@@ -1,5 +1,7 @@
 package com.example.testvaadin;
 
+import com.example.testvaadin.components.SimulatorForm;
+import com.example.testvaadin.components.SimulatorList;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
@@ -14,7 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 @Theme("testvaadin")
-public class TestvaadinUI extends HorizontalSplitPanel implements View {
+public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	// @WebServlet(value = "/*", asyncSupported = true)
 	// @VaadinServletConfiguration(productionMode = false, ui =
@@ -23,40 +25,16 @@ public class TestvaadinUI extends HorizontalSplitPanel implements View {
 
 	// }
 
-	private static final String SIMNAME = "SimulatorName";
-	private static final String PLANESIM = "AircraftModel";
-	private static final String SIMID = "SimulatorId";
-	private DatabaseHelper dbHelp = new DatabaseHelper();
 	private SimulatorList simulatorList;
-
-	private SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();//
-
-	private static final String[] columnNames = new String[] { SIMNAME,
-			PLANESIM, SIMID, "MinSpeed", "MaxSpeed", "HighSpeed",
-			"MaxSpeedOnFlaps", "MinSpeedOnFlaps", "HasGears", "MinTempCHT1",
-			"MinTempCHT2", "MinTempEGT1", "MinTempEGT2", "MaxTempCHT1",
-			"MaxTempCHT2", "MaxTempEGT1", "MaxTempEGT2", "ManifoldPressure",
-			"Power", "MaxAmountOfFuel", "MinAmountOfFuel", "MaxRPM",
-			"NumberOfEngines" };
+	private DatabaseHelper dbHelp = new DatabaseHelper();
+	private SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();
 
 	private FormLayout editorLayout = new FormLayout();
-	private SimulatorForm editorFields;
+	private SimulatorForm simulatorForm;
 	private Button removeSimulatorButton = new Button("Remove simulator");
 	private Button addSimulatorButton = new Button("Add simulator");
 	private Button buttonToMainMenu = new Button("Go to start page");
 	private Navigator navigator;
-
-	public String getSimNamePropertyName() {
-		return SIMNAME;
-	}
-
-	public String[] getVisibleColumns() {
-		return new String[] { SIMID, SIMNAME, PLANESIM };
-	}
-
-	public String[] getColumnNames() {
-		return columnNames;
-	}
 
 	public FormLayout getEditorLayout() {
 		return editorLayout;
@@ -66,26 +44,19 @@ public class TestvaadinUI extends HorizontalSplitPanel implements View {
 		return removeSimulatorButton;
 	}
 
-	public SimulatorForm getEditorFields() {
-		return editorFields;
+	public SimulatorForm getSimulatorForm() {
+		return simulatorForm;
 	}
 
 	public SimulatorList getSimulatorList() {
 		return simulatorList;
 	}
 
-	/*
-	 * @Override protected void init(VaadinRequest request) {
-	 * 
-	 * initSimulatorList(); initLayout(); initEditor(); initAddRemoveButtons();
-	 * }
-	 */
-
 	public DatabaseHelper getDBHelp() {
 		return dbHelp;
 	}
 
-	public TestvaadinUI(Navigator navigator) {
+	public SimulatorsView(Navigator navigator) {
 		this.navigator = navigator;
 		initSimulatorList();
 		initLayout();
@@ -99,9 +70,6 @@ public class TestvaadinUI extends HorizontalSplitPanel implements View {
 	}
 
 	private void initLayout() {
-		// HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
-		// setContent(splitPanel);
-
 		VerticalLayout leftLayout = new VerticalLayout();
 		editorLayout = new FormLayout();
 		addComponent(leftLayout);
@@ -117,7 +85,7 @@ public class TestvaadinUI extends HorizontalSplitPanel implements View {
 	}
 
 	private void initEditor() {
-		editorFields = new SimulatorForm(this);
+		simulatorForm = new SimulatorForm(this);
 	}
 
 	private void addClickListeners() {
@@ -141,7 +109,7 @@ public class TestvaadinUI extends HorizontalSplitPanel implements View {
 		addSimulatorButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				editorFields.addSimulator();
+				simulatorForm.addSimulator();
 			}
 		});
 	}
@@ -150,7 +118,7 @@ public class TestvaadinUI extends HorizontalSplitPanel implements View {
 		removeSimulatorButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				editorFields.removeSimulator();
+				simulatorForm.removeSimulator();
 			}
 		});
 	}

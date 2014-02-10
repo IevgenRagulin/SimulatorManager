@@ -1,25 +1,26 @@
-package com.example.testvaadin;
+package com.example.testvaadin.components;
 
 import java.sql.SQLException;
 
+import com.example.testvaadin.NavigatorUI;
+import com.example.testvaadin.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.ui.TextField;
 
 public class SimulatorForm extends FieldGroup {
-
 	private static final long serialVersionUID = 5886087581072819926L;
-	private TestvaadinUI app;
+	private SimulatorsView app;
 
-	public SimulatorForm(TestvaadinUI app) {
+	public SimulatorForm(SimulatorsView app) {
 		this.app = app;
 		initSimulatorForm();
 	}
 
 	private void initSimulatorForm() {
 		setBuffered(false);
-		for (String fieldName : app.getColumnNames()) {
+		for (String fieldName : NavigatorUI.getColumnNames()) {
 			TextField field = createInputField(fieldName);
 			app.getEditorLayout().addComponent(field);
 			this.bind(field, fieldName);
@@ -30,7 +31,8 @@ public class SimulatorForm extends FieldGroup {
 	private TextField createInputField(String fieldName) {
 		TextField field = new TextField(fieldName);
 		addValueChangeListener(field);
-		field.setWidth("100%");
+		field.setImmediate(true);
+		field.setWidth("90%");
 		field.setNullRepresentation("");
 		return field;
 	}
@@ -49,8 +51,8 @@ public class SimulatorForm extends FieldGroup {
 	public void addSimulator() {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
 		app.getSimulatorList()
-				.getContainerProperty(simulatorId, app.getSimNamePropertyName())
-				.setValue("New");
+				.getContainerProperty(simulatorId,
+						NavigatorUI.getSimNamePropertyName()).setValue("New");
 		commit();
 	}
 

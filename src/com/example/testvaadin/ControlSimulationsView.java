@@ -7,9 +7,8 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.VerticalLayout;
 
-public class ControlSimulationsView extends VerticalLayout implements View {
+public class ControlSimulationsView extends BasicView implements View {
 
 	private static final long serialVersionUID = -1499211740985566852L;
 	private Button buttonToMainMenu = new Button("Go to start page");

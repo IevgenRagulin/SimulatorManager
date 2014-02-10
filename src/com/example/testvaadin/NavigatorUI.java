@@ -21,6 +21,18 @@ public class NavigatorUI extends UI {
 	protected static final String RUNNINGSIMULATIONS = "Running simulations";
 	protected static final String CONTROLSIMULATIONS = "Control simulations";
 
+	private static final String SIMNAME = "SimulatorName";
+	private static final String PLANESIM = "AircraftModel";
+	private static final String SIMID = "SimulatorId";
+
+	private static final String[] columnNames = new String[] { SIMNAME,
+			PLANESIM, SIMID, "MinSpeed", "MaxSpeed", "HighSpeed",
+			"MaxSpeedOnFlaps", "MinSpeedOnFlaps", "HasGears", "MinTempCHT1",
+			"MinTempCHT2", "MinTempEGT1", "MinTempEGT2", "MaxTempCHT1",
+			"MaxTempCHT2", "MaxTempEGT1", "MaxTempEGT2", "ManifoldPressure",
+			"Power", "MaxAmountOfFuel", "MinAmountOfFuel", "MaxRPM",
+			"NumberOfEngines" };
+
 	// @WebServlet(value = "/*", asyncSupported = true)
 	// @VaadinServletConfiguration(productionMode = false, ui =
 	// NavigatorUI.class)
@@ -28,13 +40,25 @@ public class NavigatorUI extends UI {
 
 	// }
 
+	public static String getSimNamePropertyName() {
+		return SIMNAME;
+	}
+
+	public static String[] getVisibleColumns() {
+		return new String[] { SIMID, SIMNAME, PLANESIM };
+	}
+
+	public static String[] getColumnNames() {
+		return columnNames;
+	}
+
 	@Override
 	protected void init(VaadinRequest request) {
 		getPage().setTitle("Main menu");
 		navigator = new Navigator(this, this);
 		// Create and register the views
 		navigator.addView("", new StartView(this.navigator));
-		navigator.addView(MANAGESIMULATORS, new TestvaadinUI(this.navigator));
+		navigator.addView(MANAGESIMULATORS, new SimulatorsView(this.navigator));
 		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(
 				this.navigator));
 		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(
