@@ -1,21 +1,30 @@
 package com.example.testvaadin;
 
-import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.github.wolfie.refresher.Refresher;
+import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
 
+	public class StatusRefreshListener implements RefreshListener {
+		private static final long serialVersionUID = 392864906906738406L;
+
+		public void refresh(final Refresher source) {
+			getSelectSimulator().handleValueChangeEvent();
+		}
+	}
+
 	private static final long serialVersionUID = -1785707193097941934L;
 	private Navigator navigator;
-	private DatabaseHelper dbHelp = new DatabaseHelper();
-	private SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();
 	private FormLayout simulatorInfoLayout = new FormLayout();
 	private FormLayout simulationInfoLayout = new FormLayout();
 	private FormLayout simulationDevicesStateLayout = new FormLayout();
@@ -23,7 +32,12 @@ public class RunningSimulationsView extends BasicView implements View {
 	private SimulationStateFieldGroup simulationInfo;
 	private SimulationStateFieldGroup simulationDevicesState;
 	private SelectSimulatorCombo selectSimulator;
-	private ButtonToMainMenu buttonToMainMenu;
+
+	public SelectSimulatorCombo getSelectSimulator() {
+		return selectSimulator;
+	}
+
+	private Button buttonToMainMenu;
 
 	public SimulationStateFieldGroup getSimulatorInfo() {
 		return simulatorInfo;
@@ -41,10 +55,6 @@ public class RunningSimulationsView extends BasicView implements View {
 		return simulationDevicesState;
 	}
 
-	public SQLContainer getSqlContainer() {
-		return simulatorContainer;
-	}
-
 	public FormLayout getSimulatorInfoLayout() {
 		return simulatorInfoLayout;
 	}
@@ -60,6 +70,26 @@ public class RunningSimulationsView extends BasicView implements View {
 		initSimulatorsInfo();
 		initSimulationInfo();
 		initSimulationDevicesState();
+		setClickListeners();
+
+		StatusRefreshListener listener = new StatusRefreshListener();
+		final Refresher refresher = new Refresher();
+		refresher.addListener(listener);
+		refresher.setRefreshInterval(1000);
+		addExtension(refresher);
+
+	}
+
+	private void setClickListeners() {
+		buttonToMainMenu.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -4243499910765394003L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("");
+				selectSimulator.unscheduleUpdates();
+			}
+		});
 	}
 
 	private void initSimulationInfo() {
@@ -86,7 +116,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initLayout() {
-		buttonToMainMenu = new ButtonToMainMenu(navigator);
+		buttonToMainMenu = new Button("Go to start page");
 		addComponent(buttonToMainMenu);
 		addComponent(selectSimulator);
 		simulatorInfoLayout.setCaption("Simulator info");
@@ -99,7 +129,8 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-
+		selectSimulator.initSelectSimulator();
+		selectSimulator.handleValueChangeEvent();
 	}
 
 }

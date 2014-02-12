@@ -1,6 +1,7 @@
 package com.example.testvaadin.components;
 
 import java.sql.SQLException;
+import java.util.Random;
 
 import com.example.testvaadin.SimulatorsView;
 import com.example.testvaadin.data.ColumnNames;
@@ -12,6 +13,9 @@ import com.vaadin.ui.TextField;
 public class SimulatorForm extends FieldGroup {
 	private static final long serialVersionUID = 5886087581072819926L;
 	private SimulatorsView app;
+	private Random random = new Random();
+	private final int MINRANDOM = 1000;
+	private final int MAXRANDOM = 10000;
 
 	public SimulatorForm(SimulatorsView app) {
 		this.app = app;
@@ -52,7 +56,10 @@ public class SimulatorForm extends FieldGroup {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
 		app.getSimulatorList()
 				.getContainerProperty(simulatorId,
-						ColumnNames.getSimulatorNamePropName()).setValue("New");
+						ColumnNames.getSimulatorNamePropName())
+				.setValue(
+						"New" + random.nextInt(MAXRANDOM - MINRANDOM)
+								+ MINRANDOM);
 		commit();
 	}
 

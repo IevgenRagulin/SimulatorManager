@@ -20,41 +20,85 @@ public class SelectSimulatorCombo extends ComboBox {
 	private static final long serialVersionUID = -3343300838743270165L;
 	private RunningSimulationsView runningSims;
 	private Map<String, RowId> simulatorsIdNamesMapping = new HashMap<String, RowId>();
+	private ScheduledExecutorService ses = Executors
+			.newSingleThreadScheduledExecutor();;
 
 	public SelectSimulatorCombo(RunningSimulationsView runningSimulations) {
 		super("Simulator name:");
+		setBuffered(false);
 		this.runningSims = runningSimulations;
 		initSelectSimulator();
+		setEventListeners();
 	}
 
-	private void initSelectSimulator() {
+	public void initSelectSimulator() {
 		this.setImmediate(true);
-		Collection<?> itemIds = runningSims.getSqlContainer().getItemIds();
+		Collection<?> itemIds = runningSims.getDBHelp().getSimulatorContainer()
+				.getItemIds();
 		for (Object itemId : itemIds) {
-			Property simulatorName = runningSims.getSqlContainer()
-					.getItem(itemId)
-					.getItemProperty(ColumnNames.getSimulatorNamePropName());
+			Property<?> simulatorName = getSimulatorNameById((RowId) itemId);
 			this.addItem(simulatorName.getValue());
 			simulatorsIdNamesMapping.put((String) simulatorName.getValue(),
 					(RowId) itemId);
 		}
 
+	}
+
+	private Property<?> getSimulatorNameById(RowId itemId) {
+		return runningSims.getDBHelp().getSimulatorContainer().getItem(itemId)
+				.getItemProperty(ColumnNames.getSimulatorNamePropName());
+	}
+
+	private void setEventListeners() {
 		this.addValueChangeListener(new ValueChangeListener() {
 			private static final long serialVersionUID = -2862814943819650227L;
 
 			@Override
 			public void valueChange(
 					com.vaadin.data.Property.ValueChangeEvent event) {
-				String value = (String) SelectSimulatorCombo.this.getValue();
-				RowId rowId = simulatorsIdNamesMapping.get(value);
-				Item selectedItem = runningSims.getSqlContainer()
-						.getItem(rowId);
-				setSimulatorInfoData(selectedItem);
-				setSimulationInfoData(runningSims.getSqlContainer()
-						.getContainerProperty(rowId, "SimulatorId"));
-
+				handleValueChangeEvent();
 			}
 		});
+	}
+
+	public void handleValueChangeEvent() {
+		// unscheduleUpdates();
+		String value = (String) SelectSimulatorCombo.this.getValue();
+		RowId rowId = simulatorsIdNamesMapping.get(value);
+		Item selectedItem = runningSims.getDBHelp().getSimulatorContainer()
+				.getItem(rowId);
+		if (selectedItem != null) {
+			setSimulatorInfoData(selectedItem);
+			setSimulationInfoData(getSimulatorIdByRowId(rowId));
+			// scheduleUpdatesForSelectedSimulator(getSimulatorIdByRowId(rowId));
+		} else {
+			runningSims.getSimulatorInfo().setEnabled(false);
+			runningSims.getSimulationInfo().setEnabled(false);
+		}
+	}
+
+	private Property<?> getSimulatorIdByRowId(RowId rowId) {
+		return runningSims.getDBHelp().getSimulatorContainer()
+				.getContainerProperty(rowId, "SimulatorId");
+	}
+
+	private void scheduleUpdatesForSelectedSimulator(
+			final Property<?> simulatorId) {
+		ses = Executors.newSingleThreadScheduledExecutor();
+		ses.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					setSimulationInfoData(simulatorId);
+					System.out.println("Update");
+				} catch (Exception e) {
+				}
+			}
+		}, 0, 1, TimeUnit.SECONDS);
+	}
+
+	public void unscheduleUpdates() {
+		ses.shutdownNow();
 	}
 
 	private void setSimulatorInfoData(Item selectedItem) {
@@ -63,64 +107,20 @@ public class SelectSimulatorCombo extends ComboBox {
 		runningSims.getSimulatorInfo().setEnabled(true);
 	}
 
-	private void setSimulationInfoData(final Property property) {
+	private void setSimulationInfoData(final Property<?> property) {
 		final SQLContainer simulationContainer = runningSims.getDBHelp()
 				.getLatestRunningSimulationOnSimulatorWithId(
 						property.getValue().toString());
 		if (simulationContainer.size() == 0) {
 			Notification
-					.show("There are now simulations currently running on this simulator");
+					.show("There are no simulations currently running on this simulator");
+			runningSims.getSimulationInfo().setEnabled(false);
 		} else {
 			final RowId id = (RowId) simulationContainer.getIdByIndex(0);
-			// System.out.println(id)
-			/*
-			 * runningSims.getSimulationInfo().setItemDataSource(
-			 * simulationContainer.getItem(id));
-			 */
-			runningSims.getSimulationInfo().setItemDataSource(null);
-			// runningSims.getSimulationInfo().setEnabled(true);
-			// runningSims.getSimulationInfo().setReadOnly(false);
-
-			ScheduledExecutorService ses = Executors
-					.newSingleThreadScheduledExecutor();
-
-			ses.scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					// System.out.println("run");
-					SQLContainer simulationContainerUpd = runningSims
-							.getDBHelp()
-							.getLatestRunningSimulationOnSimulatorWithId(
-									property.getValue().toString());
-					// System.out.println(simulationContainerUpd.getItem(id)
-
-					updateUi(simulationContainerUpd.getItem(id));
-					/*
-					 * runningSims.getSimulationInfo().setItemDataSource(
-					 * simulationContainerUpd.getItem(id));
-					 * simulationContainer.refresh();
-					 * simulationContainerUpd.refresh();
-					 */
-				}
-			}, 0, 1, TimeUnit.SECONDS);
+			runningSims.getSimulationInfo().setItemDataSource(
+					simulationContainer.getItem(id));
+			runningSims.getSimulationInfo().setEnabled(true);
+			runningSims.getSimulationInfo().setReadOnly(true);
 		}
-	}
-
-	private void updateUi(Item item) {
-		System.out.println("check if sim is paused"
-				+ item.getItemProperty("IsSimulationPaused").getValue()
-						.toString());
-		runningSims.setSimulationInfo(new SimulationStateFieldGroup(
-				runningSims, ColumnNames.getSimulationCols(), runningSims
-						.getSimulationInfoLayout()));
-		runningSims.getSimulationInfo().setEnabled(
-				runningSims.getSimulationInfo().isEnabled());
-		Notification.show("notification");
-		runningSims.getSimulationInfo().setItemDataSource(item);
-
-	}
-
-	private void setSimulationDevicesState(Item selectedItem) {
-
 	}
 }

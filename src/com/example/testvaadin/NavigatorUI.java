@@ -20,6 +20,7 @@ public class NavigatorUI extends UI {
 	protected static final String MANAGESIMULATORS = "Manage simulators";
 	protected static final String RUNNINGSIMULATIONS = "Running simulations";
 	protected static final String CONTROLSIMULATIONS = "Control simulations";
+	protected static RunningSimulationsView runningSimulationsView;
 
 	// @WebServlet(value = "/*", asyncSupported = true)
 	// @VaadinServletConfiguration(productionMode = false, ui =
@@ -31,6 +32,7 @@ public class NavigatorUI extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 		getPage().setTitle("Main menu");
+
 		navigator = new Navigator(this, this);
 		// Create and register the views
 		navigator.addView("", new StartView(this.navigator));
@@ -39,9 +41,16 @@ public class NavigatorUI extends UI {
 				this.navigator));
 		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(
 				this.navigator));
+
 	}
 
 	public Navigator getNavigator() {
 		return navigator;
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		runningSimulationsView.getSelectSimulator().unscheduleUpdates();
 	}
 }
