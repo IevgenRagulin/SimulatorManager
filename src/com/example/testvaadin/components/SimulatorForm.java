@@ -2,8 +2,8 @@ package com.example.testvaadin.components;
 
 import java.sql.SQLException;
 
-import com.example.testvaadin.NavigatorUI;
 import com.example.testvaadin.SimulatorsView;
+import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -20,7 +20,7 @@ public class SimulatorForm extends FieldGroup {
 
 	private void initSimulatorForm() {
 		setBuffered(false);
-		for (String fieldName : NavigatorUI.getColumnNames()) {
+		for (String fieldName : ColumnNames.getSimulatorCols()) {
 			TextField field = createInputField(fieldName);
 			app.getEditorLayout().addComponent(field);
 			this.bind(field, fieldName);
@@ -52,7 +52,7 @@ public class SimulatorForm extends FieldGroup {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
 		app.getSimulatorList()
 				.getContainerProperty(simulatorId,
-						NavigatorUI.getSimNamePropertyName()).setValue("New");
+						ColumnNames.getSimulatorNamePropName()).setValue("New");
 		commit();
 	}
 

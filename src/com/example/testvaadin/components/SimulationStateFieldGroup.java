@@ -2,31 +2,32 @@ package com.example.testvaadin.components;
 
 import com.example.testvaadin.RunningSimulationsView;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
-public class SimulatorInfo extends FieldGroup {
+public class SimulationStateFieldGroup extends FieldGroup {
 	private static final long serialVersionUID = -1726362933655786619L;
 	private RunningSimulationsView runningSimulations;
 
-	public SimulatorInfo(RunningSimulationsView runningSimulations) {
+	public SimulationStateFieldGroup(RunningSimulationsView runningSimulations,
+			String[] fieldNames, FormLayout formLayout) {
 		this.runningSimulations = runningSimulations;
-		initSimulatorInfo();
+		initSimulatorInfo(fieldNames, formLayout);
 	}
 
-	private void initSimulatorInfo() {
+	private void initSimulatorInfo(String[] fieldNames, FormLayout formLayout) {
 		setBuffered(false);
-		for (String fieldName : runningSimulations.getVisibleColumns()) {
+		for (String fieldName : fieldNames) {
 			TextField field = createInputField(fieldName);
-			runningSimulations.getEditorLayout().addComponent(field);
+			formLayout.addComponent(field);
 			this.bind(field, fieldName);
-			System.out.println("generating form" + fieldName);
 		}
 	}
 
 	private TextField createInputField(String fieldName) {
 		TextField field = new TextField(fieldName);
 		field.setImmediate(true);
-		field.setWidth("90%");
+		field.setWidth("30%");
 		field.setNullRepresentation("");
 		return field;
 	}

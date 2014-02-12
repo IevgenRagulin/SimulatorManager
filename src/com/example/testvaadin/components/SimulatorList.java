@@ -1,7 +1,7 @@
 package com.example.testvaadin.components;
 
-import com.example.testvaadin.NavigatorUI;
 import com.example.testvaadin.SimulatorsView;
+import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 
@@ -14,7 +14,7 @@ public class SimulatorList extends Table {
 		setSelectable(true);
 		setImmediate(true);
 		setBuffered(false);
-		setVisibleColumns(NavigatorUI.getVisibleColumns());
+		setVisibleColumns(ColumnNames.getSimulatorMainCols());
 		addValueChangeListener(new Property.ValueChangeListener() {
 			private static final long serialVersionUID = -4721755745740872033L;
 

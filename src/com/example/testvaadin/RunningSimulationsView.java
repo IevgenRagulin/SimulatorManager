@@ -1,101 +1,100 @@
 package com.example.testvaadin;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.example.testvaadin.components.SimulatorInfo;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.sqlcontainer.RowId;
+import com.example.testvaadin.components.ButtonToMainMenu;
+import com.example.testvaadin.components.SelectSimulatorCombo;
+import com.example.testvaadin.components.SimulationStateFieldGroup;
+import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
 
 	private static final long serialVersionUID = -1785707193097941934L;
 	private Navigator navigator;
-	private Button buttonToMainMenu = new Button("Go to start page");
 	private DatabaseHelper dbHelp = new DatabaseHelper();
 	private SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();
-	private FormLayout editorLayout = new FormLayout();
-	private Map<String, RowId> simulatorsIdNamesMapping = new HashMap<String, RowId>();
-	private SimulatorInfo simulatorInfo;
-	private ComboBox selectSimulator = new ComboBox("Simulator name:");;
+	private FormLayout simulatorInfoLayout = new FormLayout();
+	private FormLayout simulationInfoLayout = new FormLayout();
+	private FormLayout simulationDevicesStateLayout = new FormLayout();
+	private SimulationStateFieldGroup simulatorInfo;
+	private SimulationStateFieldGroup simulationInfo;
+	private SimulationStateFieldGroup simulationDevicesState;
+	private SelectSimulatorCombo selectSimulator;
+	private ButtonToMainMenu buttonToMainMenu;
 
-	public SimulatorInfo getSimulatorInfo() {
+	public SimulationStateFieldGroup getSimulatorInfo() {
 		return simulatorInfo;
 	}
 
-	public FormLayout getEditorLayout() {
-		return editorLayout;
+	public SimulationStateFieldGroup getSimulationInfo() {
+		return simulationInfo;
+	}
+
+	public void setSimulationInfo(SimulationStateFieldGroup simulationInfo) {
+		this.simulationInfo = simulationInfo;
+	}
+
+	public SimulationStateFieldGroup getSimulatorDevicesState() {
+		return simulationDevicesState;
+	}
+
+	public SQLContainer getSqlContainer() {
+		return simulatorContainer;
+	}
+
+	public FormLayout getSimulatorInfoLayout() {
+		return simulatorInfoLayout;
+	}
+
+	public FormLayout getSimulationInfoLayout() {
+		return simulationInfoLayout;
 	}
 
 	public RunningSimulationsView(Navigator navigator) {
-		addComponent(buttonToMainMenu);
-		initLayout();
-		initSelectSimulator();
-		initSimulatorsInfo();
 		this.navigator = navigator;
-		setComponentAlignment(buttonToMainMenu, Alignment.MIDDLE_CENTER);
-		addClickListeners();
+		initSelectSimulator();
+		initLayout();
+		initSimulatorsInfo();
+		initSimulationInfo();
+		initSimulationDevicesState();
 	}
 
-	private void initSimulatorsInfo() {
-		simulatorInfo = new SimulatorInfo(this);
+	private void initSimulationInfo() {
+		simulationInfo = new SimulationStateFieldGroup(this,
+				ColumnNames.getSimulationCols(), simulationInfoLayout);
+		simulationInfo.setEnabled(false);
 	}
 
-	private void initLayout() {
-		addComponent(selectSimulator);
-		editorLayout = new FormLayout();
-		editorLayout.setVisible(true);
-		addComponent(editorLayout);
+	private void initSimulationDevicesState() {
+		simulationDevicesState = new SimulationStateFieldGroup(this,
+				ColumnNames.getSimulationDevicesStateCols(),
+				simulationDevicesStateLayout);
+		simulationDevicesState.setEnabled(false);
 	}
 
 	private void initSelectSimulator() {
-		selectSimulator.setImmediate(true);
-		Collection<?> itemIds = simulatorContainer.getItemIds();
-		for (Object itemId : itemIds) {
-			Property simulatorName = simulatorContainer.getItem(itemId)
-					.getItemProperty("SimulatorName");
-			selectSimulator.addItem(simulatorName.getValue());
-			simulatorsIdNamesMapping.put((String) simulatorName.getValue(),
-					(RowId) itemId);
-		}
-
-		selectSimulator.addValueChangeListener(new ValueChangeListener() {
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				String value = (String) selectSimulator.getValue();
-				RowId rowId = simulatorsIdNamesMapping.get(value);
-				Item selectedItem = simulatorContainer.getItem(rowId);
-				RunningSimulationsView.this.getSimulatorInfo()
-						.setItemDataSource(selectedItem);
-				RunningSimulationsView.this.getSimulatorInfo()
-						.setReadOnly(true);
-			}
-		});
+		selectSimulator = new SelectSimulatorCombo(this);
 	}
 
-	private void addClickListeners() {
-		buttonToMainMenu.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = -4243499910765394003L;
+	private void initSimulatorsInfo() {
+		simulatorInfo = new SimulationStateFieldGroup(this,
+				ColumnNames.getSimulatorMainCols(), simulatorInfoLayout);
+		simulatorInfo.setEnabled(false);
+	}
 
-			@Override
-			public void buttonClick(ClickEvent event) {
-				navigator.navigateTo("");
-			}
-		});
+	private void initLayout() {
+		buttonToMainMenu = new ButtonToMainMenu(navigator);
+		addComponent(buttonToMainMenu);
+		addComponent(selectSimulator);
+		simulatorInfoLayout.setCaption("Simulator info");
+		simulationInfoLayout.setCaption("Simulation info");
+		simulationDevicesStateLayout.setCaption("Simulation devices state");
+		addComponent(simulatorInfoLayout);
+		addComponent(simulationInfoLayout);
+		addComponent(simulationDevicesStateLayout);
 	}
 
 	@Override

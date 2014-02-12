@@ -1,5 +1,6 @@
 package com.example.testvaadin;
 
+import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorList;
 import com.vaadin.annotations.Theme;
@@ -33,7 +34,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	private SimulatorForm simulatorForm;
 	private Button removeSimulatorButton = new Button("Remove simulator");
 	private Button addSimulatorButton = new Button("Add simulator");
-	private Button buttonToMainMenu = new Button("Go to start page");
+	private ButtonToMainMenu buttonToMainMenu;
 	private Navigator navigator;
 
 	public FormLayout getEditorLayout() {
@@ -70,6 +71,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	}
 
 	private void initLayout() {
+		buttonToMainMenu = new ButtonToMainMenu(navigator);
 		VerticalLayout leftLayout = new VerticalLayout();
 		editorLayout = new FormLayout();
 		addComponent(leftLayout);
@@ -91,18 +93,6 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	private void addClickListeners() {
 		initAddButton();
 		initRemoveButton();
-		initGoToMainMenuButton();
-	}
-
-	private void initGoToMainMenuButton() {
-		buttonToMainMenu.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = -4243499910765394003L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				navigator.navigateTo("");
-			}
-		});
 	}
 
 	private void initAddButton() {
