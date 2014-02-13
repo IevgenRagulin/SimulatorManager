@@ -12,6 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Label;
 
 public class RunningSimulationsView extends BasicView implements View {
 
@@ -28,6 +29,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	private FormLayout simulatorInfoLayout = new FormLayout();
 	private FormLayout simulationInfoLayout = new FormLayout();
 	private FormLayout simulationDevicesStateLayout = new FormLayout();
+	private Label errorLabel = new Label("");
 	private SimulationStateFieldGroup simulatorInfo;
 	private SimulationStateFieldGroup simulationInfo;
 	private SimulationStateFieldGroup simulationDevicesState;
