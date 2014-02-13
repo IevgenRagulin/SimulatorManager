@@ -3,9 +3,6 @@ package com.example.testvaadin.components;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.example.testvaadin.RunningSimulationsView;
 import com.example.testvaadin.data.ColumnNames;
@@ -14,14 +11,14 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Notification;
 
 public class SelectSimulatorCombo extends ComboBox {
+	private static final String NO_SIMULATOR_SELECTED = "Please, select simulator";
+	private static final String EMPTY_STRING = "";
+	private static final String NO_RUNNING_SIMULATIONS = "There are no simulations currently running on this simulator";
 	private static final long serialVersionUID = -3343300838743270165L;
 	private RunningSimulationsView runningSims;
 	private Map<String, RowId> simulatorsIdNamesMapping = new HashMap<String, RowId>();
-	private ScheduledExecutorService ses = Executors
-			.newSingleThreadScheduledExecutor();;
 
 	public SelectSimulatorCombo(RunningSimulationsView runningSimulations) {
 		super("Simulator name:");
@@ -41,7 +38,6 @@ public class SelectSimulatorCombo extends ComboBox {
 			simulatorsIdNamesMapping.put((String) simulatorName.getValue(),
 					(RowId) itemId);
 		}
-
 	}
 
 	private Property<?> getSimulatorNameById(RowId itemId) {
@@ -68,13 +64,29 @@ public class SelectSimulatorCombo extends ComboBox {
 		Item selectedItem = runningSims.getDBHelp().getSimulatorContainer()
 				.getItem(rowId);
 		if (selectedItem != null) {
-			setSimulatorInfoData(selectedItem);
-			setSimulationInfoData(getSimulatorIdByRowId(rowId));
-			// scheduleUpdatesForSelectedSimulator(getSimulatorIdByRowId(rowId));
+			setAllSimulationSimulatorData(rowId);
 		} else {
-			runningSims.getSimulatorInfo().setEnabled(false);
-			runningSims.getSimulationInfo().setEnabled(false);
+			setSimulatorNotSelectedState();
 		}
+	}
+
+	private void setAllSimulationSimulatorData(RowId rowId) {
+		setSimulatorInfoData(rowId);
+		setSimulationInfoData(getSimulatorIdByRowId(rowId));
+		setSimulationDevicesStateInfo(getSimulatorIdByRowId(rowId));
+	}
+
+	private void setSimulatorNotSelectedState() {
+		runningSims.getErrorLabel().setValue(NO_SIMULATOR_SELECTED);
+		runningSims.getSimulatorInfo().setEnabled(false);
+		runningSims.getSimulationInfo().setEnabled(false);
+		runningSims.getSimulatorDevicesState().setEnabled(false);
+	}
+
+	private void setNoSimulationsRunningState() {
+		runningSims.getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
+		runningSims.getSimulationInfo().setEnabled(false);
+		runningSims.getSimulatorDevicesState().setEnabled(false);
 	}
 
 	private Property<?> getSimulatorIdByRowId(RowId rowId) {
@@ -82,26 +94,9 @@ public class SelectSimulatorCombo extends ComboBox {
 				.getContainerProperty(rowId, "SimulatorId");
 	}
 
-	private void scheduleUpdatesForSelectedSimulator(
-			final Property<?> simulatorId) {
-		ses = Executors.newSingleThreadScheduledExecutor();
-		ses.scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					setSimulationInfoData(simulatorId);
-					System.out.println("Update");
-				} catch (Exception e) {
-				}
-			}
-		}, 0, 1, TimeUnit.SECONDS);
-	}
-
-	public void unscheduleUpdates() {
-		ses.shutdownNow();
-	}
-
-	private void setSimulatorInfoData(Item selectedItem) {
+	private void setSimulatorInfoData(RowId rowId) {
+		Item selectedItem = runningSims.getDBHelp().getSimulatorContainer()
+				.getItem(rowId);
 		runningSims.getSimulatorInfo().setItemDataSource(selectedItem);
 		runningSims.getSimulatorInfo().setReadOnly(true);
 		runningSims.getSimulatorInfo().setEnabled(true);
@@ -112,15 +107,28 @@ public class SelectSimulatorCombo extends ComboBox {
 				.getLatestRunningSimulationOnSimulatorWithId(
 						property.getValue().toString());
 		if (simulationContainer.size() == 0) {
-			Notification
-					.show("There are no simulations currently running on this simulator");
-			runningSims.getSimulationInfo().setEnabled(false);
+			setNoSimulationsRunningState();
 		} else {
+			runningSims.getErrorLabel().setValue(EMPTY_STRING);
 			final RowId id = (RowId) simulationContainer.getIdByIndex(0);
 			runningSims.getSimulationInfo().setItemDataSource(
 					simulationContainer.getItem(id));
 			runningSims.getSimulationInfo().setEnabled(true);
 			runningSims.getSimulationInfo().setReadOnly(true);
+		}
+	}
+
+	private void setSimulationDevicesStateInfo(final Property<?> property) {
+		final SQLContainer simulationDevicesStateContainer = runningSims
+				.getDBHelp().getSimulationDevicesStateBySimulatorId(
+						property.getValue().toString());
+		if (simulationDevicesStateContainer.size() != 0) {
+			final RowId id = (RowId) simulationDevicesStateContainer
+					.getIdByIndex(0);
+			runningSims.getSimulatorDevicesState().setItemDataSource(
+					simulationDevicesStateContainer.getItem(id));
+			runningSims.getSimulatorDevicesState().setEnabled(true);
+			runningSims.getSimulatorDevicesState().setReadOnly(true);
 		}
 	}
 }

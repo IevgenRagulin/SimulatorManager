@@ -1,17 +1,13 @@
 package com.example.testvaadin.components;
 
-import com.example.testvaadin.RunningSimulationsView;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
 public class SimulationStateFieldGroup extends FieldGroup {
 	private static final long serialVersionUID = -1726362933655786619L;
-	private RunningSimulationsView runningSimulations;
 
-	public SimulationStateFieldGroup(RunningSimulationsView runningSimulations,
-			String[] fieldNames, FormLayout formLayout) {
-		this.runningSimulations = runningSimulations;
+	public SimulationStateFieldGroup(String[] fieldNames, FormLayout formLayout) {
 		initSimulatorInfo(fieldNames, formLayout);
 	}
 

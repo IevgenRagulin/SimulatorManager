@@ -11,13 +11,6 @@ import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
 public class DatabaseHelper {
 	JDBCConnectionPool pool = null;
-	private SQLContainer simulatorContainer = null;
-	private SQLContainer simulationContainer = null;
-	private SQLContainer simulationDevicesStateContainer = null;
-
-	public SQLContainer getSimulatorContainer() {
-		return simulatorContainer;
-	}
 
 	/*
 	 * Returns an SQLContainer with the currently running simulation on
@@ -41,45 +34,61 @@ public class DatabaseHelper {
 		return runningSimulations;
 	}
 
-	public SQLContainer getSimulationDevicesStateContainer() {
-		return simulationDevicesStateContainer;
+	public SQLContainer getSimulationDevicesStateBySimulatorId(
+			String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM SimulationDevicesState WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
+						+ simulatorId
+						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1)",
+				Arrays.asList("DevStateId"), pool);
+		SQLContainer simulationDevicesState = null;
+		try {
+			simulationDevicesState = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationDevicesState;
 	}
 
 	public DatabaseHelper() {
 		initConnectionPool();
-		initSimulatorContainer();
-		initSimulationContainer();
-		initSimulationDevicesStateContainer();
 	}
 
-	private void initSimulatorContainer() {
+	public SQLContainer getSimulatorContainer() {
 		TableQuery tq = new TableQuery("simulator", pool);
 		tq.setVersionColumn("Timestamp");
+		SQLContainer simulatorContainer = null;
 		try {
 			simulatorContainer = new SQLContainer(tq);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return simulatorContainer;
 	}
 
-	private void initSimulationContainer() {
+	public SQLContainer getSimulationContainer() {
 		TableQuery tq = new TableQuery("simulation", pool);
 		tq.setVersionColumn("Timestamp");
+		SQLContainer simulationContainer = null;
 		try {
 			simulationContainer = new SQLContainer(tq);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return simulationContainer;
 	}
 
-	private void initSimulationDevicesStateContainer() {
+	public SQLContainer getSimulationDevicesStateContainer() {
 		TableQuery tq = new TableQuery("simulationdevicesstate", pool);
 		tq.setVersionColumn("Timestamp");
+		SQLContainer simulationDevicesStateContainer = null;
 		try {
 			simulationDevicesStateContainer = new SQLContainer(tq);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return simulationDevicesStateContainer;
 	}
 
 	private void initConnectionPool() {
@@ -88,7 +97,6 @@ public class DatabaseHelper {
 					"jdbc:postgresql://localhost/postgres", "postgres",
 					"password", 2, 5);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

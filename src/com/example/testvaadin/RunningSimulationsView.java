@@ -1,5 +1,8 @@
 package com.example.testvaadin;
 
+import com.example.testvaadin.components.ButtonToMainMenu;
+import com.example.testvaadin.components.ErrorLabel;
+import com.example.testvaadin.components.InfoLabel;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
@@ -8,7 +11,6 @@ import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
@@ -29,7 +31,11 @@ public class RunningSimulationsView extends BasicView implements View {
 	private FormLayout simulatorInfoLayout = new FormLayout();
 	private FormLayout simulationInfoLayout = new FormLayout();
 	private FormLayout simulationDevicesStateLayout = new FormLayout();
-	private Label errorLabel = new Label("");
+	private ErrorLabel errorLabel = new ErrorLabel("");
+	private InfoLabel simulatorInfoLabel = new InfoLabel("Simulator info");
+	private InfoLabel simulationInfoLabel = new InfoLabel("Simulation info");
+	private InfoLabel simulatorDevicesStateLabel = new InfoLabel(
+			"Simulator devices state");
 	private SimulationStateFieldGroup simulatorInfo;
 	private SimulationStateFieldGroup simulationInfo;
 	private SimulationStateFieldGroup simulationDevicesState;
@@ -39,7 +45,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		return selectSimulator;
 	}
 
-	private Button buttonToMainMenu;
+	private ButtonToMainMenu buttonToMainMenu;
 
 	public SimulationStateFieldGroup getSimulatorInfo() {
 		return simulatorInfo;
@@ -65,21 +71,32 @@ public class RunningSimulationsView extends BasicView implements View {
 		return simulationInfoLayout;
 	}
 
+	public Label getErrorLabel() {
+		return errorLabel;
+	}
+
 	public RunningSimulationsView(Navigator navigator) {
 		this.navigator = navigator;
-		initSelectSimulator();
-		initLayout();
+		initButtonToMainMenu();
+		initSelectSimulatorCombo();
 		initSimulatorsInfo();
 		initSimulationInfo();
 		initSimulationDevicesState();
+		initLayout();
 		setClickListeners();
+		initPageRefresher();
+	}
 
+	private void initButtonToMainMenu() {
+		buttonToMainMenu = new ButtonToMainMenu(navigator);
+	}
+
+	private void initPageRefresher() {
 		StatusRefreshListener listener = new StatusRefreshListener();
 		final Refresher refresher = new Refresher();
 		refresher.addListener(listener);
 		refresher.setRefreshInterval(1000);
 		addExtension(refresher);
-
 	}
 
 	private void setClickListeners() {
@@ -89,43 +106,42 @@ public class RunningSimulationsView extends BasicView implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				navigator.navigateTo("");
-				selectSimulator.unscheduleUpdates();
 			}
 		});
 	}
 
 	private void initSimulationInfo() {
-		simulationInfo = new SimulationStateFieldGroup(this,
+		simulationInfo = new SimulationStateFieldGroup(
 				ColumnNames.getSimulationCols(), simulationInfoLayout);
 		simulationInfo.setEnabled(false);
 	}
 
 	private void initSimulationDevicesState() {
-		simulationDevicesState = new SimulationStateFieldGroup(this,
+		simulationDevicesState = new SimulationStateFieldGroup(
 				ColumnNames.getSimulationDevicesStateCols(),
 				simulationDevicesStateLayout);
 		simulationDevicesState.setEnabled(false);
 	}
 
-	private void initSelectSimulator() {
+	private void initSelectSimulatorCombo() {
 		selectSimulator = new SelectSimulatorCombo(this);
 	}
 
 	private void initSimulatorsInfo() {
-		simulatorInfo = new SimulationStateFieldGroup(this,
+		simulatorInfo = new SimulationStateFieldGroup(
 				ColumnNames.getSimulatorMainCols(), simulatorInfoLayout);
 		simulatorInfo.setEnabled(false);
 	}
 
 	private void initLayout() {
-		buttonToMainMenu = new Button("Go to start page");
 		addComponent(buttonToMainMenu);
 		addComponent(selectSimulator);
-		simulatorInfoLayout.setCaption("Simulator info");
-		simulationInfoLayout.setCaption("Simulation info");
-		simulationDevicesStateLayout.setCaption("Simulation devices state");
+		addComponent(errorLabel);
+		addComponent(simulatorInfoLabel);
 		addComponent(simulatorInfoLayout);
+		addComponent(simulationInfoLabel);
 		addComponent(simulationInfoLayout);
+		addComponent(simulatorDevicesStateLabel);
 		addComponent(simulationDevicesStateLayout);
 	}
 

@@ -14,7 +14,7 @@ public class SimulatorList extends Table {
 		setSelectable(true);
 		setImmediate(true);
 		setBuffered(false);
-		setVisibleColumns(ColumnNames.getSimulatorMainCols());
+		setVisibleColumns((Object[]) ColumnNames.getSimulatorMainCols());
 		addValueChangeListener(new Property.ValueChangeListener() {
 			private static final long serialVersionUID = -4721755745740872033L;
 

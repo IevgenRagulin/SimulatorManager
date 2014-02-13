@@ -9,4 +9,18 @@
   @include reindeer;
 
   /* Insert your theme rules here */
+  .runningSimulationsErrorLabel {
+   font-weight:bold;
+   color:red;
+  }
+  
+    .v-caption-runningSimulationsErrorLabel {
+   font-weight:bold;
+   color:green;
+  }
+  
+    .runningSimulationsInfoLabel {
+   font-weight:bold;
+   color:blue;
+  }
 }

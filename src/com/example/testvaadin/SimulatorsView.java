@@ -4,7 +4,6 @@ import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorList;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -28,7 +27,6 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	private SimulatorList simulatorList;
 	private DatabaseHelper dbHelp = new DatabaseHelper();
-	private SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();
 
 	private FormLayout editorLayout = new FormLayout();
 	private SimulatorForm simulatorForm;
