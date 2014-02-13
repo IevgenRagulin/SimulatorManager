@@ -1,8 +1,9 @@
-package com.example.testvaadin;
+package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorList;
+import com.example.testvaadin.data.DatabaseHelper;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;

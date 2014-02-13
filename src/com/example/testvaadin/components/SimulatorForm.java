@@ -3,8 +3,8 @@ package com.example.testvaadin.components;
 import java.sql.SQLException;
 import java.util.Random;
 
-import com.example.testvaadin.SimulatorsView;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -54,6 +54,11 @@ public class SimulatorForm extends FieldGroup {
 
 	public void addSimulator() {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
+		System.out.println(app.getSimulatorList());
+		System.out.println(ColumnNames.getSimulatorNamePropName());
+		System.out.println(app.getSimulatorList().getContainerProperty(
+				simulatorId, ColumnNames.getSimulatorNamePropName()));
+
 		app.getSimulatorList()
 				.getContainerProperty(simulatorId,
 						ColumnNames.getSimulatorNamePropName())

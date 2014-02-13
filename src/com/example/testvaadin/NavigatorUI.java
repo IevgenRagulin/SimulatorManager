@@ -2,6 +2,10 @@ package com.example.testvaadin;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.example.testvaadin.views.ControlSimulationsView;
+import com.example.testvaadin.views.RunningSimulationsView;
+import com.example.testvaadin.views.SimulatorsView;
+import com.example.testvaadin.views.StartView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
@@ -19,9 +23,9 @@ public class NavigatorUI extends UI {
 
 	private static final long serialVersionUID = -2218352764682942955L;
 	Navigator navigator;
-	protected static final String MANAGESIMULATORS = "Manage simulators";
-	protected static final String RUNNINGSIMULATIONS = "Running simulations";
-	protected static final String CONTROLSIMULATIONS = "Control simulations";
+	public static final String MANAGESIMULATORS = "Manage simulators";
+	public static final String RUNNINGSIMULATIONS = "Running simulations";
+	public static final String CONTROLSIMULATIONS = "Control simulations";
 	protected static RunningSimulationsView runningSimulationsView;
 
 	// @WebServlet(value = "/*", asyncSupported = true)

@@ -1,5 +1,6 @@
-package com.example.testvaadin;
+package com.example.testvaadin.views;
 
+import com.example.testvaadin.data.DatabaseHelper;
 import com.vaadin.ui.VerticalLayout;
 
 public class BasicView extends VerticalLayout {

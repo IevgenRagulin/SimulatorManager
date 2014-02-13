@@ -1,4 +1,4 @@
-package com.example.testvaadin;
+package com.example.testvaadin.data;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -11,6 +11,7 @@ import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
 public class DatabaseHelper {
 	JDBCConnectionPool pool = null;
+	private SQLContainer simulatorContainer = null;
 
 	/*
 	 * Returns an SQLContainer with the currently running simulation on
@@ -53,17 +54,20 @@ public class DatabaseHelper {
 
 	public DatabaseHelper() {
 		initConnectionPool();
+		initSimulatorContainer();
 	}
 
-	public SQLContainer getSimulatorContainer() {
+	private void initSimulatorContainer() {
 		TableQuery tq = new TableQuery("simulator", pool);
 		tq.setVersionColumn("Timestamp");
-		SQLContainer simulatorContainer = null;
 		try {
 			simulatorContainer = new SQLContainer(tq);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public SQLContainer getSimulatorContainer() {
 		return simulatorContainer;
 	}
 

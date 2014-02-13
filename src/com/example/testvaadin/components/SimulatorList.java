@@ -1,7 +1,7 @@
 package com.example.testvaadin.components;
 
-import com.example.testvaadin.SimulatorsView;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 

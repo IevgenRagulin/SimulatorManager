@@ -1,4 +1,4 @@
-package com.example.testvaadin;
+package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
@@ -8,6 +8,10 @@ import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.sqlcontainer.RowId;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -17,7 +21,6 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 
 public class RunningSimulationsView extends BasicView implements View {
-
 	public class StatusRefreshListener implements RefreshListener {
 		private static final long serialVersionUID = 392864906906738406L;
 
@@ -25,6 +28,10 @@ public class RunningSimulationsView extends BasicView implements View {
 			getSelectSimulator().handleValueChangeEvent();
 		}
 	}
+
+	private static final String NO_SIMULATOR_SELECTED = "Please, select simulator";
+	private static final String EMPTY_STRING = "";
+	private static final String NO_RUNNING_SIMULATIONS = "There are no simulations currently running on this simulator";
 
 	private static final long serialVersionUID = -1785707193097941934L;
 	private Navigator navigator;
@@ -149,6 +156,70 @@ public class RunningSimulationsView extends BasicView implements View {
 	public void enter(ViewChangeEvent event) {
 		selectSimulator.initSelectSimulator();
 		selectSimulator.handleValueChangeEvent();
+	}
+
+	public void setAllSimulationSimulatorData(RowId rowId) {
+		setSimulatorInfoData(rowId);
+		setSimulationInfoData(getSimulatorIdByRowId(rowId));
+		setSimulationDevicesStateInfo(getSimulatorIdByRowId(rowId));
+	}
+
+	private void setSimulatorInfoData(RowId rowId) {
+		Item selectedItem = getDBHelp().getSimulatorContainer().getItem(rowId);
+		getSimulatorInfo().setItemDataSource(selectedItem);
+		getSimulatorInfo().setReadOnly(true);
+		getSimulatorInfo().setEnabled(true);
+	}
+
+	private void setSimulationInfoData(final Property<?> property) {
+		final SQLContainer simulationContainer = getDBHelp()
+				.getLatestRunningSimulationOnSimulatorWithId(
+						property.getValue().toString());
+		getErrorLabel().setValue(EMPTY_STRING);
+		if (simulationContainer.size() != 0) {
+			final RowId id = (RowId) simulationContainer.getIdByIndex(0);
+			getSimulationInfo().setItemDataSource(
+					simulationContainer.getItem(id));
+			getSimulationInfo().setEnabled(true);
+			getSimulationInfo().setReadOnly(true);
+		} else {
+			getSimulationInfo().setEnabled(false);
+		}
+	}
+
+	private void setSimulationDevicesStateInfo(final Property<?> property) {
+		final SQLContainer simulationDevicesStateContainer = getDBHelp()
+				.getSimulationDevicesStateBySimulatorId(
+						property.getValue().toString());
+		if (simulationDevicesStateContainer.size() != 0) {
+			final RowId id = (RowId) simulationDevicesStateContainer
+					.getIdByIndex(0);
+			getSimulatorDevicesState().setItemDataSource(
+					simulationDevicesStateContainer.getItem(id));
+			getSimulatorDevicesState().setEnabled(true);
+			getSimulatorDevicesState().setReadOnly(true);
+		} else {
+			getSimulatorDevicesState().setEnabled(false);
+		}
+	}
+
+	public Property<?> getSimulatorIdByRowId(RowId rowId) {
+		return getDBHelp().getSimulatorContainer().getContainerProperty(rowId,
+				"SimulatorId");
+	}
+
+	public void setSimulatorNotSelectedState() {
+		getErrorLabel().setValue(NO_SIMULATOR_SELECTED);
+		getSimulatorInfo().setEnabled(false);
+		getSimulationInfo().setEnabled(false);
+		getSimulatorDevicesState().setEnabled(false);
+	}
+
+	public void setNoSimulationsRunningState(RowId rowId) {
+		setSimulatorInfoData(rowId);
+		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
+		getSimulationInfo().setEnabled(false);
+		getSimulatorDevicesState().setEnabled(false);
 	}
 
 }

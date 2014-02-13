@@ -1,4 +1,4 @@
-package com.example.testvaadin;
+package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.vaadin.navigator.Navigator;

@@ -1,5 +1,6 @@
-package com.example.testvaadin;
+package com.example.testvaadin.views;
 
+import com.example.testvaadin.NavigatorUI;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
