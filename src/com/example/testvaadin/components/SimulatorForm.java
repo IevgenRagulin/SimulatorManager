@@ -54,10 +54,6 @@ public class SimulatorForm extends FieldGroup {
 
 	public void addSimulator() {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
-		System.out.println(app.getSimulatorList());
-		System.out.println(ColumnNames.getSimulatorNamePropName());
-		System.out.println(app.getSimulatorList().getContainerProperty(
-				simulatorId, ColumnNames.getSimulatorNamePropName()));
 
 		app.getSimulatorList()
 				.getContainerProperty(simulatorId,

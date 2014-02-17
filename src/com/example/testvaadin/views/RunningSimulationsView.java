@@ -191,7 +191,8 @@ public class RunningSimulationsView extends BasicView implements View {
 		final SQLContainer simulationDevicesStateContainer = getDBHelp()
 				.getSimulationDevicesStateBySimulatorId(
 						property.getValue().toString());
-		if (simulationDevicesStateContainer.size() != 0) {
+		if ((simulationDevicesStateContainer != null)
+				&& (simulationDevicesStateContainer.size() != 0)) {
 			final RowId id = (RowId) simulationDevicesStateContainer
 					.getIdByIndex(0);
 			getSimulatorDevicesState().setItemDataSource(

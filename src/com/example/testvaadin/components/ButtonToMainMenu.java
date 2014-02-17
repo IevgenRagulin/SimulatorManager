@@ -14,7 +14,6 @@ public class ButtonToMainMenu extends Button {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				navigator.navigateTo("");
-				// NavigatorUI.goToMainMenu();
 			}
 		});
 
