@@ -1,0 +1,407 @@
+<html>
+
+<head>
+<script type="application/javascript">
+var sightRadius = 90;
+var sightCenterRadius = 10;
+var sightCenterCenterRadius = 1;
+
+var canvasHeight = 300;
+var canvasWidth = 300;
+var currentSpeed = 200;
+
+var speedBarWidth = 30;
+var speedBarHeight = 300; 
+var leftSpeedBarMargin = 0;
+var topSpeedBarMargin = 0;
+var speedIndicatorWidth = 5;
+
+var altBarWidth = 30;
+var altBarHeight = 300;
+var altBarRightMargin = 0;
+var altBarTopMargin = 0;
+
+var currentSpeed = 0;
+var currentAltitude = 0;
+var currentPitch = 0;
+var currentRoll = 0;
+
+var horizontWidth = 2000; 
+function init(){
+  //clock();
+  
+  drawSpeedIndicator();
+  drawHeightIndicator();
+  drawSight();
+  drawArtificialHorizon(10,10,0);
+  
+  setSpeed(10); 
+  setAltitude(0);  
+  //setInterval(function(){setSpeed(40);},17);
+  //setInterval(clock,5);
+}
+
+function clearRect(ctx, x, y, w, h) {
+	ctx.clearRect(x, y, w, h);
+}
+
+function drawTestLine(ctx) {
+	ctx.translate(0,0);
+	ctx.beginPath();
+	ctx.lineWidth = 15;
+	ctx.strokeStyle="red";
+	ctx.moveTo(0,0);
+	ctx.lineTo(300,300);
+	ctx.stroke();
+	ctx.restore();
+}
+
+function fillRect(ctx, x, y, w, h) {
+	ctx.translate(0,0);
+	ctx.beginPath();
+	ctx.fillRect(x,y,w,h);
+	ctx.fill();
+	ctx.stroke();
+}
+
+function fillSky(ctx, x, y, w, h) {
+	ctx.beginPath();
+	ctx.save();
+	ctx.fillStyle = "0080ff";
+	ctx.fillRect(x,y,w,h);
+	ctx.fill();
+	ctx.restore();
+}
+
+function fillGround(ctx, x, y, w, h) {
+	ctx.beginPath();
+	ctx.save();
+	ctx.fillStyle = "804000";
+	ctx.fillRect(x,y,w,h);
+	ctx.fill();
+	ctx.restore();
+}
+
+function calculateDirection(pitch) {
+	var diff = pitch - currentPitch;
+	var direction=0;
+	if ((diff>0.2)&&(diff<=180)) {
+		direction = 1;
+	} else if ((diff>0.2)&&(diff>180)) {
+		direction = -1;
+	} else if ((diff<-0.2)&&(diff<=-180)) {
+		direction = 1;
+	} else if ((diff<-0.2)&&(diff>-180)) {
+		direction = -1;
+	}
+	return direction;
+}
+
+function shouldWeRoll(roll) {
+	var difRoll = roll - currentRoll;
+	var direction = 0;
+	if ((difRoll>0.1)||(difRoll<-0.1)) {
+		return true;
+	}
+	return false;
+}
+
+function rotatePfdByRollDegrees(ctx, roll) {
+	ctx.translate(canvasHeight/2, canvasWidth/2);
+	ctx.rotate(roll*Math.PI/180);
+	ctx.translate(-canvasHeight/2, -canvasWidth/2);
+}
+
+
+
+function drawArtificialHorizon(roll, pitch, yaw) {
+	var ctx = document.getElementById('pfd').getContext('2d');
+	clearRect(ctx,-1000,-1000,3000,3000);
+	console.log("rect cleared");
+	var difPitch = pitch - currentPitch;
+	var difRoll = roll - currentRoll;
+	//Check if we should continue animating
+	//||(shouldWeRoll(roll))
+	console.log(difRoll);
+	if ((difPitch!=0)||shouldWeRoll(roll)) {
+		difPitch = 1*calculateDirection(pitch);
+		difRoll = 0.02*difRoll;
+		requestAnimationFrame(function(){drawArtificialHorizon(roll, pitch, yaw);});
+	}
+	
+	difPitch = currentPitch+difPitch;
+	difRoll = currentRoll+difRoll;
+	drawLineNumbersForSight(difPitch);
+	//Transform negative numbers to 0-359 coordinates
+	
+	if (difPitch<0) {
+		difPitch = 360+difPitch;
+	}
+	currentPitch = difPitch;
+	currentRoll = difRoll;
+	
+	ctx.save();
+	var leftHorizontMargin = leftSpeedBarMargin+speedBarWidth;
+	
+	
+	//Calculating the X,Y,W,H for sky and ground
+	if (difPitch>=0) {
+		if (difPitch>=180) {
+			var skyOnTop = difPitch*5-180*5;
+			var grOnTop = 180*5;
+			var skyBottom = 360*5 - difPitch*5;
+			var grBottom = 0;
+			
+			var skyOnTopY = 0;
+			var grOnTopY = skyOnTop;
+			var skyBottomY = grOnTopY + grOnTop;
+			var grBottomY = skyBottomY + skyBottom;
+		} else {
+			var skyOnTop = 0;
+			var grOnTop = difPitch*5;
+			var skyBottom = 180*5;
+			var grBottom = 180*5-difPitch*5;
+			
+			var skyOnTopY = 0;
+			var grOnTopY = 0;
+			var skyBottomY = grOnTopY + grOnTop;
+			var grBottomY = skyBottomY + skyBottom;
+		}
+	}
+
+	rotatePfdByRollDegrees(ctx, difRoll);
+	//Translate by 
+	ctx.translate(0,-150*5);
+	fillSky(ctx, -1000, skyOnTopY, horizontWidth, skyOnTop);
+	fillGround(ctx, -1000, grOnTopY, horizontWidth, grOnTop);
+	fillSky(ctx, -1000, skyBottomY, horizontWidth, skyBottom);
+	fillGround(ctx, -1000, grBottomY, horizontWidth, grBottom);
+
+	//rotatePfdByRollDegrees(ctx, -roll);
+	ctx.restore();
+	
+	//Draw lines and numbers for sight
+}
+
+function cropLinesNumberOutsideSight() {
+	var ctx = document.getElementById('sight').getContext('2d');
+	ctx.beginPath();
+    ctx.arc(canvasWidth/2,canvasHeight/2,sightRadius+1,0,2*Math.PI, true);
+    ctx.clip();
+}
+
+function drawLineNumberHelpFunc(startInt, endInt, difPitch, direction) {
+	var ctx = document.getElementById('sight').getContext('2d');
+	for (i = startInt; i < endInt; i++) {
+		if (((i%10) == 0) && (i!=startInt)) {
+			ctx.fillText(i, canvasWidth/2-45, canvasHeight/2+i*5*direction+3+difPitch*5);
+			ctx.moveTo(canvasWidth/2-30,canvasHeight/2+i*5*direction+difPitch*5);
+			ctx.lineTo(canvasWidth/2+30,canvasHeight/2+i*5*direction+difPitch*5);
+		} else if (((i%5) == 0) && (i!=startInt)) {
+			ctx.moveTo(canvasWidth/2-15,canvasHeight/2+i*5*direction+difPitch*5);
+			ctx.lineTo(canvasWidth/2+15,canvasHeight/2+i*5*direction+difPitch*5);
+		}
+	}
+}
+
+function drawLineNumbersForSight(difPitch) {
+	var ctx = document.getElementById('sight').getContext('2d');
+	//Transform 180-360 values to -180-0
+	if (difPitch>180) {
+		difPitch = difPitch-360;
+	}
+	cropLinesNumberOutsideSight();
+	ctx.clearRect(0,0,canvasHeight,canvasWidth);
+	drawSight();
+	ctx.save();
+	ctx.beginPath();
+	ctx.strokeStyle="white";
+	ctx.fillStyle = "white";
+	//draw numbers for degrees 0-180
+	drawLineNumberHelpFunc(0,180, difPitch, -1);
+	//draw numbers for degrees 180-360
+	drawLineNumberHelpFunc(180,360, difPitch, -1);
+	//draw numbers for degrees 0 - (-180)
+	drawLineNumberHelpFunc(0,180, difPitch, 1);
+	//draw numbers for degrees -180-(-360)
+	drawLineNumberHelpFunc(180,360, difPitch, 1);
+	ctx.stroke();
+	ctx.restore();
+}
+
+function setSpeed(speed) {
+	requestAnimationFrame(function(){setSpeed(speed);});
+	var ctx = document.getElementById('speed').getContext('2d');
+	var difSpeed = speed - currentSpeed;
+	if (difSpeed > 0) {
+		difSpeed = 2;
+	} else if (difSpeed < 0) {
+		difSpeed = -2;
+	} else {
+		difSpeed=0;
+	}
+	difSpeed=currentSpeed+difSpeed;
+	currentSpeed=difSpeed;
+	
+	clearRect(ctx,leftSpeedBarMargin,topSpeedBarMargin,speedBarWidth,speedBarHeight);
+	ctx.save();
+	ctx.fillStyle = "black";
+	fillRect(ctx, leftSpeedBarMargin,topSpeedBarMargin,speedBarWidth,speedBarHeight);
+	ctx.restore();
+  
+	//Speed marks and numbers
+	ctx.save();
+	ctx.translate(leftSpeedBarMargin,topSpeedBarMargin+speedBarHeight);
+	ctx.beginPath();
+	ctx.lineWidth = 2;
+	ctx.strokeStyle = "white";
+	ctx.fillStyle = "white";
+	ctx.font = '10pt Calibri';
+
+	//draw lines with numbers
+	for (i=0;i<1000;i+=20) {
+		ctx.moveTo(20,-i*2-3-speedBarHeight/2+difSpeed*2);
+		ctx.lineTo(30,-i*2-3-speedBarHeight/2+difSpeed*2);
+		ctx.fillText(i, 0, -i*2-speedBarHeight/2+difSpeed*2);
+		//draw lines in between the numbers
+		ctx.moveTo(25,-i*2-3-speedBarHeight/2+difSpeed*2-20);
+		ctx.lineTo(30,-i*2-3-speedBarHeight/2+difSpeed*2-20);
+	}
+	ctx.stroke();
+	ctx.restore();
+}
+
+function setAltitude(altitude) {
+	requestAnimationFrame(function(){setAltitude(altitude);});
+	var ctx = document.getElementById('altitude').getContext('2d');
+	var difAltitude = altitude - currentAltitude;
+	if (difAltitude > 0) {
+		difAltitude = 2;
+	} else if (difAltitude < 0) {
+		difAltitude = -2;
+	} else {
+		difAltitude=0;
+	}
+	difAltitude=currentAltitude+difAltitude;
+	currentAltitude=difAltitude;
+	
+	clearRect(ctx,canvasWidth-altBarRightMargin-altBarWidth,altBarTopMargin,altBarWidth,altBarHeight);
+	ctx.save();
+	ctx.fillStyle = "black";
+	fillRect(ctx, canvasWidth-altBarRightMargin-altBarWidth,altBarTopMargin,altBarWidth,altBarHeight);
+	ctx.restore();
+  
+	//Speed marks and numbers
+	ctx.save();
+	ctx.translate(canvasWidth-altBarRightMargin-altBarWidth,altBarTopMargin+altBarHeight);
+	ctx.beginPath();
+	ctx.lineWidth = 2;
+	ctx.strokeStyle = "white";
+	ctx.fillStyle = "white";
+	ctx.font = '10pt Calibri';
+
+	//draw lines with numbers
+	for (i=0;i<1000;i+=20) {
+	
+		ctx.moveTo(0,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2);
+		ctx.lineTo(10,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2);
+		ctx.fillText(i, 15, - i*2 - altBarHeight/2 + difAltitude * 2);
+		//draw lines in between the numbers
+		ctx.moveTo(0,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2-20);
+		ctx.lineTo(5,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2-20);
+	}
+	ctx.stroke();
+	ctx.restore();
+}
+
+function drawSpeedIndicator() {
+	//Draw speed indicator
+	var ctx = document.getElementById('speed').getContext('2d');
+	ctx.save();
+	ctx.strokeStyle="black";
+	ctx.fillStyle="black";
+	ctx.beginPath();
+	ctx.moveTo(speedBarWidth+leftSpeedBarMargin,canvasHeight/2-3);
+	ctx.lineTo(speedBarWidth+leftSpeedBarMargin+speedIndicatorWidth,canvasHeight/2-8);
+	ctx.lineTo(speedBarWidth+leftSpeedBarMargin+speedIndicatorWidth,canvasHeight/2);
+	ctx.lineTo(speedBarWidth+leftSpeedBarMargin,canvasHeight/2-3);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.fill();
+	ctx.restore();
+}
+
+function drawHeightIndicator() {
+	//Draw speed indicator
+	var ctx = document.getElementById('speed').getContext('2d');
+	ctx.save();
+	ctx.strokeStyle="black";
+	ctx.fillStyle="black";
+	ctx.beginPath();
+	ctx.moveTo(canvasWidth-altBarWidth-altBarRightMargin,canvasHeight/2-3);
+	ctx.lineTo(canvasWidth-altBarWidth-altBarRightMargin-speedIndicatorWidth,canvasHeight/2-8);
+	ctx.lineTo(canvasWidth-altBarWidth-altBarRightMargin-speedIndicatorWidth,canvasHeight/2);
+	ctx.lineTo(canvasWidth-altBarWidth-altBarRightMargin,canvasHeight/2-3);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.fill();
+	ctx.restore();
+}
+
+function arc(ctx, x, y, r, startAngle, finishAngle) {
+	ctx.beginPath();
+	ctx.arc(x, y, r, startAngle, finishAngle);
+	ctx.stroke();
+}
+
+function drawSight() {
+	var ctx = document.getElementById('sight').getContext('2d');
+	ctx.save();
+	//Clip everything what's outside the circle
+    ctx.beginPath();
+    ctx.arc(canvasWidth/2,canvasHeight/2,sightRadius+1,0,2*Math.PI, true);
+    ctx.clip();
+	//Draw big outer circle
+	ctx.strokeStyle="black";
+	arc(ctx, canvasWidth/2,canvasHeight/2,sightRadius,0,2*Math.PI);
+	ctx.lineWidth=3;
+	//Draw smaller inner circle
+	arc(ctx, canvasWidth/2,canvasHeight/2,sightCenterRadius,0,2*Math.PI);
+	//Draw point
+	arc(ctx, canvasWidth/2,canvasHeight/2,sightCenterCenterRadius,0,2*Math.PI);
+	//ctx.restore();
+	
+	ctx.restore();
+}
+
+function drawAltitude() {
+  var ctx = document.getElementById('altitude').getContext('2d');
+  ctx.save();
+  ctx.rect(canvasWidth-altBarWidth-altBarRightMargin,altBarTopMargin,altBarWidth,altBarHeight);
+  ctx.fill();
+  ctx.restore();
+}
+
+</script>
+</head>
+
+<body onload="init();">
+<h1>PFD</h1>
+<div style="position:relative"> 
+<canvas id="pfd" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+<canvas id="sight" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+<canvas id="speed" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+<canvas id="altitude" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+
+</div>
+
+</body>
+</html>

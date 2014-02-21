@@ -1,6 +1,9 @@
 package com.example.testvaadin.data;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
@@ -12,6 +15,9 @@ import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 public class DatabaseHelper {
 	JDBCConnectionPool pool = null;
 	private SQLContainer simulatorContainer = null;
+	private final String DB_URL = "jdbc:postgresql://localhost/postgres";
+	private String DB_USER = "postgres";
+	private String DB_PASS = "password";
 
 	/*
 	 * Returns an SQLContainer with the currently running simulation on
@@ -41,7 +47,7 @@ public class DatabaseHelper {
 		FreeformQuery query = new FreeformQuery(
 				"SELECT * FROM SimulationDevicesState WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
 						+ simulatorId
-						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1)",
+						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) ORDER BY \"Timestamp\" DESC LIMIT 1",
 				Arrays.asList("DevStateId"), pool);
 		SQLContainer simulationDevicesState = null;
 		try {
@@ -50,6 +56,29 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 		return simulationDevicesState;
+	}
+
+	public void removeSimulatorWithId(String simulatorId) {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	public DatabaseHelper() {

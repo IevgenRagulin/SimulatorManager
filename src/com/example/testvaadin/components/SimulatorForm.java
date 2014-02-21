@@ -8,6 +8,7 @@ import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.ui.TextField;
 
 public class SimulatorForm extends FieldGroup {
@@ -66,6 +67,7 @@ public class SimulatorForm extends FieldGroup {
 
 	public void removeSimulator() {
 		Object simulatorId = app.getSimulatorList().getValue();
+		System.out.println(((RowId) simulatorId).toString());
 		app.getSimulatorList().removeItem(simulatorId);
 		commit();
 	}
