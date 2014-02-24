@@ -1,6 +1,43 @@
 <html>
 
 <head>
+
+</head>
+
+<body onload="init();">
+<h1>PFD</h1>
+<div style="position:relative"> 
+<canvas id="pfd" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+<canvas id="sight" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+<canvas id="speed" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+<canvas id="altitude" width="300" height="300" style="border:1px solid #000000; position: absolute;">
+Your browser doesn't support canvas.
+</canvas>
+</div>
+<div style="margin-top: 350px">
+<label id="speedT">Current speed:</label>
+<label id="speedV"></label><br/>
+<label id="altitudeT">Current altitude:</label>
+<label id="altitudeV"></label><br/>
+<label id="rollT">Roll:</label>
+<label id="rollV"></label><br/>
+<label id="pitchT">Pitch:</label>
+<label id="pitchV"></label><br/>
+<button id="addPitch">+10 pitch</button>
+<button id="minusPitch">-10 pitch</button>
+<button id="addRoll">+5 roll</button>
+<button id="minusRoll">-5 roll</button>
+<button id="addAltitude">+50 altitude</button>
+<button id="minusAltitude">-50 altitude</button>
+<button id="addSpeed">+50 speed</button>
+<button id="minusSpeed">-50 speed</button>
+</div>
 <script type="application/javascript">
 var sightRadius = 90;
 var sightCenterRadius = 10;
@@ -26,17 +63,56 @@ var currentAltitude = 0;
 var currentPitch = 0;
 var currentRoll = 0;
 
-var horizontWidth = 2000; 
+var currentlyChangingRoll=false;
+var currentlyChanginPitch=false;
+
+var horizontWidth = 1000; 
 function init(){
-  //clock();
+  document.getElementById("addPitch").addEventListener("click", function() { 
+		var newPitch = (currentPitch+10)%360;
+		if (!((currentlyChangingRoll)||(currentlyChangingPitch))) {
+			drawArtificialHorizon(currentRoll, newPitch, 0);
+		}
+	});
+  
+  document.getElementById("minusPitch").addEventListener("click", function() {
+		var newPitch = (currentPitch-10)%360;
+		if (newPitch<0) {
+			newPitch = 360 + newPitch;
+		}
+		if (!((currentlyChangingRoll)||(currentlyChangingPitch))) {
+			drawArtificialHorizon(currentRoll, newPitch, 0);
+		}
+	});
+  
+  document.getElementById("addRoll").addEventListener("click", function() { 
+		if (!((currentlyChangingRoll)||(currentlyChangingPitch))) {
+			drawArtificialHorizon(currentRoll+5, currentPitch, 0);
+		}
+  }
+  );
+  
+  document.getElementById("minusRoll").addEventListener("click", function() {
+		if (!((currentlyChangingRoll)||(currentlyChangingPitch))) {
+			drawArtificialHorizon(currentRoll-5, currentPitch, 0);
+		}
+  });
+  
+  document.getElementById("addSpeed").addEventListener("click", function() { setSpeed(currentSpeed+50);});
+  document.getElementById("minusSpeed").addEventListener("click", function() { setSpeed(currentSpeed-50);});
+  
+  document.getElementById("addAltitude").addEventListener("click", function() { setAltitude(currentAltitude+50);});
+  document.getElementById("minusAltitude").addEventListener("click", function() { setAltitude(currentAltitude-50);});
+  //button
+  //button.addEventListener("click", function() { drawArtificialHorizon(currentRoll, currentPitch+5, 0);});
   
   drawSpeedIndicator();
   drawHeightIndicator();
   drawSight();
   drawArtificialHorizon(10,10,0);
   
-  setSpeed(10); 
-  setAltitude(0);  
+  setSpeed(100); 
+  setAltitude(200);  
   //setInterval(function(){setSpeed(40);},17);
   //setInterval(clock,5);
 }
@@ -115,21 +191,26 @@ function rotatePfdByRollDegrees(ctx, roll) {
 
 
 function drawArtificialHorizon(roll, pitch, yaw) {
+	console.log("draw artificial horizon called");
 	var ctx = document.getElementById('pfd').getContext('2d');
 	clearRect(ctx,-1000,-1000,3000,3000);
-	console.log("rect cleared");
 	var difPitch = pitch - currentPitch;
 	var difRoll = roll - currentRoll;
+	console.log("dif pitch"+difPitch);
+	
 	//Check if we should continue animating
 	//||(shouldWeRoll(roll))
-	console.log(difRoll);
 	if ((difPitch!=0)||shouldWeRoll(roll)) {
+		currentlyChangingRoll = true;
+		currentlyChangingPitch = true;
 		difPitch = 1*calculateDirection(pitch);
-		difRoll = 0.02*difRoll;
+		difRoll = 0.05*difRoll;
 		requestAnimationFrame(function(){drawArtificialHorizon(roll, pitch, yaw);});
+	} else {
+		currentlyChangingRoll = false;
+		currentlyChangingPitch = false;
 	}
-	
-	difPitch = currentPitch+difPitch;
+	difPitch = (currentPitch+difPitch)%360;
 	difRoll = currentRoll+difRoll;
 	drawLineNumbersForSight(difPitch);
 	//Transform negative numbers to 0-359 coordinates
@@ -167,19 +248,21 @@ function drawArtificialHorizon(roll, pitch, yaw) {
 			var skyBottomY = grOnTopY + grOnTop;
 			var grBottomY = skyBottomY + skyBottom;
 		}
+	} else {
 	}
 
 	rotatePfdByRollDegrees(ctx, difRoll);
 	//Translate by 
 	ctx.translate(0,-150*5);
-	fillSky(ctx, -1000, skyOnTopY, horizontWidth, skyOnTop);
-	fillGround(ctx, -1000, grOnTopY, horizontWidth, grOnTop);
-	fillSky(ctx, -1000, skyBottomY, horizontWidth, skyBottom);
-	fillGround(ctx, -1000, grBottomY, horizontWidth, grBottom);
+	fillSky(ctx, -500, skyOnTopY, horizontWidth, skyOnTop);
+	fillGround(ctx, -500, grOnTopY, horizontWidth, grOnTop);
+	fillSky(ctx, -500, skyBottomY, horizontWidth, skyBottom);
+	fillGround(ctx, -500, grBottomY, horizontWidth, grBottom);
 
 	//rotatePfdByRollDegrees(ctx, -roll);
 	ctx.restore();
-	
+	document.getElementById("rollV").innerHTML  = currentRoll;
+	document.getElementById("pitchV").innerHTML  = currentPitch;
 	//Draw lines and numbers for sight
 }
 
@@ -230,12 +313,14 @@ function drawLineNumbersForSight(difPitch) {
 }
 
 function setSpeed(speed) {
-	requestAnimationFrame(function(){setSpeed(speed);});
+	console.log("set speed called");
 	var ctx = document.getElementById('speed').getContext('2d');
 	var difSpeed = speed - currentSpeed;
 	if (difSpeed > 0) {
+		requestAnimationFrame(function(){setSpeed(speed);});
 		difSpeed = 2;
 	} else if (difSpeed < 0) {
+		requestAnimationFrame(function(){setSpeed(speed);});
 		difSpeed = -2;
 	} else {
 		difSpeed=0;
@@ -256,7 +341,7 @@ function setSpeed(speed) {
 	ctx.lineWidth = 2;
 	ctx.strokeStyle = "white";
 	ctx.fillStyle = "white";
-	ctx.font = '10pt Calibri';
+	ctx.font = '8pt Calibri';
 
 	//draw lines with numbers
 	for (i=0;i<1000;i+=20) {
@@ -269,15 +354,20 @@ function setSpeed(speed) {
 	}
 	ctx.stroke();
 	ctx.restore();
+	document.getElementById("speedV").innerHTML  = currentSpeed;
+	
 }
 
 function setAltitude(altitude) {
-	requestAnimationFrame(function(){setAltitude(altitude);});
+	console.log("set alt called");
+	
 	var ctx = document.getElementById('altitude').getContext('2d');
 	var difAltitude = altitude - currentAltitude;
 	if (difAltitude > 0) {
+		requestAnimationFrame(function(){setAltitude(altitude);});
 		difAltitude = 2;
 	} else if (difAltitude < 0) {
+		requestAnimationFrame(function(){setAltitude(altitude);});
 		difAltitude = -2;
 	} else {
 		difAltitude=0;
@@ -298,20 +388,20 @@ function setAltitude(altitude) {
 	ctx.lineWidth = 2;
 	ctx.strokeStyle = "white";
 	ctx.fillStyle = "white";
-	ctx.font = '10pt Calibri';
+	ctx.font = '8pt Calibri';
 
 	//draw lines with numbers
-	for (i=0;i<1000;i+=20) {
-	
+	for (i=0;i<10000;i+=20) {
 		ctx.moveTo(0,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2);
 		ctx.lineTo(10,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2);
-		ctx.fillText(i, 15, - i*2 - altBarHeight/2 + difAltitude * 2);
+		ctx.fillText(i, 10, - i*2 - altBarHeight/2 + difAltitude * 2);
 		//draw lines in between the numbers
 		ctx.moveTo(0,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2-20);
 		ctx.lineTo(5,-i * 2 - 3 - altBarHeight/2 + difAltitude * 2-20);
 	}
 	ctx.stroke();
 	ctx.restore();
+	document.getElementById("altitudeV").innerHTML  = currentAltitude;
 }
 
 function drawSpeedIndicator() {
@@ -369,8 +459,6 @@ function drawSight() {
 	arc(ctx, canvasWidth/2,canvasHeight/2,sightCenterRadius,0,2*Math.PI);
 	//Draw point
 	arc(ctx, canvasWidth/2,canvasHeight/2,sightCenterCenterRadius,0,2*Math.PI);
-	//ctx.restore();
-	
 	ctx.restore();
 }
 
@@ -383,25 +471,5 @@ function drawAltitude() {
 }
 
 </script>
-</head>
-
-<body onload="init();">
-<h1>PFD</h1>
-<div style="position:relative"> 
-<canvas id="pfd" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
-</canvas>
-<canvas id="sight" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
-</canvas>
-<canvas id="speed" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
-</canvas>
-<canvas id="altitude" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
-</canvas>
-
-</div>
-
 </body>
 </html>
