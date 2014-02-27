@@ -6,6 +6,7 @@ import com.example.testvaadin.components.InfoLabel;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.javascriptcomponents.PrimaryFlightDisplay;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Item;
@@ -46,6 +47,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	private SimulationStateFieldGroup simulatorInfo;
 	private SimulationStateFieldGroup simulationInfo;
 	private SimulationStateFieldGroup simulationDevicesState;
+	private PrimaryFlightDisplay primaryFlightDisplay;
 	private SelectSimulatorCombo selectSimulator;
 
 	public SelectSimulatorCombo getSelectSimulator() {
@@ -70,6 +72,10 @@ public class RunningSimulationsView extends BasicView implements View {
 		return simulationDevicesState;
 	}
 
+	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
+		return primaryFlightDisplay;
+	}
+
 	public FormLayout getSimulatorInfoLayout() {
 		return simulatorInfoLayout;
 	}
@@ -92,6 +98,14 @@ public class RunningSimulationsView extends BasicView implements View {
 		initLayout();
 		setClickListeners();
 		initPageRefresher();
+		initPrimaryFlightDisplay();
+
+	}
+
+	private void initPrimaryFlightDisplay() {
+		primaryFlightDisplay = new PrimaryFlightDisplay("index.html", 0, 0, 0,
+				0, 0);
+		addComponent(primaryFlightDisplay);
 	}
 
 	private void initButtonToMainMenu() {
@@ -162,6 +176,8 @@ public class RunningSimulationsView extends BasicView implements View {
 		setSimulatorInfoData(rowId);
 		setSimulationInfoData(getSimulatorIdByRowId(rowId));
 		setSimulationDevicesStateInfo(getSimulatorIdByRowId(rowId));
+		setPrimaryFlightDisplayInfo(getSimulatorIdByRowId(rowId));
+
 	}
 
 	private void setSimulatorInfoData(RowId rowId) {
@@ -201,6 +217,19 @@ public class RunningSimulationsView extends BasicView implements View {
 			getSimulatorDevicesState().setReadOnly(true);
 		} else {
 			getSimulatorDevicesState().setEnabled(false);
+		}
+	}
+
+	private void setPrimaryFlightDisplayInfo(Property<?> property) {
+		final SQLContainer simulationPFDContainer = getDBHelp()
+				.getSimulationPFDBySimulatorId(property.getValue().toString());
+		if ((simulationPFDContainer != null)
+				&& (simulationPFDContainer.size() != 0)) {
+			final RowId id = (RowId) simulationPFDContainer.getIdByIndex(0);
+			Item item = simulationPFDContainer.getItem(id);
+
+			primaryFlightDisplay.updateIndividualPFDValues(item);
+		} else {
 		}
 	}
 
