@@ -18,7 +18,7 @@ var altBarTopMargin = 0;
 
 var currentSpeed = 0;
 var currentAltitude = 0;
-var currentPitch = 0;
+var currentPitch = 80;
 var currentRoll = 0;
 var currentYaw = 0;
 
@@ -27,36 +27,30 @@ var currentlyChangingPitch = false;
 var currentlyChangingAlt = false;
 var currentlyChangingSpeed = false;
 
-var horizontWidth = 300;
+var horizontWidth = 500;
 
 var isItFirstLoad = true;
 
-com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
+var currentlyRotatingHorizont = false;
+var horizontHasBeenRotated = false;
+
+function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay (){
 	var e = this.getElement();
 
 	this.onStateChange = function() {
 		console.log("PFD STATE CHANGED");
-		if (isItFirstLoad) {
+		if (window.isItFirstLoad) {
+			console.log("INIT HTML AND EVERYTHING");
+			initHtml();
 			init();
-			ifItFirstLoad = false;
+			window.isItFirstLoad = false;
 		}
 		;
 		update(this.getState().speed, this.getState().altitude,
 				this.getState().roll, this.getState().pitch,
 				this.getState().yaw);
 	};
-
-	function update(speed, altitude, roll, pitch, yaw) {
-		console.log("NEW ROLL" + roll);
-
-		//setPitch(pitch);
-		if (!currentlyChangingRoll) {
-			setRoll(roll);
-		}
-		setSpeed(speed);
-		setAltitude(altitude);
-	}
-
+	
 	function initHtml() {
 		e.innerHTML = "<h1>PFD</h1>"
 				+ "<div style='position:relative; margin-left: 40px;'>"
@@ -90,6 +84,29 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 				+ "<button id='addSpeed'>+50 speed</button>"
 				+ "<button id='minusSpeed'>-50 speed</button>" + "</div>";
 	}
+}
+
+	function update(speed, altitude, roll, pitch, yaw) {
+		console.log("NEW ROLL" + roll);
+		console.log("curent roll"+window.currentRoll);
+		if (!window.currentlyChangingPitch) {
+			setPitch(pitch);
+			console.log("PITCH HAS BEEN CHANGED"+pitch);
+		}
+		if (!window.currentlyChangingRoll) {
+			var ctx = document.getElementById('pfd').getContext('2d');
+			//rotatePfdByRollDegrees(ctx, currentRoll);
+			setRoll(roll);
+		}
+		if (!window.currentlyChangingSpeed) {
+			setSpeed(speed);
+		}
+		if (!window.currentlyChangingAltitude) {
+			setAltitude(altitude);
+		}
+	}
+
+	
 	function setClickListeners() {
 		setAddPitchClickListener();
 		setMinusPitchClickListener();
@@ -102,7 +119,6 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	}
 
 	function init() {
-		initHtml();
 		drawSpeedIndicator();
 		drawHeightIndicator();
 		drawSight();
@@ -112,8 +128,8 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function setAddPitchClickListener() {
 		document.getElementById('addPitch').addEventListener('click',
 				function() {
-					var newPitch = (currentPitch + 10) % 360;
-					if (!currentlyChangingPitch) {
+					var newPitch = (window.currentPitch + 10) % 360;
+					if (!window.currentlyChangingPitch) {
 						setPitch(newPitch);
 					}
 				});
@@ -122,11 +138,11 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function setMinusPitchClickListener() {
 		document.getElementById('minusPitch').addEventListener('click',
 				function() {
-					var newPitch = (currentPitch - 10) % 360;
+					var newPitch = (window.currentPitch - 10) % 360;
 					if (newPitch < 0) {
 						newPitch = 360 + newPitch;
 					}
-					if (!currentlyChangingPitch) {
+					if (!window.currentlyChangingPitch) {
 						setPitch(newPitch);
 					}
 				});
@@ -135,9 +151,9 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function setAddRollClickListener() {
 		document.getElementById('addRoll').addEventListener('click',
 				function() {
-					console.log(currentlyChangingRoll);
-					if (!currentlyChangingRoll) {
-						setRoll(currentRoll + 60);
+					console.log(window.currentlyChangingRoll);
+					if (!window.currentlyChangingRoll) {
+						setRoll(window.currentRoll + 60);
 					}
 				});
 	}
@@ -145,8 +161,9 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function setMinusRollClickListener() {
 		document.getElementById('minusRoll').addEventListener('click',
 				function() {
-					if (!currentlyChangingRoll) {
-						setRoll(currentRoll - 60);
+					if (!window.currentlyChangingRoll) {
+						console.log("CURRENT ROLL IN ANON FUNCTION"+window.currentRoll);
+						setRoll(window.currentRoll - 60);
 					}
 				});
 	}
@@ -155,8 +172,8 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 		document.getElementById('addAltitude').addEventListener('click',
 				function() {
 					console.log("TRYING TO PLUS ALTITUDE");
-					if (!currentlyChangingAlt) {
-						setAltitude(currentAltitude + 50);
+					if (!window.currentlyChangingAlt) {
+						setAltitude(window.currentAltitude + 50);
 					}
 				});
 	}
@@ -165,8 +182,8 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 		document.getElementById('minusAltitude').addEventListener('click',
 				function() {
 					console.log("TRYING TO MINUES ALTITUDE");
-					if (!currentlyChangingAlt) {
-						setAltitude(currentAltitude - 50);
+					if (!window.currentlyChangingAlt) {
+						setAltitude(window.currentAltitude - 50);
 					}
 				});
 	}
@@ -174,8 +191,8 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function setAddSpeedClickListener() {
 		document.getElementById('addSpeed').addEventListener('click',
 				function() {
-					if (!currentlyChangingSpeed) {
-						setSpeed(currentSpeed + 50);
+					if (!window.currentlyChangingSpeed) {
+						setSpeed(window.currentSpeed + 50);
 					}
 				});
 	}
@@ -183,8 +200,8 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function setMinusSpeedClickListener() {
 		document.getElementById('minusSpeed').addEventListener('click',
 				function() {
-					if (!currentlyChangingSpeed) {
-						setSpeed(currentSpeed - 50);
+					if (!window.currentlyChangingSpeed) {
+						setSpeed(window.currentSpeed - 50);
 					}
 				});
 	}
@@ -211,17 +228,13 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	}
 
 	function fillSky(ctx, x, y, w, h) {
-		ctx.save();
 		ctx.fillStyle = '0080ff';
 		fillRect(ctx, x, y, w, h);
-		ctx.restore();
 	}
 
 	function fillGround(ctx, x, y, w, h) {
-		ctx.save();
 		ctx.fillStyle = '804000';
 		fillRect(ctx, x, y, w, h);
-		ctx.restore();
 	}
 
 	function calculateDirection(newValue, currentValue) {
@@ -240,78 +253,83 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	}
 
 	function shouldWeChangePitch(difPitch) {
-		console.log("SHOULD WE CHANGEPITCH" + difPitch);
-		return difPitch != 0;
+		return ((difPitch > 0.3)||(difPitch < -0.3));
 	}
 
 	function setPitch(pitch) {
-		var ctx = document.getElementById('pfd').getContext('2d');
-		console.log("set pitch called");
 		// Check if we should continue animating pitch
-		var difPitch = pitch - currentPitch;
+		var difPitch = pitch - window.currentPitch;
 		if (shouldWeChangePitch(difPitch)) {
-			currentlyChangingPitch = true;
-			difPitch = 1 * calculateDirection(pitch, currentPitch);
 			requestAnimationFrame(function() {
 				setPitch(pitch);
 			});
+			difPitch = 0.3 * calculateDirection(pitch, window.currentPitch);
+			window.currentlyChangingPitch = true;
 		} else {
-			currentlyChangingPitch = false;
+			window.currentlyChangingPitch = false;
 		}
-		difPitch = (currentPitch + difPitch) % 360;
-		// Draw lines and numbers for sight
-		drawLineNumbersForSight(difPitch);
-		// Transform negative numbers to 0-359 coordinates
+		var ctx = document.getElementById('pfd').getContext('2d');
+		var newPitch = (window.currentPitch + difPitch) % 360;
 
-		if (difPitch < 0) {
-			difPitch = 360 + difPitch;
+		// Transform negative numbers to 0-359 coordinates
+		if (newPitch < 0) {
+			newPitch = 360 + newPitch;
 		}
-		currentPitch = difPitch;
-		drawArtificialHorizon(ctx, currentRoll, currentPitch, currentYaw);
-		document.getElementById('pitchV').innerHTML = currentPitch;
+		
+		
+		// Draw lines and numbers for sight
+		drawLineNumbersForSight(newPitch);
+		
+		//ctx.save();
+		drawArtificialHorizon(ctx, window.currentRoll, newPitch, window.currentYaw);
+		window.currentPitch = newPitch;
+		//ctx.restore();
+		document.getElementById('pitchV').innerHTML = window.currentPitch;
+	}
+	
+	function setRoll(roll) {
+		var difRoll = roll - window.currentRoll;
+		// Check if we should continue animating roll
+		var ctx = document.getElementById('pfd').getContext('2d');
+		if (shouldWeRoll(difRoll)) {
+			requestAnimationFrame(function() {
+				setRoll(roll);
+			});
+			difRoll = 0.5 * calculateDirection(roll, window.currentRoll);
+			window.currentlyChangingRoll = true;
+		} else {
+			window.currentlyChangingRoll = false;
+		}
+		
+		
+		rotatePfdByRollDegrees(ctx, difRoll);
+		difRoll = window.currentRoll + difRoll;
+		window.currentRoll = difRoll;
+		
+		//ctx.save();
+		drawArtificialHorizon(ctx, window.currentRoll, window.currentPitch, window.currentYaw);
+		//ctx.restore();
+		document.getElementById('rollV').innerHTML = window.currentRoll;
 	}
 
 	function shouldWeRoll(difRoll) {
 		//console.log("SHOULD WE CHANGEROLL. Diff roll: "+difRoll+" Current roll: "+currentRoll);
 		return ((difRoll > 0.2) || (difRoll < -0.2));
 	}
+	
+	
 
-	function setRoll(roll) {
-		var ctx = document.getElementById('pfd').getContext('2d');
-		var difRoll = roll - currentRoll;
-		if (shouldWeRoll(difRoll)) {
-			currentlyChangingRoll = true;
-			difRoll = 0.5 * calculateDirection(roll, currentRoll);
-			requestAnimationFrame(function() {
-				setRoll(roll);
-			});
-		} else {
-			console.log("no, we shouldn't change roll");
-			currentlyChangingRoll = false;
-		}
-
-		rotatePfdByRollDegrees(ctx, difRoll);
-		ctx.save();
-		difRoll = currentRoll + difRoll;
-		currentRoll = difRoll;
-		//console.log("NEW CURRENT ROLL after rotation"+currentRoll);
-
-		drawArtificialHorizon(ctx, currentRoll, currentPitch, currentYaw);
-		ctx.restore();
-		document.getElementById('rollV').innerHTML = currentRoll;
-	}
 
 	function rotatePfdByRollDegrees(ctx, roll) {
-		ctx.translate(canvasHeight / 2, canvasWidth / 2);
+		ctx.translate(window.canvasHeight / 2, window.window.canvasWidth / 2);
 		ctx.rotate(roll * Math.PI / 180);
-		ctx.translate(-canvasHeight / 2, -canvasWidth / 2);
+		ctx.translate(-window.canvasHeight / 2, -window.window.canvasWidth / 2);
 	}
 
 	function drawArtificialHorizon(ctx, roll, pitch, yaw) {
 		//console.log('draw artificial horizon called');
-		clearRect(ctx, 0, 0, canvasWidth, canvasHeight);
+		clearRect(ctx, 0, 0, window.window.canvasWidth, window.canvasHeight);
 		drawSkyAndGround(ctx, pitch);
-
 	}
 
 	function drawSkyAndGround(ctx, newPitch) {
@@ -342,116 +360,133 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 
 			// Translate by
 			ctx.translate(0, -150 * 5);
-			var skyGroundLeftX = -(horizontWidth - canvasWidth) / 2;
-			fillSky(ctx, skyGroundLeftX, skyOnTopY, horizontWidth, skyOnTop);
-			fillGround(ctx, skyGroundLeftX, grOnTopY, horizontWidth, grOnTop);
-			fillSky(ctx, skyGroundLeftX, skyBottomY, horizontWidth, skyBottom);
-			fillGround(ctx, skyGroundLeftX, grBottomY, horizontWidth, grBottom);
+			var skyGroundLeftX = -(window.horizontWidth - window.window.canvasWidth) / 2;
+			fillSky(ctx, skyGroundLeftX, skyOnTopY, window.horizontWidth, skyOnTop);
+			fillGround(ctx, skyGroundLeftX, grOnTopY, window.horizontWidth, grOnTop);
+			fillSky(ctx, skyGroundLeftX, skyBottomY, window.horizontWidth, skyBottom);
+			fillGround(ctx, skyGroundLeftX, grBottomY, window.horizontWidth, grBottom);
+			ctx.translate(0, 150*5);
 		} else {
 			console.error("Unexpected pitch value!");
 		}
 	}
 
-	function cropLinesNumberOutsideSight() {
-		var ctx = document.getElementById('sight').getContext('2d');
-		ctx.beginPath();
-		ctx.arc(canvasWidth / 2, canvasHeight / 2, sightRadius + 1, 0,
+	function cropLinesNumberOutsideSight(ctxSight) {
+		ctxSight.beginPath();
+		ctxSight.arc(window.window.canvasWidth / 2, window.canvasHeight / 2, window.sightRadius + 1, 0,
 				2 * Math.PI, true);
-		ctx.clip();
+		ctxSight.clip();
 	}
 
-	function drawLineNumberHelpFunc(startInt, endInt, difPitch, direction) {
-		var ctx = document.getElementById('sight').getContext('2d');
+	function drawLineNumberHelpFunc(ctxSight, startInt, endInt, difPitch, direction) {
 		for (var i = startInt; i <= endInt; i = i + 2.5) {
 			if (((i % 5) == 0) && (i != startInt)) {
-				ctx.fillText(i, canvasWidth / 2 - 45, canvasHeight / 2 + i * 5
+				ctxSight.fillText(i, window.window.canvasWidth / 2 - 45, window.canvasHeight / 2 + i * 5
 						* direction + 3 + difPitch * 5);
-				ctx.moveTo(canvasWidth / 2 - 30, canvasHeight / 2 + i * 5
+				ctxSight.moveTo(window.window.canvasWidth / 2 - 30, window.canvasHeight / 2 + i * 5
 						* direction + difPitch * 5);
-				ctx.lineTo(canvasWidth / 2 + 30, canvasHeight / 2 + i * 5
+				ctxSight.lineTo(window.window.canvasWidth / 2 + 30, window.canvasHeight / 2 + i * 5
 						* direction + difPitch * 5);
 			} else if (((i % (2.5)) == 0) && (i != startInt)) {
-				ctx.moveTo(canvasWidth / 2 - 15, canvasHeight / 2 + i * 5
+				ctxSight.moveTo(window.window.canvasWidth / 2 - 15, window.canvasHeight / 2 + i * 5
 						* direction + difPitch * 5);
-				ctx.lineTo(canvasWidth / 2 + 15, canvasHeight / 2 + i * 5
+				ctxSight.lineTo(window.window.canvasWidth / 2 + 15, window.canvasHeight / 2 + i * 5
 						* direction + difPitch * 5);
 			}
 		}
 	}
+	
+	function rotateSightFor180DigreesArountPoint(ctxSight, xRotationPoint, yRotationPoint) {
+		window.currentlyRotatingHorizont = true;
+		window.horizontHasBeenRotated = true;
+		ctxSight.translate(x, y);
+		ctxSight.rotate(roll * Math.PI / 180);
+		//ctxSight.translate(-x, -window.window.canvasWidth / 2);
+	}
 
 	function drawLineNumbersForSight(difPitch) {
-		var ctx = document.getElementById('sight').getContext('2d');
-		// Transform 180-360 values to -180-0
+		var ctxSight = document.getElementById('sight').getContext('2d');
+		// Transform 180-360 values to (-180;-0)
 		if (difPitch > 180) {
 			difPitch = difPitch - 360;
 		}
-		cropLinesNumberOutsideSight();
-		ctx.clearRect(0, 0, canvasHeight, canvasWidth);
+		if ((difPitch>90)&&(!window.horizontHasBeenRotated)&&(!window.currentlyRotatingHorizont)) {
+			console.log ("SHOULD ROTATE"+difPitch);
+			var x = window.canvasWidth/2;
+			var y = 90*5;
+			rotateSightFor180DigreesArountPoint(ctxSight, x, y);
+		} else {
+			console.log("SHOULDNT ROTATE"+difPitch);
+		}
+		
+		cropLinesNumberOutsideSight(ctxSight);
+		ctxSight.clearRect(0, 0, window.canvasHeight, window.window.canvasWidth);
 		drawSight();
-		ctx.save();
-		ctx.beginPath();
-		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'white';
+		ctxSight.save();
+		ctxSight.beginPath();
+		ctxSight.strokeStyle = 'white';
+		ctxSight.fillStyle = 'white';
 		// draw numbers for degrees 0-180
-		drawLineNumberHelpFunc(0, 180, difPitch, -1);
+		console.log("DRAW NUMBER FOR SIGHT");
+		drawLineNumberHelpFunc(ctxSight, 0, 90, difPitch, -1);
 		// draw numbers for degrees 180-360
-		drawLineNumberHelpFunc(180, 360, difPitch, -1);
+		//drawLineNumberHelpFunc(ctxSight, 180, 360, difPitch, -1);
 		// draw numbers for degrees 0 - (-180)
-		drawLineNumberHelpFunc(0, 180, difPitch, 1);
+		drawLineNumberHelpFunc(ctxSight, 0, 90, difPitch, 1);
 		// draw numbers for degrees -180-(-360)
-		drawLineNumberHelpFunc(180, 360, difPitch, 1);
-		ctx.stroke();
-		ctx.restore();
+		//drawLineNumberHelpFunc(ctxSight, 180, 360, difPitch, 1);
+		ctxSight.stroke();
+		ctxSight.restore();
 	}
 
 	function setSpeed(speed) {
 		console.log('set speed called');
-		var ctx = document.getElementById('speed').getContext('2d');
-		var difSpeed = speed - currentSpeed;
+		var ctxSpeed = document.getElementById('speed').getContext('2d');
+		var difSpeed = speed - window.currentSpeed;
 		var difSpeedStep = calculateAltitudeSpeedStep(difSpeed);
 		if (difSpeed > 0) {
-			currentlyChangingSpeed = true;
+			window.currentlyChangingSpeed = true;
 			requestAnimationFrame(function() {
 				setSpeed(speed);
 			});
 		} else if (difSpeed < 0) {
-			currentlyChangingSpeed = true;
+			window.currentlyChangingSpeed = true;
 			requestAnimationFrame(function() {
 				setSpeed(speed);
 			});
 		} else {
-			currentlyChangingSpeed = false;
+			window.currentlyChangingSpeed = false;
 		}
-		var newSpeed = currentSpeed + difSpeedStep;
-		currentSpeed = newSpeed;
+		var newSpeed = window.currentSpeed + difSpeedStep;
+		window.currentSpeed = newSpeed;
 
-		clearRect(ctx, leftSpeedBarMargin, topSpeedBarMargin, speedBarWidth,
-				speedBarHeight);
-		ctx.save();
-		ctx.fillStyle = 'black';
-		fillRect(ctx, leftSpeedBarMargin, topSpeedBarMargin, speedBarWidth,
-				speedBarHeight);
+		clearRect(ctxSpeed, window.leftSpeedBarMargin, window.topSpeedBarMargin, window.speedBarWidth,
+				window.speedBarHeight);
+		ctxSpeed.save();
+		ctxSpeed.fillStyle = 'black';
+		fillRect(ctxSpeed, window.leftSpeedBarMargin, window.topSpeedBarMargin, window.speedBarWidth,
+				window.speedBarHeight);
 
 		// Speed marks and numbers
-		ctx.translate(leftSpeedBarMargin, topSpeedBarMargin + speedBarHeight);
-		ctx.beginPath();
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'white';
-		ctx.font = '8pt Calibri';
+		ctxSpeed.translate(window.leftSpeedBarMargin, window.topSpeedBarMargin + window.speedBarHeight);
+		ctxSpeed.beginPath();
+		ctxSpeed.lineWidth = 2;
+		ctxSpeed.strokeStyle = 'white';
+		ctxSpeed.fillStyle = 'white';
+		ctxSpeed.font = '8pt Calibri';
 
 		// draw lines with numbers
 		for (var i = 0; i < 1000; i += 20) {
-			ctx.moveTo(20, -i * 2 - 3 - speedBarHeight / 2 + newSpeed * 2);
-			ctx.lineTo(30, -i * 2 - 3 - speedBarHeight / 2 + newSpeed * 2);
-			ctx.fillText(i, 0, -i * 2 - speedBarHeight / 2 + newSpeed * 2);
+			ctxSpeed.moveTo(20, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed * 2);
+			ctxSpeed.lineTo(30, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed * 2);
+			ctxSpeed.fillText(i, 0, -i * 2 - window.speedBarHeight / 2 + newSpeed * 2);
 			// draw lines in between the numbers
-			ctx.moveTo(25, -i * 2 - 3 - speedBarHeight / 2 + newSpeed * 2 - 20);
-			ctx.lineTo(30, -i * 2 - 3 - speedBarHeight / 2 + newSpeed * 2 - 20);
+			ctxSpeed.moveTo(25, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed * 2 - 20);
+			ctxSpeed.lineTo(30, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed * 2 - 20);
 		}
-		ctx.stroke();
-		ctx.restore();
-		document.getElementById('speedV').innerHTML = currentSpeed;
+		ctxSpeed.stroke();
+		ctxSpeed.restore();
+		document.getElementById('speedV').innerHTML = window.currentSpeed;
 
 	}
 
@@ -461,13 +496,13 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 			if (dif > 50) {
 				difAltitudeStep = 10;
 			} else {
-				difAltitudeStep = 2;
+				difAltitudeStep = 1;
 			}
 		} else if (dif < 0) {
 			if (dif < -50) {
 				difAltitudeStep = -10;
 			} else {
-				difAltitudeStep = -2;
+				difAltitudeStep = -1;
 			}
 		} else {
 			difAltitudeStep = 0;
@@ -477,55 +512,56 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 
 	function setAltitude(altitude) {
 		console.log('set alt called');
+		console.log("current alt"+window.currentAltitude+" new alt"+altitude);
 
-		var ctx = document.getElementById('altitude').getContext('2d');
-		var difAltitude = altitude - currentAltitude;
+		var ctxAltitude = document.getElementById('altitude').getContext('2d');
+		var difAltitude = altitude - window.currentAltitude;
 		var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
 		if (difAltitude > 0) {
 			requestAnimationFrame(function() {
-				currentlyChangingAlt = true;
+				window.currentlyChangingAlt = true;
 				setAltitude(altitude);
 			});
 		} else if (difAltitude < 0) {
-			currentlyChangingAlt = true;
+			window.currentlyChangingAlt = true;
 			requestAnimationFrame(function() {
 				setAltitude(altitude);
 			});
 		} else {
-			currentlyChangingAlt = false;
+			window.currentlyChangingAlt = false;
 		}
 
-		newAltitude = currentAltitude + difAltitudeStep;
-		currentAltitude = newAltitude;
+		newAltitude = window.currentAltitude + difAltitudeStep;
+		window.currentAltitude = newAltitude;
 
-		clearRect(ctx, canvasWidth - altBarRightMargin - altBarWidth,
-				altBarTopMargin, altBarWidth, altBarHeight);
-		ctx.save();
-		ctx.fillStyle = 'black';
-		fillRect(ctx, canvasWidth - altBarRightMargin - altBarWidth,
-				altBarTopMargin, altBarWidth, altBarHeight);
+		clearRect(ctxAltitude, window.window.canvasWidth - window.altBarRightMargin - window.altBarWidth,
+				window.altBarTopMargin, window.altBarWidth, window.altBarHeight);
+		ctxAltitude.save();
+		ctxAltitude.fillStyle = 'black';
+		fillRect(ctxAltitude, window.window.canvasWidth - window.altBarRightMargin - window.altBarWidth,
+				window.altBarTopMargin, window.altBarWidth, window.altBarHeight);
 
 		// Speed marks and numbers
-		ctx.translate(canvasWidth - altBarRightMargin - altBarWidth,
-				altBarTopMargin + altBarHeight);
-		ctx.beginPath();
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = 'white';
-		ctx.fillStyle = 'white';
-		ctx.font = '8pt Calibri';
+		ctxAltitude.translate(window.window.canvasWidth - window.altBarRightMargin - window.altBarWidth,
+				window.altBarTopMargin + window.altBarHeight);
+		ctxAltitude.beginPath();
+		ctxAltitude.lineWidth = 2;
+		ctxAltitude.strokeStyle = 'white';
+		ctxAltitude.fillStyle = 'white';
+		ctxAltitude.font = '8pt Calibri';
 
 		// draw lines with numbers
 		for (var i = 0; i < 10000; i += 20) {
-			ctx.moveTo(0, -i * 2 - 3 - altBarHeight / 2 + newAltitude * 2);
-			ctx.lineTo(10, -i * 2 - 3 - altBarHeight / 2 + newAltitude * 2);
-			ctx.fillText(i, 10, -i * 2 - altBarHeight / 2 + newAltitude * 2);
+			ctxAltitude.moveTo(0, -i * 2 - 3 - window.altBarHeight / 2 + newAltitude * 2);
+			ctxAltitude.lineTo(10, -i * 2 - 3 - window.altBarHeight / 2 + newAltitude * 2);
+			ctxAltitude.fillText(i, 10, -i * 2 - window.altBarHeight / 2 + newAltitude * 2);
 			// draw lines in between the numbers
-			ctx.moveTo(0, -i * 2 - 3 - altBarHeight / 2 + newAltitude * 2 - 20);
-			ctx.lineTo(5, -i * 2 - 3 - altBarHeight / 2 + newAltitude * 2 - 20);
+			ctxAltitude.moveTo(0, -i * 2 - 3 - window.altBarHeight / 2 + newAltitude * 2 - 20);
+			ctxAltitude.lineTo(5, -i * 2 - 3 - window.altBarHeight / 2 + newAltitude * 2 - 20);
 		}
-		ctx.stroke();
-		ctx.restore();
-		document.getElementById('altitudeV').innerHTML = currentAltitude;
+		ctxAltitude.stroke();
+		ctxAltitude.restore();
+		document.getElementById('altitudeV').innerHTML = window.currentAltitude;
 	}
 
 	function drawSpeedIndicator() {
@@ -535,12 +571,12 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 		ctx.strokeStyle = 'black';
 		ctx.fillStyle = 'black';
 		ctx.beginPath();
-		ctx.moveTo(speedBarWidth + leftSpeedBarMargin, canvasHeight / 2 - 3);
-		ctx.lineTo(speedBarWidth + leftSpeedBarMargin + speedIndicatorWidth,
-				canvasHeight / 2 - 8);
-		ctx.lineTo(speedBarWidth + leftSpeedBarMargin + speedIndicatorWidth,
-				canvasHeight / 2);
-		ctx.lineTo(speedBarWidth + leftSpeedBarMargin, canvasHeight / 2 - 3);
+		ctx.moveTo(window.speedBarWidth + window.leftSpeedBarMargin, window.canvasHeight / 2 - 3);
+		ctx.lineTo(window.speedBarWidth + window.leftSpeedBarMargin + window.speedIndicatorWidth,
+				window.canvasHeight / 2 - 8);
+		ctx.lineTo(window.speedBarWidth + window.leftSpeedBarMargin + window.speedIndicatorWidth,
+				window.canvasHeight / 2);
+		ctx.lineTo(window.speedBarWidth + window.leftSpeedBarMargin, window.canvasHeight / 2 - 3);
 		ctx.stroke();
 		ctx.fill();
 		ctx.restore();
@@ -553,14 +589,14 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 		ctx.strokeStyle = 'black';
 		ctx.fillStyle = 'black';
 		ctx.beginPath();
-		ctx.moveTo(canvasWidth - altBarWidth - altBarRightMargin,
-				canvasHeight / 2 - 3);
-		ctx.lineTo(canvasWidth - altBarWidth - altBarRightMargin
-				- speedIndicatorWidth, canvasHeight / 2 - 8);
-		ctx.lineTo(canvasWidth - altBarWidth - altBarRightMargin
-				- speedIndicatorWidth, canvasHeight / 2);
-		ctx.lineTo(canvasWidth - altBarWidth - altBarRightMargin,
-				canvasHeight / 2 - 3);
+		ctx.moveTo(window.window.canvasWidth - window.altBarWidth - window.altBarRightMargin,
+				window.canvasHeight / 2 - 3);
+		ctx.lineTo(window.window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+				- window.speedIndicatorWidth, window.canvasHeight / 2 - 8);
+		ctx.lineTo(window.window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+				- window.speedIndicatorWidth, window.canvasHeight / 2);
+		ctx.lineTo(window.window.canvasWidth - window.altBarWidth - window.altBarRightMargin,
+				window.canvasHeight / 2 - 3);
 		ctx.stroke();
 		ctx.fill();
 		ctx.restore();
@@ -578,18 +614,18 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 		ctx.save();
 		// Clip everything what's outside the circle
 		ctx.beginPath();
-		ctx.arc(canvasWidth / 2, canvasHeight / 2, sightRadius + 1, 0,
+		ctx.arc(window.window.canvasWidth / 2, window.canvasHeight / 2, window.sightRadius + 1, 0,
 				2 * Math.PI, true);
 		ctx.clip();
 		// Draw big outer circle
 		ctx.strokeStyle = 'black';
-		arc(ctx, canvasWidth / 2, canvasHeight / 2, sightRadius, 0, 2 * Math.PI);
+		arc(ctx, window.window.canvasWidth / 2, window.canvasHeight / 2, window.sightRadius, 0, 2 * Math.PI);
 		ctx.lineWidth = 3;
 		// Draw smaller inner circle
-		arc(ctx, canvasWidth / 2, canvasHeight / 2, sightCenterRadius, 0,
+		arc(ctx, window.window.canvasWidth / 2, window.canvasHeight / 2, window.sightCenterRadius, 0,
 				2 * Math.PI);
 		// Draw point
-		arc(ctx, canvasWidth / 2, canvasHeight / 2, sightCenterCenterRadius, 0,
+		arc(ctx, window.window.canvasWidth / 2, window.canvasHeight / 2, window.sightCenterCenterRadius, 0,
 				2 * Math.PI);
 		ctx.restore();
 	}
@@ -598,9 +634,8 @@ com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay = function() {
 	function drawAltitude() {
 		var ctx = document.getElementById('altitude').getContext('2d');
 		ctx.save();
-		ctx.rect(canvasWidth - altBarWidth - altBarRightMargin,
-				altBarTopMargin, altBarWidth, altBarHeight);
+		ctx.rect(window.window.canvasWidth - window.altBarWidth - window.altBarRightMargin,
+				window.altBarTopMargin, window.altBarWidth, window.altBarHeight);
 		ctx.fill();
 		ctx.restore();
 	}
-};
