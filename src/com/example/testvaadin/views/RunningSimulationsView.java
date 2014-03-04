@@ -16,6 +16,8 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.tapio.googlemaps.GoogleMap;
+import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
@@ -49,6 +51,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	private SimulationStateFieldGroup simulationDevicesState;
 	private PrimaryFlightDisplay primaryFlightDisplay;
 	private SelectSimulatorCombo selectSimulator;
+	private String apiKey = "AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";
 
 	public SelectSimulatorCombo getSelectSimulator() {
 		return selectSimulator;
@@ -99,12 +102,28 @@ public class RunningSimulationsView extends BasicView implements View {
 		setClickListeners();
 		initPageRefresher();
 		initPrimaryFlightDisplay();
+		initGoogleMaps();
 
+	}
+
+	private void initGoogleMaps() {
+		GoogleMap googleMap = new GoogleMap(new LatLon(60.440963, 22.25122),
+				10.0, apiKey);
+		googleMap.setSizeFull();
+		googleMap.addMarker("DRAGGABLE: Paavo Nurmi Stadion", new LatLon(
+				60.442423, 22.26044), true, "VAADIN/1377279006_stadium.png");
+		googleMap.addMarker("DRAGGABLE: Kakolan vankila", new LatLon(60.44291,
+				22.242415), true, null);
+		googleMap.addMarker("NOT DRAGGABLE: Iso-Heikkilä", new LatLon(
+				60.450403, 22.230399), false, null);
+		googleMap.setMinZoom(4.0);
+		googleMap.setMaxZoom(16.0);
+		addComponent(googleMap);
 	}
 
 	private void initPrimaryFlightDisplay() {
 		primaryFlightDisplay = new PrimaryFlightDisplay("index.html", 0, 0, 0,
-				0, 0);
+				0, 0, 0);
 		addComponent(primaryFlightDisplay);
 	}
 

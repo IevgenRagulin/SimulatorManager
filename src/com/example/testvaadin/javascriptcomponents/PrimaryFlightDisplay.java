@@ -18,15 +18,17 @@ public class PrimaryFlightDisplay extends
 	private PrimaryFlightDisplayStateBean pfdStateBean;
 
 	public PrimaryFlightDisplay(final String xhtml, final int altitude,
-			final int speed, final int roll, final int pitch, final int yaw) {
+			final int speed, final int roll, final int pitch, final int yaw,
+			final int compass) {
 		getState().xhtml = xhtml;
 		getState().altitude = altitude;
 		getState().speed = speed;
 		getState().roll = roll;
 		getState().pitch = pitch;
 		getState().yaw = yaw;
+		getState().compass = compass;
 		pfdStateBean = new PrimaryFlightDisplayStateBean(xhtml, altitude,
-				speed, roll, pitch, yaw);
+				speed, roll, pitch, yaw, compass);
 		// JsLabelState state = getState();
 
 	}
@@ -66,7 +68,16 @@ public class PrimaryFlightDisplay extends
 		setYaw(newYaw);
 		setSpeed(newIAS);// IAS - indicated airspeed
 		setAltitude(newAltitude);
+		setCompass(newCompass);
 
+	}
+
+	private void setCompass(int newCompass) {
+		if (getStateBean().getCompass() != newCompass) {
+			getState().compass = newCompass;
+			getStateBean().setCompass(newCompass);
+		} else {
+		}
 	}
 
 	public void setRoll(final int roll) {

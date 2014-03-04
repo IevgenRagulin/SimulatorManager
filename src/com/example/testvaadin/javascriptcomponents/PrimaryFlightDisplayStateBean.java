@@ -10,9 +10,10 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 	private int roll;
 	private int pitch;
 	private int yaw;
+	private int compass;
 
 	public PrimaryFlightDisplayStateBean(String xhtml, int altitude, int speed,
-			int roll, int pitch, int yaw) {
+			int roll, int pitch, int yaw, int compass) {
 		super();
 		this.xhtml = xhtml;
 		this.altitude = altitude;
@@ -20,6 +21,7 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 		this.roll = roll;
 		this.pitch = pitch;
 		this.yaw = yaw;
+		this.compass = compass;
 	}
 
 	public String getXhtml() {
@@ -68,6 +70,14 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 
 	public void setYaw(int yaw) {
 		this.yaw = yaw;
+	}
+
+	public int getCompass() {
+		return compass;
+	}
+
+	public void setCompass(int compass) {
+		this.compass = compass;
 	}
 
 }
