@@ -150,4 +150,20 @@ public class DatabaseHelper {
 		return simulationPFD;
 	}
 
+	public SQLContainer getSimulationInfoBySimulatorId(String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM SimulationInfo WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
+						+ simulatorId
+						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) ORDER BY \"Timestamp\" DESC LIMIT 1",
+				Arrays.asList("SimulationInfoId"), pool);
+		SQLContainer simulationPFD = null;
+		try {
+			simulationPFD = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationPFD;
+	}
+
 }

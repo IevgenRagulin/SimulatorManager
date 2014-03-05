@@ -20,6 +20,10 @@ public class ColumnNames {
 			"IsSimulationPaused", "SimulationStartedTime",
 			"SimulationEndedTime" };
 
+	protected static final String[] simulationInfoCols = new String[] {
+			"SimulationInfoId", "Simulation_SimulationId", "BrakesOn",
+			"FlapsOn", "Longtitude", "Latitude" };
+
 	protected static final String[] simulationDevicesStateCols = new String[] {
 			"DevStateId", "Simulation_SimulationId", "Elevator", "Eleron",
 			"Rudder", "Throttle", "Flaps", "SpeedBrakes", "Trim", "Timestamp" };
@@ -46,5 +50,9 @@ public class ColumnNames {
 
 	public static String[] getSimulationDevicesStateCols() {
 		return simulationDevicesStateCols;
+	}
+
+	public static String[] getSimulationInfoCols() {
+		return simulationInfoCols;
 	}
 }
