@@ -9,7 +9,6 @@ import com.example.testvaadin.views.RunningSimulationsView;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.ComboBox;
 
 public class SelectSimulatorCombo extends ComboBox {
@@ -58,21 +57,21 @@ public class SelectSimulatorCombo extends ComboBox {
 		// unscheduleUpdates();
 		String value = (String) SelectSimulatorCombo.this.getValue();
 		RowId rowId = simulatorsIdNamesMapping.get(value);
-		Item selectedItem = runningSims.getDBHelp().getSimulatorContainer()
-				.getItem(rowId);
+		Item selectedSimulator = runningSims.getDBHelp()
+				.getSimulatorContainer().getItem(rowId);
 		Property<?> simulatorId = runningSims.getSimulatorIdByRowId(rowId);
 
-		// If no simulator is selected
-		if (selectedItem != null) {
-			final SQLContainer simulationContainer = runningSims.getDBHelp()
+		// If simulator is selected
+		if (selectedSimulator != null) {
+			final Item latestRunningSimulation = runningSims.getDBHelp()
 					.getLatestRunningSimulationOnSimulatorWithId(
 							simulatorId.getValue().toString());
 			// If there are no running simulations on simulator
-			if ((simulationContainer.size() == 0)
-					|| (simulationContainer == null)) {
-				runningSims.setNoSimulationsRunningState(rowId);
+			if (latestRunningSimulation == null) {
+				// runningSims
+				// .setNoSimulationsRunningState(latestRunningSimulation);
 			} else {
-				runningSims.setAllSimulationSimulatorData(rowId);
+				runningSims.setAllSimulationSimulatorData(selectedSimulator);
 			}
 		} else {
 			runningSims.setSimulatorNotSelectedState();

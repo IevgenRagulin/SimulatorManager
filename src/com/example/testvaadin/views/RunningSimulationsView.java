@@ -13,7 +13,6 @@ import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -207,30 +206,43 @@ public class RunningSimulationsView extends BasicView implements View {
 		selectSimulator.handleValueChangeEvent();
 	}
 
-	public void setAllSimulationSimulatorData(RowId rowId) {
-		setSimulatorInfoData(rowId);
-		setSimulationData(getSimulatorIdByRowId(rowId));
-		setSimulationInfoData(getSimulatorIdByRowId(rowId));
-		setSimulationDevicesStateInfo(getSimulatorIdByRowId(rowId));
-		setPrimaryFlightDisplayInfo(getSimulatorIdByRowId(rowId));
+	public void setAllSimulationSimulatorData(Item selectedSimulator) {
+		// Set simulator info data
+		setSimulatorInfoData(selectedSimulator);
+		Property<?> simulatorId = selectedSimulator.getItemProperty(ColumnNames
+				.getSimulatorIdPropName());
+		// Set simulation data
+		Item selectedSimulation = getDBHelp()
+				.getLatestRunningSimulationOnSimulatorWithId(
+						simulatorId.getValue().toString());
+		setSimulationData(selectedSimulation);
+		// Set simulation info data
+		Item selectedSimulationInfo = getDBHelp()
+				.getLatestSimulationInfoBySimulatorId(
+						simulatorId.getValue().toString());
+		setSimulationInfoData(selectedSimulationInfo);
+		// Set simulation devices state
+		Item selectedDevicesState = getDBHelp()
+				.getSimulationDevicesStateBySimulatorId(
+						simulatorId.getValue().toString());
+		setSimulationDevicesStateInfo(selectedDevicesState);
+		// Set PFD info
+		Item selectedPFD = getDBHelp().getSimulationPFDBySimulatorId(
+				simulatorId.getValue().toString());
+		setPrimaryFlightDisplayInfo(selectedPFD);
 
 	}
 
-	private void setSimulatorInfoData(RowId rowId) {
-		Item selectedItem = getDBHelp().getSimulatorContainer().getItem(rowId);
-		getSimulatorInfo().setItemDataSource(selectedItem);
+	private void setSimulatorInfoData(Item selectedSimulator) {
+		getSimulatorInfo().setItemDataSource(selectedSimulator);
 		getSimulatorInfo().setReadOnly(true);
 		getSimulatorInfo().setEnabled(true);
 	}
 
-	private void setSimulationData(final Property<?> property) {
-		final SQLContainer simulationContainer = getDBHelp()
-				.getLatestRunningSimulationOnSimulatorWithId(
-						property.getValue().toString());
+	private void setSimulationData(final Item selectedSimulation) {
 		getErrorLabel().setValue(EMPTY_STRING);
-		if (simulationContainer.size() != 0) {
-			final RowId id = (RowId) simulationContainer.getIdByIndex(0);
-			getSimulation().setItemDataSource(simulationContainer.getItem(id));
+		if (selectedSimulation != null) {
+			getSimulation().setItemDataSource(selectedSimulation);
 			getSimulation().setEnabled(true);
 			getSimulation().setReadOnly(true);
 		} else {
@@ -238,38 +250,23 @@ public class RunningSimulationsView extends BasicView implements View {
 		}
 	}
 
-	private void setSimulationInfoData(Property<?> property) {
-		final SQLContainer simulationInfoContainer = getDBHelp()
-				.getLatestSimulationInfoBySimulatorId(
-						property.getValue().toString());
-		if ((simulationInfoContainer != null)
-				&& (simulationInfoContainer.size() != 0)) {
+	private void setSimulationInfoData(Item selectedSimulationInfo) {
+		if (selectedSimulationInfo != null) {
 			// Set simulation info data
-			final RowId id = (RowId) simulationInfoContainer.getIdByIndex(0);
-			getSimulationInfo().setItemDataSource(
-					simulationInfoContainer.getItem(id));
+			getSimulationInfo().setItemDataSource(selectedSimulationInfo);
 			getSimulationInfo().setEnabled(true);
 			getSimulationInfo().setReadOnly(true);
 			// Add simulation info data to map
-			Item item = simulationInfoContainer.getItem(id);
-			googleMap.addLatestCoordinatesForSimulation(item, property
-					.getValue().toString());
+			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo);
 
 		} else {
 			getSimulationInfo().setEnabled(false);
 		}
 	}
 
-	private void setSimulationDevicesStateInfo(final Property<?> property) {
-		final SQLContainer simulationDevicesStateContainer = getDBHelp()
-				.getSimulationDevicesStateBySimulatorId(
-						property.getValue().toString());
-		if ((simulationDevicesStateContainer != null)
-				&& (simulationDevicesStateContainer.size() != 0)) {
-			final RowId id = (RowId) simulationDevicesStateContainer
-					.getIdByIndex(0);
-			getSimulatorDevicesState().setItemDataSource(
-					simulationDevicesStateContainer.getItem(id));
+	private void setSimulationDevicesStateInfo(Item selectedDevicesState) {
+		if (selectedDevicesState != null) {
+			getSimulatorDevicesState().setItemDataSource(selectedDevicesState);
 			getSimulatorDevicesState().setEnabled(true);
 			getSimulatorDevicesState().setReadOnly(true);
 		} else {
@@ -277,15 +274,9 @@ public class RunningSimulationsView extends BasicView implements View {
 		}
 	}
 
-	private void setPrimaryFlightDisplayInfo(Property<?> property) {
-		final SQLContainer simulationPFDContainer = getDBHelp()
-				.getSimulationPFDBySimulatorId(property.getValue().toString());
-		if ((simulationPFDContainer != null)
-				&& (simulationPFDContainer.size() != 0)) {
-			final RowId id = (RowId) simulationPFDContainer.getIdByIndex(0);
-			Item item = simulationPFDContainer.getItem(id);
-
-			primaryFlightDisplay.updateIndividualPFDValues(item);
+	private void setPrimaryFlightDisplayInfo(Item selectedPfdInfo) {
+		if (selectedPfdInfo != null) {
+			primaryFlightDisplay.updateIndividualPFDValues(selectedPfdInfo);
 		} else {
 		}
 	}
@@ -305,7 +296,9 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	public void setNoSimulationsRunningState(RowId rowId) {
-		setSimulatorInfoData(rowId);
+		Item selectedSimulator = getDBHelp().getSimulatorContainer().getItem(
+				rowId);
+		setSimulatorInfoData(selectedSimulator);
 		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
 		getSimulation().setEnabled(false);
 		getSimulatorDevicesState().setEnabled(false);

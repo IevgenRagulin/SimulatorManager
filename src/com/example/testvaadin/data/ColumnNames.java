@@ -16,6 +16,7 @@ public class ColumnNames {
 			"MaxRPM", "NumberOfEngines" };
 
 	protected static final String SIMULATORID_FOREIGN_KEY = "Simulator_SimulatorId";
+	protected static final String SIMULATIONID_FOREIGN_KEY = "Simulation_SimulationId";
 
 	protected static final String[] simulationCols = new String[] {
 			"SimulationId", SIMULATORID_FOREIGN_KEY, "IsSimulationOn",
@@ -23,11 +24,11 @@ public class ColumnNames {
 			"SimulationEndedTime" };
 
 	protected static final String[] simulationInfoCols = new String[] {
-			"SimulationInfoId", "Simulation_SimulationId", "BrakesOn",
+			"SimulationInfoId", SIMULATIONID_FOREIGN_KEY, "BrakesOn",
 			"FlapsOn", "Longtitude", "Latitude" };
 
 	protected static final String[] simulationDevicesStateCols = new String[] {
-			"DevStateId", "Simulation_SimulationId", "Elevator", "Eleron",
+			"DevStateId", SIMULATIONID_FOREIGN_KEY, "Elevator", "Eleron",
 			"Rudder", "Throttle", "Flaps", "SpeedBrakes", "Trim", "Timestamp" };
 
 	public static String[] getSimulatorMainCols() {
@@ -36,6 +37,10 @@ public class ColumnNames {
 
 	public static String[] getSimulatorCols() {
 		return simulatorCols;
+	}
+
+	public static String getSimulatorIdPropName() {
+		return SIMID;
 	}
 
 	public static String[] getSimulationCols() {
@@ -56,6 +61,10 @@ public class ColumnNames {
 
 	public static String getSimulatorIdForeignKeyPropName() {
 		return SIMULATORID_FOREIGN_KEY;
+	}
+
+	public static String getSimulationIdForeignKeyPropName() {
+		return SIMULATIONID_FOREIGN_KEY;
 	}
 
 	public static String[] getSimulationDevicesStateCols() {

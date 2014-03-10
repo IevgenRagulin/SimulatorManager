@@ -15,7 +15,6 @@ public class SimulatorDataUpdater {
 	public SimulatorDataUpdater() {
 		SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();
 		final Runnable beeper = new Runnable() {
-
 			@Override
 			public void run() {
 				System.out.println("Beep");
@@ -23,6 +22,5 @@ public class SimulatorDataUpdater {
 		};
 		final ScheduledFuture<?> beeperHandle = scheduler.scheduleAtFixedRate(
 				beeper, 0, 1, TimeUnit.SECONDS);
-
 	}
 }

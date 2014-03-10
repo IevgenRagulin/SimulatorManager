@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -86,7 +87,11 @@ public class FlightPathGoogleMap extends GoogleMap {
 		}
 	}
 
-	public void addLatestCoordinatesForSimulation(Item item, String simulatorId) {
+	public void addLatestCoordinatesForSimulation(Item item) {
+		String simulatorId = item
+				.getItemProperty(
+						ColumnNames.getSimulationIdForeignKeyPropName())
+				.getValue().toString();
 		if (!isMapInitializedWithMapHistory) {
 			initMapWithDataForSimulationWithId(simulatorId);
 			isMapInitializedWithMapHistory = true;
