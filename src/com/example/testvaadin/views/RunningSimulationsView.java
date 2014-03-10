@@ -209,26 +209,24 @@ public class RunningSimulationsView extends BasicView implements View {
 	public void setAllSimulationSimulatorData(Item selectedSimulator) {
 		// Set simulator info data
 		setSimulatorInfoData(selectedSimulator);
-		Property<?> simulatorId = selectedSimulator.getItemProperty(ColumnNames
-				.getSimulatorIdPropName());
+		String simulatorId = selectedSimulator
+				.getItemProperty(ColumnNames.getSimulatorIdPropName())
+				.getValue().toString();
 		// Set simulation data
 		Item selectedSimulation = getDBHelp()
-				.getLatestRunningSimulationOnSimulatorWithId(
-						simulatorId.getValue().toString());
+				.getLatestRunningSimulationOnSimulatorWithId(simulatorId);
 		setSimulationData(selectedSimulation);
 		// Set simulation info data
 		Item selectedSimulationInfo = getDBHelp()
-				.getLatestSimulationInfoBySimulatorId(
-						simulatorId.getValue().toString());
+				.getLatestSimulationInfoBySimulatorId(simulatorId);
 		setSimulationInfoData(selectedSimulationInfo);
 		// Set simulation devices state
 		Item selectedDevicesState = getDBHelp()
-				.getSimulationDevicesStateBySimulatorId(
-						simulatorId.getValue().toString());
+				.getSimulationDevicesStateBySimulatorId(simulatorId);
 		setSimulationDevicesStateInfo(selectedDevicesState);
 		// Set PFD info
 		Item selectedPFD = getDBHelp().getSimulationPFDBySimulatorId(
-				simulatorId.getValue().toString());
+				simulatorId);
 		setPrimaryFlightDisplayInfo(selectedPFD);
 
 	}
