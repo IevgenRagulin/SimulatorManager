@@ -1,6 +1,8 @@
 package com.example.testvaadin.components;
 
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Random;
 
 import com.example.testvaadin.data.ColumnNames;
@@ -8,11 +10,13 @@ import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.ui.TextField;
 
 public class SimulatorForm extends FieldGroup {
 	private static final long serialVersionUID = 5886087581072819926L;
+	private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
 	private SimulatorsView app;
 	private Random random = new Random();
 	private final int MINRANDOM = 1000;
@@ -25,12 +29,31 @@ public class SimulatorForm extends FieldGroup {
 
 	private void initSimulatorForm() {
 		setBuffered(false);
+		StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();
 		for (String fieldName : ColumnNames.getSimulatorCols()) {
 			TextField field = createInputField(fieldName);
 			app.getEditorLayout().addComponent(field);
 			this.bind(field, fieldName);
+			if (isUnformattedIntConverterNeeded(fieldName)) {
+				field.setConverter(plainIntegerConverter);
+			}
 		}
 		app.getEditorLayout().addComponent(app.getRemoveSimulatorButton());
+	}
+
+	private boolean isUnformattedIntConverterNeeded(String fieldName) {
+		return fieldName.equals(ColumnNames.getSimulatorPortName());
+	}
+
+	private StringToIntegerConverter getStringToIntegerConverter() {
+		StringToIntegerConverter plainIntegerConverter = new StringToIntegerConverter() {
+			protected java.text.NumberFormat getFormat(Locale locale) {
+				NumberFormat format = super.getFormat(locale);
+				format.setGroupingUsed(false);
+				return format;
+			};
+		};
+		return plainIntegerConverter;
 	}
 
 	private TextField createInputField(String fieldName) {
@@ -62,6 +85,13 @@ public class SimulatorForm extends FieldGroup {
 				.setValue(
 						"New" + random.nextInt(MAXRANDOM - MINRANDOM)
 								+ MINRANDOM);
+		app.getSimulatorList()
+				.getContainerProperty(simulatorId,
+						ColumnNames.getSimulatorPortName()).setValue(12322);
+		app.getSimulatorList()
+				.getContainerProperty(simulatorId,
+						ColumnNames.getSimulatorHostname())
+				.setValue(FAKE_HOSTNAME);
 		commit();
 	}
 

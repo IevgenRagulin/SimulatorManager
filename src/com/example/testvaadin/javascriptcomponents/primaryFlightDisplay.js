@@ -92,8 +92,8 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 				+ "<button id='minusAltitude'>-50 altitude</button>"
 				+ "<button id='addSpeed'>+50 speed</button>"
 				+ "<button id='minusSpeed'>-50 speed</button>"
-				+ "<button id='addCompass'>+5 compass</button>"
-				+ "<button id='minusCompass'>-5 compass</button>"
+				+ "<button id='addCompass'>+180 compass</button>"
+				+ "<button id='minusCompass'>-180 compass</button>"
 				+ "</div>";
 	}
 }
@@ -219,7 +219,7 @@ function setAddCompassClickListener() {
 	document.getElementById('addCompass').addEventListener('click', function() {
 		if (!window.currentlyChangingCompass) {
 			console.log("compass CLICK EVENT"+window.currentCompass);
-			setCompass(window.currentCompass + 5);
+			setCompass(window.currentCompass + 180);
 		}
 	});
 }
@@ -227,7 +227,7 @@ function setAddCompassClickListener() {
 function setMinusCompassClickListener() {
 	document.getElementById('minusCompass').addEventListener('click', function() {
 		if (!window.currentlyChangingCompass) {
-			setCompass(window.currentCompass - 5);
+			setCompass(window.currentCompass - 90);
 		}
 	});
 }
@@ -328,7 +328,6 @@ function setRoll(roll) {
 
 	rotateCanvasByRollDegrees(ctx, difRoll);
 	drawLineNumbersForSightNewRoll(difRoll);
-	//drawLineNumbersForSightNewPitch(window.currentPitch);
 	var newRoll = window.currentRoll + difRoll;
 	window.currentRoll = newRoll;
 
@@ -431,6 +430,7 @@ function rotateSightFor180DigreesArountPoint(ctxSight, xRotationPoint,
 	ctxSight.translate(-xRotationPoint, -yRotationPoint);
 }
 
+//DELETE THIS FUNCTION TO AVOID COPY PAST
 function drawLineNumbersForSightNewRoll(difRoll) {
 	var transformedPitchValue = window.currentPitch;
 	// Transform 180-360 values to (-180;-0)
@@ -579,6 +579,7 @@ function setAltitude(altitude) {
 	var ctxAltitude = document.getElementById('altitude').getContext('2d');
 	var difAltitude = altitude - window.currentAltitude;
 	var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
+	console.log(difAltitudeStep+" "+window.currentAltitude);
 	if (difAltitude > 0) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingAlt = true;
@@ -633,6 +634,7 @@ function setAltitude(altitude) {
 	document.getElementById('altitudeV').innerHTML = window.currentAltitude;
 }
 
+//Help function for rotating compass
 function rotateCompassCanvasByDegrees(compassCanvas, degrees) {
 	compassCanvas.translate(window.compasCanvasWidth / 2,
 			window.compasCanvasHeight + 170);
@@ -641,15 +643,15 @@ function rotateCompassCanvasByDegrees(compassCanvas, degrees) {
 			-window.compasCanvasHeight - 170);
 }
 
-function calculateCompassStep(degrees) {
+//Help function to calculate compass step based on difference between current compass value and desired compass value.
+function calculateCompassStep(difCompass) {
 	//currentCompass = degrees;
-	var difCompass = degrees - window.currentCompass;
 	if ((difCompass>0)&&(difCompass<180)) {
 		return difCompass*0.05;
 	} else if ((difCompass>0)&&(difCompass>=180)) {
-		return -difCompass*0.05;
+		return difCompass*0.05;
 	} else if ((difCompass<0)&&(difCompass<=-180)) {
-		return -difCompass*0.05;
+		return difCompass*0.05;
 	} else if ((difCompass<0)&&(difCompass>-180)) {
 		return difCompass*0.05;
 	} else {
@@ -657,18 +659,20 @@ function calculateCompassStep(degrees) {
 	}
 }
 
+//Sets compass value in small iterations. Animates it also with requestAnimationFrame
 function setCompassValue(ctxCompass, compass) {
-	var compassStep = calculateCompassStep(compass);
 	var difCompass = compass - window.currentCompass;
-	if ((difCompass>0.05)||(difCompass<-0.05)) {
+	var compassStep = calculateCompassStep(difCompass);
+	if ((difCompass>0.005)||(difCompass<-0.005)) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingCompass = true;
+			//window.currentCompass = window.currentCompass % 360;
 			setCompass(compass);
 		});
 	} else {
 		window.currentlyChangingCompass = false;
 	}
-	window.currentCompass+=compassStep;
+	window.currentCompass += compassStep;
 	rotateCompassCanvasByDegrees(ctxCompass, -compassStep);
 	document.getElementById('compassV').innerHTML = window.currentCompass;
 }
@@ -695,72 +699,63 @@ function setCompass(compass) {
 	
 }
 
+//Draws this little triangle which points to current speed
 function drawSpeedIndicator() {
 	// Draw speed indicator
-	var ctx = document.getElementById('speed').getContext('2d');
-	ctx.save();
-	ctx.strokeStyle = 'black';
-	ctx.fillStyle = 'black';
-	ctx.beginPath();
-	ctx.moveTo(window.speedBarWidth + window.leftSpeedBarMargin,
-			window.canvasHeight / 2 - 3);
-	ctx.lineTo(window.speedBarWidth + window.leftSpeedBarMargin
-			+ window.speedIndicatorWidth, window.canvasHeight / 2 - 8);
-	ctx.lineTo(window.speedBarWidth + window.leftSpeedBarMargin
-			+ window.speedIndicatorWidth, window.canvasHeight / 2);
-	ctx.lineTo(window.speedBarWidth + window.leftSpeedBarMargin,
-			window.canvasHeight / 2 - 3);
-	ctx.stroke();
-	ctx.fill();
-	ctx.restore();
-}
-
-function drawHeightIndicator() {
-	// Draw speed indicator
 	var ctxSpeed = document.getElementById('speed').getContext('2d');
-	ctxSpeed.save();
 	ctxSpeed.strokeStyle = 'black';
 	ctxSpeed.fillStyle = 'black';
-	ctxSpeed.beginPath();
-	ctxSpeed.moveTo(window.canvasWidth - window.altBarWidth
-			- window.altBarRightMargin, window.canvasHeight / 2 - 3);
-	ctxSpeed.lineTo(window.canvasWidth - window.altBarWidth
-			- window.altBarRightMargin - window.speedIndicatorWidth,
-			window.canvasHeight / 2 - 8);
-	ctxSpeed.lineTo(window.canvasWidth - window.altBarWidth
-			- window.altBarRightMargin - window.speedIndicatorWidth,
-			window.canvasHeight / 2);
-	ctxSpeed.lineTo(window.canvasWidth - window.altBarWidth
-			- window.altBarRightMargin, window.canvasHeight / 2 - 3);
-	ctxSpeed.stroke();
-	ctxSpeed.fill();
-	ctxSpeed.restore();
+	//setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3
+	var coords = [window.speedBarWidth + window.leftSpeedBarMargin,
+	  			window.canvasHeight / 2 - 3, 
+	  			window.speedBarWidth + window.leftSpeedBarMargin
+				+ window.speedIndicatorWidth, window.canvasHeight / 2 - 8,
+				window.speedBarWidth + window.leftSpeedBarMargin
+				+ window.speedIndicatorWidth, window.canvasHeight / 2];
+	drawPolygone(ctxSpeed, coords);
 }
 
+//Draws this little triangle which points to current altitude
+function drawHeightIndicator() {
+	// Draw speed indicator
+	var ctxAlt = document.getElementById('altitude').getContext('2d');
+	ctxAlt.strokeStyle = 'black';
+	ctxAlt.fillStyle = 'black';
+	//setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3
+	var coords = [window.canvasWidth - window.altBarWidth - window.altBarRightMargin, window.canvasHeight / 2 - 3, 
+	              window.canvasWidth - window.altBarWidth - window.altBarRightMargin - window.speedIndicatorWidth, window.canvasHeight / 2 - 8,
+	              window.canvasWidth - window.altBarWidth - window.altBarRightMargin - window.speedIndicatorWidth, window.canvasHeight / 2];
+	drawPolygone(ctxAlt, coords);
+}
+
+//Draws this little triangle which points to current compass
 function drawCompassIndicator() {
 	var compassCtx = document.getElementById('compass').getContext('2d');
-	compassCtx.save();
 	//Draw black background
 	compassCtx.fillStyle = 'black';
 	fillRect(compassCtx, 0, 0, window.compasCanvasWidth,
 			window.compasCanvasHeight);
 	compassCtx.storkeStyle = 'white';
 	compassCtx.fillStyle = 'white';
-	//Draw indicator
-	compassCtx.beginPath();
-	compassCtx.moveTo(window.compasCanvasWidth / 2 + 3, 10);
-	compassCtx.lineTo(window.compasCanvasWidth / 2
-			- window.compassIndicatorWidth + 3,
-			5 - window.compassIndicatorWidth);
-	compassCtx.lineTo(window.compasCanvasWidth / 2
-			+ window.compassIndicatorWidth + 3,
-			5 - window.compassIndicatorWidth);
-	compassCtx.lineTo(window.compasCanvasWidth / 2 + 3, 10);
-	compassCtx.stroke();
-	compassCtx.fill();
-	compassCtx.restore();
+	//setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3
+	var coords = [window.compasCanvasWidth / 2 + 3, 10, 
+	              window.compasCanvasWidth / 2 - window.compassIndicatorWidth + 3, 5 - window.compassIndicatorWidth,
+	              window.compasCanvasWidth / 2 + window.compassIndicatorWidth + 3, 5 - window.compassIndicatorWidth];
+	drawPolygone(compassCtx, coords);
 }
 
+//coords - [x1,y1,x2,y2,x3,y3...]
+function drawPolygone(ctx, poly) {
+	ctx.beginPath();
+	ctx.moveTo(poly[0], poly[1]);
+	for(var item=2 ; item < poly.length-1 ; item+=2 ) {
+		ctx.lineTo( poly[item] , poly[item+1] );
+	}
+	ctx.closePath();
+	ctx.fill();
+}
+
+//Help function for drawing arc
 function arc(ctx, x, y, r, startAngle, finishAngle) {
 	ctx.beginPath();
 	ctx.arc(x, y, r, startAngle, finishAngle);

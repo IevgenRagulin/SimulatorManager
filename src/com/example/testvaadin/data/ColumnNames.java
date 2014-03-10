@@ -4,14 +4,16 @@ public class ColumnNames {
 	protected static final String SIMNAME = "SimulatorName";
 	protected static final String PLANESIM = "AircraftModel";
 	protected static final String SIMID = "SimulatorId";
+	protected static final String PORT = "Port";
+	protected static final String HOSTNAME = "Hostname";
 
 	protected static final String[] simulatorCols = new String[] { SIMNAME,
-			PLANESIM, SIMID, "MinSpeed", "MaxSpeed", "HighSpeed",
-			"MaxSpeedOnFlaps", "MinSpeedOnFlaps", "HasGears", "MinTempCHT1",
-			"MinTempCHT2", "MinTempEGT1", "MinTempEGT2", "MaxTempCHT1",
-			"MaxTempCHT2", "MaxTempEGT1", "MaxTempEGT2", "ManifoldPressure",
-			"Power", "MaxAmountOfFuel", "MinAmountOfFuel", "MaxRPM",
-			"NumberOfEngines" };
+			PLANESIM, SIMID, HOSTNAME, PORT, "MinSpeed", "MaxSpeed",
+			"HighSpeed", "MaxSpeedOnFlaps", "MinSpeedOnFlaps", "HasGears",
+			"MinTempCHT1", "MinTempCHT2", "MinTempEGT1", "MinTempEGT2",
+			"MaxTempCHT1", "MaxTempCHT2", "MaxTempEGT1", "MaxTempEGT2",
+			"ManifoldPressure", "Power", "MaxAmountOfFuel", "MinAmountOfFuel",
+			"MaxRPM", "NumberOfEngines" };
 
 	protected static final String SIMULATORID_FOREIGN_KEY = "Simulator_SimulatorId";
 
@@ -42,6 +44,14 @@ public class ColumnNames {
 
 	public static String getSimulatorNamePropName() {
 		return SIMNAME;
+	}
+
+	public static String getSimulatorPortName() {
+		return PORT;
+	}
+
+	public static String getSimulatorHostname() {
+		return HOSTNAME;
 	}
 
 	public static String getSimulatorIdForeignKeyPropName() {

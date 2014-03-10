@@ -1,9 +1,8 @@
 package com.example.testvaadin.views;
 
-import java.math.BigDecimal;
-
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
+import com.example.testvaadin.components.FlightPathGoogleMap;
 import com.example.testvaadin.components.InfoLabel;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.components.SimulationStateFieldGroup;
@@ -18,9 +17,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.tapio.googlemaps.GoogleMap;
 import com.vaadin.tapio.googlemaps.client.LatLon;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
@@ -58,7 +55,11 @@ public class RunningSimulationsView extends BasicView implements View {
 	private PrimaryFlightDisplay primaryFlightDisplay;
 	private SelectSimulatorCombo selectSimulator;
 	private String apiKey = "AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";
-	GoogleMap googleMap = null;
+	private FlightPathGoogleMap googleMap = null;
+
+	public FlightPathGoogleMap getGoogleMap() {
+		return googleMap;
+	}
 
 	public SelectSimulatorCombo getSelectSimulator() {
 		return selectSimulator;
@@ -119,16 +120,13 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initGoogleMaps() {
-		googleMap = new GoogleMap(new LatLon(60.440963, 22.25122), 10.0, apiKey);
-		googleMap.setSizeFull();
-		googleMap.addMarker("DRAGGABLE: Kakolan vankila", new LatLon(60.44291,
-				22.242415), true, null);
-		googleMap.setMinZoom(1.0);
-		googleMap.setMaxZoom(16.0);
-		googleMap.setWidth("500px");
-		googleMap.setHeight("500px");
-		addComponent(googleMap);
-		addComponent(new Button("i am a button"));
+		if (googleMap != null) {
+			googleMap.clearMap();
+		} else {
+			googleMap = new FlightPathGoogleMap(
+					new LatLon(60.440963, 22.25122), 4.0, apiKey, this);
+			addComponent(googleMap);
+		}
 	}
 
 	private void initPrimaryFlightDisplay() {
@@ -242,7 +240,8 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private void setSimulationInfoData(Property<?> property) {
 		final SQLContainer simulationInfoContainer = getDBHelp()
-				.getSimulationInfoBySimulatorId(property.getValue().toString());
+				.getLatestSimulationInfoBySimulatorId(
+						property.getValue().toString());
 		if ((simulationInfoContainer != null)
 				&& (simulationInfoContainer.size() != 0)) {
 			// Set simulation info data
@@ -253,13 +252,8 @@ public class RunningSimulationsView extends BasicView implements View {
 			getSimulationInfo().setReadOnly(true);
 			// Add simulation info data to map
 			Item item = simulationInfoContainer.getItem(id);
-			double newLongtitude = ((BigDecimal) ((Property<?>) item
-					.getItemProperty("Longtitude")).getValue()).doubleValue();
-			double newLatitude = ((BigDecimal) ((Property<?>) item
-					.getItemProperty("Latitude")).getValue()).doubleValue();
-
-			googleMap.addMarker("Aircraft position", new LatLon(newLatitude,
-					newLongtitude), true, null);
+			googleMap.addLatestCoordinatesForSimulation(item, property
+					.getValue().toString());
 
 		} else {
 			getSimulationInfo().setEnabled(false);
@@ -307,6 +301,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		getSimulation().setEnabled(false);
 		getSimulatorDevicesState().setEnabled(false);
 		getSimulationInfo().setEnabled(false);
+		initGoogleMaps();
 	}
 
 	public void setNoSimulationsRunningState(RowId rowId) {
@@ -315,6 +310,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		getSimulation().setEnabled(false);
 		getSimulatorDevicesState().setEnabled(false);
 		getSimulationInfo().setEnabled(false);
+		initGoogleMaps();
 	}
 
 }

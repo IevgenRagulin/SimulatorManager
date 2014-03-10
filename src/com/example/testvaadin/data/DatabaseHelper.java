@@ -150,20 +150,60 @@ public class DatabaseHelper {
 		return simulationPFD;
 	}
 
-	public SQLContainer getSimulationInfoBySimulatorId(String simulatorId) {
+	/*
+	 * Gets all simulation info for latest simulation. Selects only those
+	 * records where there doesn't exist a records with id-1 with the same
+	 * values of longtitude, latitude, brakes, flaps For example: id: 1;
+	 * longtitude 2; flaps true id: 2; longtitude 2; flaps true id: 3;
+	 * longtitude 3; flapse true Returns only rows with id=2 and id = 3;
+	 */
+	public SQLContainer getAllSimulationInfoBySimulatorId(String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * "
+						+ "FROM SimulationInfo si1 "
+						+ "WHERE \"Simulation_SimulationId\" = (SELECT \"SimulationId\""
+						+ "FROM simulation "
+						+ "WHERE \"Simulator_SimulatorId\" = "
+						+ simulatorId
+						+ " AND \"IsSimulationOn\" = true "
+						+ "ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) "
+						+ "AND NOT EXISTS "
+						+ "(SELECT si2.\"SimulationInfoId\" "
+						+ "FROM SimulationInfo si2 "
+						+ "WHERE si1.\"Longtitude\" = si2.\"Longtitude\" "
+						+ "AND si1.\"Latitude\" = si2.\"Latitude\" "
+						+ "AND si1.\"BrakesOn\" = si2.\"BrakesOn\" "
+						+ "AND si1.\"FlapsOn\" = si2.\"FlapsOn\" "
+						+ "AND si1.\"SimulationInfoId\" = (si2.\"SimulationInfoId\" - 1 )) "
+						+ "ORDER BY \"Timestamp\" ASC; ",
+				Arrays.asList("SimulationInfoId"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationInfo;
+	}
+
+	/*
+	 * Gets latest simulation info record for latest simulation.
+	 */
+	public SQLContainer getLatestSimulationInfoBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
 				"SELECT * FROM SimulationInfo WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
 						+ simulatorId
 						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) ORDER BY \"Timestamp\" DESC LIMIT 1",
 				Arrays.asList("SimulationInfoId"), pool);
-		SQLContainer simulationPFD = null;
+		SQLContainer simulationInfo = null;
 		try {
-			simulationPFD = new SQLContainer(query);
+			simulationInfo = new SQLContainer(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return simulationPFD;
+		return simulationInfo;
 	}
 
 }
