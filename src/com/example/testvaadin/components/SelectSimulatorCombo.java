@@ -68,8 +68,8 @@ public class SelectSimulatorCombo extends ComboBox {
 							simulatorId.getValue().toString());
 			// If there are no running simulations on simulator
 			if (latestRunningSimulation == null) {
-				// runningSims
-				// .setNoSimulationsRunningState(latestRunningSimulation);
+				runningSims
+						.setNoSimulationsRunningState(latestRunningSimulation);
 			} else {
 				runningSims.setAllSimulationSimulatorData(selectedSimulator);
 			}

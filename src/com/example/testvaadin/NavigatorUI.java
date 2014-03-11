@@ -2,6 +2,8 @@ package com.example.testvaadin;
 
 import javax.servlet.annotation.WebServlet;
 
+import cm.example.testvaadin.simulatorcommunication.SimulationsUpdater;
+
 import com.example.testvaadin.views.ControlSimulationsView;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.example.testvaadin.views.SimulatorsView;
@@ -37,6 +39,7 @@ public class NavigatorUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
+		SimulationsUpdater.updateSimulationsInfo();
 		getPage().setTitle("Main menu");
 		navigator = new Navigator(this, this);
 		// Create and register the views

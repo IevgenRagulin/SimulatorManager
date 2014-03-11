@@ -2,6 +2,7 @@ package com.example.testvaadin.javascriptcomponents;
 
 import java.math.BigDecimal;
 
+import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
@@ -48,21 +49,21 @@ public class PrimaryFlightDisplay extends
 
 	public void updateIndividualPFDValues(Item item) {
 		int newRoll = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("Roll")).getValue());
+				.getItemProperty(ColumnNames.getRoll())).getValue());
 		int newPitch = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("Pitch")).getValue());
+				.getItemProperty(ColumnNames.getPitch())).getValue());
 		int newYaw = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("Yaw")).getValue());
+				.getItemProperty(ColumnNames.getYaw())).getValue());
 		int newIAS = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("IAS")).getValue());
+				.getItemProperty(ColumnNames.getIas())).getValue());
 		int newAltitude = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("Altitude")).getValue());
+				.getItemProperty(ColumnNames.getAltitude())).getValue());
 		int newGroundAltitude = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("GroundAltitude")).getValue());
+				.getItemProperty(ColumnNames.getGroundaltitude())).getValue());
 		int newVerticalSpeed = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("VerticalSpeed")).getValue());
+				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
 		int newCompass = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty("Compass")).getValue());
+				.getItemProperty(ColumnNames.getCompass())).getValue());
 		setRoll(newRoll);
 		setPitch(newPitch);
 		setYaw(newYaw);

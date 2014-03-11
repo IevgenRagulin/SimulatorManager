@@ -29,10 +29,10 @@ public class DatabaseHelper {
 	public Item getLatestRunningSimulationOnSimulatorWithId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
-				"SELECT * FROM simulation WHERE \"Simulator_SimulatorId\"="
+				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
 						+ simulatorId
-						+ " AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1",
-				Arrays.asList("SimulationId"), pool);
+						+ " AND IsSimulationOn=true ORDER BY SimulationStartedTime DESC LIMIT 1",
+				Arrays.asList("simulationid"), pool);
 		SQLContainer runningSimulations = null;
 		try {
 			runningSimulations = new SQLContainer(query);
@@ -54,10 +54,10 @@ public class DatabaseHelper {
 	public Item getSimulationDevicesStateBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
-				"SELECT * FROM SimulationDevicesState WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
+				"SELECT * FROM SimulationDevicesState WHERE Simulation_SimulationId=(SELECT SimulationId FROM simulation WHERE Simulator_SimulatorId="
 						+ simulatorId
-						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) ORDER BY \"Timestamp\" DESC LIMIT 1",
-				Arrays.asList("DevStateId"), pool);
+						+ "AND IsSimulationOn=true ORDER BY SimulationStartedTime DESC LIMIT 1) ORDER BY \"timestamp\" DESC LIMIT 1",
+				Arrays.asList("devstateid"), pool);
 		SQLContainer simulationDevicesState = null;
 		try {
 			simulationDevicesState = new SQLContainer(query);
@@ -92,20 +92,18 @@ public class DatabaseHelper {
 
 	public DatabaseHelper() {
 		initConnectionPool();
-		initSimulatorContainer();
-	}
-
-	private void initSimulatorContainer() {
-		TableQuery tq = new TableQuery("simulator", pool);
-		tq.setVersionColumn("Timestamp");
-		try {
-			simulatorContainer = new SQLContainer(tq);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public SQLContainer getSimulatorContainer() {
+		if (simulatorContainer == null) {
+			TableQuery tq = new TableQuery("simulator", pool);
+			tq.setVersionColumn("timestamp");
+			try {
+				simulatorContainer = new SQLContainer(tq);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return simulatorContainer;
 	}
 
@@ -123,7 +121,7 @@ public class DatabaseHelper {
 
 	public SQLContainer getSimulationDevicesStateContainer() {
 		TableQuery tq = new TableQuery("simulationdevicesstate", pool);
-		tq.setVersionColumn("Timestamp");
+		tq.setVersionColumn("timestamp");
 		SQLContainer simulationDevicesStateContainer = null;
 		try {
 			simulationDevicesStateContainer = new SQLContainer(tq);
@@ -146,9 +144,9 @@ public class DatabaseHelper {
 	public Item getSimulationPFDBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
-				"SELECT * FROM SimulationPFDInfo WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
+				"SELECT * FROM SimulationPFDInfo WHERE Simulation_SimulationId=(SELECT SimulationId FROM simulation WHERE Simulator_SimulatorId="
 						+ simulatorId
-						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) ORDER BY \"Timestamp\" DESC LIMIT 1",
+						+ "AND IsSimulationOn=true ORDER BY SimulationStartedTime DESC LIMIT 1) ORDER BY \"timestamp\" DESC LIMIT 1",
 				Arrays.asList("PFDInfoId"), pool);
 		SQLContainer simulationPFD = null;
 		try {
@@ -168,25 +166,21 @@ public class DatabaseHelper {
 	 */
 	public SQLContainer getAllSimulationInfoBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
-		FreeformQuery query = new FreeformQuery(
-				"SELECT * "
-						+ "FROM SimulationInfo si1 "
-						+ "WHERE \"Simulation_SimulationId\" = (SELECT \"SimulationId\""
-						+ "FROM simulation "
-						+ "WHERE \"Simulator_SimulatorId\" = "
-						+ simulatorId
-						+ " AND \"IsSimulationOn\" = true "
-						+ "ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) "
-						+ "AND NOT EXISTS "
-						+ "(SELECT si2.\"SimulationInfoId\" "
-						+ "FROM SimulationInfo si2 "
-						+ "WHERE si1.\"Longtitude\" = si2.\"Longtitude\" "
-						+ "AND si1.\"Latitude\" = si2.\"Latitude\" "
-						+ "AND si1.\"BrakesOn\" = si2.\"BrakesOn\" "
-						+ "AND si1.\"FlapsOn\" = si2.\"FlapsOn\" "
-						+ "AND si1.\"SimulationInfoId\" = (si2.\"SimulationInfoId\" - 1 )) "
-						+ "ORDER BY \"Timestamp\" ASC; ",
-				Arrays.asList("SimulationInfoId"), pool);
+		FreeformQuery query = new FreeformQuery("SELECT * "
+				+ "FROM SimulationInfo si1 "
+				+ "WHERE Simulation_SimulationId = (SELECT SimulationId "
+				+ "FROM simulation " + "WHERE Simulator_SimulatorId = "
+				+ simulatorId + " AND IsSimulationOn = true "
+				+ "ORDER BY SimulationStartedTime DESC LIMIT 1) "
+				+ "AND NOT EXISTS " + "(SELECT si2.SimulationInfoId "
+				+ "FROM SimulationInfo si2 "
+				+ "WHERE si1.Longtitude = si2.Longtitude "
+				+ "AND si1.Latitude = si2.Latitude "
+				+ "AND si1.BrakesOn = si2.BrakesOn "
+				+ "AND si1.FlapsOn = si2.FlapsOn "
+				+ "AND si1.SimulationInfoId = (si2.SimulationInfoId - 1 )) "
+				+ "ORDER BY \"timestamp\" ASC; ",
+				Arrays.asList("simulationinfoid"), pool);
 		SQLContainer simulationInfo = null;
 		try {
 			simulationInfo = new SQLContainer(query);
@@ -202,10 +196,10 @@ public class DatabaseHelper {
 	public Item getLatestSimulationInfoBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
-				"SELECT * FROM SimulationInfo WHERE \"Simulation_SimulationId\"=(SELECT \"SimulationId\" FROM simulation WHERE \"Simulator_SimulatorId\"="
+				"SELECT * FROM SimulationInfo WHERE Simulation_SimulationId=(SELECT SimulationId FROM simulation WHERE Simulator_SimulatorId="
 						+ simulatorId
-						+ "AND \"IsSimulationOn\"=true ORDER BY \"SimulationStartedTime\" DESC LIMIT 1) ORDER BY \"Timestamp\" DESC LIMIT 1",
-				Arrays.asList("SimulationInfoId"), pool);
+						+ "AND IsSimulationOn=true ORDER BY SimulationStartedTime DESC LIMIT 1) ORDER BY \"timestamp\" DESC LIMIT 1",
+				Arrays.asList("simulationinfoid"), pool);
 		SQLContainer simulationInfo = null;
 		try {
 			simulationInfo = new SQLContainer(query);

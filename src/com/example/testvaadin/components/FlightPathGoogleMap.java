@@ -68,10 +68,10 @@ public class FlightPathGoogleMap extends GoogleMap {
 			for (Object i : simulationInfoIds) {
 				RowId rowId = (RowId) i;
 				Item item = simulationInfoData.getItem(rowId);
-				Double lastLat = ((BigDecimal) item.getItemProperty("Latitude")
-						.getValue()).doubleValue();
+				Double lastLat = ((BigDecimal) item.getItemProperty(
+						ColumnNames.getLatitude()).getValue()).doubleValue();
 				Double lastLon = ((BigDecimal) item.getItemProperty(
-						"Longtitude").getValue()).doubleValue();
+						ColumnNames.getLongtitude()).getValue()).doubleValue();
 				lastLatLong = new LatLon(lastLat, lastLon);
 				planePathPoints.add(lastLatLong);
 			}
@@ -97,9 +97,11 @@ public class FlightPathGoogleMap extends GoogleMap {
 			isMapInitializedWithMapHistory = true;
 		}
 		Double newLongtitude = ((BigDecimal) ((Property<?>) item
-				.getItemProperty("Longtitude")).getValue()).doubleValue();
+				.getItemProperty(ColumnNames.getLongtitude())).getValue())
+				.doubleValue();
 		Double newLatitude = ((BigDecimal) ((Property<?>) item
-				.getItemProperty("Latitude")).getValue()).doubleValue();
+				.getItemProperty(ColumnNames.getLatitude())).getValue())
+				.doubleValue();
 		LatLon newPosition = new LatLon(newLatitude, newLongtitude);
 		// Check if coordinates of the new position differ from the previous
 		// one. If they don't differ, do nothing. If they do differ, add data on

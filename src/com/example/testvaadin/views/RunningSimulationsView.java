@@ -1,5 +1,7 @@
 package com.example.testvaadin.views;
 
+import cm.example.testvaadin.simulatorcommunication.SimulatorsStatus;
+
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
 import com.example.testvaadin.components.FlightPathGoogleMap;
@@ -240,7 +242,9 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void setSimulationData(final Item selectedSimulation) {
 		getErrorLabel().setValue(EMPTY_STRING);
 		if (selectedSimulation != null) {
-			getSimulation().setItemDataSource(selectedSimulation);
+			getSimulation().setItemDataSource(
+					SimulatorsStatus.getSimulationItem());
+			// getSimulation().setItemDataSource(selectedSimulation);
 			getSimulation().setEnabled(true);
 			getSimulation().setReadOnly(true);
 		} else {
@@ -256,7 +260,6 @@ public class RunningSimulationsView extends BasicView implements View {
 			getSimulationInfo().setReadOnly(true);
 			// Add simulation info data to map
 			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo);
-
 		} else {
 			getSimulationInfo().setEnabled(false);
 		}
@@ -281,7 +284,7 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	public Property<?> getSimulatorIdByRowId(RowId rowId) {
 		return getDBHelp().getSimulatorContainer().getContainerProperty(rowId,
-				"SimulatorId");
+				ColumnNames.getSimulatorIdPropName());
 	}
 
 	public void setSimulatorNotSelectedState() {
@@ -293,9 +296,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		initGoogleMaps();
 	}
 
-	public void setNoSimulationsRunningState(RowId rowId) {
-		Item selectedSimulator = getDBHelp().getSimulatorContainer().getItem(
-				rowId);
+	public void setNoSimulationsRunningState(Item selectedSimulator) {
 		setSimulatorInfoData(selectedSimulator);
 		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
 		getSimulation().setEnabled(false);
