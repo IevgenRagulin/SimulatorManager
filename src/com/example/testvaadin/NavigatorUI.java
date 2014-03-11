@@ -39,7 +39,7 @@ public class NavigatorUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-		SimulationsUpdater.updateSimulationsInfo();
+		SimulationsUpdater.fakeFunction();
 		getPage().setTitle("Main menu");
 		navigator = new Navigator(this, this);
 		// Create and register the views

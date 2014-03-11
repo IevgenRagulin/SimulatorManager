@@ -161,7 +161,7 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private void initSimulationInfo() {
 		simulation = new SimulationStateFieldGroup(
-				ColumnNames.getSimulationCols(), simulationLayout);
+				ColumnNames.getSimulationBeanCols(), simulationLayout);
 		simulation.setEnabled(false);
 	}
 
@@ -215,8 +215,10 @@ public class RunningSimulationsView extends BasicView implements View {
 				.getItemProperty(ColumnNames.getSimulatorIdPropName())
 				.getValue().toString();
 		// Set simulation data
-		Item selectedSimulation = getDBHelp()
-				.getLatestRunningSimulationOnSimulatorWithId(simulatorId);
+		Item selectedSimulation = SimulatorsStatus
+				.getSimulationItemBySimulatorId(simulatorId);
+		// Item selectedSimulation = getDBHelp()
+		// .getLatestRunningSimulationOnSimulatorWithId(simulatorId);
 		setSimulationData(selectedSimulation);
 		// Set simulation info data
 		Item selectedSimulationInfo = getDBHelp()
@@ -242,9 +244,9 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void setSimulationData(final Item selectedSimulation) {
 		getErrorLabel().setValue(EMPTY_STRING);
 		if (selectedSimulation != null) {
-			getSimulation().setItemDataSource(
-					SimulatorsStatus.getSimulationItem());
-			// getSimulation().setItemDataSource(selectedSimulation);
+			// getSimulation().setItemDataSource(
+			// SimulatorsStatus.getSimulationItem());
+			getSimulation().setItemDataSource(selectedSimulation);
 			getSimulation().setEnabled(true);
 			getSimulation().setReadOnly(true);
 		} else {

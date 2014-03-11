@@ -1,39 +1,33 @@
 package cm.example.testvaadin.simulatorcommunication;
 
-import java.util.Collection;
-
-import com.example.testvaadin.beans.SimulationBean;
-import com.example.testvaadin.data.ColumnNames;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimulatorsStatus {
-	private static SQLContainer simulatorContainer = null;
-	private static SimulationItem simulationItem = null;
+	protected static Map<String, SimulationItem> simulatorIdSimulationItem = new HashMap<String, SimulationItem>();
+	protected static Map<String, SimulationDevStateItem> simulatorIdSimDevStateItem = new HashMap<String, SimulationDevStateItem>();
 
-	public SimulatorsStatus(SQLContainer simulatorContainer) {
-		this.simulatorContainer = simulatorContainer;
-		Collection<?> itemIds = simulatorContainer.getItemIds();
-		SimulationBean simulationBean = new SimulationBean("1", "1", true,
-				true, "10:00", "12:00");
-		simulationItem = new SimulationItem(simulationBean);
-		IndexedContainer container = new IndexedContainer();
+	protected static void setSimulationDevStateItem(String simulatorId,
+			SimulationDevStateItem simDevStateItem) {
+		simulatorIdSimDevStateItem.put(simulatorId, simDevStateItem);
+	}
 
-		for (Object itemId : itemIds) {
-			Item item = simulatorContainer.getItem(itemId);
-			System.out.println(simulatorContainer.getItem(itemId)
-					.getItemProperty(ColumnNames.getSimulatorIdPropName())
-					.getValue().toString());
-		}
+	protected static void setSimulationItem(String simulatorId,
+			SimulationItem simItem) {
+		simulatorIdSimulationItem.put(simulatorId, simItem);
+	}
+
+	public void fakeFunction() {
 
 	}
 
-	// public static SQLContainer getSimulatorContainer() {
-	// return simulatorContainer;
-	// }
+	public static SimulationItem getSimulationItemBySimulatorId(
+			String simulatorId) {
+		return simulatorIdSimulationItem.get(simulatorId);
+	}
 
-	public static SimulationItem getSimulationItem() {
-		return simulationItem;
+	public static SimulationDevStateItem getSimulationDevStateItemBySimulatorId(
+			String simulatorId) {
+		return simulatorIdSimDevStateItem.get(simulatorId);
 	}
 }

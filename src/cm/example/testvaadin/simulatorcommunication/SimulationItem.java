@@ -9,10 +9,10 @@ public class SimulationItem extends BeanItem<SimulationBean> {
 	public SimulationItem(SimulationBean bean) {
 		super(bean);
 		Collection<?> itemPropIds = getItemPropertyIds();
-		for (Object prop : itemPropIds) {
-			String propeer = (String) prop;
-			System.out.println(propeer);
-		}
+		// for (Object prop : itemPropIds) {
+		// String propeer = (String) prop;
+		// System.out.println(propeer);
+		// }
 	}
 
 	private static final long serialVersionUID = -7621069271194263988L;

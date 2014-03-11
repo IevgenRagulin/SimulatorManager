@@ -1,39 +1,35 @@
 package com.example.testvaadin.beans;
 
+import com.example.testvaadin.data.ColumnNames;
+import com.vaadin.data.Item;
+
 public class SimulationBean {
-	private String simulationid;
-	private String simulator_simulatorid;
+
 	private boolean issimulationon;
 	private boolean issimulationpaused;
 	private String simulationstartedtime;
 	private String simulationendedtime;
 
-	public SimulationBean(String simulationid, String simulator_simulatorid,
-			boolean issimulationon, boolean issimulationpaused,
+	public SimulationBean(boolean issimulationon, boolean issimulationpaused,
 			String simulationstartedtime, String simulationendedtime) {
 		super();
-		this.simulationid = simulationid;
-		this.simulator_simulatorid = simulator_simulatorid;
 		this.issimulationon = issimulationon;
 		this.issimulationpaused = issimulationpaused;
 		this.simulationstartedtime = simulationstartedtime;
 		this.simulationendedtime = simulationendedtime;
 	}
 
-	public String getSimulationid() {
-		return simulationid;
-	}
-
-	public void setSimulationid(String simulationid) {
-		this.simulationid = simulationid;
-	}
-
-	public String getSimulator_simulatorid() {
-		return simulator_simulatorid;
-	}
-
-	public void setSimulator_simulatorid(String simulator_simulatorid) {
-		this.simulator_simulatorid = simulator_simulatorid;
+	public SimulationBean(Item item) {
+		if (item != null) {
+			this.issimulationon = (Boolean) item.getItemProperty(
+					ColumnNames.getIssimulationon()).getValue();
+			this.issimulationpaused = (Boolean) item.getItemProperty(
+					ColumnNames.getIssimulationpaused()).getValue();
+			this.simulationstartedtime = (String) item.getItemProperty(
+					ColumnNames.getSimulationstartedtime()).getValue();
+			this.simulationendedtime = (String) item.getItemProperty(
+					ColumnNames.getSimulationendedtime()).getValue();
+		}
 	}
 
 	public boolean isIssimulationon() {

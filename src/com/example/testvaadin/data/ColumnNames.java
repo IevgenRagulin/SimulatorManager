@@ -1,6 +1,10 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
+	private static final String SIMULATIONENDEDTIME = "simulationendedtime";
+	private static final String SIMULATIONSTARTEDTIME = "simulationstartedtime";
+	private static final String ISSIMULATIONPAUSED = "issimulationpaused";
+	private static final String ISSIMULATIONON = "issimulationon";
 	private static final String LATITUDE = "latitude";
 	private static final String LONGTITUDE = "longtitude";
 	private static final String TIMESTAMP = "timestamp";
@@ -31,9 +35,12 @@ public class ColumnNames {
 	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
 
 	protected static final String[] simulationCols = new String[] {
-			"simulationid", SIMULATORID_FOREIGN_KEY, "issimulationon",
-			"issimulationpaused", "simulationstartedtime",
-			"simulationendedtime" };
+			"simulationid", SIMULATORID_FOREIGN_KEY, ISSIMULATIONON,
+			ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME, SIMULATIONENDEDTIME };
+
+	protected static final String[] simulationBeanCols = new String[] {
+			ISSIMULATIONON, ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME,
+			SIMULATIONENDEDTIME };
 
 	protected static final String[] simulationInfoCols = new String[] {
 			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, "brakeson",
@@ -46,6 +53,22 @@ public class ColumnNames {
 	protected static final String[] simulationPfdInfo = new String[] {
 			PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, YAW, IAS,
 			ALTITUDE, GROUNDALTITUDE, VERTICALSPEED, COMPASS, TIMESTAMP };
+
+	public static String getSimulationendedtime() {
+		return SIMULATIONENDEDTIME;
+	}
+
+	public static String getSimulationstartedtime() {
+		return SIMULATIONSTARTEDTIME;
+	}
+
+	public static String getIssimulationpaused() {
+		return ISSIMULATIONPAUSED;
+	}
+
+	public static String getIssimulationon() {
+		return ISSIMULATIONON;
+	}
 
 	public static String[] getSimulatorMainCols() {
 		return new String[] { SIMID, SIMNAME, PLANESIM };
@@ -61,6 +84,10 @@ public class ColumnNames {
 
 	public static String[] getSimulationCols() {
 		return simulationCols;
+	}
+
+	public static String[] getSimulationBeanCols() {
+		return simulationBeanCols;
 	}
 
 	public static String getSimulatorNamePropName() {

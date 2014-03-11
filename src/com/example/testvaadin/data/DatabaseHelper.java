@@ -1,5 +1,6 @@
 package com.example.testvaadin.data;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,7 +15,12 @@ import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
-public class DatabaseHelper {
+public class DatabaseHelper implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5027557673512708776L;
 	JDBCConnectionPool pool = null;
 	private SQLContainer simulatorContainer = null;
 	private final String DB_URL = "jdbc:postgresql://localhost/postgres";
