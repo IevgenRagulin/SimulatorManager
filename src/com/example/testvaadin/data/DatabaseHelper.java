@@ -182,8 +182,6 @@ public class DatabaseHelper implements Serializable {
 				+ "FROM SimulationInfo si2 "
 				+ "WHERE si1.Longtitude = si2.Longtitude "
 				+ "AND si1.Latitude = si2.Latitude "
-				+ "AND si1.BrakesOn = si2.BrakesOn "
-				+ "AND si1.FlapsOn = si2.FlapsOn "
 				+ "AND si1.SimulationInfoId = (si2.SimulationInfoId - 1 )) "
 				+ "ORDER BY \"timestamp\" ASC; ",
 				Arrays.asList("simulationinfoid"), pool);

@@ -1,4 +1,4 @@
-package cm.example.testvaadin.simulatorcommunication;
+package com.example.testvaadin.items;
 
 import java.util.Collection;
 

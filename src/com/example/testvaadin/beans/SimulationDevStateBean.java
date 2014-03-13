@@ -1,19 +1,22 @@
 package com.example.testvaadin.beans;
 
-public class SimulationDevStateBean {
-	private double elevator;
-	private double eleron;
-	private int rudder;
-	private double throttle;
-	private int flaps;
-	private boolean speedbrakes;
-	private double trim;
+import cm.example.testvaadin.simulatorcommunication.AllSimulationInfo;
 
-	public SimulationDevStateBean(double elevator, double eleron, int rudder,
-			double throttle, int flaps, boolean speedbrakes, double trim) {
+public class SimulationDevStateBean {
+	private Double elevator;
+	private Double aileron;
+	private Double rudder;
+	private Double throttle;
+	private Double flaps;
+	private Double speedbrakes;
+	private Double trim;
+
+	public SimulationDevStateBean(double elevator, double aileron,
+			double rudder, double throttle, double flaps, double speedbrakes,
+			double trim) {
 		super();
 		this.elevator = elevator;
-		this.eleron = eleron;
+		this.aileron = aileron;
 		this.rudder = rudder;
 		this.throttle = throttle;
 		this.flaps = flaps;
@@ -21,31 +24,44 @@ public class SimulationDevStateBean {
 		this.trim = trim;
 	}
 
-	public double getElevator() {
+	public SimulationDevStateBean(AllSimulationInfo allSimInfo) {
+		super();
+		if (allSimInfo == null)
+			throw new NullPointerException();
+		this.elevator = allSimInfo.getElevator();
+		this.aileron = allSimInfo.getAileron();
+		this.rudder = allSimInfo.getRudder();
+		this.throttle = allSimInfo.getThrottle();
+		this.flaps = allSimInfo.getFlaps_status();
+		this.speedbrakes = allSimInfo.getSpeed_brakes();
+		this.trim = allSimInfo.getTrimPosition();
+	}
+
+	public Double getElevator() {
 		return elevator;
 	}
 
-	public double getEleron() {
-		return eleron;
+	public Double getEleron() {
+		return aileron;
 	}
 
-	public int getRudder() {
+	public Double getRudder() {
 		return rudder;
 	}
 
-	public double getThrottle() {
+	public Double getThrottle() {
 		return throttle;
 	}
 
-	public int getFlaps() {
+	public Double getFlaps() {
 		return flaps;
 	}
 
-	public boolean isSpeedbrakes() {
+	public Double getSpeedbrakes() {
 		return speedbrakes;
 	}
 
-	public double getTrim() {
+	public Double getTrim() {
 		return trim;
 	}
 

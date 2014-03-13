@@ -87,21 +87,15 @@ public class FlightPathGoogleMap extends GoogleMap {
 		}
 	}
 
-	public void addLatestCoordinatesForSimulation(Item item) {
-		String simulatorId = item
-				.getItemProperty(
-						ColumnNames.getSimulationIdForeignKeyPropName())
-				.getValue().toString();
+	public void addLatestCoordinatesForSimulation(Item item, String simulatorId) {
 		if (!isMapInitializedWithMapHistory) {
 			initMapWithDataForSimulationWithId(simulatorId);
 			isMapInitializedWithMapHistory = true;
 		}
-		Double newLongtitude = ((BigDecimal) ((Property<?>) item
-				.getItemProperty(ColumnNames.getLongtitude())).getValue())
-				.doubleValue();
-		Double newLatitude = ((BigDecimal) ((Property<?>) item
-				.getItemProperty(ColumnNames.getLatitude())).getValue())
-				.doubleValue();
+		Double newLongtitude = (Double) ((Property<?>) item
+				.getItemProperty(ColumnNames.getLongtitude())).getValue();
+		Double newLatitude = (Double) ((Property<?>) item
+				.getItemProperty(ColumnNames.getLatitude())).getValue();
 		LatLon newPosition = new LatLon(newLatitude, newLongtitude);
 		// Check if coordinates of the new position differ from the previous
 		// one. If they don't differ, do nothing. If they do differ, add data on

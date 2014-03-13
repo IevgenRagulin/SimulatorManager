@@ -8,12 +8,12 @@ public class ColumnNames {
 	private static final String LATITUDE = "latitude";
 	private static final String LONGTITUDE = "longtitude";
 	private static final String TIMESTAMP = "timestamp";
-	private static final String COMPASS = "compass";
 	private static final String VERTICALSPEED = "verticalspeed";
 	private static final String GROUNDALTITUDE = "groundaltitude";
 	private static final String ALTITUDE = "altitude";
 	private static final String IAS = "ias";
-	private static final String YAW = "yaw";
+	private static final String HEADING = "heading";
+	private static final String TRUE_COURSE = "truecourse";
 	private static final String PITCH = "pitch";
 	private static final String ROLL = "roll";
 	private static final String PFDINFOID = "pfdinfoid";
@@ -42,17 +42,31 @@ public class ColumnNames {
 			ISSIMULATIONON, ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME,
 			SIMULATIONENDEDTIME };
 
+	protected static final String[] simulationInfoBeanCols = new String[] {
+			LONGTITUDE, LATITUDE };
+
 	protected static final String[] simulationInfoCols = new String[] {
-			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, "brakeson",
-			"flapson", LONGTITUDE, LATITUDE };
+			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
+
+	protected static final String[] simulationDevicesStateBeanCols = new String[] {
+			"elevator", "eleron", "rudder", "throttle", "flaps", "speedbrakes",
+			"trim" };
 
 	protected static final String[] simulationDevicesStateCols = new String[] {
 			"devstateid", SIMULATIONID_FOREIGN_KEY, "elevator", "eleron",
 			"rudder", "throttle", "flaps", "speedbrakes", "trim", TIMESTAMP };
 
+	protected static final String[] simulationBeanPfdInfo = new String[] {
+			ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE,
+			VERTICALSPEED };
+
 	protected static final String[] simulationPfdInfo = new String[] {
-			PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, YAW, IAS,
-			ALTITUDE, GROUNDALTITUDE, VERTICALSPEED, COMPASS, TIMESTAMP };
+			PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, HEADING,
+			TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE, VERTICALSPEED };
+
+	public static String getTrueCourse() {
+		return TRUE_COURSE;
+	}
 
 	public static String getSimulationendedtime() {
 		return SIMULATIONENDEDTIME;
@@ -110,8 +124,16 @@ public class ColumnNames {
 		return SIMULATIONID_FOREIGN_KEY;
 	}
 
+	public static String[] getSimulationDevicesStateBeanCols() {
+		return simulationDevicesStateBeanCols;
+	}
+
 	public static String[] getSimulationDevicesStateCols() {
 		return simulationDevicesStateCols;
+	}
+
+	public static String[] getSimulationInfoBeanCols() {
+		return simulationInfoBeanCols;
 	}
 
 	public static String[] getSimulationInfoCols() {
@@ -120,10 +142,6 @@ public class ColumnNames {
 
 	public static String getTimestamp() {
 		return TIMESTAMP;
-	}
-
-	public static String getCompass() {
-		return COMPASS;
 	}
 
 	public static String getVerticalspeed() {
@@ -142,8 +160,8 @@ public class ColumnNames {
 		return IAS;
 	}
 
-	public static String getYaw() {
-		return YAW;
+	public static String getHeading() {
+		return HEADING;
 	}
 
 	public static String getPitch() {
@@ -200,6 +218,10 @@ public class ColumnNames {
 
 	public static String[] getSimulationdevicesstatecols() {
 		return simulationDevicesStateCols;
+	}
+
+	public static String[] getSimulationBeanpfdinfo() {
+		return simulationBeanPfdInfo;
 	}
 
 	public static String[] getSimulationpfdinfo() {

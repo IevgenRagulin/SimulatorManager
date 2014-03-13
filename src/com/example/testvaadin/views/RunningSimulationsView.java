@@ -30,6 +30,7 @@ public class RunningSimulationsView extends BasicView implements View {
 
 		public void refresh(final Refresher source) {
 			getSelectSimulator().handleValueChangeEvent();
+			// System.out.println("refreshing");
 		}
 	}
 
@@ -117,7 +118,13 @@ public class RunningSimulationsView extends BasicView implements View {
 		initPageRefresher();
 		initPrimaryFlightDisplay();
 		initGoogleMaps();
+	}
 
+	@Override
+	public void enter(ViewChangeEvent event) {
+		primaryFlightDisplay.resetPfd();
+		selectSimulator.initSelectSimulator();
+		selectSimulator.handleValueChangeEvent();
 	}
 
 	private void initGoogleMaps() {
@@ -131,6 +138,8 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initPrimaryFlightDisplay() {
+		System.out
+				.println("----------------------------------------------------------INITING PFD");
 		primaryFlightDisplay = new PrimaryFlightDisplay("index.html", 0, 0, 0,
 				0, 0, 0);
 		addComponent(primaryFlightDisplay);
@@ -167,13 +176,13 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private void initSimulationInfoInfo() {
 		simulationInfo = new SimulationStateFieldGroup(
-				ColumnNames.getSimulationInfoCols(), simulationInfoLayout);
+				ColumnNames.getSimulationInfoBeanCols(), simulationInfoLayout);
 		simulationInfo.setEnabled(false);
 	}
 
 	private void initSimulationDevicesState() {
 		simulationDevicesState = new SimulationStateFieldGroup(
-				ColumnNames.getSimulationDevicesStateCols(),
+				ColumnNames.getSimulationDevicesStateBeanCols(),
 				simulationDevicesStateLayout);
 		simulationDevicesState.setEnabled(false);
 	}
@@ -202,12 +211,6 @@ public class RunningSimulationsView extends BasicView implements View {
 		addComponent(simulationInfoLayout);
 	}
 
-	@Override
-	public void enter(ViewChangeEvent event) {
-		selectSimulator.initSelectSimulator();
-		selectSimulator.handleValueChangeEvent();
-	}
-
 	public void setAllSimulationSimulatorData(Item selectedSimulator) {
 		// Set simulator info data
 		setSimulatorInfoData(selectedSimulator);
@@ -217,20 +220,18 @@ public class RunningSimulationsView extends BasicView implements View {
 		// Set simulation data
 		Item selectedSimulation = SimulatorsStatus
 				.getSimulationItemBySimulatorId(simulatorId);
-		// Item selectedSimulation = getDBHelp()
-		// .getLatestRunningSimulationOnSimulatorWithId(simulatorId);
 		setSimulationData(selectedSimulation);
 		// Set simulation info data
-		Item selectedSimulationInfo = getDBHelp()
-				.getLatestSimulationInfoBySimulatorId(simulatorId);
-		setSimulationInfoData(selectedSimulationInfo);
+		Item selectedSimulationInfo = SimulatorsStatus
+				.getSimulationInfoItemBySimulatorId(simulatorId);
+		setSimulationInfoData(selectedSimulationInfo, simulatorId);
 		// Set simulation devices state
-		Item selectedDevicesState = getDBHelp()
-				.getSimulationDevicesStateBySimulatorId(simulatorId);
+		Item selectedDevicesState = SimulatorsStatus
+				.getSimulationDevStateItemBySimulatorId(simulatorId);
 		setSimulationDevicesStateInfo(selectedDevicesState);
 		// Set PFD info
-		Item selectedPFD = getDBHelp().getSimulationPFDBySimulatorId(
-				simulatorId);
+		Item selectedPFD = SimulatorsStatus
+				.getSimulationPFDItemBySimulatorId(simulatorId);
 		setPrimaryFlightDisplayInfo(selectedPFD);
 
 	}
@@ -254,14 +255,16 @@ public class RunningSimulationsView extends BasicView implements View {
 		}
 	}
 
-	private void setSimulationInfoData(Item selectedSimulationInfo) {
+	private void setSimulationInfoData(Item selectedSimulationInfo,
+			String simulatorId) {
 		if (selectedSimulationInfo != null) {
 			// Set simulation info data
 			getSimulationInfo().setItemDataSource(selectedSimulationInfo);
 			getSimulationInfo().setEnabled(true);
 			getSimulationInfo().setReadOnly(true);
 			// Add simulation info data to map
-			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo);
+			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo,
+					simulatorId);
 		} else {
 			getSimulationInfo().setEnabled(false);
 		}

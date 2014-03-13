@@ -36,6 +36,15 @@ public class AllSimulationInfo {
 	Double bank; // angle
 	Double heading; // angle
 
+	//
+	// DEVICES STATE
+	//
+
+	Double aileron;
+	Double rudder;
+	Double elevator;
+	Double trimPosition;
+
 	// GPS
 	Double latitude; // GPS Latitude
 	Double longitude; // GPS Longitude
@@ -57,6 +66,7 @@ public class AllSimulationInfo {
 	// ENGINE //
 	// variables for engine value //
 	// ///////////////////////////////////
+	Double throttle;
 	Double engine_rpm; // engine rounds per minutes
 	Double engine_pwr; // power in W
 	Double engine_pwr_percent; // power in percent
@@ -166,7 +176,47 @@ public class AllSimulationInfo {
 		super();
 	}
 
-	protected float getFps() {
+	public Double getAileron() {
+		return aileron;
+	}
+
+	protected void setAileron(Double aileron) {
+		this.aileron = aileron;
+	}
+
+	public Double getRudder() {
+		return rudder;
+	}
+
+	protected void setRudder(Double rudder) {
+		this.rudder = rudder;
+	}
+
+	public Double getElevator() {
+		return elevator;
+	}
+
+	protected void setElevator(Double elevator) {
+		this.elevator = elevator;
+	}
+
+	public Double getTrimPosition() {
+		return trimPosition;
+	}
+
+	protected void setTrimPosition(Double trimPosition) {
+		this.trimPosition = trimPosition;
+	}
+
+	public Double getThrottle() {
+		return throttle;
+	}
+
+	protected void setThrottle(Double throttle) {
+		this.throttle = throttle;
+	}
+
+	public float getFps() {
 		return fps;
 	}
 
@@ -174,7 +224,7 @@ public class AllSimulationInfo {
 		this.fps = fps;
 	}
 
-	protected int getSim_speed() {
+	public int getSim_speed() {
 		return sim_speed;
 	}
 
@@ -182,7 +232,7 @@ public class AllSimulationInfo {
 		this.sim_speed = sim_speed;
 	}
 
-	protected Double getTime() {
+	public Double getTime() {
 		return time;
 	}
 
@@ -190,7 +240,7 @@ public class AllSimulationInfo {
 		this.time = time;
 	}
 
-	protected Double getAltitude_standard() {
+	public Double getAltitude_standard() {
 		return altitude_standard;
 	}
 
@@ -198,7 +248,7 @@ public class AllSimulationInfo {
 		this.altitude_standard = altitude_standard;
 	}
 
-	protected Double getAltitude_corrected() {
+	public Double getAltitude_corrected() {
 		return altitude_corrected;
 	}
 
@@ -206,7 +256,7 @@ public class AllSimulationInfo {
 		this.altitude_corrected = altitude_corrected;
 	}
 
-	protected Double getGPSHeight() {
+	public Double getGPSHeight() {
 		return GPSHeight;
 	}
 
@@ -214,7 +264,7 @@ public class AllSimulationInfo {
 		GPSHeight = gPSHeight;
 	}
 
-	protected Double getGroundAltitude() {
+	public Double getGroundAltitude() {
 		return groundAltitude;
 	}
 
@@ -222,7 +272,7 @@ public class AllSimulationInfo {
 		this.groundAltitude = groundAltitude;
 	}
 
-	protected Double getIAS() {
+	public Double getIAS() {
 		return IAS;
 	}
 
@@ -230,7 +280,7 @@ public class AllSimulationInfo {
 		IAS = iAS;
 	}
 
-	protected Double getGS() {
+	public Double getGS() {
 		return GS;
 	}
 
@@ -238,7 +288,7 @@ public class AllSimulationInfo {
 		GS = gS;
 	}
 
-	protected Double getTAS() {
+	public Double getTAS() {
 		return TAS;
 	}
 
@@ -246,7 +296,7 @@ public class AllSimulationInfo {
 		TAS = tAS;
 	}
 
-	protected Double getVS() {
+	public Double getVS() {
 		return VS;
 	}
 
@@ -254,7 +304,7 @@ public class AllSimulationInfo {
 		VS = vS;
 	}
 
-	protected Double getDynamic_pressure() {
+	public Double getDynamic_pressure() {
 		return dynamic_pressure;
 	}
 
@@ -262,7 +312,7 @@ public class AllSimulationInfo {
 		this.dynamic_pressure = dynamic_pressure;
 	}
 
-	protected Double getStatic_pressure() {
+	public Double getStatic_pressure() {
 		return static_pressure;
 	}
 
@@ -270,7 +320,7 @@ public class AllSimulationInfo {
 		this.static_pressure = static_pressure;
 	}
 
-	protected Double getVE() {
+	public Double getVE() {
 		return VE;
 	}
 
@@ -278,7 +328,7 @@ public class AllSimulationInfo {
 		VE = vE;
 	}
 
-	protected Double getVN() {
+	public Double getVN() {
 		return VN;
 	}
 
@@ -286,7 +336,7 @@ public class AllSimulationInfo {
 		VN = vN;
 	}
 
-	protected Double getVU() {
+	public Double getVU() {
 		return VU;
 	}
 
@@ -294,7 +344,7 @@ public class AllSimulationInfo {
 		VU = vU;
 	}
 
-	protected Double getPitch() {
+	public Double getPitch() {
 		return pitch;
 	}
 
@@ -302,7 +352,7 @@ public class AllSimulationInfo {
 		this.pitch = pitch;
 	}
 
-	protected Double getBank() {
+	public Double getBank() {
 		return bank;
 	}
 
@@ -310,7 +360,7 @@ public class AllSimulationInfo {
 		this.bank = bank;
 	}
 
-	protected Double getHeading() {
+	public Double getHeading() {
 		return heading;
 	}
 
@@ -318,7 +368,7 @@ public class AllSimulationInfo {
 		this.heading = heading;
 	}
 
-	protected Double getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
@@ -326,7 +376,7 @@ public class AllSimulationInfo {
 		this.latitude = latitude;
 	}
 
-	protected Double getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
@@ -334,7 +384,7 @@ public class AllSimulationInfo {
 		this.longitude = longitude;
 	}
 
-	protected Double getTT() {
+	public Double getTT() {
 		return TT;
 	}
 
@@ -342,7 +392,7 @@ public class AllSimulationInfo {
 		TT = tT;
 	}
 
-	protected Double getAlpha() {
+	public Double getAlpha() {
 		return alpha;
 	}
 
@@ -350,7 +400,7 @@ public class AllSimulationInfo {
 		this.alpha = alpha;
 	}
 
-	protected Double getBeta() {
+	public Double getBeta() {
 		return beta;
 	}
 
@@ -358,7 +408,7 @@ public class AllSimulationInfo {
 		this.beta = beta;
 	}
 
-	protected Double getAngleOfSideSlip() {
+	public Double getAngleOfSideSlip() {
 		return angleOfSideSlip;
 	}
 
@@ -366,7 +416,7 @@ public class AllSimulationInfo {
 		this.angleOfSideSlip = angleOfSideSlip;
 	}
 
-	protected Double getP() {
+	public Double getP() {
 		return P;
 	}
 
@@ -374,7 +424,7 @@ public class AllSimulationInfo {
 		P = p;
 	}
 
-	protected Double getQ() {
+	public Double getQ() {
 		return Q;
 	}
 
@@ -382,7 +432,7 @@ public class AllSimulationInfo {
 		Q = q;
 	}
 
-	protected Double getR() {
+	public Double getR() {
 		return R;
 	}
 
@@ -390,7 +440,7 @@ public class AllSimulationInfo {
 		R = r;
 	}
 
-	protected Double getLocal_ax() {
+	public Double getLocal_ax() {
 		return local_ax;
 	}
 
@@ -398,7 +448,7 @@ public class AllSimulationInfo {
 		this.local_ax = local_ax;
 	}
 
-	protected Double getLocal_ay() {
+	public Double getLocal_ay() {
 		return local_ay;
 	}
 
@@ -406,7 +456,7 @@ public class AllSimulationInfo {
 		this.local_ay = local_ay;
 	}
 
-	protected Double getLocal_az() {
+	public Double getLocal_az() {
 		return local_az;
 	}
 
@@ -414,7 +464,7 @@ public class AllSimulationInfo {
 		this.local_az = local_az;
 	}
 
-	protected Double getEngine_rpm() {
+	public Double getEngine_rpm() {
 		return engine_rpm;
 	}
 
@@ -422,7 +472,7 @@ public class AllSimulationInfo {
 		this.engine_rpm = engine_rpm;
 	}
 
-	protected Double getEngine_pwr() {
+	public Double getEngine_pwr() {
 		return engine_pwr;
 	}
 
@@ -430,7 +480,7 @@ public class AllSimulationInfo {
 		this.engine_pwr = engine_pwr;
 	}
 
-	protected Double getEngine_pwr_percent() {
+	public Double getEngine_pwr_percent() {
 		return engine_pwr_percent;
 	}
 
@@ -438,7 +488,7 @@ public class AllSimulationInfo {
 		this.engine_pwr_percent = engine_pwr_percent;
 	}
 
-	protected Double getEngine_manifold_pressure() {
+	public Double getEngine_manifold_pressure() {
 		return engine_manifold_pressure;
 	}
 
@@ -446,7 +496,7 @@ public class AllSimulationInfo {
 		this.engine_manifold_pressure = engine_manifold_pressure;
 	}
 
-	protected Double getEngine_exh_gas_temp1() {
+	public Double getEngine_exh_gas_temp1() {
 		return engine_exh_gas_temp1;
 	}
 
@@ -454,7 +504,7 @@ public class AllSimulationInfo {
 		this.engine_exh_gas_temp1 = engine_exh_gas_temp1;
 	}
 
-	protected Double getEngine_exh_gas_temp2() {
+	public Double getEngine_exh_gas_temp2() {
 		return engine_exh_gas_temp2;
 	}
 
@@ -462,7 +512,7 @@ public class AllSimulationInfo {
 		this.engine_exh_gas_temp2 = engine_exh_gas_temp2;
 	}
 
-	protected Double getEngine_cyl_head_temp1() {
+	public Double getEngine_cyl_head_temp1() {
 		return engine_cyl_head_temp1;
 	}
 
@@ -470,7 +520,7 @@ public class AllSimulationInfo {
 		this.engine_cyl_head_temp1 = engine_cyl_head_temp1;
 	}
 
-	protected Double getEngine_cyl_head_temp2() {
+	public Double getEngine_cyl_head_temp2() {
 		return engine_cyl_head_temp2;
 	}
 
@@ -478,7 +528,7 @@ public class AllSimulationInfo {
 		this.engine_cyl_head_temp2 = engine_cyl_head_temp2;
 	}
 
-	protected Double getEngine_suction_temp() {
+	public Double getEngine_suction_temp() {
 		return engine_suction_temp;
 	}
 
@@ -486,7 +536,7 @@ public class AllSimulationInfo {
 		this.engine_suction_temp = engine_suction_temp;
 	}
 
-	protected Double getEngine_oil_pressure() {
+	public Double getEngine_oil_pressure() {
 		return engine_oil_pressure;
 	}
 
@@ -494,7 +544,7 @@ public class AllSimulationInfo {
 		this.engine_oil_pressure = engine_oil_pressure;
 	}
 
-	protected Double getEngine_oil_temp() {
+	public Double getEngine_oil_temp() {
 		return engine_oil_temp;
 	}
 
@@ -502,7 +552,7 @@ public class AllSimulationInfo {
 		this.engine_oil_temp = engine_oil_temp;
 	}
 
-	protected Double getEngine_fuel_pressure() {
+	public Double getEngine_fuel_pressure() {
 		return engine_fuel_pressure;
 	}
 
@@ -510,7 +560,7 @@ public class AllSimulationInfo {
 		this.engine_fuel_pressure = engine_fuel_pressure;
 	}
 
-	protected Double getEngine_fuel_flow() {
+	public Double getEngine_fuel_flow() {
 		return engine_fuel_flow;
 	}
 
@@ -518,7 +568,7 @@ public class AllSimulationInfo {
 		this.engine_fuel_flow = engine_fuel_flow;
 	}
 
-	protected Double getLfuel() {
+	public Double getLfuel() {
 		return lfuel;
 	}
 
@@ -526,7 +576,7 @@ public class AllSimulationInfo {
 		this.lfuel = lfuel;
 	}
 
-	protected Double getRfuel() {
+	public Double getRfuel() {
 		return rfuel;
 	}
 
@@ -534,7 +584,7 @@ public class AllSimulationInfo {
 		this.rfuel = rfuel;
 	}
 
-	protected Double getTfuel() {
+	public Double getTfuel() {
 		return tfuel;
 	}
 
@@ -542,7 +592,7 @@ public class AllSimulationInfo {
 		this.tfuel = tfuel;
 	}
 
-	protected Double getBattery_temp() {
+	public Double getBattery_temp() {
 		return battery_temp;
 	}
 
@@ -550,7 +600,7 @@ public class AllSimulationInfo {
 		this.battery_temp = battery_temp;
 	}
 
-	protected Double getBattery_voltage() {
+	public Double getBattery_voltage() {
 		return battery_voltage;
 	}
 
@@ -558,7 +608,7 @@ public class AllSimulationInfo {
 		this.battery_voltage = battery_voltage;
 	}
 
-	protected Double getBattery_amperage() {
+	public Double getBattery_amperage() {
 		return battery_amperage;
 	}
 
@@ -566,7 +616,7 @@ public class AllSimulationInfo {
 		this.battery_amperage = battery_amperage;
 	}
 
-	protected Double getBattery_capacity() {
+	public Double getBattery_capacity() {
 		return battery_capacity;
 	}
 
@@ -574,7 +624,7 @@ public class AllSimulationInfo {
 		this.battery_capacity = battery_capacity;
 	}
 
-	protected Double getFlaps() {
+	public Double getFlaps() {
 		return flaps;
 	}
 
@@ -582,7 +632,7 @@ public class AllSimulationInfo {
 		this.flaps = flaps;
 	}
 
-	protected Double getFlaps_status() {
+	public Double getFlaps_status() {
 		return flaps_status;
 	}
 
@@ -590,7 +640,7 @@ public class AllSimulationInfo {
 		this.flaps_status = flaps_status;
 	}
 
-	protected int getLanding_gear() {
+	public int getLanding_gear() {
 		return landing_gear;
 	}
 
@@ -598,7 +648,7 @@ public class AllSimulationInfo {
 		this.landing_gear = landing_gear;
 	}
 
-	protected int getLanding_gear_1_status() {
+	public int getLanding_gear_1_status() {
 		return landing_gear_1_status;
 	}
 
@@ -606,7 +656,7 @@ public class AllSimulationInfo {
 		this.landing_gear_1_status = landing_gear_1_status;
 	}
 
-	protected int getLanding_gear_2_status() {
+	public int getLanding_gear_2_status() {
 		return landing_gear_2_status;
 	}
 
@@ -614,7 +664,7 @@ public class AllSimulationInfo {
 		this.landing_gear_2_status = landing_gear_2_status;
 	}
 
-	protected int getLanding_gear_3_status() {
+	public int getLanding_gear_3_status() {
 		return landing_gear_3_status;
 	}
 
@@ -622,7 +672,7 @@ public class AllSimulationInfo {
 		this.landing_gear_3_status = landing_gear_3_status;
 	}
 
-	protected boolean isPitot_heating() {
+	public boolean isPitot_heating() {
 		return pitot_heating;
 	}
 
@@ -630,7 +680,7 @@ public class AllSimulationInfo {
 		this.pitot_heating = pitot_heating;
 	}
 
-	protected Double getBrakes() {
+	public Double getBrakes() {
 		return brakes;
 	}
 
@@ -638,7 +688,7 @@ public class AllSimulationInfo {
 		this.brakes = brakes;
 	}
 
-	protected Double getBrakes_status() {
+	public Double getBrakes_status() {
 		return brakes_status;
 	}
 
@@ -646,7 +696,7 @@ public class AllSimulationInfo {
 		this.brakes_status = brakes_status;
 	}
 
-	protected Double getSpeed_brakes() {
+	public Double getSpeed_brakes() {
 		return speed_brakes;
 	}
 
@@ -654,7 +704,7 @@ public class AllSimulationInfo {
 		this.speed_brakes = speed_brakes;
 	}
 
-	protected Double getSpeed_brakes_status() {
+	public Double getSpeed_brakes_status() {
 		return speed_brakes_status;
 	}
 
@@ -662,7 +712,7 @@ public class AllSimulationInfo {
 		this.speed_brakes_status = speed_brakes_status;
 	}
 
-	protected boolean isMaster_switch() {
+	public boolean isMaster_switch() {
 		return master_switch;
 	}
 
@@ -670,7 +720,7 @@ public class AllSimulationInfo {
 		this.master_switch = master_switch;
 	}
 
-	protected boolean isAccu() {
+	public boolean isAccu() {
 		return accu;
 	}
 
@@ -678,7 +728,7 @@ public class AllSimulationInfo {
 		this.accu = accu;
 	}
 
-	protected boolean isGen() {
+	public boolean isGen() {
 		return gen;
 	}
 
@@ -686,7 +736,7 @@ public class AllSimulationInfo {
 		this.gen = gen;
 	}
 
-	protected int getIgnition() {
+	public int getIgnition() {
 		return ignition;
 	}
 
@@ -694,7 +744,7 @@ public class AllSimulationInfo {
 		this.ignition = ignition;
 	}
 
-	protected Double getQNH() {
+	public Double getQNH() {
 		return QNH;
 	}
 
@@ -702,7 +752,7 @@ public class AllSimulationInfo {
 		QNH = qNH;
 	}
 
-	protected boolean isAvionic_switch() {
+	public boolean isAvionic_switch() {
 		return avionic_switch;
 	}
 
@@ -710,7 +760,7 @@ public class AllSimulationInfo {
 		this.avionic_switch = avionic_switch;
 	}
 
-	protected boolean isEfis() {
+	public boolean isEfis() {
 		return efis;
 	}
 
@@ -718,7 +768,7 @@ public class AllSimulationInfo {
 		this.efis = efis;
 	}
 
-	protected boolean isComm_nav() {
+	public boolean isComm_nav() {
 		return comm_nav;
 	}
 
@@ -726,7 +776,7 @@ public class AllSimulationInfo {
 		this.comm_nav = comm_nav;
 	}
 
-	protected boolean isPosition_light() {
+	public boolean isPosition_light() {
 		return position_light;
 	}
 
@@ -734,7 +784,7 @@ public class AllSimulationInfo {
 		this.position_light = position_light;
 	}
 
-	protected boolean isData_switch() {
+	public boolean isData_switch() {
 		return data_switch;
 	}
 
@@ -742,7 +792,7 @@ public class AllSimulationInfo {
 		this.data_switch = data_switch;
 	}
 
-	protected boolean isOptional_switch() {
+	public boolean isOptional_switch() {
 		return optional_switch;
 	}
 
@@ -750,7 +800,7 @@ public class AllSimulationInfo {
 		this.optional_switch = optional_switch;
 	}
 
-	protected boolean isSw_status_master_switch() {
+	public boolean isSw_status_master_switch() {
 		return sw_status_master_switch;
 	}
 
@@ -758,7 +808,7 @@ public class AllSimulationInfo {
 		this.sw_status_master_switch = sw_status_master_switch;
 	}
 
-	protected boolean isSw_status_accu() {
+	public boolean isSw_status_accu() {
 		return sw_status_accu;
 	}
 
@@ -766,7 +816,7 @@ public class AllSimulationInfo {
 		this.sw_status_accu = sw_status_accu;
 	}
 
-	protected boolean isSw_status_gen() {
+	public boolean isSw_status_gen() {
 		return sw_status_gen;
 	}
 
@@ -774,7 +824,7 @@ public class AllSimulationInfo {
 		this.sw_status_gen = sw_status_gen;
 	}
 
-	protected boolean isSw_status_avionic_switch() {
+	public boolean isSw_status_avionic_switch() {
 		return sw_status_avionic_switch;
 	}
 
@@ -782,7 +832,7 @@ public class AllSimulationInfo {
 		this.sw_status_avionic_switch = sw_status_avionic_switch;
 	}
 
-	protected boolean isSw_status_efis() {
+	public boolean isSw_status_efis() {
 		return sw_status_efis;
 	}
 
@@ -790,7 +840,7 @@ public class AllSimulationInfo {
 		this.sw_status_efis = sw_status_efis;
 	}
 
-	protected Double getAp_ias() {
+	public Double getAp_ias() {
 		return ap_ias;
 	}
 
@@ -798,7 +848,7 @@ public class AllSimulationInfo {
 		this.ap_ias = ap_ias;
 	}
 
-	protected Double getAp_alt() {
+	public Double getAp_alt() {
 		return ap_alt;
 	}
 
@@ -806,7 +856,7 @@ public class AllSimulationInfo {
 		this.ap_alt = ap_alt;
 	}
 
-	protected Double getAp_hea() {
+	public Double getAp_hea() {
 		return ap_hea;
 	}
 
@@ -814,7 +864,7 @@ public class AllSimulationInfo {
 		this.ap_hea = ap_hea;
 	}
 
-	protected Double getAp_tt() {
+	public Double getAp_tt() {
 		return ap_tt;
 	}
 
@@ -822,7 +872,7 @@ public class AllSimulationInfo {
 		this.ap_tt = ap_tt;
 	}
 
-	protected Double getAp_vs() {
+	public Double getAp_vs() {
 		return ap_vs;
 	}
 
@@ -830,7 +880,7 @@ public class AllSimulationInfo {
 		this.ap_vs = ap_vs;
 	}
 
-	protected int getAp_mode() {
+	public int getAp_mode() {
 		return ap_mode;
 	}
 
@@ -838,7 +888,7 @@ public class AllSimulationInfo {
 		this.ap_mode = ap_mode;
 	}
 
-	protected Double getTemperature() {
+	public Double getTemperature() {
 		return temperature;
 	}
 
@@ -846,7 +896,7 @@ public class AllSimulationInfo {
 		this.temperature = temperature;
 	}
 
-	protected Double getTemperature_cabin() {
+	public Double getTemperature_cabin() {
 		return temperature_cabin;
 	}
 
@@ -854,7 +904,7 @@ public class AllSimulationInfo {
 		this.temperature_cabin = temperature_cabin;
 	}
 
-	protected Double getWind_speed() {
+	public Double getWind_speed() {
 		return wind_speed;
 	}
 
@@ -862,7 +912,7 @@ public class AllSimulationInfo {
 		this.wind_speed = wind_speed;
 	}
 
-	protected Double getWind_direction() {
+	public Double getWind_direction() {
 		return wind_direction;
 	}
 
@@ -870,7 +920,7 @@ public class AllSimulationInfo {
 		this.wind_direction = wind_direction;
 	}
 
-	protected Double getTest0() {
+	public Double getTest0() {
 		return test0;
 	}
 
@@ -878,7 +928,7 @@ public class AllSimulationInfo {
 		this.test0 = test0;
 	}
 
-	protected Double getTest1() {
+	public Double getTest1() {
 		return test1;
 	}
 
@@ -886,7 +936,7 @@ public class AllSimulationInfo {
 		this.test1 = test1;
 	}
 
-	protected Double getTest2() {
+	public Double getTest2() {
 		return test2;
 	}
 
@@ -894,7 +944,7 @@ public class AllSimulationInfo {
 		this.test2 = test2;
 	}
 
-	protected Double getTest3() {
+	public Double getTest3() {
 		return test3;
 	}
 
@@ -902,7 +952,7 @@ public class AllSimulationInfo {
 		this.test3 = test3;
 	}
 
-	protected Double getTest4() {
+	public Double getTest4() {
 		return test4;
 	}
 
@@ -910,7 +960,7 @@ public class AllSimulationInfo {
 		this.test4 = test4;
 	}
 
-	protected Double getTest5() {
+	public Double getTest5() {
 		return test5;
 	}
 
@@ -918,7 +968,7 @@ public class AllSimulationInfo {
 		this.test5 = test5;
 	}
 
-	protected Double getTest6() {
+	public Double getTest6() {
 		return test6;
 	}
 
@@ -926,7 +976,7 @@ public class AllSimulationInfo {
 		this.test6 = test6;
 	}
 
-	protected Double getTest7() {
+	public Double getTest7() {
 		return test7;
 	}
 
@@ -934,7 +984,7 @@ public class AllSimulationInfo {
 		this.test7 = test7;
 	}
 
-	protected Double getTest8() {
+	public Double getTest8() {
 		return test8;
 	}
 
@@ -942,7 +992,7 @@ public class AllSimulationInfo {
 		this.test8 = test8;
 	}
 
-	protected Double getTest9() {
+	public Double getTest9() {
 		return test9;
 	}
 

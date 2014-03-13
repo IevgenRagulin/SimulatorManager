@@ -1,7 +1,5 @@
 package com.example.testvaadin.javascriptcomponents;
 
-import java.math.BigDecimal;
-
 import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -19,17 +17,18 @@ public class PrimaryFlightDisplay extends
 	private PrimaryFlightDisplayStateBean pfdStateBean;
 
 	public PrimaryFlightDisplay(final String xhtml, final int altitude,
-			final int speed, final int roll, final int pitch, final int yaw,
-			final int compass) {
+			final int speed, final int roll, final int pitch,
+			final int heading, final int truecourse) {
+		getState().resetpfd = 1;
 		getState().xhtml = xhtml;
 		getState().altitude = altitude;
 		getState().speed = speed;
 		getState().roll = roll;
 		getState().pitch = pitch;
-		getState().yaw = yaw;
-		getState().compass = compass;
+		getState().heading = heading;
+		getState().truecourse = truecourse;
 		pfdStateBean = new PrimaryFlightDisplayStateBean(xhtml, altitude,
-				speed, roll, pitch, yaw, compass);
+				speed, roll, pitch, heading, truecourse);
 		// JsLabelState state = getState();
 
 	}
@@ -43,40 +42,46 @@ public class PrimaryFlightDisplay extends
 		return pfdStateBean;
 	}
 
-	public int bigDecimalToInt(BigDecimal value) {
+	public int doubleToInt(Double value) {
 		return value.intValue();
 	}
 
+	public void resetPfd() {
+		System.out.println("RESETTING PFD");
+		getStateBean().setResetpfd(true);
+	}
+
 	public void updateIndividualPFDValues(Item item) {
-		int newRoll = bigDecimalToInt((BigDecimal) ((Property<?>) item
+		int newRoll = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getRoll())).getValue());
-		int newPitch = bigDecimalToInt((BigDecimal) ((Property<?>) item
+		int newPitch = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getPitch())).getValue());
-		int newYaw = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty(ColumnNames.getYaw())).getValue());
-		int newIAS = bigDecimalToInt((BigDecimal) ((Property<?>) item
+		int newHeading = doubleToInt((Double) ((Property<?>) item
+				.getItemProperty(ColumnNames.getHeading())).getValue());
+		int newTrueCourse = doubleToInt((Double) ((Property<?>) item
+				.getItemProperty(ColumnNames.getTrueCourse())).getValue());
+		int newIAS = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getIas())).getValue());
-		int newAltitude = bigDecimalToInt((BigDecimal) ((Property<?>) item
+		int newAltitude = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getAltitude())).getValue());
-		int newGroundAltitude = bigDecimalToInt((BigDecimal) ((Property<?>) item
+		int newGroundAltitude = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getGroundaltitude())).getValue());
-		int newVerticalSpeed = bigDecimalToInt((BigDecimal) ((Property<?>) item
+		int newVerticalSpeed = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
-		int newCompass = bigDecimalToInt((BigDecimal) ((Property<?>) item
-				.getItemProperty(ColumnNames.getCompass())).getValue());
+
 		setRoll(newRoll);
 		setPitch(newPitch);
-		setYaw(newYaw);
+		setHeading(newHeading);
+		setTrueCourse(newTrueCourse);
 		setSpeed(newIAS);// IAS - indicated airspeed
 		setAltitude(newAltitude);
-		setCompass(newCompass);
 
 	}
 
-	private void setCompass(int newCompass) {
-		if (getStateBean().getCompass() != newCompass) {
-			getState().compass = newCompass;
-			getStateBean().setCompass(newCompass);
+	private void setTrueCourse(int newTrueCourse) {
+		if (getStateBean().getTruecourse() != newTrueCourse) {
+			getState().truecourse = newTrueCourse;
+			getStateBean().setTruecourse(newTrueCourse);
 		} else {
 		}
 	}
@@ -97,10 +102,10 @@ public class PrimaryFlightDisplay extends
 		}
 	}
 
-	public void setYaw(final int yaw) {
-		if (getStateBean().getYaw() != yaw) {
-			getState().yaw = yaw;
-			getStateBean().setYaw(yaw);
+	public void setHeading(final int heading) {
+		if (getStateBean().getHeading() != heading) {
+			getState().heading = heading;
+			getStateBean().setHeading(heading);
 		} else {
 		}
 	}

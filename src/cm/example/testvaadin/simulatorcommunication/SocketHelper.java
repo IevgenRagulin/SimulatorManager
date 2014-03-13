@@ -37,9 +37,8 @@ public class SocketHelper {
 		try {
 			queryProcessorSocket = new Socket(host, port);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			System.out.println("Cant creat socket for host: " + host);
+			// System.out.println("Cant creat socket for host: " + host);
 		}
 		return queryProcessorSocket;
 	}
@@ -208,7 +207,6 @@ public class SocketHelper {
 			// barometricPressure
 			value = getValueOf(":BRP:", response);
 			simData.setStatic_pressure(stringToDouble(value));
-
 			// QNH
 			value = getValueOf(":QNH:", response);
 			simData.setQNH(stringToDouble(value));
@@ -264,6 +262,22 @@ public class SocketHelper {
 			// True Track
 			value = getValueOf(":TT_:", response);
 			simData.setTT(stringToDouble(value));
+
+			// ////////////
+			// DEVICES STATE
+			// ////////////
+			// aileron
+			value = getValueOf(":DA_:", response);
+			simData.setAileron(stringToDouble(value));
+			// elevator
+			value = getValueOf(":DE_:", response);
+			simData.setElevator(stringToDouble(value));
+			// rudder
+			value = getValueOf(":DR_:", response);
+			simData.setRudder(stringToDouble(value));
+			// trim
+			value = getValueOf(":DTE:", response);
+			simData.setTrimPosition(stringToDouble(value));
 
 			// ///////////////////////////////////////////////////////
 			// SWITCHES POSITIONS
@@ -332,6 +346,10 @@ public class SocketHelper {
 			// ENGINE
 			// ///////////////////////////////////////////////////////
 			// AWCom v1.1
+			// Throttle
+			value = getValueOf(":THR:", response);
+			simData.setThrottle(stringToDouble(value));
+
 			// EGT1
 			value = getValueOf(":EGT1:", response);
 			simData.setEngine_exh_gas_temp1(stringToDouble(value));

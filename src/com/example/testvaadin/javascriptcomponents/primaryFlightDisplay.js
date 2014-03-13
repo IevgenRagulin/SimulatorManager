@@ -48,15 +48,24 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 
 	this.onStateChange = function() {
 		console.log("PFD STATE CHANGED");
-		if (window.isItFirstLoad) {
+		if (this.getState().resetpfd==true) {
+			window.currentSpeed = 0;
+			window.currentAltitude = 0;
+			window.currentPitch = 0;
+			window.currentRoll = 0;
+			window.currentYaw = 0;
+			window.currentCompass = 0;
+			window.currentlyChangingCompass = false;
 			console.log("INIT HTML AND EVERYTHING");
 			initHtml();
-			init();
-			window.isItFirstLoad = false;
-		};
+			init();		
+			e.resetpfd=false;
+		} else {
+			console.log("NOOOOO RESET PFD IS NOT TRUE"+this.getState().resetpfd);
+		}
 		update(this.getState().speed, this.getState().altitude,
 				this.getState().roll, this.getState().pitch,
-				this.getState().yaw, this.getState().compass);
+				this.getState().heading);
 	};
 
 	function initHtml() {
@@ -98,9 +107,7 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 	}
 }
 
-function update(speed, altitude, roll, pitch, yaw, compass) {
-	console.log("SPEED"+speed);
-	console.log("COMPASS"+compass);
+function update(speed, altitude, roll, pitch, heading) {
 	if (!window.currentlyChangingPitch) {
 		setPitch(pitch);
 	}
@@ -116,7 +123,7 @@ function update(speed, altitude, roll, pitch, yaw, compass) {
 		setAltitude(altitude);
 	}
 	if (!window.currentlyChangingCompass) {
-		setCompass(compass);
+		setCompass(heading);
 	} else {
 		console.log("COMPASS NOT SET");
 	}
@@ -166,7 +173,6 @@ function setMinusPitchClickListener() {
 
 function setAddRollClickListener() {
 	document.getElementById('addRoll').addEventListener('click', function() {
-		console.log(window.currentlyChangingRoll);
 		if (!window.currentlyChangingRoll) {
 			setRoll(window.currentRoll + 60);
 		}
@@ -218,7 +224,6 @@ function setMinusSpeedClickListener() {
 function setAddCompassClickListener() {
 	document.getElementById('addCompass').addEventListener('click', function() {
 		if (!window.currentlyChangingCompass) {
-			console.log("compass CLICK EVENT"+window.currentCompass);
 			setCompass(window.currentCompass + 180);
 		}
 	});
@@ -227,7 +232,7 @@ function setAddCompassClickListener() {
 function setMinusCompassClickListener() {
 	document.getElementById('minusCompass').addEventListener('click', function() {
 		if (!window.currentlyChangingCompass) {
-			setCompass(window.currentCompass - 90);
+			setCompass(window.currentCompass - 180);
 		}
 	});
 }
@@ -340,7 +345,7 @@ function setRoll(roll) {
 
 function shouldWeRoll(difRoll) {
 	//console.log("SHOULD WE CHANGEROLL. Diff roll: "+difRoll+" Current roll: "+currentRoll);
-	return ((difRoll > 0.2) || (difRoll < -0.2));
+	return ((difRoll > 0.5) || (difRoll < -0.5));
 }
 
 function rotateCanvasByRollDegrees(ctx, roll) {
@@ -498,7 +503,6 @@ function drawSight() {
 }
 
 function setSpeed(speed) {
-	//console.log('set speed called');
 	var ctxSpeed = document.getElementById('speed').getContext('2d');
 	var difSpeed = speed - window.currentSpeed;
 	var difSpeedStep = calculateAltitudeSpeedStep(difSpeed);
@@ -579,7 +583,6 @@ function setAltitude(altitude) {
 	var ctxAltitude = document.getElementById('altitude').getContext('2d');
 	var difAltitude = altitude - window.currentAltitude;
 	var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
-	console.log(difAltitudeStep+" "+window.currentAltitude);
 	if (difAltitude > 0) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingAlt = true;

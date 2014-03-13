@@ -9,6 +9,7 @@ public class PrimaryFlightDisplayState extends JavaScriptComponentState {
 	public int speed;
 	public int roll;
 	public int pitch;
-	public int yaw;
-	public int compass;
+	public int heading;
+	public int truecourse;
+	public int resetpfd;
 }
