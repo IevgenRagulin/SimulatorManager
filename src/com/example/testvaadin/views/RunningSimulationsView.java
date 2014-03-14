@@ -23,6 +23,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
 	public class StatusRefreshListener implements RefreshListener {
@@ -68,6 +69,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private ButtonToMainMenu buttonToMainMenu;
+	private VerticalLayout mainSimulationLayout;
 
 	public SimulationStateFieldGroup getSimulatorInfo() {
 		return simulatorInfo;
@@ -134,7 +136,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		} else {
 			googleMap = new FlightPathGoogleMap(
 					new LatLon(60.440963, 22.25122), 4.0, apiKey, this);
-			addComponent(googleMap);
+			mainSimulationLayout.addComponent(googleMap);
 		}
 	}
 
@@ -143,7 +145,7 @@ public class RunningSimulationsView extends BasicView implements View {
 				.println("----------------------------------------------------------INITING PFD");
 		primaryFlightDisplay = new PrimaryFlightDisplay("index.html", 0, 0, 0,
 				0, 0, 0);
-		addComponent(primaryFlightDisplay);
+		mainSimulationLayout.addComponent(primaryFlightDisplay);
 	}
 
 	private void initButtonToMainMenu() {
@@ -172,20 +174,17 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void initSimulationInfo() {
 		simulation = new SimulationStateFieldGroup(
 				ColumnNames.getSimulationBeanCols(), simulationLayout);
-		simulation.setEnabled(false);
 	}
 
 	private void initSimulationInfoInfo() {
 		simulationInfo = new SimulationStateFieldGroup(
 				ColumnNames.getSimulationInfoBeanCols(), simulationInfoLayout);
-		simulationInfo.setEnabled(false);
 	}
 
 	private void initSimulationDevicesState() {
 		simulationDevicesState = new SimulationStateFieldGroup(
 				ColumnNames.getSimulationDevicesStateBeanCols(),
 				simulationDevicesStateLayout);
-		simulationDevicesState.setEnabled(false);
 	}
 
 	private void initSelectSimulatorCombo() {
@@ -195,7 +194,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void initSimulatorsInfo() {
 		simulatorInfo = new SimulationStateFieldGroup(
 				ColumnNames.getSimulatorMainCols(), simulatorInfoLayout);
-		simulatorInfo.setEnabled(false);
 	}
 
 	private void initLayout() {
@@ -204,15 +202,20 @@ public class RunningSimulationsView extends BasicView implements View {
 		addComponent(errorLabel);
 		addComponent(simulatorInfoLabel);
 		addComponent(simulatorInfoLayout);
-		addComponent(simulationLabel);
-		addComponent(simulationLayout);
-		addComponent(simulatorDevicesStateLabel);
-		addComponent(simulationDevicesStateLayout);
-		addComponent(simulationInfoLabel);
-		addComponent(simulationInfoLayout);
+		mainSimulationLayout = new VerticalLayout();
+		mainSimulationLayout.addComponent(simulationLabel);
+		mainSimulationLayout.addComponent(simulationLayout);
+		mainSimulationLayout.addComponent(simulatorDevicesStateLabel);
+		mainSimulationLayout.addComponent(simulationDevicesStateLayout);
+		mainSimulationLayout.addComponent(simulationInfoLabel);
+		mainSimulationLayout.addComponent(simulationInfoLayout);
+		addComponent(mainSimulationLayout);
 	}
 
 	public void setAllSimulationSimulatorData(Item selectedSimulator) {
+		mainSimulationLayout.setVisible(true);
+		simulatorInfoLabel.setVisible(true);
+		simulatorInfoLayout.setVisible(true);
 		// Set simulator info data
 		setSimulatorInfoData(selectedSimulator);
 		String simulatorId = selectedSimulator
@@ -240,7 +243,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void setSimulatorInfoData(Item selectedSimulator) {
 		getSimulatorInfo().setItemDataSource(selectedSimulator);
 		getSimulatorInfo().setReadOnly(true);
-		getSimulatorInfo().setEnabled(true);
 	}
 
 	private void setSimulationData(final Item selectedSimulation) {
@@ -262,7 +264,6 @@ public class RunningSimulationsView extends BasicView implements View {
 			// Set simulation info data
 			getSimulationInfo().setItemDataSource(selectedSimulationInfo);
 			getSimulationInfo().setEnabled(true);
-			getSimulationInfo().setReadOnly(true);
 			// Add simulation info data to map
 			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo,
 					simulatorId);
@@ -295,20 +296,16 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	public void setSimulatorNotSelectedState() {
 		getErrorLabel().setValue(NO_SIMULATOR_SELECTED);
-		getSimulatorInfo().setEnabled(false);
-		getSimulation().setEnabled(false);
-		getSimulatorDevicesState().setEnabled(false);
-		getSimulationInfo().setEnabled(false);
-		initGoogleMaps();
+		mainSimulationLayout.setVisible(false);
+		simulatorInfoLabel.setVisible(false);
+		simulatorInfoLayout.setVisible(false);
 	}
 
 	public void setNoSimulationsRunningState(Item selectedSimulator) {
-		setSimulatorInfoData(selectedSimulator);
 		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
-		getSimulation().setEnabled(false);
-		getSimulatorDevicesState().setEnabled(false);
-		getSimulationInfo().setEnabled(false);
-		initGoogleMaps();
+		mainSimulationLayout.setVisible(false);
+		simulatorInfoLabel.setVisible(true);
+		simulatorInfoLayout.setVisible(true);
 	}
 
 }

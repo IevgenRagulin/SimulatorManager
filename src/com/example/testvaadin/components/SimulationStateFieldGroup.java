@@ -13,6 +13,7 @@ public class SimulationStateFieldGroup extends FieldGroup {
 
 	private void initSimulatorInfo(String[] fieldNames, FormLayout formLayout) {
 		setBuffered(false);
+
 		for (String fieldName : fieldNames) {
 			TextField field = createInputField(fieldName);
 			formLayout.addComponent(field);

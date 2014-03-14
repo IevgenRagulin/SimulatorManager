@@ -1,8 +1,6 @@
 package com.example.testvaadin.data;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -113,28 +111,6 @@ public class DatabaseHelper implements Serializable {
 			e.printStackTrace();
 		}
 		return getLatestItemFromContainer(simulationDevicesState);
-	}
-
-	public void removeSimulatorWithId(String simulatorId) {
-		Connection conn = null;
-		try {
-			// STEP 2: Register JDBC driver
-			Class.forName("com.mysql.jdbc.Driver");
-
-			// STEP 3: Open a connection
-			System.out.println("Connecting to database...");
-			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	public DatabaseHelper() {
