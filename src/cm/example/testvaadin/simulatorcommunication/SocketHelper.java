@@ -123,6 +123,21 @@ public class SocketHelper {
 		}
 	}
 
+	private static Integer doubleToInt(Double dblVal) {
+		if (dblVal != null) {
+			return dblVal.intValue();
+		} else {
+			return null;
+		}
+	}
+
+	private static Boolean isSimulationPaused(Integer intValue) {
+		if (intValue == null)
+			throw new IllegalArgumentException(
+					"Simulator doesn't send information about its Paused or not status");
+		return intValue == 1;
+	}
+
 	private static AllSimulationInfo parseSimulatorResponse(String response) {
 		AllSimulationInfo simData = null;
 		String value = null;
@@ -393,6 +408,11 @@ public class SocketHelper {
 			// MP
 			value = getValueOf(":MP_:", response);
 			simData.setEngine_manifold_pressure(stringToDouble(value));
+
+			// Simulation paused
+			value = getValueOf(":SSPD:", response);
+			Boolean isSimPaused = isSimulationPaused(doubleToInt(stringToDouble(value)));
+			simData.setSimulationPaused(isSimPaused);
 		}
 		return simData;
 	}

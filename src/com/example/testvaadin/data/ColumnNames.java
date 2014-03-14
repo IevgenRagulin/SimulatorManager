@@ -1,6 +1,7 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
+	private static final String SIMULATIONID = "simulationid";
 	private static final String SIMULATIONENDEDTIME = "simulationendedtime";
 	private static final String SIMULATIONSTARTEDTIME = "simulationstartedtime";
 	private static final String ISSIMULATIONPAUSED = "issimulationpaused";
@@ -35,7 +36,7 @@ public class ColumnNames {
 	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
 
 	protected static final String[] simulationCols = new String[] {
-			"simulationid", SIMULATORID_FOREIGN_KEY, ISSIMULATIONON,
+			SIMULATIONID, SIMULATORID_FOREIGN_KEY, ISSIMULATIONON,
 			ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME, SIMULATIONENDEDTIME };
 
 	protected static final String[] simulationBeanCols = new String[] {
@@ -63,6 +64,10 @@ public class ColumnNames {
 	protected static final String[] simulationPfdInfo = new String[] {
 			PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, HEADING,
 			TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE, VERTICALSPEED };
+
+	public static String getSimulationid() {
+		return SIMULATIONID;
+	}
 
 	public static String getTrueCourse() {
 		return TRUE_COURSE;

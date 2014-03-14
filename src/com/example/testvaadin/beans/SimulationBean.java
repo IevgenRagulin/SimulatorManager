@@ -1,5 +1,7 @@
 package com.example.testvaadin.beans;
 
+import java.util.Date;
+
 import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;
 
@@ -7,11 +9,11 @@ public class SimulationBean {
 
 	private boolean issimulationon;
 	private boolean issimulationpaused;
-	private String simulationstartedtime;
-	private String simulationendedtime;
+	private Date simulationstartedtime;
+	private Date simulationendedtime;
 
 	public SimulationBean(boolean issimulationon, boolean issimulationpaused,
-			String simulationstartedtime, String simulationendedtime) {
+			Date simulationstartedtime, Date simulationendedtime) {
 		super();
 		this.issimulationon = issimulationon;
 		this.issimulationpaused = issimulationpaused;
@@ -25,9 +27,9 @@ public class SimulationBean {
 					ColumnNames.getIssimulationon()).getValue();
 			this.issimulationpaused = (Boolean) item.getItemProperty(
 					ColumnNames.getIssimulationpaused()).getValue();
-			this.simulationstartedtime = (String) item.getItemProperty(
+			this.simulationstartedtime = (Date) item.getItemProperty(
 					ColumnNames.getSimulationstartedtime()).getValue();
-			this.simulationendedtime = (String) item.getItemProperty(
+			this.simulationendedtime = (Date) item.getItemProperty(
 					ColumnNames.getSimulationendedtime()).getValue();
 		}
 	}
@@ -48,19 +50,19 @@ public class SimulationBean {
 		this.issimulationpaused = issimulationpaused;
 	}
 
-	public String getSimulationstartedtime() {
+	public Date getSimulationstartedtime() {
 		return simulationstartedtime;
 	}
 
-	public void setSimulationstartedtime(String simulationstartedtime) {
+	public void setSimulationstartedtime(Date simulationstartedtime) {
 		this.simulationstartedtime = simulationstartedtime;
 	}
 
-	public String getSimulationendedtime() {
+	public Date getSimulationendedtime() {
 		return simulationendedtime;
 	}
 
-	public void setSimulationendedtime(String simulationendedtime) {
+	public void setSimulationendedtime(Date simulationendedtime) {
 		this.simulationendedtime = simulationendedtime;
 	}
 

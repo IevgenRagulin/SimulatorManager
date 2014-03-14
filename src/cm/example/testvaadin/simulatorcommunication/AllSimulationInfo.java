@@ -5,6 +5,7 @@ public class AllSimulationInfo {
 	float fps; // Frame per second
 	int sim_speed; // Simulation speed
 	Double time; // Time
+	Boolean simulationPaused;
 
 	// ///////////////////////////////////
 	// POSITION AND ORIENTATION //
@@ -171,6 +172,14 @@ public class AllSimulationInfo {
 	Double test7;
 	Double test8;
 	Double test9;
+
+	public Boolean getSimulationPaused() {
+		return simulationPaused;
+	}
+
+	protected void setSimulationPaused(Boolean simulationPaused) {
+		this.simulationPaused = simulationPaused;
+	}
 
 	public AllSimulationInfo() {
 		super();

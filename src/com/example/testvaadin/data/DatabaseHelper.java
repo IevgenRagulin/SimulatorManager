@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 
 import com.vaadin.data.Item;
@@ -28,9 +27,9 @@ public class DatabaseHelper implements Serializable {
 	private String DB_PASS = "password";
 
 	/*
-	 * Returns an SQLContainer with the currently running simulation on
-	 * simulator with id simulatorId If there is more than one simulation
-	 * currently running (which should be impossible) returns the newest one
+	 * Returns an Item with the currently running simulation on simulator with
+	 * id simulatorId If there is more than one simulation currently running
+	 * (which should be impossible) returns the newest one
 	 */
 	public Item getLatestRunningSimulationOnSimulatorWithId(String simulatorId) {
 		@SuppressWarnings("deprecation")
@@ -48,7 +47,50 @@ public class DatabaseHelper implements Serializable {
 		return getLatestItemFromContainer(runningSimulations);
 	}
 
-	private Item getLatestItemFromContainer(SQLContainer container) {
+	/*
+	 * Returns SQLContainer with the latest running simulation on simulator with
+	 * id simulatorId If there is more than one simulation currently running
+	 * (which should be impossible) returns the newest one
+	 */
+	public SQLContainer getLatestSimulationContainer(String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
+						+ simulatorId
+						+ " ORDER BY SimulationStartedTime DESC LIMIT 1",
+				Arrays.asList("simulationid"), pool);
+		SQLContainer runningSimulations = null;
+		query.setDelegate(new FreeFormQueryDelegateSimulationImpl(simulatorId));
+		try {
+			runningSimulations = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return runningSimulations;
+	}
+
+	/*
+	 * Returns an Item with the latest running simulation on simulator with id
+	 * simulatorId If there is more than one simulation currently running (which
+	 * should be impossible) returns the newest one
+	 */
+	public Item getLatesttSimulationOnSimulatorWithId(String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
+						+ simulatorId
+						+ " ORDER BY SimulationStartedTime DESC LIMIT 1",
+				Arrays.asList("simulationid"), pool);
+		SQLContainer runningSimulations = null;
+		try {
+			runningSimulations = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getLatestItemFromContainer(runningSimulations);
+	}
+
+	public Item getLatestItemFromContainer(SQLContainer container) {
 		Item latestItem = null;
 		if ((container != null) && (container.size() != 0)) {
 			final RowId id = (RowId) container.getIdByIndex(0);
@@ -75,7 +117,6 @@ public class DatabaseHelper implements Serializable {
 
 	public void removeSimulatorWithId(String simulatorId) {
 		Connection conn = null;
-		Statement stmt = null;
 		try {
 			// STEP 2: Register JDBC driver
 			Class.forName("com.mysql.jdbc.Driver");

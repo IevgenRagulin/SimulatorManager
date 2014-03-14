@@ -106,6 +106,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	public RunningSimulationsView(Navigator navigator) {
+		// dbHelp.getLatestSimulationContainer("1");
 		this.navigator = navigator;
 		initButtonToMainMenu();
 		initSelectSimulatorCombo();
