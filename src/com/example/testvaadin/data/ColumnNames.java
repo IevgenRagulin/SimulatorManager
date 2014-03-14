@@ -1,6 +1,13 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
+	private static final String TRIM = "trim";
+	private static final String SPEEDBRAKES = "speedbrakes";
+	private static final String FLAPS = "flaps";
+	private static final String THROTTLE = "throttle";
+	private static final String RUDDER = "rudder";
+	private static final String ELERON = "eleron";
+	private static final String ELEVATOR = "elevator";
 	private static final String SIMULATIONID = "simulationid";
 	private static final String SIMULATIONENDEDTIME = "simulationendedtime";
 	private static final String SIMULATIONSTARTEDTIME = "simulationstartedtime";
@@ -50,12 +57,11 @@ public class ColumnNames {
 			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
 
 	protected static final String[] simulationDevicesStateBeanCols = new String[] {
-			"elevator", "eleron", "rudder", "throttle", "flaps", "speedbrakes",
-			"trim" };
+			ELEVATOR, ELERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, TRIM };
 
 	protected static final String[] simulationDevicesStateCols = new String[] {
-			"devstateid", SIMULATIONID_FOREIGN_KEY, "elevator", "eleron",
-			"rudder", "throttle", "flaps", "speedbrakes", "trim", TIMESTAMP };
+			"devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, ELERON, RUDDER,
+			THROTTLE, FLAPS, SPEEDBRAKES, TRIM, TIMESTAMP };
 
 	protected static final String[] simulationBeanPfdInfo = new String[] {
 			ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE,
@@ -240,4 +246,33 @@ public class ColumnNames {
 	public static String getLongtitude() {
 		return LONGTITUDE;
 	}
+
+	public static String getTrim() {
+		return TRIM;
+	}
+
+	public static String getSpeedbrakes() {
+		return SPEEDBRAKES;
+	}
+
+	public static String getFlaps() {
+		return FLAPS;
+	}
+
+	public static String getThrottle() {
+		return THROTTLE;
+	}
+
+	public static String getRudder() {
+		return RUDDER;
+	}
+
+	public static String getEleron() {
+		return ELERON;
+	}
+
+	public static String getElevator() {
+		return ELEVATOR;
+	}
+
 }

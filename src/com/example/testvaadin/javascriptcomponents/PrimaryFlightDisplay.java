@@ -47,7 +47,6 @@ public class PrimaryFlightDisplay extends
 	}
 
 	public void resetPfd() {
-		System.out.println("RESETTING PFD");
 		getStateBean().setResetpfd(true);
 	}
 

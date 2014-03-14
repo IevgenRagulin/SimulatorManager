@@ -16,6 +16,7 @@ import com.example.testvaadin.items.SimulationInfoItem;
 import com.example.testvaadin.items.SimulationItem;
 import com.example.testvaadin.items.SimulationPFDItem;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
 public class SimulationsUpdater {
@@ -34,6 +35,7 @@ public class SimulationsUpdater {
 		}
 	};
 	static {
+		System.out.println("GOING TO SCHEDULE AT FIXED RATE");
 		scheduler.scheduleAtFixedRate(beeper, 0, 5, TimeUnit.SECONDS);
 	}
 
@@ -121,9 +123,9 @@ public class SimulationsUpdater {
 		if (lastSim == null) {
 
 		} else if (isLastSimInDBOn && isLastSimInDBPaused) {
-			SimulatorsStatus.setSimOffNotPausedState(lastSimCont, lastSim);
+			DatabaseUpdater.setSimOffNotPausedState(lastSimCont, lastSim);
 		} else if (isLastSimInDBOn && !(isLastSimInDBPaused)) {
-			SimulatorsStatus.setSimOffNotPausedState(lastSimCont, lastSim);
+			DatabaseUpdater.setSimOffNotPausedState(lastSimCont, lastSim);
 		} else if (!isLastSimInDBOn && isLastSimInDBPaused) {
 			throw new IllegalStateException(
 					"Simulator cannot be off and paused at the same time");
@@ -137,17 +139,17 @@ public class SimulationsUpdater {
 			Boolean isLastSimInDBPaused, String simulatorId) {
 		// simulator is on, but is on pause
 		if (lastSim == null) {
-			SimulatorsStatus.createNewRunningPausedSimulation(lastSimCont,
+			DatabaseUpdater.createNewRunningPausedSimulation(lastSimCont,
 					simulatorId);
 		} else if (isLastSimInDBOn && isLastSimInDBPaused) {
 
 		} else if (isLastSimInDBOn && !(isLastSimInDBPaused)) {
-			SimulatorsStatus.setSimOnPausedState(lastSimCont, lastSim);
+			DatabaseUpdater.setSimOnPausedState(lastSimCont, lastSim);
 		} else if (!isLastSimInDBOn && isLastSimInDBPaused) {
 			throw new IllegalStateException(
 					"Simulator cannot be off and paused at the same time");
 		} else if (!isLastSimInDBOn && (!isLastSimInDBPaused)) {
-			SimulatorsStatus.createNewRunningPausedSimulation(lastSimCont,
+			DatabaseUpdater.createNewRunningPausedSimulation(lastSimCont,
 					simulatorId);
 		}
 	}
@@ -155,23 +157,28 @@ public class SimulationsUpdater {
 	private static void updateSimulationStateInDatabaseSimulatorOn(
 			SQLContainer lastSimCont, Item lastSim, Boolean isLastSimInDBOn,
 			Boolean isLastSimInDBPaused, String simulatorId) {
+		RowId simulationId = null;
 		if (lastSim == null) {
-			SimulatorsStatus.createNewRunningNotPausedSimulation(lastSimCont,
+			DatabaseUpdater.createNewRunningNotPausedSimulation(lastSimCont,
 					simulatorId);
-			// TODO add simulation info to database
+			simulationId = (RowId) dbHelp.getLatestSimulationContainer(
+					simulatorId).getIdByIndex(0);
 		} else if (isLastSimInDBOn && isLastSimInDBPaused) {
-			SimulatorsStatus.setSimOnNotPausedState(lastSimCont, lastSim);
-			// TODO add simulation info to database
+			DatabaseUpdater.setSimOnNotPausedState(lastSimCont, lastSim);
+			simulationId = (RowId) lastSimCont.getIdByIndex(0);
 		} else if (isLastSimInDBOn && !(isLastSimInDBPaused)) {
-			// TODO add simulation info to database
+			simulationId = (RowId) lastSimCont.getIdByIndex(0);
 		} else if (!isLastSimInDBOn && isLastSimInDBPaused) {
 			throw new IllegalStateException(
 					"Simulator cannot be off and paused at the same time");
 		} else if (!isLastSimInDBOn && (!isLastSimInDBPaused)) {
-			SimulatorsStatus.createNewRunningNotPausedSimulation(lastSimCont,
+			DatabaseUpdater.createNewRunningNotPausedSimulation(lastSimCont,
 					simulatorId);
-			// TODO add simulation info to database
+			simulationId = (RowId) dbHelp.getLatestSimulationContainer(
+					simulatorId).getIdByIndex(0);
 		}
+		DatabaseUpdater.addSimulationInfoToDatabase(lastSimCont, simulatorId,
+				simulationId);
 	}
 
 	private static void updateSimulPFDData(AllSimulationInfo allSimInfo,

@@ -72,7 +72,7 @@ public class DatabaseHelper implements Serializable {
 	 * simulatorId If there is more than one simulation currently running (which
 	 * should be impossible) returns the newest one
 	 */
-	public Item getLatesttSimulationOnSimulatorWithId(String simulatorId) {
+	public Item getLatestSimulationOnSimulatorWithId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
 				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
@@ -142,8 +142,32 @@ public class DatabaseHelper implements Serializable {
 		return simulationContainer;
 	}
 
+	public SQLContainer getSimulationInfoContainer() {
+		TableQuery tq = new TableQuery("simulationinfo", pool);
+		tq.setVersionColumn("timestamp");
+		SQLContainer simulationDevicesStateContainer = null;
+		try {
+			simulationDevicesStateContainer = new SQLContainer(tq);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationDevicesStateContainer;
+	}
+
 	public SQLContainer getSimulationDevicesStateContainer() {
 		TableQuery tq = new TableQuery("simulationdevicesstate", pool);
+		tq.setVersionColumn("timestamp");
+		SQLContainer simulationDevicesStateContainer = null;
+		try {
+			simulationDevicesStateContainer = new SQLContainer(tq);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationDevicesStateContainer;
+	}
+
+	public SQLContainer getSimulationPFDContainer() {
+		TableQuery tq = new TableQuery("simulationpfdinfo", pool);
 		tq.setVersionColumn("timestamp");
 		SQLContainer simulationDevicesStateContainer = null;
 		try {

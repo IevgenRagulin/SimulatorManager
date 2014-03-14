@@ -141,8 +141,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initPrimaryFlightDisplay() {
-		System.out
-				.println("----------------------------------------------------------INITING PFD");
 		primaryFlightDisplay = new PrimaryFlightDisplay("index.html", 0, 0, 0,
 				0, 0, 0);
 		mainSimulationLayout.addComponent(primaryFlightDisplay);
