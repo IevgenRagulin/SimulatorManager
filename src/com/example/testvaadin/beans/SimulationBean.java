@@ -1,12 +1,13 @@
 package com.example.testvaadin.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;
 
-public class SimulationBean {
-
+public class SimulationBean implements Serializable {
+	private static final long serialVersionUID = 3314547295194561766L;
 	private boolean issimulationon;
 	private boolean issimulationpaused;
 	private Date simulationstartedtime;

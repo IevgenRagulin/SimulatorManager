@@ -1,8 +1,12 @@
 package com.example.testvaadin.beans;
 
+import java.io.Serializable;
+
 import cm.example.testvaadin.simulatorcommunication.AllSimulationInfo;
 
-public class SimulationInfoBean {
+public class SimulationInfoBean implements Serializable {
+
+	private static final long serialVersionUID = 3769922290842743952L;
 	private Double longtitude;
 	private Double latitude;
 

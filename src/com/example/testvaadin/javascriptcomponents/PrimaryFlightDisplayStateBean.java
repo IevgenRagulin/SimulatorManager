@@ -25,7 +25,7 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 		this.pitch = pitch;
 		this.heading = heading;
 		this.truecourse = truecourse;
-		this.verticalspeed = verticalspeed;
+		this.setVerticalspeed(verticalspeed);
 		this.resetpfd = resetpfd;
 	}
 
@@ -91,6 +91,14 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 
 	public void setResetpfd(int resetpfd) {
 		this.resetpfd = resetpfd;
+	}
+
+	public int getVerticalspeed() {
+		return verticalspeed;
+	}
+
+	public void setVerticalspeed(int verticalspeed) {
+		this.verticalspeed = verticalspeed;
 	}
 
 }

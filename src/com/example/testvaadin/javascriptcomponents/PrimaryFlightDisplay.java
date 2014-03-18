@@ -67,7 +67,7 @@ public class PrimaryFlightDisplay extends
 				.getItemProperty(ColumnNames.getAltitude())).getValue());
 		int newGroundAltitude = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getGroundaltitude())).getValue());
-		int newVerticalSpeed = doubleToInt((Double) ((Property<?>) item
+		int newVertSpeed = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
 
 		setRoll(newRoll);
@@ -76,8 +76,17 @@ public class PrimaryFlightDisplay extends
 		setTrueCourse(newTrueCourse);
 		setSpeed(newIAS);// IAS - indicated airspeed
 		setAltitude(newAltitude);
+		setVerticalSpeed(newVertSpeed);
 		getStateBean().setResetpfd(0);
 		getState().resetpfd = 0;
+	}
+
+	private void setVerticalSpeed(int newVertSpeed) {
+		if (getStateBean().getVerticalspeed() != newVertSpeed) {
+			getState().verticalspeed = newVertSpeed;
+			getStateBean().setVerticalspeed(newVertSpeed);
+		} else {
+		}
 	}
 
 	private void setTrueCourse(int newTrueCourse) {

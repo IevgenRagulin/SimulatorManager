@@ -1,8 +1,12 @@
 package com.example.testvaadin.beans;
 
+import java.io.Serializable;
+
 import cm.example.testvaadin.simulatorcommunication.AllSimulationInfo;
 
-public class SimulationPFDBean {
+public class SimulationPFDBean implements Serializable {
+
+	private static final long serialVersionUID = -5185271892922972352L;
 	private Double roll;
 	private Double pitch;
 	private Double yaw;

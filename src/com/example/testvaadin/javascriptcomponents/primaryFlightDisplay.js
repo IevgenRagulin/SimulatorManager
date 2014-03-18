@@ -3,20 +3,23 @@ var sightCenterRadius = 10;
 var sightCenterCenterRadius = 1;
 
 var canvasHeight = 300;
-var canvasWidth = 300;
+var canvasWidth = 320;
 
-var compasCanvasWidth = 300;
+var compasCanvasWidth = 320;
 var compasCanvasHeight = 40;
 var compasRadius = 200;
 var compassIndicatorWidth = 5;
 
-var speedBarWidth = 30;
+var vsCanW = 100;
+var vsCanH = 300;
+
+var speedBarWidth = 40;
 var speedBarHeight = 300;
 var leftSpeedBarMargin = 0;
 var topSpeedBarMargin = 0;
 var speedIndicatorWidth = 5;
 
-var altBarWidth = 30;
+var altBarWidth = 40;
 var altBarHeight = 300;
 var altBarRightMargin = 0;
 var altBarTopMargin = 0;
@@ -26,18 +29,21 @@ var currentAltitude = 0;
 var currentPitch = 0;
 var currentRoll = 0;
 var currentCompass = 0;
+var currentVerSpeed = 0;
 
 var wantHaveSpeed = 0;
 var wantHaveAltitude = 0;
 var wantHavePitch = 0;
 var wantHaveRoll = 0;
 var wantHaveCompass = 0;
+var wantHaveVerSpeed = 0;
 
 var currentlyChangingRoll = false;
 var currentlyChangingPitch = false;
 var currentlyChangingAlt = false;
 var currentlyChangingSpeed = false;
 var currentlyChangingCompass = false;
+var currentlyChangingVerSpeed = false;
 
 var horizontWidth = 500;
 
@@ -56,38 +62,43 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 	window.currentRoll = 0;
 	window.currentYaw = 0;
 	window.currentCompass = 0;
-	window.currentlyChangingCompass = false;
+	window.currentVerSpeed = 0;
 	initHtml();
 	init();		
 	this.onStateChange = function() {
-		//console.log("PFD STATE CHANGED");
-		//if (this.getState().resetpfd==1) {
-		//
-		//} else {
-		//	console.log("logging NOOOOO RESET PFD IS NOT TRUE"+this.getState().resetpfd);
-		//}
-		console.log("PFD NEW DATA RECEIVED");
-		window.wantHaveSpeed = this.getState().speed;
-		window.wantHaveAltitude = this.getState().altitude;
+		console.log("ver speed"+this.getState().verticalspeed);
+		window.wantHaveSpeed = metersPerSecondToKts(this.getState().speed);
+		window.wantHaveAltitude = metersToFeet(this.getState().altitude);
 		window.wantHaveRoll = this.getState().roll;
 		window.wantHavePitch = this.getState().pitch;
 		window.wantHaveHeading = this.getState().heading;
+		window.wantHaveVerSpeed = this.getState().verticalspeed;
 		update();
 	};
+
+	function metersPerSecondToKts(metersPerSecond) {
+		return metersPerSecond*1.94;
+	}
+	
+	function metersToFeet(meters) {
+		return meters*3.2808;
+	}
 
 	function initHtml() {
 		e.innerHTML = "<h1>PFD</h1>"
 				+ "<div style='position:relative; margin-left: 40px;'>"
-				+ "<canvas id='pfd' width='300' height='300' style='border:1px solid #000000; position: absolute;'>"
+				+ "<canvas id='pfd' width='320' height='300' style='border:1px solid #000000; position: absolute;'>"
 				+ "Your browser doesn't support canvas."
 				+ "</canvas>"
-				+ "<canvas id='sight' width='300' height='300' style='border:1px solid #000000; position: absolute;'>"
+				+ "<canvas id='sight' width='320' height='300' style='border:1px solid #000000; position: absolute;'>"
 				+ "</canvas>"
-				+ "<canvas id='speed' width='300' height='300' style='border:1px solid #000000; position: absolute;'>"
+				+ "<canvas id='speed' width='320' height='300' style='border:1px solid #000000; position: absolute;'>"
 				+ "</canvas>"
-				+ "<canvas id='altitude' width='300' height='300' style='border:1px solid #000000; position: absolute;'>"
+				+ "<canvas id='altitude' width='320' height='300' style='border:1px solid #000000; position: absolute;'>"
 				+ "</canvas>"
-				+ "<canvas id='compass' width='300' height='40' style='border:1px solid #000000; margin-top:300px;'>"
+				+ "<canvas id='compass' width='320' height='40' style='border:1px solid #000000; margin-top:300px;'>"
+				+ "</canvas>"
+				+ "<canvas id='verspeed' width='100' height='300' style='border:1px solid #000000; position:absolute; margin-left: 5px;'>"
 				+ "</canvas>" + "</div>"
 				+ "<div style='margin-top: 50px; margin-left: 40px;'>"
 				+ "<label id='speedT'>Current speed:</label>"
@@ -129,7 +140,10 @@ function update() {
 	}
 	if (!window.currentlyChangingCompass) {
 		setCompass();
-	} else {
+	} if (!window.currentlyChangingVerSpeed) {
+		setVerticalSpeed();
+	}
+	else {
 		console.log("COMPASS NOT SET");
 	}
 }
@@ -152,6 +166,7 @@ function init() {
 	drawHeightIndicator();
 	drawSight();
 	drawCompassIndicator();
+	drawVerticalSpeed();
 	setClickListeners();
 }
 
@@ -480,16 +495,64 @@ function drawSight() {
 	ctx.restore();
 }
 
+function drawVerticalSpeed() {
+	var ctxVS = document.getElementById('verspeed').getContext('2d');
+	ctxVS.beginPath();
+	ctxVS.fillStyle = 'black';
+	ctxVS.clearRect(0,0,window.vsCanW, vsCanH);
+	ctxVS.fillRect(0,0,window.vsCanW, vsCanH);
+	ctxVS.fill();
+	ctxVS.beginPath();
+	ctxVS.strokeStyle = darkGray;
+	ctxVS.fillStyle = darkGray;
+	ctxVS.moveTo(window.vsCanW*0.05, window.vsCanH*0.2);
+	ctxVS.lineTo(window.vsCanW*0.05, window.vsCanH*0.35);
+	ctxVS.lineTo(window.vsCanW*0.15, window.vsCanH*0.40);
+	ctxVS.lineTo(window.vsCanW*0.15, window.vsCanH*0.60);
+	ctxVS.lineTo(window.vsCanW*0.05, window.vsCanH*0.65);
+	ctxVS.lineTo(window.vsCanW*0.05, window.vsCanH*0.80);
+	ctxVS.lineTo(window.vsCanW*0.25, window.vsCanH*0.80);
+	ctxVS.lineTo(window.vsCanW*0.40, window.vsCanH*0.68);
+	ctxVS.lineTo(window.vsCanW*0.40, window.vsCanH*0.32);
+	ctxVS.lineTo(window.vsCanW*0.25, window.vsCanH*0.20);
+	ctxVS.lineTo(window.vsCanW*0.05, window.vsCanH*0.20);
+	ctxVS.stroke();
+	ctxVS.fill();
+}
+
+function calculateVsYPosition(verticalSpeed) {
+	var verticalSpeedYPos=0;
+	if (verticalSpeed>3) {
+		verticalSpeedYPos=window.vsCanH*0.25;
+	} else if (verticalSpeed<-3) {
+		verticalSpeedYPos=window.vsCanH*0.75;
+	}
+	return verticalSpeedYPos;
+}
+
+function setVerticalSpeed() {
+	console.log("ver speed setting");
+	var speedYPos = calculateVsYPosition(window.wantHaveVerSpeed);
+	var ctxVS = document.getElementById('verspeed').getContext('2d');
+	drawVerticalSpeed();
+	ctxVS.beginPath();
+	ctxVS.strokeStyle = 'white';
+	ctxVS.moveTo(window.vsCanW/2, window.vsCanH/2);
+	ctxVS.lineTo(window.vsCanW*0.1, speedYPos);
+	console.log("ver speed setting to "+window.vsCanW*0.1 + " " + speedYPos);
+	ctxVS.stroke();
+}
+
 function setSpeed() {
 	var ctxSpeed = document.getElementById('speed').getContext('2d');
 	var difSpeed = window.wantHaveSpeed - window.currentSpeed;
 	var difSpeedStep = calculateAltitudeSpeedStep(difSpeed);
-	if (difSpeed > 0) {
+	if (difSpeed > 1.0) {
 		window.currentlyChangingSpeed = true;
 		requestAnimationFrame(function() {
 			setSpeed();
 		});
-	} else if (difSpeed < 0) {
+	} else if (difSpeed < -1.0) {
 		window.currentlyChangingSpeed = true;
 		requestAnimationFrame(function() {
 			setSpeed();
@@ -518,16 +581,16 @@ function setSpeed() {
 
 	// draw lines with numbers
 	for (var i = 0; i < 1000; i += 20) {
-		ctxSpeed.moveTo(20, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
+		ctxSpeed.moveTo(window.speedBarWidth-10, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
 				* 2);
-		ctxSpeed.lineTo(30, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
+		ctxSpeed.lineTo(window.speedBarWidth, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
 				* 2);
 		ctxSpeed.fillText(i, 0, -i * 2 - window.speedBarHeight / 2 + newSpeed
 				* 2);
 		// draw lines in between the numbers
-		ctxSpeed.moveTo(25, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
+		ctxSpeed.moveTo(window.speedBarWidth-5, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
 				* 2 - 20);
-		ctxSpeed.lineTo(30, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
+		ctxSpeed.lineTo(window.speedBarWidth, -i * 2 - 3 - window.speedBarHeight / 2 + newSpeed
 				* 2 - 20);
 	}
 	ctxSpeed.stroke();
@@ -538,14 +601,19 @@ function setSpeed() {
 
 function calculateAltitudeSpeedStep(dif) {
 	var difAltitudeStep;
-	if (dif > 0) {
-		if (dif > 50) {
+	if (dif > 1.0) {
+		if (dif > 100) {
+			difAltitudeStep = 50;
+		} else if (dif > 50) {
 			difAltitudeStep = 10;
 		} else {
 			difAltitudeStep = 1;
 		}
-	} else if (dif < 0) {
-		if (dif < -50) {
+	} else if (dif < -1.0) {
+		if (dif<-100) {
+			difAltitudeStep = -50;
+		}
+		else if (dif < -50) {
 			difAltitudeStep = -10;
 		} else {
 			difAltitudeStep = -1;
@@ -561,12 +629,12 @@ function setAltitude() {
 	var ctxAltitude = document.getElementById('altitude').getContext('2d');
 	var difAltitude = window.wantHaveAltitude - window.currentAltitude;
 	var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
-	if (difAltitude > 0) {
+	if (difAltitude > 1) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingAlt = true;
 			setAltitude();
 		});
-	} else if (difAltitude < 0) {
+	} else if (difAltitude < -1) {
 		window.currentlyChangingAlt = true;
 		requestAnimationFrame(function() {
 			setAltitude();
@@ -597,7 +665,7 @@ function setAltitude() {
 	ctxAltitude.font = '8pt Calibri';
 
 	// draw lines with numbers
-	for (var i = 0; i < 10000; i += 20) {
+	for (var i = 0; i < 50000; i += 20) {
 		ctxAltitude.moveTo(0, -i * 2 - 3 - window.altBarHeight / 2
 				+ newAltitude * 2);
 		ctxAltitude.lineTo(10, -i * 2 - 3 - window.altBarHeight / 2
