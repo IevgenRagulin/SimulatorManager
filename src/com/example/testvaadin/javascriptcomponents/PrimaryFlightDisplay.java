@@ -16,10 +16,11 @@ public class PrimaryFlightDisplay extends
 	 */
 	private PrimaryFlightDisplayStateBean pfdStateBean;
 
-	public PrimaryFlightDisplay(final String xhtml, final int altitude,
-			final int speed, final int roll, final int pitch,
-			final int heading, final int truecourse) {
-		getState().resetpfd = 1;
+	public PrimaryFlightDisplay(final int resetpfd, final String xhtml,
+			final int altitude, final int speed, final int roll,
+			final int pitch, final int heading, final int truecourse,
+			final int verticalspeed) {
+		getState().resetpfd = resetpfd;
 		getState().xhtml = xhtml;
 		getState().altitude = altitude;
 		getState().speed = speed;
@@ -28,7 +29,8 @@ public class PrimaryFlightDisplay extends
 		getState().heading = heading;
 		getState().truecourse = truecourse;
 		pfdStateBean = new PrimaryFlightDisplayStateBean(xhtml, altitude,
-				speed, roll, pitch, heading, truecourse);
+				speed, roll, pitch, heading, truecourse, verticalspeed,
+				resetpfd);
 		// JsLabelState state = getState();
 
 	}
@@ -47,7 +49,7 @@ public class PrimaryFlightDisplay extends
 	}
 
 	public void resetPfd() {
-		getStateBean().setResetpfd(true);
+		getStateBean().setResetpfd(1);
 	}
 
 	public void updateIndividualPFDValues(Item item) {
@@ -74,7 +76,8 @@ public class PrimaryFlightDisplay extends
 		setTrueCourse(newTrueCourse);
 		setSpeed(newIAS);// IAS - indicated airspeed
 		setAltitude(newAltitude);
-
+		getStateBean().setResetpfd(0);
+		getState().resetpfd = 0;
 	}
 
 	private void setTrueCourse(int newTrueCourse) {

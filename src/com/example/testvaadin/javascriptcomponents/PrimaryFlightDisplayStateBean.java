@@ -11,10 +11,12 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 	private int pitch;
 	private int heading;
 	private int truecourse;
-	private boolean resetpfd;
+	private int verticalspeed;
+	private int resetpfd;
 
 	public PrimaryFlightDisplayStateBean(String xhtml, int altitude, int speed,
-			int roll, int pitch, int heading, int truecourse) {
+			int roll, int pitch, int heading, int truecourse,
+			int verticalspeed, int resetpfd) {
 		super();
 		this.xhtml = xhtml;
 		this.altitude = altitude;
@@ -23,7 +25,8 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 		this.pitch = pitch;
 		this.heading = heading;
 		this.truecourse = truecourse;
-		this.resetpfd = true;
+		this.verticalspeed = verticalspeed;
+		this.resetpfd = resetpfd;
 	}
 
 	public String getXhtml() {
@@ -82,11 +85,11 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 		this.truecourse = truecourse;
 	}
 
-	public boolean isResetpfd() {
+	public int getResetpfd() {
 		return resetpfd;
 	}
 
-	public void setResetpfd(boolean resetpfd) {
+	public void setResetpfd(int resetpfd) {
 		this.resetpfd = resetpfd;
 	}
 

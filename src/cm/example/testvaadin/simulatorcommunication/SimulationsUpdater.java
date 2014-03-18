@@ -36,7 +36,7 @@ public class SimulationsUpdater {
 	};
 	static {
 		System.out.println("GOING TO SCHEDULE AT FIXED RATE");
-		scheduler.scheduleAtFixedRate(beeper, 0, 5, TimeUnit.SECONDS);
+		scheduler.scheduleAtFixedRate(beeper, 0, 1, TimeUnit.SECONDS);
 	}
 
 	private SimulationsUpdater() {
@@ -47,7 +47,7 @@ public class SimulationsUpdater {
 	}
 
 	public static void updateSimulationsInfo() {
-		SQLContainer simulatorContainer = dbHelp.getSimulatorContainer();
+		SQLContainer simulatorContainer = dbHelp.getNewSimulatorContainer();
 		updateSimulatorsStatus(simulatorContainer);
 	}
 
@@ -64,10 +64,10 @@ public class SimulationsUpdater {
 					.getValue().toString();
 			int simulatorPort = (Integer) item.getItemProperty(
 					ColumnNames.getSimulatorPortName()).getValue();
-			SimulationItem simulationItem = getLatestSimulationData(simulatorId);
-			SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
 			updateSimulationStateData(simulatorId, simulatorHostname,
 					simulatorPort);
+			SimulationItem simulationItem = getLatestSimulationData(simulatorId);
+			SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
 		}
 	}
 
@@ -101,7 +101,6 @@ public class SimulationsUpdater {
 		if (dataFromSimulator != null) {
 			isCurrentSimulationPaused = dataFromSimulator.getSimulationPaused();
 		}
-
 		if (dataFromSimulator == null) {
 			// simulator is turned off
 			updateSimulationStateInDatabaseSimulatorOff(lastSimCont, lastSim,

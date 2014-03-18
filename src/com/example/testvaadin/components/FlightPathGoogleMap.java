@@ -1,6 +1,5 @@
 package com.example.testvaadin.components;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,7 +23,7 @@ public class FlightPathGoogleMap extends GoogleMap {
 	private LatLon lastLatLong = null;
 	private ArrayList<LatLon> planePathPoints = new ArrayList<LatLon>();
 	private GoogleMapPolyline flightPath = new GoogleMapPolyline(
-			planePathPoints, "#d31717", 0.8, 10);
+			planePathPoints, "#d31717", 0.8, 3);
 
 	private RunningSimulationsView view = null;
 
@@ -68,10 +67,10 @@ public class FlightPathGoogleMap extends GoogleMap {
 			for (Object i : simulationInfoIds) {
 				RowId rowId = (RowId) i;
 				Item item = simulationInfoData.getItem(rowId);
-				Double lastLat = ((BigDecimal) item.getItemProperty(
-						ColumnNames.getLatitude()).getValue()).doubleValue();
-				Double lastLon = ((BigDecimal) item.getItemProperty(
-						ColumnNames.getLongtitude()).getValue()).doubleValue();
+				Double lastLat = ((Double) item.getItemProperty(
+						ColumnNames.getLatitude()).getValue());
+				Double lastLon = ((Double) item.getItemProperty(
+						ColumnNames.getLongtitude()).getValue());
 				lastLatLong = new LatLon(lastLat, lastLon);
 				planePathPoints.add(lastLatLong);
 			}

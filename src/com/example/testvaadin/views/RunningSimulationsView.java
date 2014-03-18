@@ -141,8 +141,8 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initPrimaryFlightDisplay() {
-		primaryFlightDisplay = new PrimaryFlightDisplay("index.html", 0, 0, 0,
-				0, 0, 0);
+		primaryFlightDisplay = new PrimaryFlightDisplay(1, "index.html", 0, 0,
+				0, 0, 0, 0, 0);
 		mainSimulationLayout.addComponent(primaryFlightDisplay);
 	}
 
@@ -304,6 +304,8 @@ public class RunningSimulationsView extends BasicView implements View {
 		mainSimulationLayout.setVisible(false);
 		simulatorInfoLabel.setVisible(true);
 		simulatorInfoLayout.setVisible(true);
+		simulatorInfo.setItemDataSource(selectedSimulator);
+		simulatorInfo.setReadOnly(true);
 	}
 
 }

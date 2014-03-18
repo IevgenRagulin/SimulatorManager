@@ -34,7 +34,7 @@ public class DatabaseHelper implements Serializable {
 		FreeformQuery query = new FreeformQuery(
 				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
 						+ simulatorId
-						+ " AND IsSimulationOn=true ORDER BY SimulationStartedTime DESC LIMIT 1",
+						+ " AND IsSimulationOn=true ORDER BY simulationid DESC LIMIT 1",
 				Arrays.asList("simulationid"), pool);
 		SQLContainer runningSimulations = null;
 		try {
@@ -54,8 +54,7 @@ public class DatabaseHelper implements Serializable {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
 				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
-						+ simulatorId
-						+ " ORDER BY SimulationStartedTime DESC LIMIT 1",
+						+ simulatorId + " ORDER BY simulationid DESC LIMIT 1",
 				Arrays.asList("simulationid"), pool);
 		SQLContainer runningSimulations = null;
 		query.setDelegate(new FreeFormQueryDelegateSimulationImpl(simulatorId));
@@ -72,21 +71,16 @@ public class DatabaseHelper implements Serializable {
 	 * simulatorId If there is more than one simulation currently running (which
 	 * should be impossible) returns the newest one
 	 */
-	public Item getLatestSimulationOnSimulatorWithId(String simulatorId) {
-		@SuppressWarnings("deprecation")
-		FreeformQuery query = new FreeformQuery(
-				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
-						+ simulatorId
-						+ " ORDER BY SimulationStartedTime DESC LIMIT 1",
-				Arrays.asList("simulationid"), pool);
-		SQLContainer runningSimulations = null;
-		try {
-			runningSimulations = new SQLContainer(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return getLatestItemFromContainer(runningSimulations);
-	}
+	/*
+	 * public Item getLatestSimulationOnSimulatorWithId(String simulatorId) {
+	 * 
+	 * @SuppressWarnings("deprecation") FreeformQuery query = new FreeformQuery(
+	 * "SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId +
+	 * " ORDER BY simulationid DESC LIMIT 1", Arrays.asList("simulationid"),
+	 * pool); SQLContainer runningSimulations = null; try { runningSimulations =
+	 * new SQLContainer(query); } catch (SQLException e) { e.printStackTrace();
+	 * } return getLatestItemFromContainer(runningSimulations); }
+	 */
 
 	public Item getLatestItemFromContainer(SQLContainer container) {
 		Item latestItem = null;
@@ -128,6 +122,18 @@ public class DatabaseHelper implements Serializable {
 			}
 		}
 		return simulatorContainer;
+	}
+
+	public SQLContainer getNewSimulatorContainer() {
+		SQLContainer newSimulatorContainer = null;
+		TableQuery tq = new TableQuery("simulator", pool);
+		tq.setVersionColumn("timestamp");
+		try {
+			newSimulatorContainer = new SQLContainer(tq);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return newSimulatorContainer;
 	}
 
 	public SQLContainer getSimulationContainer() {
@@ -253,4 +259,5 @@ public class DatabaseHelper implements Serializable {
 		}
 		return getLatestItemFromContainer(simulationInfo);
 	}
+
 }

@@ -12,4 +12,5 @@ public class PrimaryFlightDisplayState extends JavaScriptComponentState {
 	public int heading;
 	public int truecourse;
 	public int resetpfd;
+	public int verticalspeed;
 }

@@ -17,7 +17,7 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
-		System.out.println(response + " from " + host);
+		// System.out.println(" from " + host + " " + response);
 		closeSocket(queryProcessorSocket);
 		simData = parseSimulatorResponse(response);
 		return simData;
@@ -135,7 +135,7 @@ public class SocketHelper {
 		if (intValue == null)
 			throw new IllegalArgumentException(
 					"Simulator doesn't send information about its Paused or not status");
-		return intValue == 1;
+		return intValue == 0;
 	}
 
 	private static AllSimulationInfo parseSimulatorResponse(String response) {

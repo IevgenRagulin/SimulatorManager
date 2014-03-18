@@ -25,8 +25,13 @@ var currentSpeed = 0;
 var currentAltitude = 0;
 var currentPitch = 0;
 var currentRoll = 0;
-var currentYaw = 0;
 var currentCompass = 0;
+
+var wantHaveSpeed = 0;
+var wantHaveAltitude = 0;
+var wantHavePitch = 0;
+var wantHaveRoll = 0;
+var wantHaveCompass = 0;
 
 var currentlyChangingRoll = false;
 var currentlyChangingPitch = false;
@@ -45,27 +50,29 @@ var darkGray = '404040';
 
 function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 	var e = this.getElement();
-
+	window.currentSpeed = 0;
+	window.currentAltitude = 0;
+	window.currentPitch = 0;
+	window.currentRoll = 0;
+	window.currentYaw = 0;
+	window.currentCompass = 0;
+	window.currentlyChangingCompass = false;
+	initHtml();
+	init();		
 	this.onStateChange = function() {
-		console.log("PFD STATE CHANGED");
-		if (this.getState().resetpfd==true) {
-			window.currentSpeed = 0;
-			window.currentAltitude = 0;
-			window.currentPitch = 0;
-			window.currentRoll = 0;
-			window.currentYaw = 0;
-			window.currentCompass = 0;
-			window.currentlyChangingCompass = false;
-			console.log("INIT HTML AND EVERYTHING");
-			initHtml();
-			init();		
-			e.resetpfd=false;
-		} else {
-			console.log("NOOOOO RESET PFD IS NOT TRUE"+this.getState().resetpfd);
-		}
-		update(this.getState().speed, this.getState().altitude,
-				this.getState().roll, this.getState().pitch,
-				this.getState().heading);
+		//console.log("PFD STATE CHANGED");
+		//if (this.getState().resetpfd==1) {
+		//
+		//} else {
+		//	console.log("logging NOOOOO RESET PFD IS NOT TRUE"+this.getState().resetpfd);
+		//}
+		console.log("PFD NEW DATA RECEIVED");
+		window.wantHaveSpeed = this.getState().speed;
+		window.wantHaveAltitude = this.getState().altitude;
+		window.wantHaveRoll = this.getState().roll;
+		window.wantHavePitch = this.getState().pitch;
+		window.wantHaveHeading = this.getState().heading;
+		update();
 	};
 
 	function initHtml() {
@@ -107,23 +114,21 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 	}
 }
 
-function update(speed, altitude, roll, pitch, heading) {
+function update() {
 	if (!window.currentlyChangingPitch) {
-		setPitch(pitch);
+		setPitch();
 	}
 	if (!window.currentlyChangingRoll) {
-		//var ctx = document.getElementById('pfd').getContext('2d');
-		//rotatePfdByRollDegrees(ctx, currentRoll);
-		setRoll(roll);
+		setRoll();
 	}
 	if (!window.currentlyChangingSpeed) {
-		setSpeed(speed);
+		setSpeed();
 	}
 	if (!window.currentlyChangingAltitude) {
-		setAltitude(altitude);
+		setAltitude();
 	}
 	if (!window.currentlyChangingCompass) {
-		setCompass(heading);
+		setCompass();
 	} else {
 		console.log("COMPASS NOT SET");
 	}
@@ -269,7 +274,7 @@ function fillGround(ctx, x, y, w, h) {
 }
 
 function calculateDirection(newValue, currentValue) {
-	var diff = newValue - currentValue;
+	var diff = (newValue - currentValue)%360;
 	var direction = 0;
 	if ((diff > 0.2) && (diff <= 180)) {
 		direction = 1;
@@ -287,28 +292,29 @@ function shouldWeChangePitch(difPitch) {
 	return ((difPitch > 0.3) || (difPitch < -0.3));
 }
 
-function setPitch(pitch) {
+function setPitch() {
 	// Check if we should continue animating pitch
-	var difPitch = pitch - window.currentPitch;
+	var difPitch = (window.wantHavePitch - window.currentPitch)%360;
 	if (shouldWeChangePitch(difPitch)) {
 		requestAnimationFrame(function() {
-			setPitch(pitch);
+			setPitch(window.wantHavePitch);
 		});
-		difPitch = 0.3 * calculateDirection(pitch, window.currentPitch);
+		difPitch = 0.3 * calculateDirection(window.wantHavePitch, window.currentPitch);
 		window.currentlyChangingPitch = true;
 	} else {
 		window.currentlyChangingPitch = false;
 	}
+	
 	var ctx = document.getElementById('pfd').getContext('2d');
 	var newPitch = (window.currentPitch + difPitch) % 360;
-
+	
+	
 	// Transform negative numbers to 0-359 coordinates
 	if (newPitch < 0) {
 		newPitch = 360 + newPitch;
 	}
-
 	// Draw lines and numbers for sight
-	drawLineNumbersForSightNewPitch(newPitch);
+	drawLineNumbersForSight(0, newPitch);
 
 	//ctx.save();
 	drawArtificialHorizon(ctx, window.currentRoll, newPitch, window.currentYaw);
@@ -317,34 +323,32 @@ function setPitch(pitch) {
 	document.getElementById('pitchV').innerHTML = window.currentPitch;
 }
 
-function setRoll(roll) {
-	var difRoll = roll - window.currentRoll;
+
+
+function setRoll() {
+	var difRoll = (window.wantHaveRoll - window.currentRoll)%360;
 	// Check if we should continue animating roll
 	var ctx = document.getElementById('pfd').getContext('2d');
 	if (shouldWeRoll(difRoll)) {
 		requestAnimationFrame(function() {
-			setRoll(roll);
+			setRoll();
 		});
-		difRoll = 0.5 * calculateDirection(roll, window.currentRoll);
+		difRoll = 0.5 * calculateDirection(window.wantHaveRoll, window.currentRoll);
 		window.currentlyChangingRoll = true;
 	} else {
 		window.currentlyChangingRoll = false;
 	}
-
-	rotateCanvasByRollDegrees(ctx, difRoll);
-	drawLineNumbersForSightNewRoll(difRoll);
-	var newRoll = window.currentRoll + difRoll;
+	rotateCanvasByRollDegrees(ctx, -difRoll);
+	drawLineNumbersForSight(difRoll, window.currentPitch);
+	var newRoll = (window.currentRoll + difRoll)%360;
 	window.currentRoll = newRoll;
 
-	//ctx.save();
 	drawArtificialHorizon(ctx, window.currentRoll, window.currentPitch,
 			window.currentYaw);
-	//ctx.restore();
 	document.getElementById('rollV').innerHTML = window.currentRoll;
 }
 
 function shouldWeRoll(difRoll) {
-	//console.log("SHOULD WE CHANGEROLL. Diff roll: "+difRoll+" Current roll: "+currentRoll);
 	return ((difRoll > 0.5) || (difRoll < -0.5));
 }
 
@@ -391,7 +395,7 @@ function drawSkyAndGround(ctx, newPitch) {
 		fillSky(ctx, skyGroundLeftX, skyOnTopY, window.horizontWidth, skyOnTop);
 		fillGround(ctx, skyGroundLeftX, grOnTopY, window.horizontWidth, grOnTop);
 		fillSky(ctx, skyGroundLeftX, skyBottomY, window.horizontWidth,
-				skyBottom);
+			skyBottom);
 		fillGround(ctx, skyGroundLeftX, grBottomY, window.horizontWidth,
 				grBottom);
 		ctx.translate(0, 150 * 5);
@@ -408,6 +412,8 @@ function cropLinesNumberOutsideSight(ctxSight) {
 }
 
 function drawLineNumberHelpFunc(ctxSight, startInt, endInt, difPitch, direction) {
+	ctxSight.strokeStyle = 'white';
+	ctxSight.fillStyle = 'white';
 	for (var i = startInt; i <= endInt; i = i + 2.5) {
 		if (((i % 5) == 0) && (i != startInt)) {
 			ctxSight.fillText(i, window.window.canvasWidth / 2 - 45,
@@ -435,58 +441,30 @@ function rotateSightFor180DigreesArountPoint(ctxSight, xRotationPoint,
 	ctxSight.translate(-xRotationPoint, -yRotationPoint);
 }
 
-//DELETE THIS FUNCTION TO AVOID COPY PAST
-function drawLineNumbersForSightNewRoll(difRoll) {
-	var transformedPitchValue = window.currentPitch;
-	// Transform 180-360 values to (-180;-0)
-	if (window.currentPitch > 180) {
-		transformedPitchValue = window.currentPitch - 360;
+
+
+//Transform 180-360 values to (-180;-0)
+function transformPitchValue(pitch) {
+	if (pitch>180) {
+		pitch=pitch-360;
 	}
-	var ctxSight = document.getElementById('sight').getContext('2d');
-	ctxSight
-			.clearRect(0, -100, window.horizontWidth, window.canvasHeight + 200);
-	drawSight();
-	rotateCanvasByRollDegrees(ctxSight, difRoll);
-	ctxSight.strokeStyle = 'white';
-	ctxSight.fillStyle = 'white';
-	// draw numbers for degrees 0-180
-	drawLineNumberHelpFunc(ctxSight, 0, 90, transformedPitchValue, -1);
-	// draw numbers for degrees 180-360
-	// drawLineNumberHelpFunc(ctxSight, 180, 360, difPitch, -1);
-	// draw numbers for degrees 0 - (-180)
-	drawLineNumberHelpFunc(ctxSight, 0, 90, transformedPitchValue, 1);
-	// draw numbers for degrees -180-(-360)
-	//drawLineNumberHelpFunc(ctxSight, 180, 360, difPitch, 1);
-	ctxSight.stroke();
+	return pitch;
 }
 
-function drawLineNumbersForSightNewPitch(difPitch) {
+function drawLineNumbersForSight(difRoll, difPitch) {
+	var transformedPitchValue = transformPitchValue(difPitch);
 	var ctxSight = document.getElementById('sight').getContext('2d');
-	// Transform 180-360 values to (-180;-0)
-	if (difPitch > 180) {
-		difPitch = difPitch - 360;
-	}
-	//cropLinesNumberOutsideSight(ctxSight);
-	ctxSight.clearRect(0, 0, window.canvasHeight, window.canvasWidth);
 	drawSight();
-	//ctxSight.save();
-	//ctxSight.beginPath();
-	ctxSight.strokeStyle = 'white';
-	ctxSight.fillStyle = 'white';
-	// draw numbers for degrees 0-180
-	drawLineNumberHelpFunc(ctxSight, 0, 90, difPitch, -1);
-	// draw numbers for degrees 180-360
-	// drawLineNumberHelpFunc(ctxSight, 180, 360, difPitch, -1);
-	// draw numbers for degrees 0 - (-180)
-	drawLineNumberHelpFunc(ctxSight, 0, 90, difPitch, 1);
-	// draw numbers for degrees -180-(-360)
-	// drawLineNumberHelpFunc(ctxSight, 180, 360, difPitch, 1);
+	rotateCanvasByRollDegrees(ctxSight, -difRoll);
+	// draw numbers for degrees -90 to +90
+	drawLineNumberHelpFunc(ctxSight, 0, 90, transformedPitchValue, -1);
+	drawLineNumberHelpFunc(ctxSight, 0, 90, transformedPitchValue, 1);
 	ctxSight.stroke();
-	//ctxSight.restore();
 }
 
 function drawSight() {
 	var ctx = document.getElementById('sight').getContext('2d');
+	ctx.clearRect(0, -100, window.horizontWidth, window.canvasHeight+200);
 	ctx.save();
 	// Draw big outer circle
 	ctx.strokeStyle = 'black';
@@ -502,19 +480,19 @@ function drawSight() {
 	ctx.restore();
 }
 
-function setSpeed(speed) {
+function setSpeed() {
 	var ctxSpeed = document.getElementById('speed').getContext('2d');
-	var difSpeed = speed - window.currentSpeed;
+	var difSpeed = window.wantHaveSpeed - window.currentSpeed;
 	var difSpeedStep = calculateAltitudeSpeedStep(difSpeed);
 	if (difSpeed > 0) {
 		window.currentlyChangingSpeed = true;
 		requestAnimationFrame(function() {
-			setSpeed(speed);
+			setSpeed();
 		});
 	} else if (difSpeed < 0) {
 		window.currentlyChangingSpeed = true;
 		requestAnimationFrame(function() {
-			setSpeed(speed);
+			setSpeed();
 		});
 	} else {
 		window.currentlyChangingSpeed = false;
@@ -578,20 +556,20 @@ function calculateAltitudeSpeedStep(dif) {
 	return difAltitudeStep;
 }
 
-function setAltitude(altitude) {
+function setAltitude() {
 	//console.log('set alt called');
 	var ctxAltitude = document.getElementById('altitude').getContext('2d');
-	var difAltitude = altitude - window.currentAltitude;
+	var difAltitude = window.wantHaveAltitude - window.currentAltitude;
 	var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
 	if (difAltitude > 0) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingAlt = true;
-			setAltitude(altitude);
+			setAltitude();
 		});
 	} else if (difAltitude < 0) {
 		window.currentlyChangingAlt = true;
 		requestAnimationFrame(function() {
-			setAltitude(altitude);
+			setAltitude();
 		});
 	} else {
 		window.currentlyChangingAlt = false;
@@ -680,9 +658,9 @@ function setCompassValue(ctxCompass, compass) {
 	document.getElementById('compassV').innerHTML = window.currentCompass;
 }
 
-function setCompass(compass) {
+function setCompass() {
 	var ctxCompass = document.getElementById('compass').getContext('2d');
-	setCompassValue(ctxCompass, compass);
+	setCompassValue(ctxCompass, window.wantHaveHeading);
 	
 	ctxCompass.strokeStyle = window.darkGray;
 	ctxCompass.fillStyle = window.darkGray;

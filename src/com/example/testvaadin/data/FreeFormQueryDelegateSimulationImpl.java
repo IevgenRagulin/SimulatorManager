@@ -21,7 +21,7 @@ public class FreeFormQueryDelegateSimulationImpl implements
 	public String getQueryString(int offset, int limit)
 			throws UnsupportedOperationException {
 		return "SELECT * FROM simulation WHERE Simulator_SimulatorId="
-				+ simulatorId + " ORDER BY SimulationStartedTime DESC LIMIT 1";
+				+ simulatorId + " ORDER BY simulationid DESC LIMIT 1";
 	}
 
 	@Override
