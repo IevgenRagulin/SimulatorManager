@@ -106,11 +106,11 @@ public class FlightPathGoogleMap extends GoogleMap {
 
 	private void addMarkerOnMap(LatLon newPosition) {
 		clearMarkers();
-		GoogleMapMarker newPositionMarker = new GoogleMapMarker(
-				CURRENT_AIRCRAFT_POSITION_TEXT, newPosition, false, null);
+		newPositionMarker = new GoogleMapMarker(CURRENT_AIRCRAFT_POSITION_TEXT,
+				newPosition, false, null);
 		newPositionMarker.setAnimationEnabled(false);
 		addMarker(newPositionMarker);
-		setCenter(newPosition);
+		// setCenter(newPosition);
 		this.lastLatLong = newPosition;
 		addLatestCoordinatesToFlightPath(newPosition);
 	}
@@ -124,5 +124,6 @@ public class FlightPathGoogleMap extends GoogleMap {
 	 * 
 	 */
 	private static final long serialVersionUID = -4678405407558787986L;
+	private GoogleMapMarker newPositionMarker;
 
 }

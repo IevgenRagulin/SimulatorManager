@@ -17,7 +17,7 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
-		// System.out.println(" from " + host + " " + response);
+		System.out.println(" from " + host + " " + response);
 		closeSocket(queryProcessorSocket);
 		simData = parseSimulatorResponse(response);
 		return simData;

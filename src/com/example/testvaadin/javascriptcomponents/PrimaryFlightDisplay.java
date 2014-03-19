@@ -19,7 +19,7 @@ public class PrimaryFlightDisplay extends
 	public PrimaryFlightDisplay(final int resetpfd, final String xhtml,
 			final int altitude, final int speed, final int roll,
 			final int pitch, final int heading, final int truecourse,
-			final int verticalspeed) {
+			final float verticalspeed) {
 		getState().resetpfd = resetpfd;
 		getState().xhtml = xhtml;
 		getState().altitude = altitude;
@@ -48,6 +48,10 @@ public class PrimaryFlightDisplay extends
 		return value.intValue();
 	}
 
+	public float doubleToFloat(Double value) {
+		return value.floatValue();
+	}
+
 	public void resetPfd() {
 		getStateBean().setResetpfd(1);
 	}
@@ -63,11 +67,11 @@ public class PrimaryFlightDisplay extends
 				.getItemProperty(ColumnNames.getTrueCourse())).getValue());
 		int newIAS = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getIas())).getValue());
-		int newAltitude = doubleToInt((Double) ((Property<?>) item
+		float newAltitude = doubleToFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getAltitude())).getValue());
-		int newGroundAltitude = doubleToInt((Double) ((Property<?>) item
+		float newGroundAltitude = doubleToFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getGroundaltitude())).getValue());
-		int newVertSpeed = doubleToInt((Double) ((Property<?>) item
+		float newVertSpeed = doubleToFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
 
 		setRoll(newRoll);
@@ -81,7 +85,7 @@ public class PrimaryFlightDisplay extends
 		getState().resetpfd = 0;
 	}
 
-	private void setVerticalSpeed(int newVertSpeed) {
+	private void setVerticalSpeed(float newVertSpeed) {
 		if (getStateBean().getVerticalspeed() != newVertSpeed) {
 			getState().verticalspeed = newVertSpeed;
 			getStateBean().setVerticalspeed(newVertSpeed);
@@ -121,7 +125,7 @@ public class PrimaryFlightDisplay extends
 		}
 	}
 
-	public void setAltitude(final int altitude) {
+	public void setAltitude(final float altitude) {
 		if (getStateBean().getAltitude() != altitude) {
 			getState().altitude = altitude;
 			getStateBean().setAltitude(altitude);

@@ -5,18 +5,18 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 @SuppressWarnings("serial")
 public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 	private String xhtml;
-	private int altitude;
+	private float altitude;
 	private int speed;
 	private int roll;
 	private int pitch;
 	private int heading;
 	private int truecourse;
-	private int verticalspeed;
+	private float verticalspeed;
 	private int resetpfd;
 
-	public PrimaryFlightDisplayStateBean(String xhtml, int altitude, int speed,
-			int roll, int pitch, int heading, int truecourse,
-			int verticalspeed, int resetpfd) {
+	public PrimaryFlightDisplayStateBean(String xhtml, float altitude,
+			int speed, int roll, int pitch, int heading, int truecourse,
+			float verticalspeed, int resetpfd) {
 		super();
 		this.xhtml = xhtml;
 		this.altitude = altitude;
@@ -37,11 +37,11 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 		this.xhtml = xhtml;
 	}
 
-	public int getAltitude() {
+	public float getAltitude() {
 		return altitude;
 	}
 
-	public void setAltitude(int altitude) {
+	public void setAltitude(float altitude) {
 		this.altitude = altitude;
 	}
 
@@ -93,11 +93,11 @@ public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
 		this.resetpfd = resetpfd;
 	}
 
-	public int getVerticalspeed() {
+	public float getVerticalspeed() {
 		return verticalspeed;
 	}
 
-	public void setVerticalspeed(int verticalspeed) {
+	public void setVerticalspeed(float verticalspeed) {
 		this.verticalspeed = verticalspeed;
 	}
 

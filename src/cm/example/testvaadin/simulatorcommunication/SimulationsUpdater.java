@@ -22,6 +22,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class SimulationsUpdater {
 	protected static DatabaseHelper dbHelp = new DatabaseHelper();
 	protected static SimulatorsStatus simStatus = null;
+
 	private final static ScheduledExecutorService scheduler = Executors
 			.newScheduledThreadPool(1);
 	private static final Runnable beeper = new Runnable() {
@@ -64,11 +65,22 @@ public class SimulationsUpdater {
 					.getValue().toString();
 			int simulatorPort = (Integer) item.getItemProperty(
 					ColumnNames.getSimulatorPortName()).getValue();
-			updateSimulationStateData(simulatorId, simulatorHostname,
+			updateSimulatorStatusInAThread(simulatorId, simulatorHostname,
 					simulatorPort);
-			SimulationItem simulationItem = getLatestSimulationData(simulatorId);
-			SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
 		}
+	}
+
+	private static void updateSimulatorStatusInAThread(
+			final String simulatorId, final String simulatorHostname,
+			final int simulatorPort) {
+		// new Thread(new Runnable() {
+		// public void run() {
+		updateSimulationStateData(simulatorId, simulatorHostname, simulatorPort);
+		SimulationItem simulationItem = getLatestSimulationData(simulatorId);
+		SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
+		// }
+		// }).start();
+
 	}
 
 	private static void updateSimulationStateData(String simulatorId,
