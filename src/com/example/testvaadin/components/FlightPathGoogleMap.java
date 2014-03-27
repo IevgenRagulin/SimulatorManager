@@ -1,7 +1,10 @@
 package com.example.testvaadin.components;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import cm.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.views.RunningSimulationsView;
@@ -9,10 +12,13 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
 import com.vaadin.tapio.googlemaps.GoogleMap;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
+import com.vaadin.ui.Image;
 
 public class FlightPathGoogleMap extends GoogleMap {
 	private static final String CURRENT_AIRCRAFT_POSITION_TEXT = "Current aircraft position";
@@ -24,6 +30,10 @@ public class FlightPathGoogleMap extends GoogleMap {
 	private ArrayList<LatLon> planePathPoints = new ArrayList<LatLon>();
 	private GoogleMapPolyline flightPath = new GoogleMapPolyline(
 			planePathPoints, "#d31717", 0.8, 3);
+	GoogleMapMarker newPositionMarker = new GoogleMapMarker();
+	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0,
+			112.5, 135.0, 157.5, 180.0, 202.5, 225.0, 247.5, 270.0, 292.5,
+			315.0, 337.5 };
 
 	private RunningSimulationsView view = null;
 
@@ -47,16 +57,55 @@ public class FlightPathGoogleMap extends GoogleMap {
 	public void initMapWithDataForSimulationWithId(String simulatorId) {
 		SQLContainer simulationInfoData = view.getDBHelp()
 				.getAllSimulationInfoBySimulatorId(simulatorId);
+		Double trueCourse = SimulatorsStatus
+				.getSimulationPFDItemBySimulatorId(simulatorId).getBean()
+				.getTruecourse();
 		planePathPoints = new ArrayList<LatLon>();
-		addOldDataToMap(simulationInfoData);
+		addOldDataToMap(simulationInfoData, trueCourse);
 	}
 
-	private void addOldDataToMap(SQLContainer simulationInfoData) {
+	private void addOldDataToMap(SQLContainer simulationInfoData,
+			Double trueCourse) {
 		planePathPoints = getArrayListOfFlightPathPoints(simulationInfoData);
 		this.flightPath.setCoordinates(planePathPoints);
 		addPolyline(this.flightPath);
-		addMarker(CURRENT_AIRCRAFT_POSITION_TEXT, lastLatLong, false, null);
+		newPositionMarker.setPosition(lastLatLong);
+		String iconUrl = getIconUrl(trueCourse);
+		// Find the application directory
+		String basepath = VaadinService.getCurrent().getBaseDirectory()
+				.getAbsolutePath();
+		FileResource resource = new FileResource(new File(basepath
+				+ "/WEB-INF/images/plane_icons/0.png"));
+		Image image = new Image("Image from file", resource);
+		newPositionMarker.setIconUrl(iconUrl);
+		addMarker(newPositionMarker);
 		setCenter(lastLatLong);
+	}
+
+	private String getIconUrl(Double trueCourse) {
+		return "VAADIN/themes/testvaadin/plane_icons/"
+				+ chooseIconBasedOnCourse(trueCourse);
+	}
+
+	/**
+	 * Returns icon name based on course. True course is between 0 and 360. I.e.
+	 * if true course is 47 degrees, the method choosest 45 degrees item
+	 * 
+	 * @param trueCourse
+	 *            - airplane course
+	 * @return icon file name
+	 */
+	private String chooseIconBasedOnCourse(Double trueCourse) {
+		trueCourse = trueCourse % 360;
+		Double closestIconPos = possibleIconPos[0];
+		for (int i = 0; i < possibleIconPos.length; i++) {
+			if (Math.abs(possibleIconPos[i] - trueCourse) < Math
+					.abs((closestIconPos - trueCourse))) {
+				closestIconPos = possibleIconPos[i];
+			}
+		}
+		System.out.println("chosen icon" + closestIconPos.toString() + ".png");
+		return closestIconPos.toString() + ".png";
 	}
 
 	private ArrayList<LatLon> getArrayListOfFlightPathPoints(
@@ -96,19 +145,24 @@ public class FlightPathGoogleMap extends GoogleMap {
 		Double newLatitude = (Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getLatitude())).getValue();
 		LatLon newPosition = new LatLon(newLatitude, newLongtitude);
+		Double trueCourse = SimulatorsStatus
+				.getSimulationPFDItemBySimulatorId(simulatorId).getBean()
+				.getTruecourse();
+
 		// Check if coordinates of the new position differ from the previous
 		// one. If they don't differ, do nothing. If they do differ, add data on
 		// the map
-		if (!newPosition.equals(this.lastLatLong)) {
-			addMarkerOnMap(newPosition);
+		if (!newPosition.equals(this.lastLatLong) && (newPosition != null)) {
+			addMarkerOnMap(newPosition, trueCourse);
 		}
 	}
 
-	private void addMarkerOnMap(LatLon newPosition) {
+	private void addMarkerOnMap(LatLon newPosition, Double trueCourse) {
 		clearMarkers();
-		newPositionMarker = new GoogleMapMarker(CURRENT_AIRCRAFT_POSITION_TEXT,
-				newPosition, false, null);
+		newPositionMarker.setPosition(newPosition);
 		newPositionMarker.setAnimationEnabled(false);
+		newPositionMarker.setIconUrl(getIconUrl(trueCourse));
+		System.out.println("ICON URL" + getIconUrl(trueCourse));
 		addMarker(newPositionMarker);
 		// setCenter(newPosition);
 		this.lastLatLong = newPosition;
@@ -124,6 +178,5 @@ public class FlightPathGoogleMap extends GoogleMap {
 	 * 
 	 */
 	private static final long serialVersionUID = -4678405407558787986L;
-	private GoogleMapMarker newPositionMarker;
 
 }

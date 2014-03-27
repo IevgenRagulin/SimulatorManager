@@ -9,7 +9,8 @@ import com.example.testvaadin.components.InfoLabel;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
-import com.example.testvaadin.javascriptcomponents.PrimaryFlightDisplay;
+import com.example.testvaadin.javascriptcomponents.pfd.PrimaryFlightDisplay;
+import com.example.testvaadin.javascriptcomponents.yoke.ControlYoke;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Item;
@@ -55,10 +56,15 @@ public class RunningSimulationsView extends BasicView implements View {
 	private SimulationStateFieldGroup simulation;
 	private SimulationStateFieldGroup simulationInfo;
 	private SimulationStateFieldGroup simulationDevicesState;
-	private PrimaryFlightDisplay primaryFlightDisplay;
+
 	private SelectSimulatorCombo selectSimulator;
+	// TODO: make configurable from app configuration
 	private String apiKey = "AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";
 	private FlightPathGoogleMap googleMap = null;
+
+	/* Custom javascript components */
+	private PrimaryFlightDisplay primaryFlightDisplay;
+	private ControlYoke controlYoke;
 
 	public FlightPathGoogleMap getGoogleMap() {
 		return googleMap;
@@ -120,7 +126,14 @@ public class RunningSimulationsView extends BasicView implements View {
 		setClickListeners();
 		initPageRefresher();
 		initPrimaryFlightDisplay();
+		initControlYoke();
 		initGoogleMaps();
+
+	}
+
+	private void initControlYoke() {
+		controlYoke = new ControlYoke(0, 0, 0);
+		mainSimulationLayout.addComponent(controlYoke);
 	}
 
 	@Override
@@ -231,11 +244,19 @@ public class RunningSimulationsView extends BasicView implements View {
 		Item selectedDevicesState = SimulatorsStatus
 				.getSimulationDevStateItemBySimulatorId(simulatorId);
 		setSimulationDevicesStateInfo(selectedDevicesState);
+		// Set control yoke info
+		setControlYokeInfo(selectedDevicesState);
 		// Set PFD info
 		Item selectedPFD = SimulatorsStatus
 				.getSimulationPFDItemBySimulatorId(simulatorId);
 		setPrimaryFlightDisplayInfo(selectedPFD);
 
+	}
+
+	private void setControlYokeInfo(Item selectedDevicesState) {
+		if (selectedDevicesState != null) {
+			controlYoke.updateIndividualControlYokeValues(selectedDevicesState);
+		}
 	}
 
 	private void setSimulatorInfoData(Item selectedSimulator) {
@@ -283,7 +304,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void setPrimaryFlightDisplayInfo(Item selectedPfdInfo) {
 		if (selectedPfdInfo != null) {
 			primaryFlightDisplay.updateIndividualPFDValues(selectedPfdInfo);
-		} else {
 		}
 	}
 

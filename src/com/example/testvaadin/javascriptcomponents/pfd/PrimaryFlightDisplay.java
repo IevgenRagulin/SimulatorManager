@@ -1,4 +1,4 @@
-package com.example.testvaadin.javascriptcomponents;
+package com.example.testvaadin.javascriptcomponents.pfd;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;
@@ -31,8 +31,7 @@ public class PrimaryFlightDisplay extends
 		pfdStateBean = new PrimaryFlightDisplayStateBean(xhtml, altitude,
 				speed, roll, pitch, heading, truecourse, verticalspeed,
 				resetpfd);
-		// JsLabelState state = getState();
-
+		System.out.println("CALLED PFD CONSTRUCTOR");
 	}
 
 	@Override
@@ -89,7 +88,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getVerticalspeed() != newVertSpeed) {
 			getState().verticalspeed = newVertSpeed;
 			getStateBean().setVerticalspeed(newVertSpeed);
-		} else {
 		}
 	}
 
@@ -97,7 +95,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getTruecourse() != newTrueCourse) {
 			getState().truecourse = newTrueCourse;
 			getStateBean().setTruecourse(newTrueCourse);
-		} else {
 		}
 	}
 
@@ -105,7 +102,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getRoll() != roll) {
 			getState().roll = roll;
 			getStateBean().setRoll(roll);
-		} else {
 		}
 	}
 
@@ -113,7 +109,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getPitch() != pitch) {
 			getState().pitch = pitch;
 			getStateBean().setPitch(pitch);
-		} else {
 		}
 	}
 
@@ -121,7 +116,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getHeading() != heading) {
 			getState().heading = heading;
 			getStateBean().setHeading(heading);
-		} else {
 		}
 	}
 
@@ -129,7 +123,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getAltitude() != altitude) {
 			getState().altitude = altitude;
 			getStateBean().setAltitude(altitude);
-		} else {
 		}
 	}
 
@@ -137,7 +130,6 @@ public class PrimaryFlightDisplay extends
 		if (getStateBean().getSpeed() != speed) {
 			getState().speed = speed;
 			getStateBean().setSpeed(speed);
-		} else {
 		}
 	}
 

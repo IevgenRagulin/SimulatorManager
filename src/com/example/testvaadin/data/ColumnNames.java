@@ -6,7 +6,7 @@ public class ColumnNames {
 	private static final String FLAPS = "flaps";
 	private static final String THROTTLE = "throttle";
 	private static final String RUDDER = "rudder";
-	private static final String ELERON = "eleron";
+	private static final String AILERON = "eleron";
 	private static final String ELEVATOR = "elevator";
 	private static final String SIMULATIONID = "simulationid";
 	private static final String SIMULATIONENDEDTIME = "simulationendedtime";
@@ -57,10 +57,10 @@ public class ColumnNames {
 			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
 
 	protected static final String[] simulationDevicesStateBeanCols = new String[] {
-			ELEVATOR, ELERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, TRIM };
+			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, TRIM };
 
 	protected static final String[] simulationDevicesStateCols = new String[] {
-			"devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, ELERON, RUDDER,
+			"devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, AILERON, RUDDER,
 			THROTTLE, FLAPS, SPEEDBRAKES, TRIM, TIMESTAMP };
 
 	protected static final String[] simulationBeanPfdInfo = new String[] {
@@ -267,8 +267,8 @@ public class ColumnNames {
 		return RUDDER;
 	}
 
-	public static String getEleron() {
-		return ELERON;
+	public static String getAileron() {
+		return AILERON;
 	}
 
 	public static String getElevator() {

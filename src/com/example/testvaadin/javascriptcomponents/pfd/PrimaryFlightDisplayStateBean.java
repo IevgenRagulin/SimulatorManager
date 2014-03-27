@@ -1,9 +1,6 @@
-package com.example.testvaadin.javascriptcomponents;
+package com.example.testvaadin.javascriptcomponents.pfd;
 
-import com.vaadin.shared.ui.JavaScriptComponentState;
-
-@SuppressWarnings("serial")
-public class PrimaryFlightDisplayStateBean extends JavaScriptComponentState {
+public class PrimaryFlightDisplayStateBean {
 	private String xhtml;
 	private float altitude;
 	private int speed;

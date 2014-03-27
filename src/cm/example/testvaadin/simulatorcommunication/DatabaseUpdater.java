@@ -92,7 +92,7 @@ public class DatabaseUpdater {
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getElevator()).setValue(simDevStBean.getElevator());
 		simDevStCont
-				.getContainerProperty(newSimDvStId, ColumnNames.getEleron())
+				.getContainerProperty(newSimDvStId, ColumnNames.getAileron())
 				.setValue(simDevStBean.getEleron());
 		simDevStCont
 				.getContainerProperty(newSimDvStId, ColumnNames.getRudder())

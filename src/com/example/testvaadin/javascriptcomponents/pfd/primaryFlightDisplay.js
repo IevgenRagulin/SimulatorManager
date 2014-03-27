@@ -11,8 +11,8 @@ var vsCanH = 340;
 var compasCanvasWidth = 320;
 var compasCanvasHeight = 40;
 
-//var backGrW=canvasWidth+vsCanW*2;
-//var backGrH=canvasHeight+compasCanvasHeight;
+var backGrW=canvasWidth+vsCanW*2;
+var backGrH=canvasHeight+compasCanvasHeight;
 
 
 var compasRadius = 200;
@@ -61,7 +61,7 @@ var horizontHasBeenRotated = false;
 
 var darkGray = '404040';
 
-function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
+function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() {
 	var e = this.getElement();
 
 	window.currentSpeed = 0;
@@ -71,11 +71,10 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 	window.currentYaw = 0;
 	window.currentCompass = 0;
 	window.currentVerSpeed = 0;
-	initHtml();
+	initHtml(e);
 	init();
+	console.log("inited everything");
 	this.onStateChange = function() {
-		console.log("ver speed" + this.getState().verticalspeed);
-
 		window.wantHaveSpeed = metersPerSecondToKts(this.getState().speed);
 		window.wantHaveAltitude = metersToFeet(this.getState().altitude);
 		window.wantHaveRoll = this.getState().roll;
@@ -84,6 +83,49 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 		window.wantHaveVerSpeed = metersPerSecondToFeetPerMin(this.getState().verticalspeed);
 		update();
 	};
+}
+
+function initHtml(e) {
+	console.log("init html");
+	e.innerHTML = e.innerHTML+"<h1>PFD</h1>"
+			+ "<div id='pfd_whole' style='width: 360px; height: 340px; padding-left: 40px; background-color: black; position:relative; margin-left: 40px;'>"
+			//+ "<canvas id='background' width='400' height='340'>"
+			//+ "</canvas>"
+			+ "<canvas id='pfd' width='320' height='300'>"
+			+ "Your browser doesn't support canvas."
+			+ "</canvas>"
+			+ "<canvas id='sight' width='320' height='300' style='position: absolute; margin-left: -320px'>"
+			+ "</canvas>"
+			+ "<canvas id='speed' width='320' height='300' style='position: absolute; margin-left: -320px'>"
+			+ "</canvas>"
+			+ "<canvas id='altitude' width='320' height='300' style='position: absolute; margin-left: -320px'>"
+			+ "</canvas>"
+			+ "<canvas id='compass' width='320' height='40' style='position: absolute; margin-top:300px;margin-left: -320px '>"
+			+ "</canvas>"
+			+ "<canvas id='verspeed' width='40' height='340' style='position:absolute; margin-left: 0px'>"
+			+ "</canvas>" + "</div>"
+			+ "<div style='margin-top: 50px; margin-left: 40px'>"
+			+ "<label id='speedT'>Current speed:</label>"
+			+ "<label id='speedV'></label><br/>"
+			+ "<label id='altitudeT'>Current altitude:</label>"
+			+ "<label id='altitudeV'></label><br/>"
+			+ "<label id='rollT'>Roll:</label>"
+			+ "<label id='rollV'></label><br/>"
+			+ "<label id='pitchT'>Pitch:</label>"
+			+ "<label id='pitchV'></label><br/>"
+			+ "<label id='compassT'>Compass:</label>"
+			+ "<label id='compassV'></label><br/>"
+			+ "<button id='addPitch'>+10 pitch</button>"
+			+ "<button id='minusPitch'>-10 pitch</button>"
+			+ "<button id='addRoll'>+60 roll</button>"
+			+ "<button id='minusRoll'>-60 roll</button>"
+			+ "<button id='addAltitude'>+50 altitude</button>"
+			+ "<button id='minusAltitude'>-50 altitude</button>"
+			+ "<button id='addSpeed'>+50 speed</button>"
+			+ "<button id='minusSpeed'>-50 speed</button>"
+			+ "<button id='addCompass'>+180 compass</button>"
+			+ "<button id='minusCompass'>-180 compass</button>" + "</div>";
+}
 
 	function metersPerSecondToKts(metersPerSecond) {
 		return metersPerSecond * 1.94;
@@ -96,48 +138,21 @@ function com_example_testvaadin_javascriptcomponents_PrimaryFlightDisplay() {
 	function metersPerSecondToFeetPerMin(metersPerSecond) {
 		return metersPerSecond * 196.850;
 	}
-
-	function initHtml() {
-		e.innerHTML = "<h1>PFD</h1>"
-				+ "<div style='position:relative; margin-left: 40px;'>"
-				+ "<canvas id='background' width='420' height='340' style='position:absolute; border: 1px solid #000000'>"
-				+ "</canvas>"
-				+ "<canvas id='pfd' width='320' height='300' style='position: absolute; margin-left: 40px;'>"
-				+ "Your browser doesn't support canvas."
-				+ "</canvas>"
-				+ "<canvas id='sight' width='320' height='300' style='position: absolute; margin-left: 40px;'>"
-				+ "</canvas>"
-				+ "<canvas id='speed' width='320' height='300' style='position: absolute; margin-left: 40px;'>"
-				+ "</canvas>"
-				+ "<canvas id='altitude' width='320' height='300' style='position: absolute; margin-left: 40px;'>"
-				+ "</canvas>"
-				+ "<canvas id='compass' width='320' height='40' style='margin-top:300px; margin-left: 40px;'>"
-				+ "</canvas>"
-				+ "<canvas id='verspeed' width='50' height='340' style='position:absolute;'>"
-				+ "</canvas>" + "</div>"
-				+ "<div style='margin-top: 50px; margin-left: 40px;'>"
-				+ "<label id='speedT'>Current speed:</label>"
-				+ "<label id='speedV'></label><br/>"
-				+ "<label id='altitudeT'>Current altitude:</label>"
-				+ "<label id='altitudeV'></label><br/>"
-				+ "<label id='rollT'>Roll:</label>"
-				+ "<label id='rollV'></label><br/>"
-				+ "<label id='pitchT'>Pitch:</label>"
-				+ "<label id='pitchV'></label><br/>"
-				+ "<label id='compassT'>Compass:</label>"
-				+ "<label id='compassV'></label><br/>"
-				+ "<button id='addPitch'>+10 pitch</button>"
-				+ "<button id='minusPitch'>-10 pitch</button>"
-				+ "<button id='addRoll'>+60 roll</button>"
-				+ "<button id='minusRoll'>-60 roll</button>"
-				+ "<button id='addAltitude'>+50 altitude</button>"
-				+ "<button id='minusAltitude'>-50 altitude</button>"
-				+ "<button id='addSpeed'>+50 speed</button>"
-				+ "<button id='minusSpeed'>-50 speed</button>"
-				+ "<button id='addCompass'>+180 compass</button>"
-				+ "<button id='minusCompass'>-180 compass</button>" + "</div>";
+	
+	function init() {
+		console.log("inited init");
+		console.log("DRAW INIT INIT");
+		drawBackground();
+		drawSpeedIndicator();
+		drawHeightIndicator();
+		drawSight();
+		drawCompassIndicator();
+		drawVerticalSpeed();
+		setClickListeners();
 	}
-}
+
+
+
 
 function update() {
 	if (!window.currentlyChangingPitch) {
@@ -175,18 +190,8 @@ function setClickListeners() {
 	setMinusCompassClickListener();
 }
 
-function init() {
-	drawBackground();
-	drawSpeedIndicator();
-	drawHeightIndicator();
-	drawSight();
-	drawCompassIndicator();
-	drawVerticalSpeed();
-	setClickListeners();
-}
-
 function drawBackground() {
-	var ctx = document.getElementById('background').getContext('2d');
+	var ctx = document.getElementById('pfd').getContext('2d');
 	ctx.fillStyle = 'black';
 	fillRect(ctx,0,0,window.backGrW, window.backGrH);
 	ctx.fill();
@@ -298,7 +303,6 @@ function fillRect(ctx, x, y, w, h) {
 	ctx.beginPath();
 	ctx.fillRect(x, y, w, h);
 	ctx.fill();
-	ctx.stroke();
 }
 
 function fillSky(ctx, x, y, w, h) {
@@ -311,34 +315,45 @@ function fillGround(ctx, x, y, w, h) {
 	fillRect(ctx, x, y, w, h);
 }
 
-function calculateDirection(newValue, currentValue) {
-	var diff = (newValue - currentValue) % 360;
+
+//Help function to calculate compass, pitch, roll step based on difference between current
+//value and desired value.
+function calculateCompassPitchRollStep(diff, step) {
+	diff = diff % 360;
 	var direction = 0;
-	if ((diff > 0.2) && (diff <= 180)) {
-		direction = 1;
-	} else if ((diff > 0.2) && (diff > 180)) {
-		direction = -1;
-	} else if ((diff < -0.2) && (diff <= -180)) {
-		direction = 1;
-	} else if ((diff < -0.2) && (diff > -180)) {
-		direction = -1;
+	if ((diff > step) && (diff <= 180)) {
+		direction = diff*step;
+	} else if ((diff > step) && (diff > 180)) {
+		direction = (diff - 360)*step;
+	} else if ((diff < -step) && (diff <= -180)) {
+		direction = (diff + 360)*step;
+	} else if ((diff < -step) && (diff > -180)) {
+		direction = diff*step;
 	}
 	return direction;
 }
 
-function shouldWeChangePitch(difPitch) {
-	return ((difPitch > 0.3) || (difPitch < -0.3));
+
+function calculateAltitudeSpeedStep(dif) {
+	if ((dif>1)||(dif<1)) {
+		return dif*0.1;
+	} else {
+		return 0;
+	}
+}
+
+function shouldWeMakeAnimationStep(dif, step) {
+	return ((dif > step) || (dif < -step));
 }
 
 function setPitch() {
 	// Check if we should continue animating pitch
 	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
-	if (shouldWeChangePitch(difPitch)) {
+	if (shouldWeMakeAnimationStep(difPitch, 0.03)) {
 		requestAnimationFrame(function() {
-			setPitch(window.wantHavePitch);
+			setPitch();
 		});
-		difPitch = 0.3 * calculateDirection(window.wantHavePitch,
-				window.currentPitch);
+		difPitch = calculateCompassPitchRollStep(difPitch, 0.03);
 		window.currentlyChangingPitch = true;
 	} else {
 		window.currentlyChangingPitch = false;
@@ -346,7 +361,6 @@ function setPitch() {
 
 	var ctx = document.getElementById('pfd').getContext('2d');
 	var newPitch = (window.currentPitch + difPitch) % 360;
-
 	// Transform negative numbers to 0-359 coordinates
 	if (newPitch < 0) {
 		newPitch = 360 + newPitch;
@@ -365,12 +379,11 @@ function setRoll() {
 	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
 	// Check if we should continue animating roll
 	var ctx = document.getElementById('pfd').getContext('2d');
-	if (shouldWeRoll(difRoll)) {
+	if (shouldWeMakeAnimationStep(difRoll, 0.5)) {
 		requestAnimationFrame(function() {
 			setRoll();
 		});
-		difRoll = 0.5 * calculateDirection(window.wantHaveRoll,
-				window.currentRoll);
+		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
 		window.currentlyChangingRoll = true;
 	} else {
 		window.currentlyChangingRoll = false;
@@ -385,9 +398,6 @@ function setRoll() {
 	document.getElementById('rollV').innerHTML = window.currentRoll;
 }
 
-function shouldWeRoll(difRoll) {
-	return ((difRoll > 0.5) || (difRoll < -0.5));
-}
 
 function rotateCanvasByRollDegrees(ctx, roll) {
 	ctx.translate(window.canvasHeight / 2, window.canvasWidth / 2);
@@ -441,12 +451,6 @@ function drawSkyAndGround(ctx, newPitch) {
 	}
 }
 
-function cropLinesNumberOutsideSight(ctxSight) {
-	ctxSight.beginPath();
-	ctxSight.arc(window.canvasWidth / 2, window.canvasHeight / 2,
-			window.sightRadius + 1, 0, 2 * Math.PI, true);
-	ctxSight.clip();
-}
 
 function drawLineNumberHelpFunc(ctxSight, startInt, endInt, difPitch, direction) {
 	ctxSight.strokeStyle = 'white';
@@ -517,6 +521,7 @@ function drawSight() {
 
 function drawVerticalSpeedLines(ctxVS, direction) {
 	ctxVS.strokeStyle = 'white';
+	ctxVS.fillStyle='white';
 	ctxVS.moveTo(window.vsCanW * 0.1, window.vsCanH * 0.5);
 	ctxVS.lineTo(window.vsCanW * 0.8, window.vsCanH * 0.5);
 	var scale = 0.28 * window.vsCanH;
@@ -525,12 +530,14 @@ function drawVerticalSpeedLines(ctxVS, direction) {
 		// draw 0.5
 		ctxVS.moveTo(window.vsCanW * 0.4, vsiYCenter + ((i - 0.5) / 3) * scale
 				* direction);
-		ctxVS.lineTo(window.vsCanW * 0.5, vsiYCenter + ((i - 0.5) / 3) * scale
+		ctxVS.lineTo(window.vsCanW * 0.50, vsiYCenter + ((i - 0.5) / 3) * scale
 				* direction);
 		// draw 1
+		ctxVS.fillText(i, window.vsCanW*0.2, vsiYCenter + (i / 3) * scale
+				* direction+3);
 		ctxVS.moveTo(window.vsCanW * 0.4, vsiYCenter + (i / 3) * scale
 				* direction);
-		ctxVS.lineTo(window.vsCanW * 0.5, vsiYCenter + (i / 3) * scale
+		ctxVS.lineTo(window.vsCanW * 0.55, vsiYCenter + (i / 3) * scale
 				* direction);
 	}
 	ctxVS.stroke();
@@ -539,10 +546,7 @@ function drawVerticalSpeedLines(ctxVS, direction) {
 function drawVerticalSpeed() {
 	var ctxVS = document.getElementById('verspeed').getContext('2d');
 	ctxVS.beginPath();
-	ctxVS.fillStyle = 'black';
 	ctxVS.clearRect(0, 0, window.vsCanW, vsCanH);
-	ctxVS.fillRect(0, 0, window.vsCanW, vsCanH);
-	ctxVS.fill();
 	ctxVS.beginPath();
 	ctxVS.strokeStyle = darkGray;
 	ctxVS.fillStyle = darkGray;
@@ -584,23 +588,25 @@ function calculateVerSpeedStep(difVerSpeed) {
 function setVerticalSpeed() {
 	var difVerSpeed = window.wantHaveVerSpeed - window.currentVerSpeed;
 	var difVerSpeedStep = calculateVerSpeedStep(difVerSpeed);
-	if ((difVerSpeed>10)||(difVerSpeed<-10)) {
-		window.currentlyChangingVerSpeed = true;
+    if (shouldWeMakeAnimationStep(difVerSpeed, 10)) {
+    	window.currentlyChangingVerSpeed = true;
 		requestAnimationFrame(function() {
 			setVerticalSpeed();
 		});
-	} else {
-		window.currentlyChangingVerSpeed = false;
-	}
+    } else {
+    	window.currentlyChangingVerSpeed = false;
+    }
 	window.currentVerSpeed += difVerSpeedStep;
 	var speedYPos = calculateVsYPosition(window.currentVerSpeed);
 	var ctxVS = document.getElementById('verspeed').getContext('2d');
 	drawVerticalSpeed();
 	ctxVS.beginPath();
 	ctxVS.strokeStyle = 'white';
+	ctxVS.lineWidth = 2;
 	ctxVS.moveTo(window.vsCanW, window.vsCanH/2);
 	ctxVS.lineTo(window.vsCanW*0.5, speedYPos);
-	
+	ctxVS.font = '10pt Calibri';
+	ctxVS.fillText(Math.round(window.currentVerSpeed), window.vsCanW*0.05, window.vsCanH*0.16);
 	ctxVS.stroke();
 }
 
@@ -608,7 +614,7 @@ function setSpeed() {
 	var ctxSpeed = document.getElementById('speed').getContext('2d');
 	var difSpeed = window.wantHaveSpeed - window.currentSpeed;
 	var difSpeedStep = calculateAltitudeSpeedStep(difSpeed);
-	if ((difSpeed > 1.0)||(difSpeed<-1.0)) {
+	if (shouldWeMakeAnimationStep(difSpeed, 1.0)) {
 		window.currentlyChangingSpeed = true;
 		requestAnimationFrame(function() {
 			setSpeed();
@@ -654,40 +660,15 @@ function setSpeed() {
 
 }
 
-function calculateAltitudeSpeedStep(dif) {
-	var difAltitudeStep=0;
-	var absDifVal = Math.abs(dif);
-	var direction=1;
-	if (dif>0) {
-		direction = 1;
-	} else { 
-		direction = -1;
-	}
-	if (absDifVal > 1.0) {
-		if (absDifVal > 100) {
-			difAltitudeStep = 50*direction;
-		} else if (absDifVal > 50) {
-			difAltitudeStep = 10*direction;
-		} else {
-			difAltitudeStep = 1*direction;
-		}
-	} 
-	return difAltitudeStep;
-}
 
 function setAltitude() {
 	// console.log('set alt called');
 	var ctxAltitude = document.getElementById('altitude').getContext('2d');
 	var difAltitude = window.wantHaveAltitude - window.currentAltitude;
 	var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
-	if (difAltitude > 1) {
+	if (shouldWeMakeAnimationStep(difAltitude, 1)) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingAlt = true;
-			setAltitude();
-		});
-	} else if (difAltitude < -1) {
-		window.currentlyChangingAlt = true;
-		requestAnimationFrame(function() {
 			setAltitude();
 		});
 	} else {
@@ -716,18 +697,18 @@ function setAltitude() {
 	ctxAltitude.font = '8pt Calibri';
 
 	// draw lines with numbers
-	for (var i = 0; i < 50000; i += 20) {
-		ctxAltitude.moveTo(0, -i * 2 - 3 - window.altBarHeight / 2
-				+ newAltitude * 2);
-		ctxAltitude.lineTo(10, -i * 2 - 3 - window.altBarHeight / 2
-				+ newAltitude * 2);
-		ctxAltitude.fillText(i, 10, -i * 2 - window.altBarHeight / 2
-				+ newAltitude * 2);
+	for (var i = 0; i < 50000; i += 200) {
+		ctxAltitude.moveTo(0, -(i * 2)/10 - 3 - window.altBarHeight / 2
+				+ (newAltitude * 2)/10);
+		ctxAltitude.lineTo(10, -(i * 2)/10 - 3 - window.altBarHeight / 2
+				+ (newAltitude * 2)/10);
+		ctxAltitude.fillText(i, 10, -(i * 2)/10 - window.altBarHeight / 2
+				+ (newAltitude * 2)/10);
 		// draw lines in between the numbers
-		ctxAltitude.moveTo(0, -i * 2 - 3 - window.altBarHeight / 2
-				+ newAltitude * 2 - 20);
-		ctxAltitude.lineTo(5, -i * 2 - 3 - window.altBarHeight / 2
-				+ newAltitude * 2 - 20);
+		ctxAltitude.moveTo(0, -(i * 2)/10 - 3 - window.altBarHeight / 2
+				+ (newAltitude * 2)/10 - 20);
+		ctxAltitude.lineTo(5, -(i * 2)/10 - 3 - window.altBarHeight / 2
+				+ (newAltitude * 2)/10 - 20);
 	}
 	ctxAltitude.stroke();
 	ctxAltitude.restore();
@@ -743,30 +724,12 @@ function rotateCompassCanvasByDegrees(compassCanvas, degrees) {
 			-window.compasCanvasHeight - 170);
 }
 
-// Help function to calculate compass step based on difference between current
-// compass value and desired compass value.
-//There is some error here. Rotates in wrong direction sometimes
-function calculateCompassStep(difCompass) {
-	// currentCompass = degrees;
-	console.log("calcul comp step"+difCompass);
-	if ((difCompass > 0) && (difCompass < 180)) {
-		return difCompass * 0.05;
-	} else if ((difCompass > 0) && (difCompass >= 180)) {
-		return ((difCompass - 360) * 0.05);
-	} else if ((difCompass < 0) && (difCompass <= -180)) {
-		return ((difCompass + 360) * 0.05);
-	} else if ((difCompass < 0) && (difCompass > -180)) {
-		return difCompass * 0.05;
-	} else {
-		return 0;
-	}
-}
 
 // Sets compass value in small iterations. Animates it also with
 // requestAnimationFrame
 function setCompassValue(ctxCompass, compass) {
 	var difCompass = (compass - window.currentCompass)%360;
-	var compassStep = calculateCompassStep(difCompass);
+	var compassStep = calculateCompassPitchRollStep(difCompass, 0.05);
 	if ((difCompass > 0.005) || (difCompass < -0.005)) {
 		requestAnimationFrame(function() {
 			window.currentlyChangingCompass = true;
@@ -776,12 +739,10 @@ function setCompassValue(ctxCompass, compass) {
 	} else {
 		window.currentlyChangingCompass = false;
 	}
-	console.log("calculated comp step"+compassStep);
 	window.currentCompass = (window.currentCompass+compassStep)%360;
 	if (window.currentCompass<0) {
 		window.currentCompass+=360;
 	}
-	console.log("calcul new cur com"+window.currentCompass);
 	rotateCompassCanvasByDegrees(ctxCompass, -compassStep);
 	document.getElementById('compassV').innerHTML = window.currentCompass;
 }
@@ -847,10 +808,7 @@ function drawHeightIndicator() {
 // Draws this little triangle which points to current compass
 function drawCompassIndicator() {
 	var compassCtx = document.getElementById('compass').getContext('2d');
-	// Draw black background
-	compassCtx.fillStyle = 'black';
-	fillRect(compassCtx, 0, 0, window.compasCanvasWidth,
-			window.compasCanvasHeight);
+	console.log("DRAWING COMPASS INDICATOR");
 	compassCtx.storkeStyle = 'white';
 	compassCtx.fillStyle = 'white';
 	// setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3
@@ -870,6 +828,11 @@ function drawPolygone(ctx, poly) {
 		ctx.lineTo(poly[item], poly[item + 1]);
 	}
 	ctx.closePath();
+	ctx.fill();
+}
+
+function fillArc(ctx, x, y, r, startAngle, finishAngle) {
+	arc(ctx, x, y, r, startAngle, finishAngle);
 	ctx.fill();
 }
 

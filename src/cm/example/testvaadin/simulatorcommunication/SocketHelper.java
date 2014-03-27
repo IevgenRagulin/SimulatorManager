@@ -17,7 +17,6 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
-		System.out.println(" from " + host + " " + response);
 		closeSocket(queryProcessorSocket);
 		simData = parseSimulatorResponse(response);
 		return simData;
@@ -282,13 +281,13 @@ public class SocketHelper {
 			// DEVICES STATE
 			// ////////////
 			// aileron
-			value = getValueOf(":DA_:", response);
+			value = getValueOf(":CA_:", response);
 			simData.setAileron(stringToDouble(value));
 			// elevator
-			value = getValueOf(":DE_:", response);
+			value = getValueOf(":CE_:", response);
 			simData.setElevator(stringToDouble(value));
 			// rudder
-			value = getValueOf(":DR_:", response);
+			value = getValueOf(":CR_:", response);
 			simData.setRudder(stringToDouble(value));
 			// trim
 			value = getValueOf(":DTE:", response);

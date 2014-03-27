@@ -20,6 +20,7 @@ public class DatabaseHelper implements Serializable {
 	private static final long serialVersionUID = -5027557673512708776L;
 	JDBCConnectionPool pool = null;
 	private SQLContainer simulatorContainer = null;
+	// TODO: make configurable from application settings
 	private final String DB_URL = "jdbc:postgresql://localhost/postgres";
 	private String DB_USER = "postgres";
 	private String DB_PASS = "password";
@@ -187,8 +188,7 @@ public class DatabaseHelper implements Serializable {
 	private void initConnectionPool() {
 		try {
 			pool = new SimpleJDBCConnectionPool("org.postgresql.Driver",
-					"jdbc:postgresql://localhost/postgres", "postgres",
-					"password", 2, 5);
+					DB_URL, DB_USER, DB_PASS, 2, 5);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
