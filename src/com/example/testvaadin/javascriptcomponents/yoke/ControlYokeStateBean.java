@@ -1,38 +1,38 @@
 package com.example.testvaadin.javascriptcomponents.yoke;
 
 public class ControlYokeStateBean {
-	public float aileron;
-	public float elevator;
-	public float rudder;
+	public float ail;
+	public float el;
+	public float rd;
 
 	public ControlYokeStateBean(float aileron, float elevator, float rudder) {
-		this.aileron = aileron;
-		this.elevator = elevator;
-		this.rudder = rudder;
+		this.ail = aileron;
+		this.el = elevator;
+		this.rd = rudder;
 	}
 
 	protected float getAileron() {
-		return aileron;
+		return ail;
 	}
 
 	protected void setAileron(float aileron) {
-		this.aileron = aileron;
+		this.ail = aileron;
 	}
 
 	protected float getElevator() {
-		return elevator;
+		return el;
 	}
 
 	protected void setElevator(float elevator) {
-		this.elevator = elevator;
+		this.el = elevator;
 	}
 
 	protected float getRudder() {
-		return rudder;
+		return rd;
 	}
 
 	protected void setRudder(float rudder) {
-		this.rudder = rudder;
+		this.rd = rudder;
 	}
 
 }

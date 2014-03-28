@@ -4,7 +4,7 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 
 @SuppressWarnings("serial")
 public class ControlYokeState extends JavaScriptComponentState {
-	public float aileron;
-	public float elevator;
-	public float rudder;
+	public float ail;
+	public float el;
+	public float rd;
 }

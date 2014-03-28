@@ -17,9 +17,9 @@ public class ControlYoke extends AbstractJavaScriptComponent {
 	private ControlYokeStateBean controlYokeStateBean;
 
 	public ControlYoke(float aileron, float elevator, float rudder) {
-		getState().aileron = aileron;
-		getState().elevator = elevator;
-		getState().rudder = rudder;
+		getState().ail = aileron;
+		getState().el = elevator;
+		getState().rd = rudder;
 		controlYokeStateBean = new ControlYokeStateBean(aileron, elevator,
 				rudder);
 	}
@@ -43,21 +43,21 @@ public class ControlYoke extends AbstractJavaScriptComponent {
 
 	private void setAileron(float newAileron) {
 		if (getStateBean().getAileron() != newAileron) {
-			getState().aileron = newAileron;
+			getState().ail = newAileron;
 			getStateBean().setAileron(newAileron);
 		}
 	}
 
 	private void setElevator(float newElevator) {
 		if (getStateBean().getElevator() != newElevator) {
-			getState().elevator = newElevator;
+			getState().el = newElevator;
 			getStateBean().setElevator(newElevator);
 		}
 	}
 
 	private void setRudder(float newRudder) {
 		if (getStateBean().getRudder() != newRudder) {
-			getState().rudder = newRudder;
+			getState().rd = newRudder;
 			getStateBean().setRudder(newRudder);
 		}
 	}

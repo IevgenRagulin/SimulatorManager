@@ -1,101 +1,91 @@
 package com.example.testvaadin.javascriptcomponents.pfd;
 
 public class PrimaryFlightDisplayStateBean {
-	private String xhtml;
-	private float altitude;
-	private int speed;
-	private int roll;
-	private int pitch;
-	private int heading;
-	private int truecourse;
-	private float verticalspeed;
-	private int resetpfd;
+	private int a;// altitude
+	private int s;// speed
+	private int r;// roll
+	private int p;// pitch
+	private int h;// heading
+	private int tc;// truecourse
+	private float vs;// verticalspeed
+	private int rpfd;// resetpfd
 
-	public PrimaryFlightDisplayStateBean(String xhtml, float altitude,
-			int speed, int roll, int pitch, int heading, int truecourse,
-			float verticalspeed, int resetpfd) {
+	public PrimaryFlightDisplayStateBean(int altitude, int speed, int roll,
+			int pitch, int heading, int truecourse, float verticalspeed,
+			int resetpfd) {
 		super();
-		this.xhtml = xhtml;
-		this.altitude = altitude;
-		this.speed = speed;
-		this.roll = roll;
-		this.pitch = pitch;
-		this.heading = heading;
-		this.truecourse = truecourse;
+		this.a = altitude;
+		this.s = speed;
+		this.r = roll;
+		this.p = pitch;
+		this.h = heading;
+		this.tc = truecourse;
 		this.setVerticalspeed(verticalspeed);
-		this.resetpfd = resetpfd;
-	}
-
-	public String getXhtml() {
-		return xhtml;
-	}
-
-	public void setXhtml(String xhtml) {
-		this.xhtml = xhtml;
+		this.rpfd = resetpfd;
 	}
 
 	public float getAltitude() {
-		return altitude;
+		return a;
 	}
 
-	public void setAltitude(float altitude) {
-		this.altitude = altitude;
+	public void setAltitude(int altitude) {
+		this.a = altitude;
 	}
 
 	public int getSpeed() {
-		return speed;
+		return s;
 	}
 
 	public void setSpeed(int speed) {
-		this.speed = speed;
+		this.s = speed;
 	}
 
 	public int getRoll() {
-		return roll;
+		return r;
 	}
 
 	public void setRoll(int roll) {
-		this.roll = roll;
+		this.r = roll;
 	}
 
 	public int getPitch() {
-		return pitch;
+		return p;
 	}
 
 	public void setPitch(int pitch) {
-		this.pitch = pitch;
+		this.p = pitch;
 	}
 
 	public int getHeading() {
-		return heading;
+		return h;
 	}
 
 	public void setHeading(int heading) {
-		this.heading = heading;
+		this.h = heading;
 	}
 
 	public int getTruecourse() {
-		return truecourse;
+		return tc;
 	}
 
 	public void setTruecourse(int truecourse) {
-		this.truecourse = truecourse;
+		this.tc = truecourse;
 	}
 
 	public int getResetpfd() {
-		return resetpfd;
+		return rpfd;
 	}
 
 	public void setResetpfd(int resetpfd) {
-		this.resetpfd = resetpfd;
+		this.rpfd = resetpfd;
 	}
 
 	public float getVerticalspeed() {
-		return verticalspeed;
+		return vs;
 	}
 
 	public void setVerticalspeed(float verticalspeed) {
-		this.verticalspeed = verticalspeed;
+		this.vs = verticalspeed;
 	}
 
 }

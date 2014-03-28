@@ -8,6 +8,12 @@ var yokeHeight = 120;
 var yokeBackWidth = 130;
 var yokeBackHeight = 130;
 
+var rudderWidth = 120;
+var rudderHeight = 20;
+
+var rudderBackWidth = 130;
+var rudderBackHeight = 32;
+
 var wantHaveRudder = 0;
 var wantHaveAileron = 0;
 var wantHaveElevator = 0;
@@ -19,6 +25,10 @@ var currentlyChangingElevator = false;
 var xOffset = (window.yokeBackWidth-window.yokeWidth)/2;
 var yOffset = (window.yokeBackHeight-window.yokeHeight)/2;
 
+var xOffsetR = (window.rudderBackWidth-window.rudderWidth)/2;
+var yOffsetR = (window.rudderBackHeight-window.rudderHeight)/2;
+
+
 function com_example_testvaadin_javascriptcomponents_yoke_ControlYoke() {
 	var e = this.getElement();
 	window.currentRudder = 0;
@@ -28,9 +38,9 @@ function com_example_testvaadin_javascriptcomponents_yoke_ControlYoke() {
 	initYokeHtml(e);
 	initYoke();
 	this.onStateChange = function() {
-		window.wantHaveRudder = this.getState().rudder;
-		window.wantHaveAileron = this.getState().aileron;
-		window.wantHaveElevator = this.getState().elevator;
+		window.wantHaveRudder = this.getState().rd;
+		window.wantHaveAileron = this.getState().ail;
+		window.wantHaveElevator = this.getState().el;
 		console.log("NEW ELEVATOR" + window.wantHaveElevator);
 		console.log("NEW AILERON" + window.wantHaveAileron);
 		console.log("NEW RUDDER" + window.wantHaveRudder);
@@ -43,7 +53,7 @@ function initYokeHtml(e) {
 			+ "<h1>Control Yoke</h1>"
 			+ "<canvas id='controlYokeB' width='130' height='130' style='margin-left:40px; background-color: black;'>"
 			+ "Your browser doesn't support canvas." + "</canvas>"
-			+ "<canvas id='controlYoke' width='130' height='130' style='margin-left:-130px;'></canvas>"
+			+ "<canvas id='controlRudderB' width='130' height='32' style='margin-top:140px; margin-left: -130px; position: absolute; background-color: black'></canvas>"
 			+ "<div style='margin-top: 50px; margin-left: 40px'>"
 			+ "<label id='rudderV'>Current rudder:</label>"
 			+ "<label id='aileronV'Current aileron:></label><br/>"
@@ -63,8 +73,18 @@ function updateYoke() {
 }
 
 function setRudder() {
-	console.log("SETTING RUDDER");
-	var ctx = document.getElementById('controlYoke').getContext('2d');
+	var dif = window.wantHaveRudder-window.currentRudder;
+	if (shouldWeMakeAnimationStep(dif, 0.1)) {
+		requestAnimationFrame(function() {
+			setRudder();
+		});
+		dif = calculateElRudAilAnimStem(dif, 0.1);
+		window.currentlyChangingRudder = true;
+	} else {
+		window.currentlyChangingRudder= false;
+	}
+	window.currentRudder = window.currentRudder+dif;
+	drawAilRudElev();
 }
 
 function calculateElRudAilAnimStem(dif, step) {
@@ -106,9 +126,11 @@ function setAileron() {
 }
 
 function drawAilRudElev() {
-	var ctx = document.getElementById('controlYoke').getContext('2d');
+	var ctx = document.getElementById('controlYokeB').getContext('2d');
 	clearRect(ctx, 0, 0, window.yokeBackWidth, window.yokeBackHeight);
+	drawYoke();
 	ctx.fillStyle = "red";
+	ctx.strokeStyle = "red";
 	/*Draw aileron*/
 	var y = window.yokeHeight/2+yOffset;
 	var x = window.yokeWidth/2+window.currentAileron*(window.yokeWidth/2)+xOffset;
@@ -117,10 +139,25 @@ function drawAilRudElev() {
 	x = window.yokeWidth/2+xOffset;
 	y = window.yokeHeight/2+window.currentElevator*(window.yokeHeight/2)+yOffset;
 	fillArc(ctx, x, y, 5, 0, 2 * Math.PI);
+	/*Draw rudder*/
+	drawRudderInd();
+}
+
+function drawRudderInd() {
+	var ctxRud = document.getElementById('controlRudderB').getContext('2d');
+	clearRect(ctxRud, 0, 0, window.rudderBackWidth, window.rudderBackHeight);
+	drawRudder();
+	ctxRud.fillStyle = "red";
+	ctxRud.strokeStyle = "red";
+	/*Draw rudder*/
+	var y = window.rudderHeight/2+window.yOffsetR;
+	var x = window.rudderWidth/2+window.currentRudder*(window.rudderWidth/2)+window.xOffsetR;
+	fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
 }
 
 function initYoke() {
 	drawYoke();
+	drawRudder();
 }
 
 function shouldMakeYokeAnimStep(dif, step) {
@@ -133,6 +170,15 @@ function drawYoke() {
 	ctx.fillStyle = "white";
 	// fill rect, clear rect, arc functions is in primaryFlightDisplay.js file
 	clearRect(ctx, 0, 0, ctx.width, ctx.height);
-	fillRect(ctx, (window.yokeWidth / 2) - 4+xOffset, yOffset, 8, window.yokeHeight);
-	fillRect(ctx, xOffset, (window.yokeHeight / 2) - 4+yOffset, window.yokeWidth, 8);
+	fillRect(ctx, (window.yokeWidth / 2) - 4+window.xOffset, window.yOffset, 8, window.yokeHeight);
+	fillRect(ctx, window.xOffset, (window.yokeHeight / 2) - 4+window.yOffset, window.yokeWidth, 8);
+}
+
+function drawRudder() {
+	var ctx = document.getElementById('controlRudderB').getContext('2d');
+	ctx.beginPath();
+	ctx.fillStyle = "white";
+	// fill rect, clear rect, arc functions is in primaryFlightDisplay.js file
+	clearRect(ctx, 0, 0, ctx.width, ctx.height);
+	fillRect(ctx, xOffsetR, (window.rudderHeight / 2) - 4+yOffsetR, window.rudderWidth, 8);
 }

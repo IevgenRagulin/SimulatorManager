@@ -4,13 +4,12 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 
 @SuppressWarnings("serial")
 public class PrimaryFlightDisplayState extends JavaScriptComponentState {
-	public String xhtml;
-	public float altitude;
-	public int speed;
-	public int roll;
-	public int pitch;
-	public int heading;
-	public int truecourse;
-	public int resetpfd;
-	public float verticalspeed;
+	public int a;// altitude
+	public int s;// speed
+	public int r;// roll
+	public int p;// pitch
+	public int h;// heading
+	public int tc;// truecourse
+	public int rpfd;// resetpfd
+	public float vs;// verticalspeed
 }

@@ -1,6 +1,5 @@
 package com.example.testvaadin.components;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -12,13 +11,11 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.VaadinService;
 import com.vaadin.tapio.googlemaps.GoogleMap;
 import com.vaadin.tapio.googlemaps.client.LatLon;
+import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapInfoWindow;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
-import com.vaadin.ui.Image;
 
 public class FlightPathGoogleMap extends GoogleMap {
 	private static final String CURRENT_AIRCRAFT_POSITION_TEXT = "Current aircraft position";
@@ -31,6 +28,8 @@ public class FlightPathGoogleMap extends GoogleMap {
 	private GoogleMapPolyline flightPath = new GoogleMapPolyline(
 			planePathPoints, "#d31717", 0.8, 3);
 	GoogleMapMarker newPositionMarker = new GoogleMapMarker();
+	private GoogleMapInfoWindow latestCoordinatesWindow = new GoogleMapInfoWindow(
+			"Kakola used to be a provincial prison.", newPositionMarker);
 	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0,
 			112.5, 135.0, 157.5, 180.0, 202.5, 225.0, 247.5, 270.0, 292.5,
 			315.0, 337.5 };
@@ -52,6 +51,11 @@ public class FlightPathGoogleMap extends GoogleMap {
 		setWidth(MAP_WIDTH);
 		setHeight(MAP_HEIGHT);
 		setPrimaryStyleName(MAP_STYLE_NAME);
+		// Display coordinates on clicking the marker
+		OpenInfoWindowOnMarkerClickListener infoWindowOpener = new OpenInfoWindowOnMarkerClickListener(
+				this, newPositionMarker, latestCoordinatesWindow);
+		this.addMarkerClickListener(infoWindowOpener);
+		newPositionMarker.setAnimationEnabled(false);
 	}
 
 	public void initMapWithDataForSimulationWithId(String simulatorId) {
@@ -69,17 +73,9 @@ public class FlightPathGoogleMap extends GoogleMap {
 		planePathPoints = getArrayListOfFlightPathPoints(simulationInfoData);
 		this.flightPath.setCoordinates(planePathPoints);
 		addPolyline(this.flightPath);
-		newPositionMarker.setPosition(lastLatLong);
-		String iconUrl = getIconUrl(trueCourse);
-		// Find the application directory
-		String basepath = VaadinService.getCurrent().getBaseDirectory()
-				.getAbsolutePath();
-		FileResource resource = new FileResource(new File(basepath
-				+ "/WEB-INF/images/plane_icons/0.png"));
-		Image image = new Image("Image from file", resource);
-		newPositionMarker.setIconUrl(iconUrl);
 		addMarker(newPositionMarker);
 		setCenter(lastLatLong);
+		addMarkerOnMap(lastLatLong, trueCourse);
 	}
 
 	private String getIconUrl(Double trueCourse) {
@@ -148,7 +144,8 @@ public class FlightPathGoogleMap extends GoogleMap {
 		Double trueCourse = SimulatorsStatus
 				.getSimulationPFDItemBySimulatorId(simulatorId).getBean()
 				.getTruecourse();
-
+		latestCoordinatesWindow.setContent(newPosition.getLat() + " "
+				+ newPosition.getLon());
 		// Check if coordinates of the new position differ from the previous
 		// one. If they don't differ, do nothing. If they do differ, add data on
 		// the map
@@ -158,13 +155,8 @@ public class FlightPathGoogleMap extends GoogleMap {
 	}
 
 	private void addMarkerOnMap(LatLon newPosition, Double trueCourse) {
-		clearMarkers();
 		newPositionMarker.setPosition(newPosition);
-		newPositionMarker.setAnimationEnabled(false);
 		newPositionMarker.setIconUrl(getIconUrl(trueCourse));
-		System.out.println("ICON URL" + getIconUrl(trueCourse));
-		addMarker(newPositionMarker);
-		// setCenter(newPosition);
 		this.lastLatLong = newPosition;
 		addLatestCoordinatesToFlightPath(newPosition);
 	}

@@ -45,17 +45,11 @@ public class RunningSimulationsView extends BasicView implements View {
 	private FormLayout simulatorInfoLayout = new FormLayout();
 	private FormLayout simulationLayout = new FormLayout();
 	private FormLayout simulationInfoLayout = new FormLayout();
-	private FormLayout simulationDevicesStateLayout = new FormLayout();
 	private ErrorLabel errorLabel = new ErrorLabel("");
 	private InfoLabel simulatorInfoLabel = new InfoLabel("Simulator info");
 	private InfoLabel simulationLabel = new InfoLabel("Simulation");
-	private InfoLabel simulationInfoLabel = new InfoLabel("Simulation info");
-	private InfoLabel simulatorDevicesStateLabel = new InfoLabel(
-			"Simulator devices state");
 	private SimulationStateFieldGroup simulatorInfo;
 	private SimulationStateFieldGroup simulation;
-	private SimulationStateFieldGroup simulationInfo;
-	private SimulationStateFieldGroup simulationDevicesState;
 
 	private SelectSimulatorCombo selectSimulator;
 	// TODO: make configurable from app configuration
@@ -85,16 +79,8 @@ public class RunningSimulationsView extends BasicView implements View {
 		return simulation;
 	}
 
-	public SimulationStateFieldGroup getSimulationInfo() {
-		return simulationInfo;
-	}
-
 	public void setSimulationInfo(SimulationStateFieldGroup simulationInfo) {
 		this.simulation = simulationInfo;
-	}
-
-	public SimulationStateFieldGroup getSimulatorDevicesState() {
-		return simulationDevicesState;
 	}
 
 	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
@@ -120,8 +106,6 @@ public class RunningSimulationsView extends BasicView implements View {
 		initSelectSimulatorCombo();
 		initSimulatorsInfo();
 		initSimulationInfo();
-		initSimulationDevicesState();
-		initSimulationInfoInfo();
 		initLayout();
 		setClickListeners();
 		initPageRefresher();
@@ -154,8 +138,7 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initPrimaryFlightDisplay() {
-		primaryFlightDisplay = new PrimaryFlightDisplay(1, "index.html", 0, 0,
-				0, 0, 0, 0, 0);
+		primaryFlightDisplay = new PrimaryFlightDisplay(1, 0, 0, 0, 0, 0, 0, 0);
 		mainSimulationLayout.addComponent(primaryFlightDisplay);
 	}
 
@@ -164,10 +147,12 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initPageRefresher() {
+		// Set refresher which updates the UI
 		StatusRefreshListener listener = new StatusRefreshListener();
 		final Refresher refresher = new Refresher();
 		refresher.addListener(listener);
-		refresher.setRefreshInterval(1000);
+		// Set update interval in miliseconds
+		refresher.setRefreshInterval(500);
 		addExtension(refresher);
 	}
 
@@ -185,17 +170,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void initSimulationInfo() {
 		simulation = new SimulationStateFieldGroup(
 				ColumnNames.getSimulationBeanCols(), simulationLayout);
-	}
-
-	private void initSimulationInfoInfo() {
-		simulationInfo = new SimulationStateFieldGroup(
-				ColumnNames.getSimulationInfoBeanCols(), simulationInfoLayout);
-	}
-
-	private void initSimulationDevicesState() {
-		simulationDevicesState = new SimulationStateFieldGroup(
-				ColumnNames.getSimulationDevicesStateBeanCols(),
-				simulationDevicesStateLayout);
 	}
 
 	private void initSelectSimulatorCombo() {
@@ -216,9 +190,6 @@ public class RunningSimulationsView extends BasicView implements View {
 		mainSimulationLayout = new VerticalLayout();
 		mainSimulationLayout.addComponent(simulationLabel);
 		mainSimulationLayout.addComponent(simulationLayout);
-		mainSimulationLayout.addComponent(simulatorDevicesStateLabel);
-		mainSimulationLayout.addComponent(simulationDevicesStateLayout);
-		mainSimulationLayout.addComponent(simulationInfoLabel);
 		mainSimulationLayout.addComponent(simulationInfoLayout);
 		addComponent(mainSimulationLayout);
 	}
@@ -243,7 +214,6 @@ public class RunningSimulationsView extends BasicView implements View {
 		// Set simulation devices state
 		Item selectedDevicesState = SimulatorsStatus
 				.getSimulationDevStateItemBySimulatorId(simulatorId);
-		setSimulationDevicesStateInfo(selectedDevicesState);
 		// Set control yoke info
 		setControlYokeInfo(selectedDevicesState);
 		// Set PFD info
@@ -280,24 +250,9 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void setSimulationInfoData(Item selectedSimulationInfo,
 			String simulatorId) {
 		if (selectedSimulationInfo != null) {
-			// Set simulation info data
-			getSimulationInfo().setItemDataSource(selectedSimulationInfo);
-			getSimulationInfo().setEnabled(true);
 			// Add simulation info data to map
 			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo,
 					simulatorId);
-		} else {
-			getSimulationInfo().setEnabled(false);
-		}
-	}
-
-	private void setSimulationDevicesStateInfo(Item selectedDevicesState) {
-		if (selectedDevicesState != null) {
-			getSimulatorDevicesState().setItemDataSource(selectedDevicesState);
-			getSimulatorDevicesState().setEnabled(true);
-			getSimulatorDevicesState().setReadOnly(true);
-		} else {
-			getSimulatorDevicesState().setEnabled(false);
 		}
 	}
 

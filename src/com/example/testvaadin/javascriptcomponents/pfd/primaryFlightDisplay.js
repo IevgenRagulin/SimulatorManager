@@ -19,7 +19,6 @@ var compasRadius = 200;
 var compassIndicatorWidth = 5;
 
 
-
 var speedBarWidth = 40;
 var speedBarHeight = 300;
 var leftSpeedBarMargin = 0;
@@ -63,7 +62,6 @@ var darkGray = '404040';
 
 function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() {
 	var e = this.getElement();
-
 	window.currentSpeed = 0;
 	window.currentAltitude = 0;
 	window.currentPitch = 0;
@@ -73,14 +71,14 @@ function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() 
 	window.currentVerSpeed = 0;
 	initHtml(e);
 	init();
-	console.log("inited everything");
 	this.onStateChange = function() {
-		window.wantHaveSpeed = metersPerSecondToKts(this.getState().speed);
-		window.wantHaveAltitude = metersToFeet(this.getState().altitude);
-		window.wantHaveRoll = this.getState().roll;
-		window.wantHavePitch = this.getState().pitch;
-		window.wantHaveHeading = this.getState().heading;
-		window.wantHaveVerSpeed = metersPerSecondToFeetPerMin(this.getState().verticalspeed);
+		console.log("got new data");
+		window.wantHaveSpeed = metersPerSecondToKts(this.getState().s);
+		window.wantHaveAltitude = metersToFeet(this.getState().a);
+		window.wantHaveRoll = this.getState().r;
+		window.wantHavePitch = this.getState().p;
+		window.wantHaveHeading = this.getState().h;
+		window.wantHaveVerSpeed = metersPerSecondToFeetPerMin(this.getState().vs);
 		update();
 	};
 }
@@ -140,8 +138,6 @@ function initHtml(e) {
 	}
 	
 	function init() {
-		console.log("inited init");
-		console.log("DRAW INIT INIT");
 		drawBackground();
 		drawSpeedIndicator();
 		drawHeightIndicator();
@@ -330,7 +326,7 @@ function calculateCompassPitchRollStep(diff, step) {
 	} else if ((diff < -step) && (diff > -180)) {
 		direction = diff*step;
 	}
-	return direction;
+	return Math.round(direction*100)/100;
 }
 
 
@@ -349,11 +345,11 @@ function shouldWeMakeAnimationStep(dif, step) {
 function setPitch() {
 	// Check if we should continue animating pitch
 	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
-	if (shouldWeMakeAnimationStep(difPitch, 0.03)) {
+	if (shouldWeMakeAnimationStep(difPitch, 0.3)) {
 		requestAnimationFrame(function() {
 			setPitch();
 		});
-		difPitch = calculateCompassPitchRollStep(difPitch, 0.03);
+		difPitch = calculateCompassPitchRollStep(difPitch, 0.3);
 		window.currentlyChangingPitch = true;
 	} else {
 		window.currentlyChangingPitch = false;
@@ -383,7 +379,7 @@ function setRoll() {
 		requestAnimationFrame(function() {
 			setRoll();
 		});
-		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
+		difRoll = calculateCompassPitchRollStep(difRoll, 0.5);
 		window.currentlyChangingRoll = true;
 	} else {
 		window.currentlyChangingRoll = false;
@@ -739,10 +735,11 @@ function setCompassValue(ctxCompass, compass) {
 	} else {
 		window.currentlyChangingCompass = false;
 	}
-	window.currentCompass = (window.currentCompass+compassStep)%360;
+	window.currentCompass = Math.round((window.currentCompass+compassStep)%360*100.00)/100.00;
 	if (window.currentCompass<0) {
 		window.currentCompass+=360;
 	}
+	//console.log("setting compass value"+compassStep);
 	rotateCompassCanvasByDegrees(ctxCompass, -compassStep);
 	document.getElementById('compassV').innerHTML = window.currentCompass;
 }
@@ -750,23 +747,25 @@ function setCompassValue(ctxCompass, compass) {
 function setCompass() {
 	var ctxCompass = document.getElementById('compass').getContext('2d');
 	setCompassValue(ctxCompass, window.wantHaveHeading);
+	drawCompass();
+}
 
-	ctxCompass.strokeStyle = window.darkGray;
-	ctxCompass.fillStyle = window.darkGray;
-	arc(ctxCompass, window.compasCanvasWidth / 2,
-			window.compasCanvasHeight + 170, window.compasRadius, 0,
-			2 * Math.PI);
-
-	ctxCompass.fill();
-	ctxCompass.fillStyle = 'white';
-	ctxCompass.font = '33 pt Calibri';
-
-	for (var i = 0; i < 36; i++) {
-		ctxCompass.fillText(i, window.compasCanvasWidth / 2,
-				window.compasCanvasHeight - 20);
-		rotateCompassCanvasByDegrees(ctxCompass, 10);
-	}
-
+function drawCompass() {
+		var ctxCompass = document.getElementById('compass').getContext('2d');
+		clearRect(ctxCompass, 0, 0, ctxCompass.width, ctxCompass.height);
+		ctxCompass.strokeStyle = window.darkGray;
+		ctxCompass.fillStyle = window.darkGray;
+		arc(ctxCompass, window.compasCanvasWidth / 2,
+				window.compasCanvasHeight + 170, window.compasRadius, 0,
+				2 * Math.PI);
+		ctxCompass.fill();
+		ctxCompass.fillStyle = 'white';
+		ctxCompass.font = '33 pt Calibri';
+		for (var i = 0; i < 36; i++) {
+			ctxCompass.fillText(i, window.compasCanvasWidth / 2,
+					window.compasCanvasHeight - 20);
+			rotateCompassCanvasByDegrees(ctxCompass, 10);
+		}
 }
 
 // Draws this little triangle which points to current speed
@@ -808,7 +807,6 @@ function drawHeightIndicator() {
 // Draws this little triangle which points to current compass
 function drawCompassIndicator() {
 	var compassCtx = document.getElementById('compass').getContext('2d');
-	console.log("DRAWING COMPASS INDICATOR");
 	compassCtx.storkeStyle = 'white';
 	compassCtx.fillStyle = 'white';
 	// setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3

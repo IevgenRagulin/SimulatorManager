@@ -109,7 +109,7 @@ public class SocketHelper {
 			b = response.indexOf(":", a);
 			value = response.substring(a, b);
 		} else {
-			System.out.println("KEY NOT FOUND " + keyName);
+			// System.out.println("KEY NOT FOUND " + keyName);
 		}
 		return value;
 	}
