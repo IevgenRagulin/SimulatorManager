@@ -1,6 +1,8 @@
 var currentRudder = 0;
 var currentAileron = 0;
 var currentElevator = 0;
+var currentFlaps = 0;
+var currentSpeedBrakes = 0;
 
 var yokeWidth = 120;
 var yokeHeight = 120;
@@ -14,13 +16,20 @@ var rudderHeight = 20;
 var rudderBackWidth = 130;
 var rudderBackHeight = 32;
 
+var speedBrakesWidth = 130;
+var speedBrakesHeight = 130;
+
 var wantHaveRudder = 0;
 var wantHaveAileron = 0;
 var wantHaveElevator = 0;
+var wantHaveFlaps = 0;
+var wantHaveSpeedBrakes = 0;
 
 var currentlyChangingRudder = false;
 var currentlyChangingAileron = false;
 var currentlyChangingElevator = false;
+var currentlyChangingSpeedBrakes = false;
+var currentlyChangingFlaps = false;
 
 var xOffset = (window.yokeBackWidth-window.yokeWidth)/2;
 var yOffset = (window.yokeBackHeight-window.yokeHeight)/2;
@@ -29,11 +38,8 @@ var xOffsetR = (window.rudderBackWidth-window.rudderWidth)/2;
 var yOffsetR = (window.rudderBackHeight-window.rudderHeight)/2;
 
 
-function com_example_testvaadin_javascriptcomponents_yoke_ControlYoke() {
+function com_example_testvaadin_javascriptcomponents_flightcontrols_FlightControls() {
 	var e = this.getElement();
-	window.currentRudder = 0;
-	window.currentAileron = 0;
-	window.currentElevator = 0;
 	console.log("INIT CONTROL YOKE");
 	initYokeHtml(e);
 	initYoke();
@@ -41,26 +47,29 @@ function com_example_testvaadin_javascriptcomponents_yoke_ControlYoke() {
 		window.wantHaveRudder = this.getState().rd;
 		window.wantHaveAileron = this.getState().ail;
 		window.wantHaveElevator = this.getState().el;
+		window.wantHaveFlaps = this.getState().fl;
+		window.wantHaveSpeedBrakes = 45;//this.getState().sb;
 		console.log("NEW ELEVATOR" + window.wantHaveElevator);
 		console.log("NEW AILERON" + window.wantHaveAileron);
 		console.log("NEW RUDDER" + window.wantHaveRudder);
-		updateYoke();
+		console.log("NEW SPEED BRAKES" + window.wantHaveSpeedBrakes);
+		console.log("NEW FLAPS" + window.wantHaveFlaps);
+		updateFlightControls();
 	};
 }
 
 function initYokeHtml(e) {
 	e.innerHTML = e.innerHTML
-			+ "<h1>Control Yoke</h1>"
-			+ "<canvas id='controlYokeB' width='130' height='130' style='margin-left:40px; background-color: black;'>"
+			+ "<h3>Control Yoke</h3>"
+			+ "<canvas id='controlYokeB' width='130' height='130' style='margin-bottom: 50px; margin-left:40px; background-color: black;'>"
 			+ "Your browser doesn't support canvas." + "</canvas>"
-			+ "<canvas id='controlRudderB' width='130' height='32' style='margin-top:140px; margin-left: -130px; position: absolute; background-color: black'></canvas>"
-			+ "<div style='margin-top: 50px; margin-left: 40px'>"
-			+ "<label id='rudderV'>Current rudder:</label>"
-			+ "<label id='aileronV'Current aileron:></label><br/>"
-			+ "<label id='elevatorV'>Current elevator:</label></div>";
+			+ "<canvas id='controlRudderB' width='130' height='32' style='margin-left: -130px; background-color: black'></canvas>"
+			+ "<h3 id='speedBrakesV'>Speed brakes</h3>"
+			+ "<canvas id='speedBrakes' width='130' height='130' style='margin-left: 40px;'></canvas>"
+			+ "<div style='margin-top: 10px; margin-left: 40px'>";
 }
 
-function updateYoke() {
+function updateFlightControls() {
 	if (!window.currentlyChangingRudder) {
 		setRudder();
 	}
@@ -70,15 +79,22 @@ function updateYoke() {
 	if (!window.currentlyChangingAileron) {
 		setAileron();
 	}
+	if (!window.currentlyChangingSpeedBrakes) {
+		setSpeedBrakes();
+	}
+	if (!window.currentlyChangingSpeedFlaps) {
+		//setFlaps();
+	}
+	
 }
 
 function setRudder() {
 	var dif = window.wantHaveRudder-window.currentRudder;
-	if (shouldWeMakeAnimationStep(dif, 0.1)) {
+	if (shouldWeMakeAnimationStep(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setRudder();
 		});
-		dif = calculateElRudAilAnimStem(dif, 0.1);
+		dif = calculateElRudAilSpeedBrAnimStem(dif, 0.05);
 		window.currentlyChangingRudder = true;
 	} else {
 		window.currentlyChangingRudder= false;
@@ -87,7 +103,8 @@ function setRudder() {
 	drawAilRudElev();
 }
 
-function calculateElRudAilAnimStem(dif, step) {
+//Function for calculating aileron, rudder, elevetor, speed brakes, flaps animation step
+function calculateFlightControlsAnimStep(dif, step) {
 	if ((dif>step)||(dif<-step)) {
 		return dif*step;
 	} else {
@@ -97,11 +114,12 @@ function calculateElRudAilAnimStem(dif, step) {
 
 function setElevator() {
 	var dif = window.wantHaveElevator-window.currentElevator;
-	if (shouldWeMakeAnimationStep(dif, 0.1)) {
+	//check if we should continue animating
+	if (shouldWeMakeAnimationStep(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setElevator();
 		});
-		dif = calculateElRudAilAnimStem(dif, 0.1);
+		dif = calculateFlightControlsAnimStep(dif, 0.05);
 		window.currentlyChangingElevator = true;
 	} else {
 		window.currentlyChangingElevator = false;
@@ -112,11 +130,12 @@ function setElevator() {
 
 function setAileron() {
 	var dif = window.wantHaveAileron-window.currentAileron;
-	if (shouldWeMakeAnimationStep(dif, 0.1)) {
+	//check if we should continue animating
+	if (shouldWeMakeAnimationStep(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setAileron();
 		});
-		dif = calculateElRudAilAnimStem(dif, 0.1);
+		dif = calculateFlightControlsAnimStep(dif, 0.05);
 		window.currentlyChangingAileron = true;
 	} else {
 		window.currentlyChangingAileron = false;
@@ -155,9 +174,28 @@ function drawRudderInd() {
 	fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
 }
 
+function setSpeedBrakes() {
+	var dif = window.wantHaveSpeedBrakes-window.currentSpeedBrakes;
+	//check if we should continue animating
+	console.log("SET SPEED BRAKES"+dif);
+	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+		requestAnimationFrame(function() {
+			setSpeedBrakes();
+		});
+		dif = calculateFlightControlsAnimStep(dif, 0.05);
+		window.currentlyChangingSpeedBrakes = true;
+	} else {
+		window.currentlyChangingSpeedBrakes = false;
+	}
+	window.currentSpeedBrakes=Math.round((window.currentSpeedBrakes+dif)*1000)/1000;
+	document.getElementById('speedBrakesV').innerHTML = "Speed brakes "+window.currentSpeedBrakes;
+	drawSpeedBrakesInd();
+}
+
 function initYoke() {
 	drawYoke();
 	drawRudder();
+	drawSpeedBrakes();
 }
 
 function shouldMakeYokeAnimStep(dif, step) {
@@ -178,7 +216,36 @@ function drawRudder() {
 	var ctx = document.getElementById('controlRudderB').getContext('2d');
 	ctx.beginPath();
 	ctx.fillStyle = "white";
-	// fill rect, clear rect, arc functions is in primaryFlightDisplay.js file
+	// fill rect, clear rect, arc functions are in primaryFlightDisplay.js file
 	clearRect(ctx, 0, 0, ctx.width, ctx.height);
 	fillRect(ctx, xOffsetR, (window.rudderHeight / 2) - 4+yOffsetR, window.rudderWidth, 8);
+}
+
+function drawSpeedBrakesInd() {
+	console.log("GOING TO DRAW SPEED BRAKES IND");
+	var ctx = document.getElementById('speedBrakes').getContext('2d');
+	clearRect(ctx, 0, 0, window.speedBrakesWidth, window.speedBrakesHeight);
+	drawSpeedBrakes();
+	ctx.fillStyle = "black";
+	ctx.strokeStyle = "black";
+	ctx.lineWidth=4;
+	/*Draw speed brakes*/
+	console.log("GOING TO CALC X Y");
+	var y = window.speedBrakesWidth*Math.sin((Math.PI / 180)*window.currentSpeedBrakes);
+	var x =  window.speedBrakesWidth*Math.cos((Math.PI / 180)*window.currentSpeedBrakes);
+	console.log("CALCULATED X Y");
+	ctx.moveTo(0,0);
+	ctx.lineTo(x,y);
+	console.log ("X Y"+x+" "+y);
+	ctx.stroke();
+	//fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
+}
+
+function drawSpeedBrakes() {
+	var ctx = document.getElementById('speedBrakes').getContext('2d');
+	ctx.beginPath();
+	ctx.fillStyle = "black";
+	// fill rect, clear rect functions are in primaryFlightDisplay.js file
+	clearRect(ctx, 0, 0, window.speedBrakesWidth, window.speedBrakesHeight);
+	fillRect(ctx, 0, 0, window.speedBrakesWidth, 2);
 }

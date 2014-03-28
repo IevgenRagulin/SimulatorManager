@@ -56,6 +56,7 @@ public class FlightPathGoogleMap extends GoogleMap {
 				this, newPositionMarker, latestCoordinatesWindow);
 		this.addMarkerClickListener(infoWindowOpener);
 		newPositionMarker.setAnimationEnabled(false);
+		latestCoordinatesWindow.setWidth("100px");
 	}
 
 	public void initMapWithDataForSimulationWithId(String simulatorId) {

@@ -14,10 +14,8 @@ var compasCanvasHeight = 40;
 var backGrW=canvasWidth+vsCanW*2;
 var backGrH=canvasHeight+compasCanvasHeight;
 
-
 var compasRadius = 200;
 var compassIndicatorWidth = 5;
-
 
 var speedBarWidth = 40;
 var speedBarHeight = 300;
@@ -62,13 +60,6 @@ var darkGray = '404040';
 
 function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() {
 	var e = this.getElement();
-	window.currentSpeed = 0;
-	window.currentAltitude = 0;
-	window.currentPitch = 0;
-	window.currentRoll = 0;
-	window.currentYaw = 0;
-	window.currentCompass = 0;
-	window.currentVerSpeed = 0;
 	initHtml(e);
 	init();
 	this.onStateChange = function() {
@@ -332,7 +323,7 @@ function calculateCompassPitchRollStep(diff, step) {
 
 function calculateAltitudeSpeedStep(dif) {
 	if ((dif>1)||(dif<1)) {
-		return dif*0.1;
+		return Math.round(dif*0.1*100)/100;
 	} else {
 		return 0;
 	}
@@ -345,11 +336,11 @@ function shouldWeMakeAnimationStep(dif, step) {
 function setPitch() {
 	// Check if we should continue animating pitch
 	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
-	if (shouldWeMakeAnimationStep(difPitch, 0.3)) {
+	if (shouldWeMakeAnimationStep(difPitch, 0.03)) {
 		requestAnimationFrame(function() {
 			setPitch();
 		});
-		difPitch = calculateCompassPitchRollStep(difPitch, 0.3);
+		difPitch = calculateCompassPitchRollStep(difPitch, 0.03);
 		window.currentlyChangingPitch = true;
 	} else {
 		window.currentlyChangingPitch = false;
@@ -375,11 +366,11 @@ function setRoll() {
 	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
 	// Check if we should continue animating roll
 	var ctx = document.getElementById('pfd').getContext('2d');
-	if (shouldWeMakeAnimationStep(difRoll, 0.5)) {
+	if (shouldWeMakeAnimationStep(difRoll, 0.05)) {
 		requestAnimationFrame(function() {
 			setRoll();
 		});
-		difRoll = calculateCompassPitchRollStep(difRoll, 0.5);
+		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
 		window.currentlyChangingRoll = true;
 	} else {
 		window.currentlyChangingRoll = false;
@@ -618,7 +609,7 @@ function setSpeed() {
 	} else {
 		window.currentlyChangingSpeed = false;
 	}
-	window.currentSpeed+= difSpeedStep;;
+	window.currentSpeed= window.currentSpeed+difSpeedStep;
 
 	clearRect(ctxSpeed, window.leftSpeedBarMargin, window.topSpeedBarMargin,
 			window.speedBarWidth, window.speedBarHeight);

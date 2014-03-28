@@ -1,4 +1,4 @@
-package com.example.testvaadin.javascriptcomponents.yoke;
+package com.example.testvaadin.javascriptcomponents.flightcontrols;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;
@@ -6,39 +6,60 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
 @SuppressWarnings("serial")
-@com.vaadin.annotations.JavaScript({ "controlYoke.js" })
-public class ControlYoke extends AbstractJavaScriptComponent {
+@com.vaadin.annotations.JavaScript({ "flightControls.js" })
+public class FlightControls extends AbstractJavaScriptComponent {
 
 	/*
 	 * We use this bean in adition to state class, because when we access state
 	 * class fields, the change state event is generated even if we don't change
 	 * the state. So, we use this bean to imporove performance
 	 */
-	private ControlYokeStateBean controlYokeStateBean;
+	private FlightControlsStateBean controlYokeStateBean;
 
-	public ControlYoke(float aileron, float elevator, float rudder) {
+	public FlightControls(float aileron, float elevator, float rudder,
+			float speedbrakes, float flaps) {
 		getState().ail = aileron;
 		getState().el = elevator;
 		getState().rd = rudder;
-		controlYokeStateBean = new ControlYokeStateBean(aileron, elevator,
-				rudder);
+		controlYokeStateBean = new FlightControlsStateBean(aileron, elevator,
+				rudder, speedbrakes, flaps);
 	}
 
-	public void updateIndividualControlYokeValues(Item item) {
+	public void updateIndividualFlightControlValues(Item item) {
 		float newAileron = doubleToFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getAileron())).getValue());
 		float newElevator = doubleToFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getElevator())).getValue());
 		float newRudder = doubleToFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getRudder())).getValue());
+		// float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) item
+		// .getItemProperty(ColumnNames.getSpeedbrakes())).getValue());
+		float newFlaps = doubleToFloat((Double) ((Property<?>) item
+				.getItemProperty(ColumnNames.getFlaps())).getValue());
 		setAileron(newAileron);
 		setElevator(newElevator);
 		setRudder(newRudder);
+		setFlaps(newFlaps);
+		// setSpeedBrakes(newSpeedBrakes);
 
+	}
+
+	private void setSpeedBrakes(float newSpeedBrakes) {
+		if (getStateBean().getSpeedBrakes() != newSpeedBrakes) {
+			getState().sb = newSpeedBrakes;
+			getStateBean().setSpeedBrakes(newSpeedBrakes);
+		}
 	}
 
 	public float doubleToFloat(Double value) {
 		return value.floatValue();
+	}
+
+	private void setFlaps(float newFlaps) {
+		if (getStateBean().getFlaps() != newFlaps) {
+			getState().fl = newFlaps;
+			getStateBean().setFlaps(newFlaps);
+		}
 	}
 
 	private void setAileron(float newAileron) {
@@ -62,13 +83,13 @@ public class ControlYoke extends AbstractJavaScriptComponent {
 		}
 	}
 
-	public ControlYokeStateBean getStateBean() {
+	public FlightControlsStateBean getStateBean() {
 		return controlYokeStateBean;
 	}
 
 	@Override
-	public ControlYokeState getState() {
-		return (ControlYokeState) super.getState();
+	public FlightControlsState getState() {
+		return (FlightControlsState) super.getState();
 	}
 
 }

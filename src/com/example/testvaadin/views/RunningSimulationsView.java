@@ -9,8 +9,8 @@ import com.example.testvaadin.components.InfoLabel;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.javascriptcomponents.flightcontrols.FlightControls;
 import com.example.testvaadin.javascriptcomponents.pfd.PrimaryFlightDisplay;
-import com.example.testvaadin.javascriptcomponents.yoke.ControlYoke;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Item;
@@ -58,7 +58,7 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	/* Custom javascript components */
 	private PrimaryFlightDisplay primaryFlightDisplay;
-	private ControlYoke controlYoke;
+	private FlightControls flightControls;
 
 	public FlightPathGoogleMap getGoogleMap() {
 		return googleMap;
@@ -116,8 +116,8 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initControlYoke() {
-		controlYoke = new ControlYoke(0, 0, 0);
-		mainSimulationLayout.addComponent(controlYoke);
+		flightControls = new FlightControls(0, 0, 0, 0, 0);
+		mainSimulationLayout.addComponent(flightControls);
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		final Refresher refresher = new Refresher();
 		refresher.addListener(listener);
 		// Set update interval in miliseconds
-		refresher.setRefreshInterval(500);
+		refresher.setRefreshInterval(300);
 		addExtension(refresher);
 	}
 
@@ -215,7 +215,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		Item selectedDevicesState = SimulatorsStatus
 				.getSimulationDevStateItemBySimulatorId(simulatorId);
 		// Set control yoke info
-		setControlYokeInfo(selectedDevicesState);
+		setFlightControlsInfo(selectedDevicesState);
 		// Set PFD info
 		Item selectedPFD = SimulatorsStatus
 				.getSimulationPFDItemBySimulatorId(simulatorId);
@@ -223,9 +223,10 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	}
 
-	private void setControlYokeInfo(Item selectedDevicesState) {
+	private void setFlightControlsInfo(Item selectedDevicesState) {
 		if (selectedDevicesState != null) {
-			controlYoke.updateIndividualControlYokeValues(selectedDevicesState);
+			flightControls
+					.updateIndividualFlightControlValues(selectedDevicesState);
 		}
 	}
 

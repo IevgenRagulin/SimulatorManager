@@ -299,11 +299,11 @@ public class SocketHelper {
 			// FLP Flaps
 			value = getValueOf(":FLP:", response);
 			simData.setFlaps_status(stringToDouble(value));
-
+			System.out.println("FLAPS" + value);
 			// Brakes
 			value = getValueOf(":BRK:", response);
 			simData.setBrakes_status(stringToDouble(value));
-
+			System.out.println("BRAKES" + value);
 			// Switch Master switch
 			value = getValueOf(":SWMA:", response);
 			simData.setSw_status_master_switch(stringToBoolean(value));
