@@ -70,21 +70,16 @@ public class PrimaryFlightDisplay extends
 		float newVertSpeed = doubleToRoundedFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
 
-		setRoll(newRoll);
-		setPitch(newPitch);
-		setHeading(newHeading);
-		setTrueCourse(newTrueCourse);
-		setSpeed(newIAS);// IAS - indicated airspeed
-		setAltitude(newAltitude);
-		setVerticalSpeed(newVertSpeed);
-		getState().rpfd = 0;
+		setNewValues(newRoll, newPitch, newHeading, newTrueCourse, newIAS,
+				newAltitude, newVertSpeed);
+		// getState().rpfd = 0;
 	}
 
 	/*
 	 * If any data has changed, set all data to state bean.
 	 */
 	private void setNewValues(int newRoll, int newPitch, int newHeading,
-			int newTrueCourse, int newIas, int newAltitude, int newVertSpeed) {
+			int newTrueCourse, int newIas, int newAltitude, float newVertSpeed) {
 		if ((getStateBean().getVerticalspeed() != newVertSpeed)
 				|| (getStateBean().getTruecourse() != newTrueCourse)
 				|| (getStateBean().getRoll() != newRoll)
@@ -92,6 +87,7 @@ public class PrimaryFlightDisplay extends
 				|| (getStateBean().getHeading() != newHeading)
 				|| (getStateBean().getAltitude() != newAltitude)
 				|| (getStateBean().getSpeed() != newIas)) {
+			System.out.println("SOMETHING HAS CHANGED");
 			setVerticalSpeed(newVertSpeed);
 			setTrueCourse(newTrueCourse);
 			setRoll(newRoll);

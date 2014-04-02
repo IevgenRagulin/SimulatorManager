@@ -17,6 +17,7 @@ import com.vaadin.ui.TextField;
 public class SimulatorForm extends FieldGroup {
 	private static final long serialVersionUID = 5886087581072819926L;
 	private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
+	private static final Object DEFAULT_MAX_SPEED_ON_FLAPS = 200;
 	private SimulatorsView app;
 	private Random random = new Random();
 	private final int MINRANDOM = 1000;
@@ -92,6 +93,10 @@ public class SimulatorForm extends FieldGroup {
 				.getContainerProperty(simulatorId,
 						ColumnNames.getSimulatorHostname())
 				.setValue(FAKE_HOSTNAME);
+		app.getSimulatorList()
+				.getContainerProperty(simulatorId,
+						ColumnNames.getMaxspeedonflaps())
+				.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
 		commit();
 	}
 

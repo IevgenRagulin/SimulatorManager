@@ -17,6 +17,7 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
+		System.out.println("From " + host + " " + response);
 		closeSocket(queryProcessorSocket);
 		simData = parseSimulatorResponse(response);
 		return simData;
@@ -105,7 +106,8 @@ public class SocketHelper {
 		int b = 0;
 		String value = null;
 		int keyNameLength = keyName.length();
-		if ((a = response.indexOf(keyName) + keyNameLength) != 4) {
+		if ((a = response.indexOf(keyName)) != -1) {
+			a += keyNameLength;
 			b = response.indexOf(":", a);
 			value = response.substring(a, b);
 		} else {
@@ -299,11 +301,16 @@ public class SocketHelper {
 			// FLP Flaps
 			value = getValueOf(":FLP:", response);
 			simData.setFlaps_status(stringToDouble(value));
-			System.out.println("FLAPS" + value);
+
+			// Speed brakes
+			value = getValueOf(":SBRK:", response);
+			System.out.println("SPEED BRAKES AFTER PARSING" + value);
+			simData.setSpeed_brakes(stringToDouble(value));
+
 			// Brakes
 			value = getValueOf(":BRK:", response);
 			simData.setBrakes_status(stringToDouble(value));
-			System.out.println("BRAKES" + value);
+
 			// Switch Master switch
 			value = getValueOf(":SWMA:", response);
 			simData.setSw_status_master_switch(stringToBoolean(value));

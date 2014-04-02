@@ -18,6 +18,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
 
 	public FlightControls(float aileron, float elevator, float rudder,
 			float speedbrakes, float flaps) {
+
 		getState().ail = aileron;
 		getState().el = elevator;
 		getState().rd = rudder;
@@ -25,22 +26,34 @@ public class FlightControls extends AbstractJavaScriptComponent {
 				rudder, speedbrakes, flaps);
 	}
 
-	public void updateIndividualFlightControlValues(Item item) {
-		float newAileron = doubleToFloat((Double) ((Property<?>) item
+	public void updateIndividualFlightControlValues(Item flightControlItem,
+			Item simulatorItem) {
+		float newAileron = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getAileron())).getValue());
-		float newElevator = doubleToFloat((Double) ((Property<?>) item
+		float newElevator = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getElevator())).getValue());
-		float newRudder = doubleToFloat((Double) ((Property<?>) item
+		float newRudder = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getRudder())).getValue());
-		// float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) item
-		// .getItemProperty(ColumnNames.getSpeedbrakes())).getValue());
-		float newFlaps = doubleToFloat((Double) ((Property<?>) item
+		float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(ColumnNames.getSpeedbrakes())).getValue());
+		float newFlaps = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getFlaps())).getValue());
 		setAileron(newAileron);
 		setElevator(newElevator);
 		setRudder(newRudder);
 		setFlaps(newFlaps);
-		// setSpeedBrakes(newSpeedBrakes);
+		setPlaneConfiguration(simulatorItem);
+		setSpeedBrakes(newSpeedBrakes);
+
+	}
+
+	private void setPlaneConfiguration(Item simulatorItem) {
+		int maxSpeedOnFlaps = (Integer) ((Property<?>) simulatorItem
+				.getItemProperty(ColumnNames.getMaxspeedonflaps())).getValue();
+		if (getStateBean().getMaxonflaps() != maxSpeedOnFlaps) {
+			getState().maxonflaps = maxSpeedOnFlaps;
+			getStateBean().setMaxonflaps(maxSpeedOnFlaps);
+		}
 
 	}
 
@@ -52,7 +65,10 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	}
 
 	public float doubleToFloat(Double value) {
-		return value.floatValue();
+		if (value != null) {
+			return value.floatValue();
+		}
+		return 0;
 	}
 
 	private void setFlaps(float newFlaps) {

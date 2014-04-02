@@ -37,8 +37,8 @@ public class SimulationDevStateBean implements Serializable {
 		this.throttle = allSimInfo.getThrottle();
 		this.flaps = allSimInfo.getFlaps_status();
 		this.speedbrakes = allSimInfo.getSpeed_brakes();
-		System.out.println("creating bean flaps" + this.flaps);
-		System.out.println("creating bean speed brakes" + this.speedbrakes);
+		System.out.println("constr flaps" + this.flaps);
+		System.out.println("constr speed brakes" + this.speedbrakes);
 		this.trim = allSimInfo.getTrimPosition();
 	}
 

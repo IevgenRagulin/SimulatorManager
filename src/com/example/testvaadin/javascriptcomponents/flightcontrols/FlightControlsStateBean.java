@@ -1,6 +1,9 @@
 package com.example.testvaadin.javascriptcomponents.flightcontrols;
 
 public class FlightControlsStateBean {
+	/* Plane configuration */
+	public int maxonflaps;// mas speed on flaps
+	/* Flight controls status */
 	public float ail;// aileron
 	public float el; // elevator
 	public float rd; // rudder
@@ -14,6 +17,14 @@ public class FlightControlsStateBean {
 		this.rd = rudder;
 		this.sb = speedbrakes;
 		this.fl = flaps;
+	}
+
+	protected int getMaxonflaps() {
+		return maxonflaps;
+	}
+
+	protected void setMaxonflaps(int maxonflaps) {
+		this.maxonflaps = maxonflaps;
 	}
 
 	protected float getSpeedBrakes() {

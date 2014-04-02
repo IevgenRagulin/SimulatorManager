@@ -1,6 +1,7 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
+	private static final String MAXSPEEDONFLAPS = "maxspeedonflaps";
 	private static final String TRIM = "trim";
 	private static final String SPEEDBRAKES = "speedbrakes";
 	private static final String FLAPS = "flaps";
@@ -33,7 +34,7 @@ public class ColumnNames {
 
 	protected static final String[] simulatorCols = new String[] { SIMNAME,
 			PLANESIM, SIMID, HOSTNAME, PORT, "minspeed", "maxspeed",
-			"highspeed", "maxspeedonflaps", "minspeedonflaps", "hasgears",
+			"highspeed", MAXSPEEDONFLAPS, "minspeedonflaps", "hasgears",
 			"mintempcht1", "mintempcht2", "mintempegt1", "mintempegt2",
 			"maxtempcht1", "maxtempcht2", "maxtempegt1", "maxtempegt2",
 			"manifoldpressure", "power", "maxamountoffuel", "minamountoffuel",
@@ -73,6 +74,10 @@ public class ColumnNames {
 
 	public static String getSimulationid() {
 		return SIMULATIONID;
+	}
+
+	public static String getMaxspeedonflaps() {
+		return MAXSPEEDONFLAPS;
 	}
 
 	public static String getTrueCourse() {

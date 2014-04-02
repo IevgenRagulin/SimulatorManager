@@ -23,16 +23,18 @@ import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
+	private static final int REFRESH_INTERVAL = 300;
+
 	public class StatusRefreshListener implements RefreshListener {
 		private static final long serialVersionUID = 392864906906738406L;
 
 		public void refresh(final Refresher source) {
 			getSelectSimulator().handleValueChangeEvent();
-			// System.out.println("refreshing");
 		}
 	}
 
@@ -42,8 +44,8 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private static final long serialVersionUID = -1785707193097941934L;
 	private Navigator navigator;
-	private FormLayout simulatorInfoLayout = new FormLayout();
-	private FormLayout simulationLayout = new FormLayout();
+	private HorizontalLayout simulatorInfoLayout = new HorizontalLayout();
+	private HorizontalLayout simulationLayout = new HorizontalLayout();
 	private FormLayout simulationInfoLayout = new FormLayout();
 	private ErrorLabel errorLabel = new ErrorLabel("");
 	private InfoLabel simulatorInfoLabel = new InfoLabel("Simulator info");
@@ -87,11 +89,11 @@ public class RunningSimulationsView extends BasicView implements View {
 		return primaryFlightDisplay;
 	}
 
-	public FormLayout getSimulatorInfoLayout() {
+	public HorizontalLayout getSimulatorInfoLayout() {
 		return simulatorInfoLayout;
 	}
 
-	public FormLayout getSimulationInfoLayout() {
+	public HorizontalLayout getSimulationInfoLayout() {
 		return simulationLayout;
 	}
 
@@ -100,7 +102,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	public RunningSimulationsView(Navigator navigator) {
-		// dbHelp.getLatestSimulationContainer("1");
 		this.navigator = navigator;
 		initButtonToMainMenu();
 		initSelectSimulatorCombo();
@@ -152,7 +153,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		final Refresher refresher = new Refresher();
 		refresher.addListener(listener);
 		// Set update interval in miliseconds
-		refresher.setRefreshInterval(300);
+		refresher.setRefreshInterval(REFRESH_INTERVAL);
 		addExtension(refresher);
 	}
 
@@ -214,8 +215,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		// Set simulation devices state
 		Item selectedDevicesState = SimulatorsStatus
 				.getSimulationDevStateItemBySimulatorId(simulatorId);
-		// Set control yoke info
-		setFlightControlsInfo(selectedDevicesState);
+		setFlightControlsInfo(selectedDevicesState, selectedSimulator);
 		// Set PFD info
 		Item selectedPFD = SimulatorsStatus
 				.getSimulationPFDItemBySimulatorId(simulatorId);
@@ -223,14 +223,21 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	}
 
-	private void setFlightControlsInfo(Item selectedDevicesState) {
+	private void setFlightControlsInfo(Item selectedDevicesState,
+			Item selectedSimulaotr) {
 		if (selectedDevicesState != null) {
-			flightControls
-					.updateIndividualFlightControlValues(selectedDevicesState);
+			flightControls.updateIndividualFlightControlValues(
+					selectedDevicesState, selectedSimulaotr);
 		}
 	}
 
 	private void setSimulatorInfoData(Item selectedSimulator) {
+		// If some data was updated, update the data on UI. Commented this out
+		// because no performance was noticed. It seems that Vaadin
+		// optimizes it automatically
+		// if (!getSimulatorInfo().equalsItem(selectedSimulator)) {
+		// getSimulatorInfo().setItemDataSource(selectedSimulator);
+		// }
 		getSimulatorInfo().setItemDataSource(selectedSimulator);
 		getSimulatorInfo().setReadOnly(true);
 	}
@@ -238,8 +245,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	private void setSimulationData(final Item selectedSimulation) {
 		getErrorLabel().setValue(EMPTY_STRING);
 		if (selectedSimulation != null) {
-			// getSimulation().setItemDataSource(
-			// SimulatorsStatus.getSimulationItem());
 			getSimulation().setItemDataSource(selectedSimulation);
 			getSimulation().setEnabled(true);
 			getSimulation().setReadOnly(true);

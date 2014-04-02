@@ -54,12 +54,15 @@ public class SelectSimulatorCombo extends ComboBox {
 		});
 	}
 
+	/*
+	 * Based on selected simulator, updates the UI.
+	 */
 	public void handleValueChangeEvent() {
 		// unscheduleUpdates();
 		String value = (String) SelectSimulatorCombo.this.getValue();
 		RowId rowId = simulatorsIdNamesMapping.get(value);
 		Item selectedSimulator = runningSims.getDBHelp()
-				.getSimulatorContainer().getItem(rowId);
+				.getNewSimulatorContainer().getItem(rowId);
 		Property<?> simulatorId = runningSims.getSimulatorIdByRowId(rowId);
 
 		// If simulator is selected
