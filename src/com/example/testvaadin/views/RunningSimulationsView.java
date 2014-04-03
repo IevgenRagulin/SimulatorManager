@@ -55,7 +55,8 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private SelectSimulatorCombo selectSimulator;
 	// TODO: make configurable from app configuration
-	private String apiKey = "AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";
+	private String apiKey = "AIzaSyA3ofOOv8Q8vtkqLnUbmyWRMtAG2lKVOfg";// eragulin
+																		// AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";
 	private FlightPathGoogleMap googleMap = null;
 
 	/* Custom javascript components */

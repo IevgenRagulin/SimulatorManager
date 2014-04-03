@@ -98,6 +98,8 @@ function initHtml(e) {
 			+ "</canvas>"
 			+ "<canvas id='compass' width='240' height='40' style='position: absolute; margin-top:300px;margin-left: 50px '>"
 			+ "</canvas>"
+			+ "<canvas id='compassIndicator' width='240' height='40' style='position: absolute; margin-top:300px;margin-left: 50px '>"
+			+ "</canvas>"
 			+ "<canvas id='verspeed' width='40' height='340' style='position:absolute; margin-left: 350px'>"
 			+ "</canvas>" + "</div>"
 			+ "<div style='margin-top: 50px; margin-left: 40px'>"
@@ -136,37 +138,49 @@ function metersPerSecondToFeetPerMin(metersPerSecond) {
 }
 
 function init() {
-	drawBackground();
+	//drawBackground();
 	//drawSpeedIndicator();
 	//drawHeightIndicator();
+	console.log("severe:after drawing background");
 	drawSight();
+	console.log("severe:after drawing sight");
 	drawCompassIndicator();
+	console.log("severe:after drawing comp ind");
 	drawVerticalSpeed();
+	console.log("severe:after drawing ver speed");
 	setClickListeners();
+	console.log("severe:after setting click list");
 	drawBankAngleLines();
+	console.log("severe:after drawing bank angle l");
 }
 
 function update() {
 	if (!window.currentlyChangingPitch) {
 		setPitch();
 	}
+	console.log("severe:after setting pitch");
 	if (!window.currentlyChangingRoll) {
 		setRoll();
 	}
+	console.log("severe:after setting roll");
 	if (!window.currentlyChangingSpeed) {
 		setSpeed();
 	}
+	console.log("severe:after setting speed");
 	if (!window.currentlyChangingAltitude) {
 		setAltitude();
 	}
+	console.log("severe:after setting alt");
 	if (!window.currentlyChangingCompass) {
 		setCompass();
 	}
+	console.log("severe:after setting comp");
 	if (!window.currentlyChangingVerSpeed) {
 		setVerticalSpeed();
 	} else {
 		console.log("COMPASS NOT SET");
 	}
+	console.log("severe:after setting ver speed");
 }
 
 function setClickListeners() {
@@ -193,7 +207,7 @@ function setAddPitchClickListener() {
 	document.getElementById('addPitch').addEventListener('click', function() {
 		var newPitch = (window.currentPitch + 10) % 360;
 		if (!window.currentlyChangingPitch) {
-			setPitch(newPitch);
+			setPitch();
 		}
 	});
 }
@@ -205,7 +219,7 @@ function setMinusPitchClickListener() {
 			newPitch = 360 + newPitch;
 		}
 		if (!window.currentlyChangingPitch) {
-			setPitch(newPitch);
+			setPitch();
 		}
 	});
 }
@@ -213,7 +227,7 @@ function setMinusPitchClickListener() {
 function setAddRollClickListener() {
 	document.getElementById('addRoll').addEventListener('click', function() {
 		if (!window.currentlyChangingRoll) {
-			setRoll(window.currentRoll + 60);
+			setRoll();
 		}
 	});
 }
@@ -221,7 +235,7 @@ function setAddRollClickListener() {
 function setMinusRollClickListener() {
 	document.getElementById('minusRoll').addEventListener('click', function() {
 		if (!window.currentlyChangingRoll) {
-			setRoll(window.currentRoll - 60);
+			setRoll();
 		}
 	});
 }
@@ -230,7 +244,7 @@ function setAddAltitudeClickListener() {
 	document.getElementById('addAltitude').addEventListener('click',
 			function() {
 				if (!window.currentlyChangingAlt) {
-					setAltitude(window.currentAltitude + 50);
+					setAltitude();
 				}
 			});
 }
@@ -239,7 +253,7 @@ function setMinusAltitudeClickListener() {
 	document.getElementById('minusAltitude').addEventListener('click',
 			function() {
 				if (!window.currentlyChangingAlt) {
-					setAltitude(window.currentAltitude - 50);
+					setAltitude();
 				}
 			});
 }
@@ -247,7 +261,7 @@ function setMinusAltitudeClickListener() {
 function setAddSpeedClickListener() {
 	document.getElementById('addSpeed').addEventListener('click', function() {
 		if (!window.currentlyChangingSpeed) {
-			setSpeed(window.currentSpeed + 50);
+			setSpeed();
 		}
 	});
 }
@@ -255,25 +269,25 @@ function setAddSpeedClickListener() {
 function setMinusSpeedClickListener() {
 	document.getElementById('minusSpeed').addEventListener('click', function() {
 		if (!window.currentlyChangingSpeed) {
-			setSpeed(window.currentSpeed - 50);
+			setSpeed();
 		}
 	});
 }
 
 function setAddCompassClickListener() {
 	document.getElementById('addCompass').addEventListener('click', function() {
-		if (!window.currentlyChangingCompass) {
-			setCompass(window.currentCompass + 180);
-		}
+			console.log("set compass");
+			window.wantHaveHeading=window.currentCompass+60;
+			setCompass();
 	});
 }
 
 function setMinusCompassClickListener() {
 	document.getElementById('minusCompass').addEventListener('click',
 			function() {
-				if (!window.currentlyChangingCompass) {
-					setCompass(window.currentCompass - 180);
-				}
+				console.log("set compass");
+				window.wantHaveHeading=window.currentCompass-60;
+				setCompass();
 			});
 }
 
@@ -322,7 +336,7 @@ function calculateCompassPitchRollStep(diff, step) {
 	} else if ((diff < -step) && (diff > -180)) {
 		direction = diff * step;
 	}
-	return Math.round(direction * 100) / 100;
+	return direction;
 }
 
 function calculateAltitudeSpeedStep(dif) {
@@ -830,28 +844,29 @@ function rotateCanvasByRollDegrees(can, roll) {
 function setCompassValue(ctxCompass, compass) {
 	var difCompass = (compass - window.currentCompass) % 360;
 	var compassStep = calculateCompassPitchRollStep(difCompass, 0.05);
-	if ((difCompass > 0.005) || (difCompass < -0.005)) {
+	if (shouldWeMakeAnimationStep(difCompass, 0.05)) {
 		requestAnimationFrame(function() {
+			console.log("setting compass dif compa"+difCompass+"comp step "+compassStep);
 			window.currentlyChangingCompass = true;
-			// window.currentCompass = window.currentCompass % 360;
 			setCompass();
 		});
 	} else {
 		window.currentlyChangingCompass = false;
 	}
-	rotateCompassCanvasByDegrees(ctxCompass, window.currentCompass);//rotate compass back to initial pos
-	window.currentCompass = Math
-			.round((window.currentCompass + compassStep) % 360 * 100.00) / 100.00;
+	//rotate compass back to initial pos
+	rotateCompassCanvasByDegrees(ctxCompass, window.currentCompass);
+	//set compass value to new position
+	window.currentCompass = (window.currentCompass + compassStep)%360;
 	if (window.currentCompass < 0) {
 		window.currentCompass += 360;
 	}
-	//rotate compass
+	//rotate compass to new pos
 	rotateCompassCanvasByDegrees(ctxCompass, -window.currentCompass);
-
 	document.getElementById('compassV').innerHTML = window.currentCompass;
 }
-
+var itstep=0;
 function setCompass() {
+	console.log("setting compass"+itstep++);
 	var ctxCompass = document.getElementById('compass').getContext('2d');
 	setCompassValue(ctxCompass, window.wantHaveHeading);
 	drawCompass();
@@ -860,19 +875,21 @@ function setCompass() {
 function drawCompass() {
 	var canCompass = document.getElementById('compass');
 	var ctxCompass = canCompass.getContext('2d');
-	clearRect(ctxCompass, 0, 0, canCompass.width*5, canCompass.height*5);
+	clearRect(ctxCompass, 0, 10, canCompass.width*5, canCompass.height*5);
 	ctxCompass.strokeStyle = window.darkGray;
 	ctxCompass.fillStyle = window.darkGray;
+	var y = window.compasCanvasHeight + window.compasTopMargin;
 	arc(ctxCompass, window.compasCanvasWidth / 2,
-			window.compasCanvasHeight + window.compasTopMargin, window.compasRadius, 0,
+			y, window.compasRadius, 0,
 			2 * Math.PI);
 	ctxCompass.fill();
 	ctxCompass.fillStyle = 'white';
 	ctxCompass.font = '33 pt Calibri';
 	for (var i = 0; i < 36; i++) {
+		ctxCompass.save();
+		rotateCompassCanvasByDegrees(ctxCompass, 10*i);
 		ctxCompass.fillText(i, window.compasCanvasWidth / 2, 20);
-				//window.compasCanvasHeight - 20);
-		rotateCompassCanvasByDegrees(ctxCompass, 10);
+		ctxCompass.restore();
 	}
 }
 
@@ -917,13 +934,13 @@ function drawAltitudeIndicator(ctxAlt) {
 
 // Draws this little triangle which points to current compass
 function drawCompassIndicator() {
-	var compassCtx = document.getElementById('compass').getContext('2d');
+	var compassCtx = document.getElementById('compassIndicator').getContext('2d');
 	compassCtx.strokeStyle = 'white';
 	compassCtx.fillStyle = 'white';
 	// setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3
-	var coords = [ window.compasCanvasWidth / 2 + 3, 0,
-			window.compasCanvasWidth / 2 - window.compassIndicatorWidth + 3, 0 - window.compassIndicatorWidth,
-			window.compasCanvasWidth / 2 + window.compassIndicatorWidth + 3, 0 - window.compassIndicatorWidth ];
+	var coords = [ window.compasCanvasWidth / 2 + 3, 7,
+			window.compasCanvasWidth / 2 - window.compassIndicatorWidth + 3, 7 - window.compassIndicatorWidth,
+			window.compasCanvasWidth / 2 + window.compassIndicatorWidth + 3, 7 - window.compassIndicatorWidth ];
 	drawPolygone(compassCtx, coords);
 }
 
