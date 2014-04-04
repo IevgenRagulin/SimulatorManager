@@ -18,7 +18,6 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 
 public class FlightPathGoogleMap extends GoogleMap {
-	private static final String CURRENT_AIRCRAFT_POSITION_TEXT = "Current aircraft position";
 	private static final String MAP_STYLE_NAME = "flightPathMap";
 	private final String MAP_WIDTH = "500px";
 	private final String MAP_HEIGHT = "500px";
@@ -33,6 +32,12 @@ public class FlightPathGoogleMap extends GoogleMap {
 	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0,
 			112.5, 135.0, 157.5, 180.0, 202.5, 225.0, 247.5, 270.0, 292.5,
 			315.0, 337.5 };
+	// how often we add data about plane position to the map
+	private static int addNewPositionFrequency = Math
+			.round(2000 / RunningSimulationsView.REFRESH_INTERVAL);
+	// in combination with addNewPositionFrequency used to determine if we
+	// should add new coord on the map
+	private static int addedCount = 0;
 
 	private RunningSimulationsView view = null;
 
@@ -66,7 +71,10 @@ public class FlightPathGoogleMap extends GoogleMap {
 				.getSimulationPFDItemBySimulatorId(simulatorId).getBean()
 				.getTruecourse();
 		planePathPoints = new ArrayList<LatLon>();
-		addOldDataToMap(simulationInfoData, trueCourse);
+		if (simulationInfoData.size() > 0) {
+			addOldDataToMap(simulationInfoData, trueCourse);
+		}
+		addMarker(newPositionMarker);
 	}
 
 	private void addOldDataToMap(SQLContainer simulationInfoData,
@@ -74,7 +82,6 @@ public class FlightPathGoogleMap extends GoogleMap {
 		planePathPoints = getArrayListOfFlightPathPoints(simulationInfoData);
 		this.flightPath.setCoordinates(planePathPoints);
 		addPolyline(this.flightPath);
-		addMarker(newPositionMarker);
 		setCenter(lastLatLong);
 		addMarkerOnMap(lastLatLong, trueCourse);
 	}
@@ -101,7 +108,6 @@ public class FlightPathGoogleMap extends GoogleMap {
 				closestIconPos = possibleIconPos[i];
 			}
 		}
-		System.out.println("chosen icon" + closestIconPos.toString() + ".png");
 		return closestIconPos.toString() + ".png";
 	}
 
@@ -137,22 +143,33 @@ public class FlightPathGoogleMap extends GoogleMap {
 			initMapWithDataForSimulationWithId(simulatorId);
 			isMapInitializedWithMapHistory = true;
 		}
-		Double newLongtitude = (Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getLongtitude())).getValue();
-		Double newLatitude = (Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getLatitude())).getValue();
-		LatLon newPosition = new LatLon(newLatitude, newLongtitude);
-		Double trueCourse = SimulatorsStatus
-				.getSimulationPFDItemBySimulatorId(simulatorId).getBean()
-				.getTruecourse();
-		latestCoordinatesWindow.setContent(newPosition.getLat() + " "
-				+ newPosition.getLon());
-		// Check if coordinates of the new position differ from the previous
-		// one. If they don't differ, do nothing. If they do differ, add data on
-		// the map
-		if (!newPosition.equals(this.lastLatLong) && (newPosition != null)) {
-			addMarkerOnMap(newPosition, trueCourse);
+		if (shouldWeAddMarkerOnMap()) {
+			Double newLongtitude = (Double) ((Property<?>) item
+					.getItemProperty(ColumnNames.getLongtitude())).getValue();
+			Double newLatitude = (Double) ((Property<?>) item
+					.getItemProperty(ColumnNames.getLatitude())).getValue();
+			LatLon newPosition = new LatLon(newLatitude, newLongtitude);
+			Double trueCourse = SimulatorsStatus
+					.getSimulationPFDItemBySimulatorId(simulatorId).getBean()
+					.getTruecourse();
+			latestCoordinatesWindow.setContent(newPosition.getLat() + " "
+					+ newPosition.getLon());
+			// Check if coordinates of the new position differ from the previous
+			// one. If they don't differ, do nothing. If they do differ, add
+			// data on
+			// the map
+			if (!newPosition.equals(this.lastLatLong) && (newPosition != null)) {
+				addMarkerOnMap(newPosition, trueCourse);
+			} else {
+			}
 		}
+		addedCount = (addedCount + 1) % addNewPositionFrequency;
+	}
+
+	// Returns true if addedCount==0 (we save data to db every saveToDbFrequency
+	// time)
+	private static boolean shouldWeAddMarkerOnMap() {
+		return addedCount == 0;
 	}
 
 	private void addMarkerOnMap(LatLon newPosition, Double trueCourse) {

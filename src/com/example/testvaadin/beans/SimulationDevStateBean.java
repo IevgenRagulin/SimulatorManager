@@ -12,11 +12,13 @@ public class SimulationDevStateBean implements Serializable {
 	private Double throttle;
 	private Double flaps;
 	private Double speedbrakes;
-	private Double trim;
+	private Double ailerontrim;
+	private Double elevatortrim;
+	private Double ruddertrim;
 
 	public SimulationDevStateBean(double elevator, double aileron,
 			double rudder, double throttle, double flaps, double speedbrakes,
-			double trim) {
+			double trimAileron, double trimElevator, double trimRudder) {
 		super();
 		this.elevator = elevator;
 		this.aileron = aileron;
@@ -24,7 +26,9 @@ public class SimulationDevStateBean implements Serializable {
 		this.throttle = throttle;
 		this.flaps = flaps;
 		this.speedbrakes = speedbrakes;
-		this.trim = trim;
+		this.ailerontrim = trimAileron;
+		this.elevatortrim = trimElevator;
+		this.ruddertrim = trimRudder;
 	}
 
 	public SimulationDevStateBean(AllSimulationInfo allSimInfo) {
@@ -37,9 +41,9 @@ public class SimulationDevStateBean implements Serializable {
 		this.throttle = allSimInfo.getThrottle();
 		this.flaps = allSimInfo.getFlaps_status();
 		this.speedbrakes = allSimInfo.getSpeed_brakes();
-		System.out.println("constr flaps" + this.flaps);
-		System.out.println("constr speed brakes" + this.speedbrakes);
-		this.trim = allSimInfo.getTrimPosition();
+		this.ailerontrim = allSimInfo.getTrimAileronPosition();
+		this.elevatortrim = allSimInfo.getTrimElevatorPosition();
+		this.ruddertrim = allSimInfo.getTrimRudderPosition();
 	}
 
 	public Double getElevator() {
@@ -66,8 +70,16 @@ public class SimulationDevStateBean implements Serializable {
 		return speedbrakes;
 	}
 
-	public Double getTrim() {
-		return trim;
+	public Double getAilerontrim() {
+		return ailerontrim;
+	}
+
+	public Double getElevatortrim() {
+		return elevatortrim;
+	}
+
+	public Double getRuddertrim() {
+		return ruddertrim;
 	}
 
 }

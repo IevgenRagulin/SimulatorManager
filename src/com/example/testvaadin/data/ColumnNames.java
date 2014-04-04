@@ -2,7 +2,9 @@ package com.example.testvaadin.data;
 
 public class ColumnNames {
 	private static final String MAXSPEEDONFLAPS = "maxspeedonflaps";
-	private static final String TRIM = "trim";
+	private static final String AILERONTRIM = "ailerontrim";
+	private static final String ELEVATORTRIM = "elevatortrim";
+	private static final String RUDDERTRIM = "ruddertrim";
 	private static final String SPEEDBRAKES = "speedbrakes";
 	private static final String FLAPS = "flaps";
 	private static final String THROTTLE = "throttle";
@@ -58,11 +60,13 @@ public class ColumnNames {
 			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
 
 	protected static final String[] simulationDevicesStateBeanCols = new String[] {
-			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, TRIM };
+			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES,
+			AILERONTRIM, ELEVATORTRIM, RUDDERTRIM };
 
 	protected static final String[] simulationDevicesStateCols = new String[] {
 			"devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, AILERON, RUDDER,
-			THROTTLE, FLAPS, SPEEDBRAKES, TRIM, TIMESTAMP };
+			THROTTLE, FLAPS, SPEEDBRAKES, AILERONTRIM, ELEVATORTRIM,
+			RUDDERTRIM, TIMESTAMP };
 
 	protected static final String[] simulationBeanPfdInfo = new String[] {
 			ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE,
@@ -252,8 +256,16 @@ public class ColumnNames {
 		return LONGTITUDE;
 	}
 
-	public static String getTrim() {
-		return TRIM;
+	public static String getAileronTrim() {
+		return AILERONTRIM;
+	}
+
+	public static String getElevatorTrim() {
+		return ELEVATORTRIM;
+	}
+
+	public static String getRudderTrim() {
+		return RUDDERTRIM;
 	}
 
 	public static String getSpeedbrakes() {

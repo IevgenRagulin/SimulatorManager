@@ -22,6 +22,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class SimulationsUpdater {
 	protected static DatabaseHelper dbHelp = new DatabaseHelper();
 	protected static SimulatorsStatus simStatus = null;
+	protected static final int UPDATE_RATE_MS = 300;
 
 	private final static ScheduledExecutorService scheduler = Executors
 			.newScheduledThreadPool(1);
@@ -37,7 +38,8 @@ public class SimulationsUpdater {
 	};
 	static {
 		System.out.println("GOING TO SCHEDULE AT FIXED RATE");
-		scheduler.scheduleAtFixedRate(beeper, 0, 300, TimeUnit.MILLISECONDS);
+		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS,
+				TimeUnit.MILLISECONDS);
 	}
 
 	private SimulationsUpdater() {

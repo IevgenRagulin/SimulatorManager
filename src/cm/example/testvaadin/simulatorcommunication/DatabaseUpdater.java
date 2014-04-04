@@ -15,20 +15,53 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class DatabaseUpdater {
 	private static final double HALF_METER = 0.5;
 	private static DatabaseHelper dbHelp = new DatabaseHelper();
+	// how often we save data to database. Here - every 1000/UPDATE_RATE MS
+	// times. I.e. if UPDATE_RATE_MS = 300, we save data every 3 times
+	private static int saveToDbFrequency = Math
+			.round(1000 / SimulationsUpdater.UPDATE_RATE_MS);
+	// how often we save data to database. We make this frequency smaller than
+	// for other data, because data in simulation info contains
+	// plane coordinates and it's to overwhelming for googlemaps to display too
+	// many points for the flight path.
+	private static int saveSimInfoToDbFrequency = Math
+			.round(10000 / SimulationsUpdater.UPDATE_RATE_MS);
+
+	// in combination with saveToDbFrequency used to determine if we should save
+	// data to db
+	private static int addedCount = 0;
+	private static int addedSimInfoCount = 0;
 
 	public static void addSimulationInfoToDatabase(SQLContainer lastSimCont,
 			String simulatorId, RowId simulationId) {
 		Integer simulationIdInt = Integer.valueOf(simulationId.toString());
-		if (shouldWeAddSimulationInfoToDatabase(simulatorId)) {
+		addedCount = (addedCount + 1) % saveToDbFrequency;
+		addedSimInfoCount = (addedSimInfoCount + 1) % saveSimInfoToDbFrequency;
+		if (hasPlaneMoved(simulatorId) && (shouldWeSaveDataToDb())) {
 			addDevicesStateInfoToDatabase(simulationIdInt, simulatorId);
-			addSimulationInfoToDatabase(simulationIdInt, simulatorId);
+			if (shouldWeSaveSimulationInfoToDatabase()) {
+				addSimulationInfoInfoToDatabase(simulationIdInt, simulatorId);
+			}
 			addPfdInfoToDatabase(simulationIdInt, simulatorId);
 		}
 	}
 
-	private static boolean shouldWeAddSimulationInfoToDatabase(
-			String simulatorId) {
-		boolean shouldWeAdd = true;
+	// Returns true if addedCount==0 (we save data to db every saveToDbFrequency
+	// time)
+	private static boolean shouldWeSaveDataToDb() {
+		return addedCount == 0;
+	}
+
+	// Returns true if addedSimInfoCount==0 (we save data to db every
+	// saveSimInfoToDbFrequency time)
+	private static boolean shouldWeSaveSimulationInfoToDatabase() {
+		return addedSimInfoCount == 0;
+	}
+
+	/*
+	 * Returns true if the plane has moved more than HALF_METER
+	 */
+	private static boolean hasPlaneMoved(String simulatorId) {
+		boolean hasPlaneMoved = true;
 		SimulationInfoItem currentSimItem = SimulatorsStatus
 				.getSimulationInfoItemBySimulatorId(simulatorId);
 		SimulationInfoItem prevSimItem = SimulatorsStatus
@@ -40,15 +73,15 @@ public class DatabaseUpdater {
 			Double currentLongtitude = currentSimItem.getBean().getLongtitude();
 			if (distanceBetweenTwoPoints(prevLatitude, prevLongtitude,
 					currentLatitude, currentLongtitude) > HALF_METER) {
-				shouldWeAdd = true;
+				hasPlaneMoved = true;
 			} else {
-				shouldWeAdd = false;
+				hasPlaneMoved = false;
 			}
 		} else {
 			System.out
 					.println("PREV ITEM IS NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 		}
-		return shouldWeAdd;
+		return hasPlaneMoved;
 	}
 
 	// calculates distance between two points in meters
@@ -79,6 +112,9 @@ public class DatabaseUpdater {
 		return (rad * 180 / Math.PI);
 	}
 
+	/*
+	 * Saves data about devices state to database
+	 */
 	@SuppressWarnings("unchecked")
 	private static void addDevicesStateInfoToDatabase(Integer simulationIdInt,
 			String simulatorId) {
@@ -91,9 +127,8 @@ public class DatabaseUpdater {
 				simulationIdInt);
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getElevator()).setValue(simDevStBean.getElevator());
-		simDevStCont
-				.getContainerProperty(newSimDvStId, ColumnNames.getAileron())
-				.setValue(simDevStBean.getEleron());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getAileron()).setValue(simDevStBean.getEleron());
 		simDevStCont
 				.getContainerProperty(newSimDvStId, ColumnNames.getRudder())
 				.setValue(simDevStBean.getRudder().intValue());
@@ -104,11 +139,19 @@ public class DatabaseUpdater {
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getSpeedbrakes()).setValue(
 				simDevStBean.getSpeedbrakes());
-		simDevStCont.getContainerProperty(newSimDvStId, ColumnNames.getTrim())
-				.setValue(simDevStBean.getTrim());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getAileronTrim()).setValue(
+				simDevStBean.getAilerontrim());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getElevatorTrim()).setValue(
+				simDevStBean.getElevatortrim());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getRudderTrim()).setValue(
+				simDevStBean.getRuddertrim());
 		commitChangeInSQLContainer(simDevStCont);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void addPfdInfoToDatabase(Integer simulationIdInt,
 			String simulatorId) {
 		SQLContainer simPfdCont = dbHelp.getSimulationPFDContainer();
@@ -140,8 +183,9 @@ public class DatabaseUpdater {
 
 	}
 
-	private static void addSimulationInfoToDatabase(Integer simulationIdInt,
-			String simulatorId) {
+	@SuppressWarnings("unchecked")
+	private static void addSimulationInfoInfoToDatabase(
+			Integer simulationIdInt, String simulatorId) {
 		SQLContainer simInfoCont = dbHelp.getSimulationInfoContainer();
 		SimulationInfoBean simInfoBean = SimulatorsStatus
 				.getSimulationInfoItemBySimulatorId(simulatorId).getBean();

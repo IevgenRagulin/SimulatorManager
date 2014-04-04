@@ -44,7 +44,9 @@ public class AllSimulationInfo {
 	Double aileron;
 	Double rudder;
 	Double elevator;
-	Double trimPosition;
+	Double trimAileronPosition;// if simulator sends no data we set it to -1
+	Double trimRudderPosition; // if simulator sends no data we set it to -1
+	Double trimElevatorPosition;// if simulator sends no data we set it to -1
 
 	// GPS
 	Double latitude; // GPS Latitude
@@ -209,12 +211,40 @@ public class AllSimulationInfo {
 		this.elevator = elevator;
 	}
 
-	public Double getTrimPosition() {
-		return trimPosition;
+	public Double getTrimAileronPosition() {
+		return trimAileronPosition;
 	}
 
-	protected void setTrimPosition(Double trimPosition) {
-		this.trimPosition = trimPosition;
+	protected void setTrimAileronPosition(Double trimPosition) {
+		if (trimPosition != null) {
+			this.trimAileronPosition = trimPosition;
+		} else {// if simulator doesn't send data about aileron trim
+			this.trimAileronPosition = -2.0;
+		}
+	}
+
+	public Double getTrimRudderPosition() {
+		return trimRudderPosition;
+	}
+
+	protected void setTrimRudderPosition(Double trimRudderPosition) {
+		if (trimRudderPosition != null) {
+			this.trimRudderPosition = trimRudderPosition;
+		} else {// if simulator doesn't send data about rudder trim
+			this.trimRudderPosition = -2.0;
+		}
+	}
+
+	public Double getTrimElevatorPosition() {
+		return trimElevatorPosition;
+	}
+
+	protected void setTrimElevatorPosition(Double trimElevatorPosition) {
+		if (trimElevatorPosition != null) {
+			this.trimElevatorPosition = trimElevatorPosition;
+		} else { // if simulator doesn't send data about elevator trim
+			this.trimElevatorPosition = -2.0;
+		}
 	}
 
 	public Double getThrottle() {

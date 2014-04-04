@@ -4,6 +4,8 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 
 @SuppressWarnings("serial")
 public class PrimaryFlightDisplayState extends JavaScriptComponentState {
+	// the variable names are so short so that we pass less data through the
+	// network
 	public int a;// altitude
 	public int s;// speed
 	public int r;// roll

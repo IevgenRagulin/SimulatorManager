@@ -9,6 +9,7 @@ import com.vaadin.ui.AbstractJavaScriptComponent;
 @com.vaadin.annotations.JavaScript({ "flightControls.js" })
 public class FlightControls extends AbstractJavaScriptComponent {
 
+	private static final String CSS_CLASS = "FLIGHT_CONTROLS";
 	/*
 	 * We use this bean in adition to state class, because when we access state
 	 * class fields, the change state event is generated even if we don't change
@@ -17,13 +18,18 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	private FlightControlsStateBean controlYokeStateBean;
 
 	public FlightControls(float aileron, float elevator, float rudder,
-			float speedbrakes, float flaps) {
+			float aileront, float elevatort, float ruddert, float speedbrakes,
+			float flaps) {
 
 		getState().ail = aileron;
 		getState().el = elevator;
 		getState().rd = rudder;
+		getState().ailt = aileront;
+		getState().elt = elevatort;
+		getState().rdt = ruddert;
 		controlYokeStateBean = new FlightControlsStateBean(aileron, elevator,
-				rudder, speedbrakes, flaps);
+				rudder, aileront, elevatort, ruddert, speedbrakes, flaps);
+		setPrimaryStyleName(CSS_CLASS);
 	}
 
 	public void updateIndividualFlightControlValues(Item flightControlItem,
@@ -38,13 +44,43 @@ public class FlightControls extends AbstractJavaScriptComponent {
 				.getItemProperty(ColumnNames.getSpeedbrakes())).getValue());
 		float newFlaps = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getFlaps())).getValue());
+		float newAileronTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(ColumnNames.getAileronTrim())).getValue());
+		float newElevatorTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(ColumnNames.getElevatorTrim())).getValue());
+		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(ColumnNames.getRudderTrim())).getValue());
 		setAileron(newAileron);
 		setElevator(newElevator);
 		setRudder(newRudder);
+		setAileronTrim(newAileronTrim);
+		setElevatorTrim(newElevatorTrim);
+		setRudderTrim(newRudderTrim);
 		setFlaps(newFlaps);
 		setPlaneConfiguration(simulatorItem);
 		setSpeedBrakes(newSpeedBrakes);
 
+	}
+
+	private void setRudderTrim(float newRudderTrim) {
+		if (getStateBean().getRudderTrim() != newRudderTrim) {
+			getState().rdt = newRudderTrim;
+			getStateBean().setRudderTrim(newRudderTrim);
+		}
+	}
+
+	private void setElevatorTrim(float newElevatorTrim) {
+		if (getStateBean().getElevatorTrim() != newElevatorTrim) {
+			getState().elt = newElevatorTrim;
+			getStateBean().setElevatorTrim(newElevatorTrim);
+		}
+	}
+
+	private void setAileronTrim(float newAileronTrim) {
+		if (getStateBean().getAileronTrim() != newAileronTrim) {
+			getState().ailt = newAileronTrim;
+			getStateBean().setAileronTrim(newAileronTrim);
+		}
 	}
 
 	private void setPlaneConfiguration(Item simulatorItem) {

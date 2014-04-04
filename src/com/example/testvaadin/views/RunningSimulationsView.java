@@ -5,9 +5,7 @@ import cm.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
 import com.example.testvaadin.components.FlightPathGoogleMap;
-import com.example.testvaadin.components.InfoLabel;
 import com.example.testvaadin.components.SelectSimulatorCombo;
-import com.example.testvaadin.components.SimulationStateFieldGroup;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.javascriptcomponents.flightcontrols.FlightControls;
 import com.example.testvaadin.javascriptcomponents.pfd.PrimaryFlightDisplay;
@@ -22,13 +20,12 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
-	private static final int REFRESH_INTERVAL = 300;
+	public static final int REFRESH_INTERVAL = 300;
 
 	public class StatusRefreshListener implements RefreshListener {
 		private static final long serialVersionUID = 392864906906738406L;
@@ -44,19 +41,20 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private static final long serialVersionUID = -1785707193097941934L;
 	private Navigator navigator;
-	private HorizontalLayout simulatorInfoLayout = new HorizontalLayout();
-	private HorizontalLayout simulationLayout = new HorizontalLayout();
-	private FormLayout simulationInfoLayout = new FormLayout();
+	// private HorizontalLayout simulatorInfoLayout = new HorizontalLayout();
+	// private HorizontalLayout simulationLayout = new HorizontalLayout();
+	// private FormLayout simulationInfoLayout = new FormLayout();
 	private ErrorLabel errorLabel = new ErrorLabel("");
-	private InfoLabel simulatorInfoLabel = new InfoLabel("Simulator info");
-	private InfoLabel simulationLabel = new InfoLabel("Simulation");
-	private SimulationStateFieldGroup simulatorInfo;
-	private SimulationStateFieldGroup simulation;
+	// private InfoLabel simulatorInfoLabel = new InfoLabel("Simulator info");
+	// private InfoLabel simulationLabel = new InfoLabel("Simulation");
+	// private SimulationStateFieldGroup simulatorInfo;
+	// private SimulationStateFieldGroup simulation;
 
 	private SelectSimulatorCombo selectSimulator;
 	// TODO: make configurable from app configuration
-	private String apiKey = "AIzaSyA3ofOOv8Q8vtkqLnUbmyWRMtAG2lKVOfg";// eragulin
-																		// AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";
+	private String API_KEY = "AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";// eragulin
+																		// //
+																		// AIzaSyA3ofOOv8Q8vtkqLnUbmyWRMtAG2lKVOfg";
 	private FlightPathGoogleMap googleMap = null;
 
 	/* Custom javascript components */
@@ -72,31 +70,32 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private ButtonToMainMenu buttonToMainMenu;
-	private VerticalLayout mainSimulationLayout;
+	private HorizontalLayout avionycsLayout = new HorizontalLayout();
+	private VerticalLayout mainSimulationLayout = new VerticalLayout();
 
-	public SimulationStateFieldGroup getSimulatorInfo() {
-		return simulatorInfo;
-	}
+	// public SimulationStateFieldGroup getSimulatorInfo() {
+	// return simulatorInfo;
+	// }
 
-	public SimulationStateFieldGroup getSimulation() {
-		return simulation;
-	}
+	// public SimulationStateFieldGroup getSimulation() {
+	// return simulation;
+	// }
 
-	public void setSimulationInfo(SimulationStateFieldGroup simulationInfo) {
-		this.simulation = simulationInfo;
-	}
+	// public void setSimulationInfo(SimulationStateFieldGroup simulationInfo) {
+	// this.simulation = simulationInfo;
+	// }
 
 	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 		return primaryFlightDisplay;
 	}
 
-	public HorizontalLayout getSimulatorInfoLayout() {
-		return simulatorInfoLayout;
-	}
+	// public HorizontalLayout getSimulatorInfoLayout() {
+	// return simulatorInfoLayout;
+	// }
 
-	public HorizontalLayout getSimulationInfoLayout() {
-		return simulationLayout;
-	}
+	// public HorizontalLayout getSimulationInfoLayout() {
+	// return simulationLayout;
+	// }
 
 	public Label getErrorLabel() {
 		return errorLabel;
@@ -106,20 +105,21 @@ public class RunningSimulationsView extends BasicView implements View {
 		this.navigator = navigator;
 		initButtonToMainMenu();
 		initSelectSimulatorCombo();
-		initSimulatorsInfo();
-		initSimulationInfo();
+		// initSimulatorsInfo();
+		// initSimulationInfo();
 		initLayout();
+		initGoogleMaps();
 		setClickListeners();
 		initPageRefresher();
 		initPrimaryFlightDisplay();
 		initControlYoke();
-		initGoogleMaps();
 
 	}
 
 	private void initControlYoke() {
-		flightControls = new FlightControls(0, 0, 0, 0, 0);
-		mainSimulationLayout.addComponent(flightControls);
+		// -2 means the device doesn't send data
+		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0);
+		avionycsLayout.addComponent(flightControls);
 	}
 
 	@Override
@@ -130,18 +130,20 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void initGoogleMaps() {
+		System.out.println("going to init google maps" + googleMap);
 		if (googleMap != null) {
 			googleMap.clearMap();
 		} else {
+			System.out.println("going to call google map constructor");
 			googleMap = new FlightPathGoogleMap(
-					new LatLon(60.440963, 22.25122), 4.0, apiKey, this);
+					new LatLon(60.440963, 22.25122), 4.0, API_KEY, this);
 			mainSimulationLayout.addComponent(googleMap);
 		}
 	}
 
 	private void initPrimaryFlightDisplay() {
 		primaryFlightDisplay = new PrimaryFlightDisplay(1, 0, 0, 0, 0, 0, 0, 0);
-		mainSimulationLayout.addComponent(primaryFlightDisplay);
+		avionycsLayout.addComponent(primaryFlightDisplay);
 	}
 
 	private void initButtonToMainMenu() {
@@ -169,37 +171,37 @@ public class RunningSimulationsView extends BasicView implements View {
 		});
 	}
 
-	private void initSimulationInfo() {
-		simulation = new SimulationStateFieldGroup(
-				ColumnNames.getSimulationBeanCols(), simulationLayout);
-	}
+	// private void initSimulationInfo() {
+	// simulation = new SimulationStateFieldGroup(
+	// ColumnNames.getSimulationBeanCols(), simulationLayout);
+	// }
 
 	private void initSelectSimulatorCombo() {
 		selectSimulator = new SelectSimulatorCombo(this);
 	}
 
-	private void initSimulatorsInfo() {
-		simulatorInfo = new SimulationStateFieldGroup(
-				ColumnNames.getSimulatorMainCols(), simulatorInfoLayout);
-	}
+	// private void initSimulatorsInfo() {
+	// simulatorInfo = new SimulationStateFieldGroup(
+	// ColumnNames.getSimulatorMainCols(), simulatorInfoLayout);
+	// }
 
 	private void initLayout() {
 		addComponent(buttonToMainMenu);
 		addComponent(selectSimulator);
 		addComponent(errorLabel);
-		addComponent(simulatorInfoLabel);
-		addComponent(simulatorInfoLayout);
-		mainSimulationLayout = new VerticalLayout();
-		mainSimulationLayout.addComponent(simulationLabel);
-		mainSimulationLayout.addComponent(simulationLayout);
-		mainSimulationLayout.addComponent(simulationInfoLayout);
+		// addComponent(simulatorInfoLabel);
+		// addComponent(simulatorInfoLayout);
+		// mainSimulationLayout.addComponent(simulationLabel);
+		// mainSimulationLayout.addComponent(simulationLayout);
+		// mainSimulationLayout.addComponent(simulationInfoLayout);
 		addComponent(mainSimulationLayout);
+		mainSimulationLayout.addComponent(avionycsLayout);
 	}
 
 	public void setAllSimulationSimulatorData(Item selectedSimulator) {
 		mainSimulationLayout.setVisible(true);
-		simulatorInfoLabel.setVisible(true);
-		simulatorInfoLayout.setVisible(true);
+		// simulatorInfoLabel.setVisible(true);
+		// simulatorInfoLayout.setVisible(true);
 		// Set simulator info data
 		setSimulatorInfoData(selectedSimulator);
 		String simulatorId = selectedSimulator
@@ -225,10 +227,10 @@ public class RunningSimulationsView extends BasicView implements View {
 	}
 
 	private void setFlightControlsInfo(Item selectedDevicesState,
-			Item selectedSimulaotr) {
+			Item selectedSimulator) {
 		if (selectedDevicesState != null) {
 			flightControls.updateIndividualFlightControlValues(
-					selectedDevicesState, selectedSimulaotr);
+					selectedDevicesState, selectedSimulator);
 		}
 	}
 
@@ -239,19 +241,18 @@ public class RunningSimulationsView extends BasicView implements View {
 		// if (!getSimulatorInfo().equalsItem(selectedSimulator)) {
 		// getSimulatorInfo().setItemDataSource(selectedSimulator);
 		// }
-		getSimulatorInfo().setItemDataSource(selectedSimulator);
-		getSimulatorInfo().setReadOnly(true);
+		// getSimulatorInfo().setItemDataSource(selectedSimulator);
+		// getSimulatorInfo().setReadOnly(true);
 	}
 
 	private void setSimulationData(final Item selectedSimulation) {
 		getErrorLabel().setValue(EMPTY_STRING);
-		if (selectedSimulation != null) {
-			getSimulation().setItemDataSource(selectedSimulation);
-			getSimulation().setEnabled(true);
-			getSimulation().setReadOnly(true);
-		} else {
-			getSimulation().setEnabled(false);
-		}
+		/*
+		 * if (selectedSimulation != null) {
+		 * getSimulation().setItemDataSource(selectedSimulation);
+		 * getSimulation().setEnabled(true); getSimulation().setReadOnly(true);
+		 * } else { getSimulation().setEnabled(false); }
+		 */
 	}
 
 	private void setSimulationInfoData(Item selectedSimulationInfo,
@@ -277,17 +278,17 @@ public class RunningSimulationsView extends BasicView implements View {
 	public void setSimulatorNotSelectedState() {
 		getErrorLabel().setValue(NO_SIMULATOR_SELECTED);
 		mainSimulationLayout.setVisible(false);
-		simulatorInfoLabel.setVisible(false);
-		simulatorInfoLayout.setVisible(false);
+		// simulatorInfoLabel.setVisible(false);
+		// simulatorInfoLayout.setVisible(false);
 	}
 
 	public void setNoSimulationsRunningState(Item selectedSimulator) {
 		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
 		mainSimulationLayout.setVisible(false);
-		simulatorInfoLabel.setVisible(true);
-		simulatorInfoLayout.setVisible(true);
-		simulatorInfo.setItemDataSource(selectedSimulator);
-		simulatorInfo.setReadOnly(true);
+		// simulatorInfoLabel.setVisible(true);
+		// simulatorInfoLayout.setVisible(true);
+		// simulatorInfo.setItemDataSource(selectedSimulator);
+		// simulatorInfo.setReadOnly(true);
 	}
 
 }

@@ -9,6 +9,8 @@ import com.vaadin.data.Property;
 public class PrimaryFlightDisplay extends
 		com.vaadin.ui.AbstractJavaScriptComponent {
 
+	private final String CSS_CLASS = "PFD_DISPLAY";
+
 	/*
 	 * We use this bean in adition to state class, because when we access state
 	 * class fields, the change state event is generated even if we don't change
@@ -28,7 +30,7 @@ public class PrimaryFlightDisplay extends
 		getState().tc = truecourse;
 		pfdStateBean = new PrimaryFlightDisplayStateBean(altitude, speed, roll,
 				pitch, heading, truecourse, verticalspeed, resetpfd);
-		System.out.println("CALLED PFD CONSTRUCTOR");
+		setPrimaryStyleName(CSS_CLASS);
 	}
 
 	@Override
@@ -87,7 +89,6 @@ public class PrimaryFlightDisplay extends
 				|| (getStateBean().getHeading() != newHeading)
 				|| (getStateBean().getAltitude() != newAltitude)
 				|| (getStateBean().getSpeed() != newIas)) {
-			System.out.println("SOMETHING HAS CHANGED");
 			setVerticalSpeed(newVertSpeed);
 			setTrueCourse(newTrueCourse);
 			setRoll(newRoll);
