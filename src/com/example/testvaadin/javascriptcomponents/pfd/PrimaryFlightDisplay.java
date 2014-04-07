@@ -67,8 +67,9 @@ public class PrimaryFlightDisplay extends
 				.getItemProperty(ColumnNames.getIas())).getValue());
 		int newAltitude = doubleToInt((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getAltitude())).getValue());
-		float newGroundAltitude = doubleToRoundedFloat((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getGroundaltitude())).getValue());
+		// float newGroundAltitude = doubleToRoundedFloat((Double)
+		// ((Property<?>) item
+		// .getItemProperty(ColumnNames.getGroundaltitude())).getValue());
 		float newVertSpeed = doubleToRoundedFloat((Double) ((Property<?>) item
 				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
 

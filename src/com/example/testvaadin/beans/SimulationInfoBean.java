@@ -2,7 +2,7 @@ package com.example.testvaadin.beans;
 
 import java.io.Serializable;
 
-import cm.example.testvaadin.simulatorcommunication.AllSimulationInfo;
+import com.example.testvaadin.simulatorcommunication.AllSimulationInfo;
 
 public class SimulationInfoBean implements Serializable {
 

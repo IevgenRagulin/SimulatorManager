@@ -64,8 +64,11 @@ var darkGray = '404040';
 
 function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() {
 	var e = this.getElement();
+	resetPfd();
 	initHtml(e);
 	init();
+	update();
+	console.log("severe:creating pfd");
 	this.onStateChange = function() {
 		window.wantHaveSpeed = metersPerSecondToKts(this.getState().s);
 		window.wantHaveAltitude = metersToFeet(this.getState().a);
@@ -75,6 +78,22 @@ function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() 
 		window.wantHaveVerSpeed = metersPerSecondToFeetPerMin(this.getState().vs);
 		update();
 	};
+}
+
+//Set reset currentlyChangingValue, currentValue global variables to prevent bug when we switch between simulators
+function resetPfd() {
+	window.currentCompass = 0;
+	window.currentAltitude = 0;
+	window.currentSpeed = 0;
+	window.currentRoll = 0;
+	window.currentPitch = 0;
+	window.currentVerSpeed = 0;
+	window.currentlyChangingRoll = false;
+	window.currentlyChangingPitch = false;
+	window.currentlyChangingAlt = false;
+	window.currentlyChangingSpeed = false;
+	window.currentlyChangingCompass = false;
+	window.currentlyChangingVerSpeed = false;
 }
 
 function initHtml(e) {
@@ -150,29 +169,24 @@ function update() {
 	if (!window.currentlyChangingPitch) {
 		setPitch();
 	}
-	console.log("severe:after setting pitch");
 	if (!window.currentlyChangingRoll) {
 		setRoll();
 	}
-	console.log("severe:after setting roll");
 	if (!window.currentlyChangingSpeed) {
 		setSpeed();
 	}
-	console.log("severe:after setting speed");
 	if (!window.currentlyChangingAltitude) {
 		setAltitude();
 	}
-	console.log("severe:after setting alt");
 	if (!window.currentlyChangingCompass) {
 		setCompass();
 	}
-	console.log("severe:after setting comp");
 	if (!window.currentlyChangingVerSpeed) {
 		setVerticalSpeed();
 	} else {
 		console.log("COMPASS NOT SET");
 	}
-	console.log("severe:after setting ver speed");
+	console.log("severe:"+window.currentlyChangingCompass);
 }
 
 function setClickListeners() {
@@ -841,6 +855,7 @@ function rotateCanvasByRollDegrees(can, roll) {
 // requestAnimationFrame
 function setCompassValue(ctxCompass, compass) {
 	var difCompass = (compass - window.currentCompass) % 360;
+	console.log("severe:setting compass. Compass want"+compass+" comp now"+window.currentCompass+" dif"+difCompass);
 	var compassStep = calculateCompassPitchRollStep(difCompass, 0.05);
 	if (shouldWeMakeAnimationStep(difCompass, 0.05)) {
 		requestAnimationFrame(function() {

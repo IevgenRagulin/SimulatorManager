@@ -1,10 +1,11 @@
-package cm.example.testvaadin.simulatorcommunication;
+package com.example.testvaadin.simulatorcommunication;
 
 import java.sql.SQLException;
 
 import com.example.testvaadin.beans.SimulationDevStateBean;
 import com.example.testvaadin.beans.SimulationInfoBean;
 import com.example.testvaadin.beans.SimulationPFDBean;
+import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.example.testvaadin.items.SimulationInfoItem;
@@ -15,16 +16,6 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class DatabaseUpdater {
 	private static final double HALF_METER = 0.5;
 	private static DatabaseHelper dbHelp = new DatabaseHelper();
-	// how often we save data to database. Here - every 1000/UPDATE_RATE MS
-	// times. I.e. if UPDATE_RATE_MS = 300, we save data every 3 times
-	private static int saveToDbFrequency = Math
-			.round(1000 / SimulationsUpdater.UPDATE_RATE_MS);
-	// how often we save data to database. We make this frequency smaller than
-	// for other data, because data in simulation info contains
-	// plane coordinates and it's to overwhelming for googlemaps to display too
-	// many points for the flight path.
-	private static int saveSimInfoToDbFrequency = Math
-			.round(10000 / SimulationsUpdater.UPDATE_RATE_MS);
 
 	// in combination with saveToDbFrequency used to determine if we should save
 	// data to db
@@ -33,6 +24,13 @@ public class DatabaseUpdater {
 
 	public static void addSimulationInfoToDatabase(SQLContainer lastSimCont,
 			String simulatorId, RowId simulationId) {
+		int saveToDbFrequency = Math.round(ApplicationConfiguration
+				.getWriteToDbFrequency()
+				/ ApplicationConfiguration.getSimulatorGetDataFrequency());
+		int saveSimInfoToDbFrequency = Math.round(ApplicationConfiguration
+				.getWritePositionToDbFrequency()
+				/ ApplicationConfiguration.getSimulatorGetDataFrequency());
+
 		Integer simulationIdInt = Integer.valueOf(simulationId.toString());
 		addedCount = (addedCount + 1) % saveToDbFrequency;
 		addedSimInfoCount = (addedSimInfoCount + 1) % saveSimInfoToDbFrequency;

@@ -1,4 +1,4 @@
-package cm.example.testvaadin.simulatorcommunication;
+package com.example.testvaadin.simulatorcommunication;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

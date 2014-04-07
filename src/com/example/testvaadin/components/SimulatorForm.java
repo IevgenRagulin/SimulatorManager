@@ -48,6 +48,8 @@ public class SimulatorForm extends FieldGroup {
 
 	private StringToIntegerConverter getStringToIntegerConverter() {
 		StringToIntegerConverter plainIntegerConverter = new StringToIntegerConverter() {
+			private static final long serialVersionUID = -7227277283837048291L;
+
 			protected java.text.NumberFormat getFormat(Locale locale) {
 				NumberFormat format = super.getFormat(locale);
 				format.setGroupingUsed(false);
@@ -77,6 +79,7 @@ public class SimulatorForm extends FieldGroup {
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addSimulator() {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
 

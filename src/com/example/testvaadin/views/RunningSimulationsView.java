@@ -1,14 +1,14 @@
 package com.example.testvaadin.views;
 
-import cm.example.testvaadin.simulatorcommunication.SimulatorsStatus;
-
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
 import com.example.testvaadin.components.FlightPathGoogleMap;
 import com.example.testvaadin.components.SelectSimulatorCombo;
+import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.javascriptcomponents.flightcontrols.FlightControls;
 import com.example.testvaadin.javascriptcomponents.pfd.PrimaryFlightDisplay;
+import com.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Item;
@@ -25,7 +25,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
-	public static final int REFRESH_INTERVAL = 300;
 
 	public class StatusRefreshListener implements RefreshListener {
 		private static final long serialVersionUID = 392864906906738406L;
@@ -40,15 +39,9 @@ public class RunningSimulationsView extends BasicView implements View {
 	private static final String NO_RUNNING_SIMULATIONS = "There are no simulations currently running on this simulator";
 
 	private static final long serialVersionUID = -1785707193097941934L;
+	private static final String MAIN_LAYOUT_CLASS = "mainVertLayout";
 	private Navigator navigator;
-	// private HorizontalLayout simulatorInfoLayout = new HorizontalLayout();
-	// private HorizontalLayout simulationLayout = new HorizontalLayout();
-	// private FormLayout simulationInfoLayout = new FormLayout();
 	private ErrorLabel errorLabel = new ErrorLabel("");
-	// private InfoLabel simulatorInfoLabel = new InfoLabel("Simulator info");
-	// private InfoLabel simulationLabel = new InfoLabel("Simulation");
-	// private SimulationStateFieldGroup simulatorInfo;
-	// private SimulationStateFieldGroup simulation;
 
 	private SelectSimulatorCombo selectSimulator;
 	// TODO: make configurable from app configuration
@@ -71,31 +64,12 @@ public class RunningSimulationsView extends BasicView implements View {
 
 	private ButtonToMainMenu buttonToMainMenu;
 	private HorizontalLayout avionycsLayout = new HorizontalLayout();
+	private VerticalLayout topSimulationLayout = new VerticalLayout();
 	private VerticalLayout mainSimulationLayout = new VerticalLayout();
-
-	// public SimulationStateFieldGroup getSimulatorInfo() {
-	// return simulatorInfo;
-	// }
-
-	// public SimulationStateFieldGroup getSimulation() {
-	// return simulation;
-	// }
-
-	// public void setSimulationInfo(SimulationStateFieldGroup simulationInfo) {
-	// this.simulation = simulationInfo;
-	// }
 
 	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 		return primaryFlightDisplay;
 	}
-
-	// public HorizontalLayout getSimulatorInfoLayout() {
-	// return simulatorInfoLayout;
-	// }
-
-	// public HorizontalLayout getSimulationInfoLayout() {
-	// return simulationLayout;
-	// }
 
 	public Label getErrorLabel() {
 		return errorLabel;
@@ -105,8 +79,6 @@ public class RunningSimulationsView extends BasicView implements View {
 		this.navigator = navigator;
 		initButtonToMainMenu();
 		initSelectSimulatorCombo();
-		// initSimulatorsInfo();
-		// initSimulationInfo();
 		initLayout();
 		initGoogleMaps();
 		setClickListeners();
@@ -156,7 +128,8 @@ public class RunningSimulationsView extends BasicView implements View {
 		final Refresher refresher = new Refresher();
 		refresher.addListener(listener);
 		// Set update interval in miliseconds
-		refresher.setRefreshInterval(REFRESH_INTERVAL);
+		refresher.setRefreshInterval(ApplicationConfiguration
+				.getRefreshUiFrequency());
 		addExtension(refresher);
 	}
 
@@ -171,39 +144,23 @@ public class RunningSimulationsView extends BasicView implements View {
 		});
 	}
 
-	// private void initSimulationInfo() {
-	// simulation = new SimulationStateFieldGroup(
-	// ColumnNames.getSimulationBeanCols(), simulationLayout);
-	// }
-
 	private void initSelectSimulatorCombo() {
 		selectSimulator = new SelectSimulatorCombo(this);
 	}
 
-	// private void initSimulatorsInfo() {
-	// simulatorInfo = new SimulationStateFieldGroup(
-	// ColumnNames.getSimulatorMainCols(), simulatorInfoLayout);
-	// }
-
 	private void initLayout() {
-		addComponent(buttonToMainMenu);
-		addComponent(selectSimulator);
-		addComponent(errorLabel);
-		// addComponent(simulatorInfoLabel);
-		// addComponent(simulatorInfoLayout);
-		// mainSimulationLayout.addComponent(simulationLabel);
-		// mainSimulationLayout.addComponent(simulationLayout);
-		// mainSimulationLayout.addComponent(simulationInfoLayout);
+		addComponent(topSimulationLayout);
 		addComponent(mainSimulationLayout);
+		topSimulationLayout.addComponent(buttonToMainMenu);
+		topSimulationLayout.addComponent(selectSimulator);
+		topSimulationLayout.addComponent(errorLabel);
 		mainSimulationLayout.addComponent(avionycsLayout);
+		topSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
+		mainSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 	}
 
 	public void setAllSimulationSimulatorData(Item selectedSimulator) {
 		mainSimulationLayout.setVisible(true);
-		// simulatorInfoLabel.setVisible(true);
-		// simulatorInfoLayout.setVisible(true);
-		// Set simulator info data
-		setSimulatorInfoData(selectedSimulator);
 		String simulatorId = selectedSimulator
 				.getItemProperty(ColumnNames.getSimulatorIdPropName())
 				.getValue().toString();
@@ -234,25 +191,8 @@ public class RunningSimulationsView extends BasicView implements View {
 		}
 	}
 
-	private void setSimulatorInfoData(Item selectedSimulator) {
-		// If some data was updated, update the data on UI. Commented this out
-		// because no performance was noticed. It seems that Vaadin
-		// optimizes it automatically
-		// if (!getSimulatorInfo().equalsItem(selectedSimulator)) {
-		// getSimulatorInfo().setItemDataSource(selectedSimulator);
-		// }
-		// getSimulatorInfo().setItemDataSource(selectedSimulator);
-		// getSimulatorInfo().setReadOnly(true);
-	}
-
 	private void setSimulationData(final Item selectedSimulation) {
 		getErrorLabel().setValue(EMPTY_STRING);
-		/*
-		 * if (selectedSimulation != null) {
-		 * getSimulation().setItemDataSource(selectedSimulation);
-		 * getSimulation().setEnabled(true); getSimulation().setReadOnly(true);
-		 * } else { getSimulation().setEnabled(false); }
-		 */
 	}
 
 	private void setSimulationInfoData(Item selectedSimulationInfo,

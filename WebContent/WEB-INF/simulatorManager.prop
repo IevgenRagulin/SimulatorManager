@@ -1,0 +1,9 @@
+db_url=jdbc:postgresql://localhost/postgres
+db_username=postgres
+db_password=password
+google_map_api_key=AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4
+simulator_get_data_frequency_ms=300
+user_interface_refresh_frequency_ms=300
+write_to_database_frequency_ms=1000
+write_position_to_database_frequency_ms=10000
+update_airplane_position_frequency_ms=2000

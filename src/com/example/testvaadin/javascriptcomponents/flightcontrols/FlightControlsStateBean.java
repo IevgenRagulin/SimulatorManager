@@ -1,6 +1,9 @@
 package com.example.testvaadin.javascriptcomponents.flightcontrols;
 
-public class FlightControlsStateBean {
+import java.io.Serializable;
+
+public class FlightControlsStateBean implements Serializable {
+	private static final long serialVersionUID = -1663050188807660753L;
 	/* Plane configuration */
 	public int maxonflaps;// mas speed on flaps
 	/* Flight controls status */

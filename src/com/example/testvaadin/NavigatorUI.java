@@ -2,7 +2,9 @@ package com.example.testvaadin;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.views.ControlSimulationsView;
+import com.example.testvaadin.views.DatabaseManagementView;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.example.testvaadin.views.SimulatorsView;
 import com.example.testvaadin.views.StartView;
@@ -26,26 +28,24 @@ public class NavigatorUI extends UI {
 	public static final String MANAGESIMULATORS = "Manage simulators";
 	public static final String RUNNINGSIMULATIONS = "Running simulations";
 	public static final String CONTROLSIMULATIONS = "Control simulations";
+	public static final String DATABASE_MANAGEMENT = "Manage database";
 	protected static RunningSimulationsView runningSimulationsView;
-
-	// @WebServlet(value = "/*", asyncSupported = true)
-	// @VaadinServletConfiguration(productionMode = false, ui =
-	// NavigatorUI.class)
-	// public static class Servlet extends VaadinServlet {
-
-	// }
 
 	@Override
 	protected void init(VaadinRequest request) {
+		initApplicationConfiguration();
 		// we do it to initialize static stuff in SimulationUpdater class
 		try {
-			Class.forName("cm.example.testvaadin.simulatorcommunication.SimulationsUpdater");
+			Class.forName("com.example.testvaadin.simulatorcommunication.SimulationsUpdater");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-
 		getPage().setTitle("Main menu");
 		navigator = new Navigator(this, this);
+		createRegisterViews();
+	}
+
+	private void createRegisterViews() {
 		// Create and register the views
 		navigator.addView("", new StartView(this.navigator));
 		navigator.addView(MANAGESIMULATORS, new SimulatorsView(this.navigator));
@@ -53,7 +53,17 @@ public class NavigatorUI extends UI {
 				this.navigator));
 		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(
 				this.navigator));
+		navigator.addView(DATABASE_MANAGEMENT, new DatabaseManagementView(
+				this.navigator));
+	}
 
+	/*
+	 * Important: reads the application configuration data from the file: dtb
+	 * username, password, google maps apikey etc., and sets it to static fields
+	 * of ApplicationConfiguration class
+	 */
+	private void initApplicationConfiguration() {
+		ApplicationConfiguration.initApplicationConfigFromConfFile();
 	}
 
 	public Navigator getNavigator() {

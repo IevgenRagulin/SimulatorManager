@@ -1,4 +1,4 @@
-package cm.example.testvaadin.simulatorcommunication;
+package com.example.testvaadin.simulatorcommunication;
 
 import java.util.Collection;
 import java.util.concurrent.Executors;

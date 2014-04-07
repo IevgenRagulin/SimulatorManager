@@ -25,17 +25,24 @@
   }
   
   	.flightPathMap {
-  	margin-left: 40px;
+  	margin-left: 00px;
  	}
  	
  	.PFD_DISPLAY {
- 	margin-left: 40px;
- 	margin-top: 15px;
+ 	margin-top: 0px;
  	}
  	
  	.FLIGHT_CONTROLS {
-	margin-left: 20px;
-	margin-top: 15px;
+ 	margin-left: 20px;
  	}
+ 	
+ 	.mainVertLayout {
+ 	margin-left: 40px;
+ 	margin-top: 10px;
+	}
 	
+	.btnDtbManagement {
+		width: 200px;
+		margin-top: 20px;
+	}
  }

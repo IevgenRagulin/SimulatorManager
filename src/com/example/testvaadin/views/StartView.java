@@ -17,6 +17,7 @@ public class StartView extends VerticalLayout implements View {
 	Button buttonToViewingSimulations = new Button("Go to viewing simulations");
 	Button buttonToControllingSimulations = new Button(
 			"Go to controlling simulations");
+	Button buttonToDatabaseManagement = new Button("Go to database management");
 	private Navigator navigator;
 
 	public StartView(final Navigator navigator) {
@@ -25,6 +26,7 @@ public class StartView extends VerticalLayout implements View {
 		addComponent(buttonToManager);
 		addComponent(buttonToViewingSimulations);
 		addComponent(buttonToControllingSimulations);
+		addComponent(buttonToDatabaseManagement);
 		addClickListeners();
 		setAllignments();
 	}
@@ -37,6 +39,18 @@ public class StartView extends VerticalLayout implements View {
 		addButtonToManagerListener();
 		addButtonToViewingSimulationsListener();
 		addButtonToControllingSimulationsListner();
+		addButtonToDatabaseManagementListner();
+	}
+
+	private void addButtonToDatabaseManagementListner() {
+		buttonToDatabaseManagement.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -4243499910765394003L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo(NavigatorUI.DATABASE_MANAGEMENT);
+			}
+		});
 	}
 
 	private void addButtonToControllingSimulationsListner() {
@@ -55,6 +69,8 @@ public class StartView extends VerticalLayout implements View {
 		setComponentAlignment(buttonToViewingSimulations,
 				Alignment.MIDDLE_CENTER);
 		setComponentAlignment(buttonToControllingSimulations,
+				Alignment.MIDDLE_CENTER);
+		setComponentAlignment(buttonToDatabaseManagement,
 				Alignment.MIDDLE_CENTER);
 	}
 

@@ -3,9 +3,9 @@ package com.example.testvaadin.components;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import cm.example.testvaadin.simulatorcommunication.SimulatorsStatus;
-
+import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -18,6 +18,7 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 
 public class FlightPathGoogleMap extends GoogleMap {
+	private static final String PLANE_ICONS_PATH = "VAADIN/themes/testvaadin/plane_icons/";
 	private static final String MAP_STYLE_NAME = "flightPathMap";
 	private final String MAP_WIDTH = "500px";
 	private final String MAP_HEIGHT = "500px";
@@ -28,14 +29,13 @@ public class FlightPathGoogleMap extends GoogleMap {
 			planePathPoints, "#d31717", 0.8, 3);
 	GoogleMapMarker newPositionMarker = new GoogleMapMarker();
 	private GoogleMapInfoWindow latestCoordinatesWindow = new GoogleMapInfoWindow(
-			"Kakola used to be a provincial prison.", newPositionMarker);
+			"", newPositionMarker);
 	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0,
 			112.5, 135.0, 157.5, 180.0, 202.5, 225.0, 247.5, 270.0, 292.5,
 			315.0, 337.5 };
-	// how often we add data about plane position to the map
-	private static int addNewPositionFrequency = Math
-			.round(2000 / RunningSimulationsView.REFRESH_INTERVAL);
-	// in combination with addNewPositionFrequency used to determine if we
+
+	// in combination with addNewPositionFrequency from application
+	// configuration used to determine if we
 	// should add new coord on the map
 	private static int addedCount = 0;
 
@@ -87,8 +87,7 @@ public class FlightPathGoogleMap extends GoogleMap {
 	}
 
 	private String getIconUrl(Double trueCourse) {
-		return "VAADIN/themes/testvaadin/plane_icons/"
-				+ chooseIconBasedOnCourse(trueCourse);
+		return PLANE_ICONS_PATH + chooseIconBasedOnCourse(trueCourse);
 	}
 
 	/**
@@ -139,6 +138,9 @@ public class FlightPathGoogleMap extends GoogleMap {
 	}
 
 	public void addLatestCoordinatesForSimulation(Item item, String simulatorId) {
+		int addNewPositionFrequency = Math.round(ApplicationConfiguration
+				.getUpdateAirplanePositionFrequency()
+				/ ApplicationConfiguration.getRefreshUiFrequency());
 		if (!isMapInitializedWithMapHistory) {
 			initMapWithDataForSimulationWithId(simulatorId);
 			isMapInitializedWithMapHistory = true;

@@ -40,7 +40,7 @@ public class SimulationStateFieldGroup extends FieldGroup {
 			for (Field<?> field : thisFields) {
 				String id = field.getId();
 				String value = field.getValue().toString();
-				Property prop = simStateCompare.getItemProperty(id);
+				Property<?> prop = simStateCompare.getItemProperty(id);
 				String compareVal = prop.getValue().toString();
 				if (!compareVal.equals(value)) {
 					return false;

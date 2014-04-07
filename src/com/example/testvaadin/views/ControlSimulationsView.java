@@ -14,7 +14,7 @@ public class ControlSimulationsView extends BasicView implements View {
 	private Navigator navigator;
 
 	public ControlSimulationsView(Navigator navigator) {
-		this.navigator = navigator;
+		this.setNavigator(navigator);
 		buttonToMainMenu = new ButtonToMainMenu(navigator);
 		addComponent(buttonToMainMenu);
 		setComponentAlignment(buttonToMainMenu, Alignment.MIDDLE_CENTER);
@@ -22,6 +22,14 @@ public class ControlSimulationsView extends BasicView implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+	}
+
+	public Navigator getNavigator() {
+		return navigator;
+	}
+
+	public void setNavigator(Navigator navigator) {
+		this.navigator = navigator;
 	}
 
 }
