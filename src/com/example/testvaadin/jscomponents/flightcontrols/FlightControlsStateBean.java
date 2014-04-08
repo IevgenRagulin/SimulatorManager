@@ -1,4 +1,4 @@
-package com.example.testvaadin.javascriptcomponents.flightcontrols;
+package com.example.testvaadin.jscomponents.flightcontrols;
 
 import java.io.Serializable;
 

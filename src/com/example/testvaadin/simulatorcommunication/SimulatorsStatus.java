@@ -14,15 +14,11 @@ public class SimulatorsStatus {
 	protected static final boolean SIMULATION_PAUSED = true;
 	protected static final boolean SIMULATION_NOT_PAUSED = false;
 
-	// protected static Map<String, SimulationItem> prevSimulatorIdSimItem = new
-	// HashMap<String, SimulationItem>();
-	// protected static Map<String, SimulationDevStateItem>
-	// prevSimulatorIdSimDevStateItem = new HashMap<String,
-	// SimulationDevStateItem>();
+	// SimulationInfoItem based on current-1 data from the simulator. Used to
+	// determine if the simulator has moved or not
 	protected static Map<String, SimulationInfoItem> prevSimulatorIdSimInfoItem = new HashMap<String, SimulationInfoItem>();
-	// protected static Map<String, SimulationPFDItem> prevSimulatorIdSimPFDItem
-	// = new HashMap<String, SimulationPFDItem>();
 
+	// Each item corresponds to a table in a database
 	protected static Map<String, SimulationItem> simulatorIdSimItem = new HashMap<String, SimulationItem>();
 	protected static Map<String, SimulationDevStateItem> simulatorIdSimDevStateItem = new HashMap<String, SimulationDevStateItem>();
 	protected static Map<String, SimulationInfoItem> simulatorIdSimInfoItem = new HashMap<String, SimulationInfoItem>();
@@ -30,23 +26,11 @@ public class SimulatorsStatus {
 
 	protected static void setSimulationDevStateItem(String simulatorId,
 			SimulationDevStateItem simDevStateItem) {
-		// Saving old value
-		/*
-		 * SimulationDevStateItem prevItem = simulatorIdSimDevStateItem
-		 * .get(simulatorId); if (prevItem != null) {
-		 * prevSimulatorIdSimDevStateItem.put(simulatorId, prevItem); }
-		 */
 		simulatorIdSimDevStateItem.put(simulatorId, simDevStateItem);
 	}
 
 	protected static void setSimulationItem(String simulatorId,
 			SimulationItem simItem) {
-		// Saving old value
-		/*
-		 * SimulationItem prevItem = simulatorIdSimItem.get(simulatorId); if
-		 * (prevItem != null) { prevSimulatorIdSimItem.put(simulatorId,
-		 * prevItem); }
-		 */
 		simulatorIdSimItem.put(simulatorId, simItem);
 	}
 
@@ -62,12 +46,6 @@ public class SimulatorsStatus {
 
 	protected static void setSimulationPFDItem(String simulatorId,
 			SimulationPFDItem simPFDItem) {
-		// Saving old value
-		/*
-		 * SimulationPFDItem prevItem = simulatorIdSimPFDItem.get(simulatorId);
-		 * if (prevItem != null) { prevSimulatorIdSimPFDItem.put(simulatorId,
-		 * prevItem); }
-		 */
 		simulatorIdSimPFDItem.put(simulatorId, simPFDItem);
 	}
 

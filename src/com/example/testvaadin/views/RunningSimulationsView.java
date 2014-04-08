@@ -6,8 +6,9 @@ import com.example.testvaadin.components.FlightPathGoogleMap;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
-import com.example.testvaadin.javascriptcomponents.flightcontrols.FlightControls;
-import com.example.testvaadin.javascriptcomponents.pfd.PrimaryFlightDisplay;
+import com.example.testvaadin.jscomponents.flightcontrols.FlightControls;
+import com.example.testvaadin.jscomponents.jshighchart.JsHighChart;
+import com.example.testvaadin.jscomponents.pfd.PrimaryFlightDisplay;
 import com.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
@@ -85,7 +86,14 @@ public class RunningSimulationsView extends BasicView implements View {
 		initPageRefresher();
 		initPrimaryFlightDisplay();
 		initControlYoke();
+		initGraphs();
 
+	}
+
+	private void initGraphs() {
+		JsHighChart chart = new JsHighChart();
+		chart.setId("myJSComponent");
+		mainSimulationLayout.addComponent(chart);
 	}
 
 	private void initControlYoke() {

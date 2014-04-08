@@ -58,7 +58,7 @@ var yOffset = (window.yokeBackHeight - window.yokeHeight) / 2;
 var xOffsetR = (window.rudderBackWidth - window.rudderWidth) / 2;
 var yOffsetR = (window.rudderBackHeight - window.rudderHeight) / 2;
 
-function com_example_testvaadin_javascriptcomponents_flightcontrols_FlightControls() {
+function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
 	var e = this.getElement();
 	initYokeHtml(e);
 	initYoke();

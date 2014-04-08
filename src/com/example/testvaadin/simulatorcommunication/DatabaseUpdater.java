@@ -58,7 +58,7 @@ public class DatabaseUpdater {
 	/*
 	 * Returns true if the plane has moved more than HALF_METER
 	 */
-	private static boolean hasPlaneMoved(String simulatorId) {
+	public static boolean hasPlaneMoved(String simulatorId) {
 		boolean hasPlaneMoved = true;
 		SimulationInfoItem currentSimItem = SimulatorsStatus
 				.getSimulationInfoItemBySimulatorId(simulatorId);
@@ -76,8 +76,6 @@ public class DatabaseUpdater {
 				hasPlaneMoved = false;
 			}
 		} else {
-			System.out
-					.println("PREV ITEM IS NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 		}
 		return hasPlaneMoved;
 	}
@@ -201,16 +199,6 @@ public class DatabaseUpdater {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void setSimOnPausedState(SQLContainer lastSimCont,
-			Item simulation) {
-		simulation.getItemProperty(ColumnNames.getIssimulationon()).setValue(
-				SimulatorsStatus.SIMULATION_ON);
-		simulation.getItemProperty(ColumnNames.getIssimulationpaused())
-				.setValue(SimulatorsStatus.SIMULATION_PAUSED);
-		commitChangeInSQLContainer(lastSimCont);
-	}
-
-	@SuppressWarnings("unchecked")
 	public static RowId createNewRunningPausedSimulation(
 			SQLContainer lastSimCont, String simulatorId) {
 		RowId id = (RowId) lastSimCont.addItem();
@@ -238,6 +226,16 @@ public class DatabaseUpdater {
 				ColumnNames.getIssimulationpaused()).setValue(false);
 		commitChangeInSQLContainer(lastSimCont);
 		return id;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void setSimOnPausedState(SQLContainer lastSimCont,
+			Item simulation) {
+		simulation.getItemProperty(ColumnNames.getIssimulationon()).setValue(
+				SimulatorsStatus.SIMULATION_ON);
+		simulation.getItemProperty(ColumnNames.getIssimulationpaused())
+				.setValue(SimulatorsStatus.SIMULATION_PAUSED);
+		commitChangeInSQLContainer(lastSimCont);
 	}
 
 	@SuppressWarnings("unchecked")

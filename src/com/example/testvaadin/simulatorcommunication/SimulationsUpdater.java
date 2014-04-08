@@ -30,7 +30,7 @@ public class SimulationsUpdater {
 		@Override
 		public void run() {
 			try {
-				updateSimulationsInfo();
+				updateRunningSimsStatus();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -49,27 +49,39 @@ public class SimulationsUpdater {
 
 	}
 
-	public static void updateSimulationsInfo() {
+	public static void updateRunningSimsStatus() {
 		SQLContainer simulatorContainer = dbHelp.getNewSimulatorContainer();
 		updateSimulatorsStatus(simulatorContainer);
 	}
 
 	public static void updateSimulatorsStatus(SQLContainer simulatorContainer) {
 		Collection<?> itemIds = simulatorContainer.getItemIds();
-
+		// Iterate over simulators, update information about running simulations
 		for (Object itemId : itemIds) {
-			Item item = simulatorContainer.getItem(itemId);
-			String simulatorId = item
-					.getItemProperty(ColumnNames.getSimulatorIdPropName())
-					.getValue().toString();
-			String simulatorHostname = item
-					.getItemProperty(ColumnNames.getSimulatorHostname())
-					.getValue().toString();
-			int simulatorPort = (Integer) item.getItemProperty(
-					ColumnNames.getSimulatorPortName()).getValue();
+			Item simulatorItem = simulatorContainer.getItem(itemId);
+			String simulatorId = getSimulatorIdFromSimItem(simulatorItem);
+			String simulatorHostname = getSimulatorHostnameFromSimItem(simulatorItem);
+			int simulatorPort = getSimulatorPortFromSimItem(simulatorItem);
 			updateSimulatorStatusInAThread(simulatorId, simulatorHostname,
 					simulatorPort);
 		}
+	}
+
+	private static String getSimulatorIdFromSimItem(Item simulatorItem) {
+		return simulatorItem
+				.getItemProperty(ColumnNames.getSimulatorIdPropName())
+				.getValue().toString();
+	}
+
+	private static String getSimulatorHostnameFromSimItem(Item simulatorItem) {
+		return simulatorItem
+				.getItemProperty(ColumnNames.getSimulatorHostname()).getValue()
+				.toString();
+	}
+
+	private static int getSimulatorPortFromSimItem(Item simulatorItem) {
+		return (Integer) simulatorItem.getItemProperty(
+				ColumnNames.getSimulatorPortName()).getValue();
 	}
 
 	private static void updateSimulatorStatusInAThread(
@@ -97,54 +109,79 @@ public class SimulationsUpdater {
 		updateSimulationStateInDatabase(allSimInfo, simulatorId);
 	}
 
+	/*
+	 * Sets simulation status (running, paused, not running), writes latest data
+	 * from simulator to database TODO: abstract checking status to interface
+	 */
 	private static void updateSimulationStateInDatabase(
 			AllSimulationInfo dataFromSimulator, String simulatorId) {
 		SQLContainer lastSimCont = dbHelp
 				.getLatestSimulationContainer(simulatorId);
-		Item lastSim = dbHelp.getLatestItemFromContainer(lastSimCont);
-
-		Boolean isLastSimInDBOn = null;
+		Item lastSimDb = dbHelp.getLatestItemFromContainer(lastSimCont);
+		// is simulator on or paused based on data from db
+		boolean isLastSimInDBOn = false;
 		Boolean isLastSimInDBPaused = null;
-		if (lastSim != null) {
-			isLastSimInDBOn = (Boolean) lastSim.getItemProperty(
+		// is simulator on or paused based on simulators response
+		Boolean isCurrentSimulationPaused = null;
+		SimulationStatusProviderSimpleImpl simStatusChecker = new SimulationStatusProviderSimpleImpl();
+		Boolean isCurrentSimulationRunning = simStatusChecker
+				.isSimulatorRunning(dataFromSimulator, simulatorId);
+
+		if (lastSimDb != null) {
+			isLastSimInDBOn = (Boolean) lastSimDb.getItemProperty(
 					ColumnNames.getIssimulationon()).getValue();
-			isLastSimInDBPaused = (Boolean) lastSim.getItemProperty(
+			isLastSimInDBPaused = (Boolean) lastSimDb.getItemProperty(
 					ColumnNames.getIssimulationpaused()).getValue();
 		}
-		Boolean isCurrentSimulationPaused = null;
+
 		if (dataFromSimulator != null) {
 			isCurrentSimulationPaused = dataFromSimulator.getSimulationPaused();
 		}
-		if (dataFromSimulator == null) {
-			// simulator is turned off
-			updateSimulationStateInDatabaseSimulatorOff(lastSimCont, lastSim,
+
+		if (!isCurrentSimulationRunning) {
+			// simulator is not running
+			updateSimulationStateInDatabaseSimulatorOff(lastSimCont, lastSimDb,
 					isLastSimInDBOn, isLastSimInDBPaused);
-		} else if (isCurrentSimulationPaused) {
+		} else if ((dataFromSimulator != null) && (isCurrentSimulationPaused)) {
 			// simulator is paused
 			updateSimulationStateInDatabaseSimulatorPaused(lastSimCont,
-					lastSim, isLastSimInDBOn, isLastSimInDBPaused, simulatorId);
-		} else {
+					lastSimDb, isLastSimInDBOn, isLastSimInDBPaused,
+					simulatorId);
+		} else if (dataFromSimulator != null) {
 			// simulator is running
-			updateSimulationStateInDatabaseSimulatorOn(lastSimCont, lastSim,
+			updateSimulationStateInDatabaseSimulatorOn(lastSimCont, lastSimDb,
 					isLastSimInDBOn, isLastSimInDBPaused, simulatorId);
 		}
 	}
 
+	private static boolean shouldWeCreateNewSimInDb(SQLContainer lastSimCont,
+			Item lastSim, Boolean isLastSimInDBOn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/*
+	 * Set simulation to OFF; NOT PAUSED state in database
+	 */
 	private static void updateSimulationStateInDatabaseSimulatorOff(
 			SQLContainer lastSimCont, Item lastSim, Boolean isLastSimInDBOn,
 			Boolean isLastSimInDBPaused) {
 		if (lastSim == null) {
-
-		} else if (isLastSimInDBOn && isLastSimInDBPaused) {
+			// if we don't have any simulations in db, do nothing
+		} else if (hasSimulationStateChanged(isLastSimInDBOn,
+				isLastSimInDBPaused, SimulatorsStatus.SIMULATION_OFF,
+				SimulatorsStatus.SIMULATION_NOT_PAUSED)) {
 			DatabaseUpdater.setSimOffNotPausedState(lastSimCont, lastSim);
-		} else if (isLastSimInDBOn && !(isLastSimInDBPaused)) {
-			DatabaseUpdater.setSimOffNotPausedState(lastSimCont, lastSim);
-		} else if (!isLastSimInDBOn && isLastSimInDBPaused) {
-			throw new IllegalStateException(
-					"Simulator cannot be off and paused at the same time");
-		} else if (!isLastSimInDBOn && (!isLastSimInDBPaused)) {
-
+		} else {
+			// if nothing changed, do nothing
 		}
+	}
+
+	private static boolean hasSimulationStateChanged(Boolean isLastSimInDBOn,
+			Boolean isLastSimInDBPaused, Boolean isSimulatorActuallyOn,
+			Boolean isSimulatorActuallyPaused) {
+		return !((isLastSimInDBOn.equals(isSimulatorActuallyOn)) && (isLastSimInDBPaused
+				.equals(isSimulatorActuallyPaused)));
 	}
 
 	private static void updateSimulationStateInDatabaseSimulatorPaused(

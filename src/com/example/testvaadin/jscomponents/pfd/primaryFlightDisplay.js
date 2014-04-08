@@ -62,7 +62,7 @@ var horizontHasBeenRotated = false;
 
 var darkGray = '404040';
 
-function com_example_testvaadin_javascriptcomponents_pfd_PrimaryFlightDisplay() {
+function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
 	var e = this.getElement();
 	resetPfd();
 	initHtml(e);

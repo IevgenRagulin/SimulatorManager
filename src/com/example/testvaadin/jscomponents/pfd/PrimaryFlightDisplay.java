@@ -1,4 +1,4 @@
-package com.example.testvaadin.javascriptcomponents.pfd;
+package com.example.testvaadin.jscomponents.pfd;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.vaadin.data.Item;

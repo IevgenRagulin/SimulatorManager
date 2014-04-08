@@ -1,4 +1,4 @@
-package com.example.testvaadin.javascriptcomponents.pfd;
+package com.example.testvaadin.jscomponents.pfd;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 
