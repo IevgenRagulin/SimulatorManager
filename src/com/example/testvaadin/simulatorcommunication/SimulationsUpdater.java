@@ -9,6 +9,7 @@ import com.example.testvaadin.beans.SimulationBean;
 import com.example.testvaadin.beans.SimulationDevStateBean;
 import com.example.testvaadin.beans.SimulationInfoBean;
 import com.example.testvaadin.beans.SimulationPFDBean;
+import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.example.testvaadin.items.SimulationDevStateItem;
@@ -22,7 +23,8 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class SimulationsUpdater {
 	protected static DatabaseHelper dbHelp = new DatabaseHelper();
 	protected static SimulatorsStatus simStatus = null;
-	protected static final int UPDATE_RATE_MS = 300;
+	protected static final int UPDATE_RATE_MS = ApplicationConfiguration
+			.getSimulatorGetDataFrequency();
 
 	private final static ScheduledExecutorService scheduler = Executors
 			.newScheduledThreadPool(1);
@@ -126,13 +128,15 @@ public class SimulationsUpdater {
 		SimulationStatusProviderSimpleImpl simStatusChecker = new SimulationStatusProviderSimpleImpl();
 		Boolean isCurrentSimulationRunning = simStatusChecker
 				.isSimulatorRunning(dataFromSimulator, simulatorId);
-
 		if (lastSimDb != null) {
 			isLastSimInDBOn = (Boolean) lastSimDb.getItemProperty(
 					ColumnNames.getIssimulationon()).getValue();
 			isLastSimInDBPaused = (Boolean) lastSimDb.getItemProperty(
 					ColumnNames.getIssimulationpaused()).getValue();
 		}
+		System.out.println("IS CURRENT SIMULATION RUNNING?"
+				+ isCurrentSimulationRunning + " according to db running? "
+				+ isLastSimInDBOn);
 
 		if (dataFromSimulator != null) {
 			isCurrentSimulationPaused = dataFromSimulator.getSimulationPaused();

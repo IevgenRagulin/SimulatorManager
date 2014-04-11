@@ -68,14 +68,13 @@ function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
 	initHtml(e);
 	init();
 	update();
-	console.log("severe:creating pfd");
 	this.onStateChange = function() {
-		window.wantHaveSpeed = metersPerSecondToKts(this.getState().s);
-		window.wantHaveAltitude = metersToFeet(this.getState().a);
+		window.wantHaveSpeed = this.getState().s;
+		window.wantHaveAltitude = this.getState().a;
 		window.wantHaveRoll = this.getState().r;
 		window.wantHavePitch = this.getState().p;
 		window.wantHaveHeading = this.getState().h;
-		window.wantHaveVerSpeed = metersPerSecondToFeetPerMin(this.getState().vs);
+		window.wantHaveVerSpeed = this.getState().vs;
 		update();
 	};
 }
@@ -142,17 +141,8 @@ function initHtml(e) {
 			//+ "<button id='minusCompass'>-180 compass</button>" + "</div>";
 }
 
-function metersPerSecondToKts(metersPerSecond) {
-	return metersPerSecond * 1.94;
-}
 
-function metersToFeet(meters) {
-	return meters * 3.2808;
-}
 
-function metersPerSecondToFeetPerMin(metersPerSecond) {
-	return metersPerSecond * 196.850;
-}
 
 function init() {
 	//drawBackground();
@@ -186,21 +176,8 @@ function update() {
 	} else {
 		console.log("COMPASS NOT SET");
 	}
-	console.log("severe:"+window.currentlyChangingCompass);
 }
 
-function setClickListeners() {
-	setAddPitchClickListener();
-	setMinusPitchClickListener();
-	setAddRollClickListener();
-	setMinusRollClickListener();
-	setAddSpeedClickListener();
-	setMinusSpeedClickListener();
-	setAddAltitudeClickListener();
-	setMinusAltitudeClickListener();
-	setAddCompassClickListener();
-	setMinusCompassClickListener();
-}
 
 function drawBackground() {
 	var ctx = document.getElementById('pfd').getContext('2d');
@@ -209,93 +186,7 @@ function drawBackground() {
 	ctx.fill();
 }
 
-function setAddPitchClickListener() {
-	document.getElementById('addPitch').addEventListener('click', function() {
-		var newPitch = (window.currentPitch + 10) % 360;
-		if (!window.currentlyChangingPitch) {
-			setPitch();
-		}
-	});
-}
 
-function setMinusPitchClickListener() {
-	document.getElementById('minusPitch').addEventListener('click', function() {
-		var newPitch = (window.currentPitch - 10) % 360;
-		if (newPitch < 0) {
-			newPitch = 360 + newPitch;
-		}
-		if (!window.currentlyChangingPitch) {
-			setPitch();
-		}
-	});
-}
-
-function setAddRollClickListener() {
-	document.getElementById('addRoll').addEventListener('click', function() {
-		if (!window.currentlyChangingRoll) {
-			setRoll();
-		}
-	});
-}
-
-function setMinusRollClickListener() {
-	document.getElementById('minusRoll').addEventListener('click', function() {
-		if (!window.currentlyChangingRoll) {
-			setRoll();
-		}
-	});
-}
-
-function setAddAltitudeClickListener() {
-	document.getElementById('addAltitude').addEventListener('click',
-			function() {
-				if (!window.currentlyChangingAlt) {
-					setAltitude();
-				}
-			});
-}
-
-function setMinusAltitudeClickListener() {
-	document.getElementById('minusAltitude').addEventListener('click',
-			function() {
-				if (!window.currentlyChangingAlt) {
-					setAltitude();
-				}
-			});
-}
-
-function setAddSpeedClickListener() {
-	document.getElementById('addSpeed').addEventListener('click', function() {
-		if (!window.currentlyChangingSpeed) {
-			setSpeed();
-		}
-	});
-}
-
-function setMinusSpeedClickListener() {
-	document.getElementById('minusSpeed').addEventListener('click', function() {
-		if (!window.currentlyChangingSpeed) {
-			setSpeed();
-		}
-	});
-}
-
-function setAddCompassClickListener() {
-	document.getElementById('addCompass').addEventListener('click', function() {
-			console.log("set compass");
-			window.wantHaveHeading=window.currentCompass+60;
-			setCompass();
-	});
-}
-
-function setMinusCompassClickListener() {
-	document.getElementById('minusCompass').addEventListener('click',
-			function() {
-				console.log("set compass");
-				window.wantHaveHeading=window.currentCompass-60;
-				setCompass();
-			});
-}
 
 function clearRect(ctx, x, y, w, h) {
 	ctx.clearRect(x, y, w, h);

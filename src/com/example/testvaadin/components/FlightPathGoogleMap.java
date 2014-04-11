@@ -20,8 +20,8 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 public class FlightPathGoogleMap extends GoogleMap {
 	private static final String PLANE_ICONS_PATH = "VAADIN/themes/testvaadin/plane_icons/";
 	private static final String MAP_STYLE_NAME = "flightPathMap";
-	private final String MAP_WIDTH = "500px";
-	private final String MAP_HEIGHT = "500px";
+	private final String MAP_WIDTH = "350px";
+	private final String MAP_HEIGHT = "350px";
 	private boolean isMapInitializedWithMapHistory = false;
 	private LatLon lastLatLong = null;
 	private ArrayList<LatLon> planePathPoints = new ArrayList<LatLon>();
@@ -64,7 +64,7 @@ public class FlightPathGoogleMap extends GoogleMap {
 		latestCoordinatesWindow.setWidth("100px");
 	}
 
-	public void initMapWithDataForSimulationWithId(String simulatorId) {
+	private void initMapWithDataForSimulationWithId(String simulatorId) {
 		SQLContainer simulationInfoData = view.getDBHelp()
 				.getAllSimulationInfoBySimulatorId(simulatorId);
 		Double trueCourse = SimulatorsStatus
@@ -162,8 +162,8 @@ public class FlightPathGoogleMap extends GoogleMap {
 			// the map
 			if (!newPosition.equals(this.lastLatLong) && (newPosition != null)) {
 				addMarkerOnMap(newPosition, trueCourse);
-			} else {
 			}
+			this.markAsDirty();
 		}
 		addedCount = (addedCount + 1) % addNewPositionFrequency;
 	}

@@ -6,8 +6,10 @@ import com.example.testvaadin.components.FlightPathGoogleMap;
 import com.example.testvaadin.components.SelectSimulatorCombo;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.items.SimulationPFDItem;
 import com.example.testvaadin.jscomponents.flightcontrols.FlightControls;
-import com.example.testvaadin.jscomponents.jshighchart.JsHighChart;
+import com.example.testvaadin.jscomponents.jshighchart.JsHighChartAltitude;
+import com.example.testvaadin.jscomponents.jshighchart.JsHighChartSpeed;
 import com.example.testvaadin.jscomponents.pfd.PrimaryFlightDisplay;
 import com.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 import com.github.wolfie.refresher.Refresher;
@@ -27,14 +29,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public class RunningSimulationsView extends BasicView implements View {
 
-	public class StatusRefreshListener implements RefreshListener {
-		private static final long serialVersionUID = 392864906906738406L;
-
-		public void refresh(final Refresher source) {
-			getSelectSimulator().handleValueChangeEvent();
-		}
-	}
-
+	private static final String ALTITUDE_CHART_ID = "altitudeChartId";
+	private String SPEED_CHART_ID = "speedChartId";
 	private static final String NO_SIMULATOR_SELECTED = "Please, select simulator";
 	private static final String EMPTY_STRING = "";
 	private static final String NO_RUNNING_SIMULATIONS = "There are no simulations currently running on this simulator";
@@ -45,15 +41,28 @@ public class RunningSimulationsView extends BasicView implements View {
 	private ErrorLabel errorLabel = new ErrorLabel("");
 
 	private SelectSimulatorCombo selectSimulator;
-	// TODO: make configurable from app configuration
-	private String API_KEY = "AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4";// eragulin
-																		// //
-																		// AIzaSyA3ofOOv8Q8vtkqLnUbmyWRMtAG2lKVOfg";
 	private FlightPathGoogleMap googleMap = null;
 
 	/* Custom javascript components */
 	private PrimaryFlightDisplay primaryFlightDisplay;
 	private FlightControls flightControls;
+
+	private ButtonToMainMenu buttonToMainMenu;
+	private HorizontalLayout avionycsLayout = new HorizontalLayout();
+	private HorizontalLayout graphsLayout = new HorizontalLayout();
+	private VerticalLayout topSimulationLayout = new VerticalLayout();
+	private VerticalLayout mainSimulationLayout = new VerticalLayout();
+	private JsHighChartAltitude altitudeChart;
+	private JsHighChartSpeed speedChart;
+
+	public class StatusRefreshListener implements RefreshListener {
+		private static final long serialVersionUID = 392864906906738406L;
+
+		public void refresh(final Refresher source) {
+			getSelectSimulator().handleUpdatingValues();
+			;
+		}
+	}
 
 	public FlightPathGoogleMap getGoogleMap() {
 		return googleMap;
@@ -62,11 +71,6 @@ public class RunningSimulationsView extends BasicView implements View {
 	public SelectSimulatorCombo getSelectSimulator() {
 		return selectSimulator;
 	}
-
-	private ButtonToMainMenu buttonToMainMenu;
-	private HorizontalLayout avionycsLayout = new HorizontalLayout();
-	private VerticalLayout topSimulationLayout = new VerticalLayout();
-	private VerticalLayout mainSimulationLayout = new VerticalLayout();
 
 	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 		return primaryFlightDisplay;
@@ -81,19 +85,23 @@ public class RunningSimulationsView extends BasicView implements View {
 		initButtonToMainMenu();
 		initSelectSimulatorCombo();
 		initLayout();
-		initGoogleMaps();
 		setClickListeners();
 		initPageRefresher();
 		initPrimaryFlightDisplay();
 		initControlYoke();
+		initGoogleMaps();
 		initGraphs();
 
 	}
 
 	private void initGraphs() {
-		JsHighChart chart = new JsHighChart();
-		chart.setId("myJSComponent");
-		mainSimulationLayout.addComponent(chart);
+		altitudeChart = new JsHighChartAltitude(this, ALTITUDE_CHART_ID);
+		altitudeChart.setId(ALTITUDE_CHART_ID);
+		speedChart = new JsHighChartSpeed(this, "Speed", "Knots",
+				SPEED_CHART_ID);
+		speedChart.setId(SPEED_CHART_ID);
+		graphsLayout.addComponent(altitudeChart);
+		graphsLayout.addComponent(speedChart);
 	}
 
 	private void initControlYoke() {
@@ -116,8 +124,9 @@ public class RunningSimulationsView extends BasicView implements View {
 		} else {
 			System.out.println("going to call google map constructor");
 			googleMap = new FlightPathGoogleMap(
-					new LatLon(60.440963, 22.25122), 4.0, API_KEY, this);
-			mainSimulationLayout.addComponent(googleMap);
+					new LatLon(60.440963, 22.25122), 4.0,
+					ApplicationConfiguration.getGoogleMapApiKey(), this);
+			avionycsLayout.addComponent(googleMap);
 		}
 	}
 
@@ -163,6 +172,7 @@ public class RunningSimulationsView extends BasicView implements View {
 		topSimulationLayout.addComponent(selectSimulator);
 		topSimulationLayout.addComponent(errorLabel);
 		mainSimulationLayout.addComponent(avionycsLayout);
+		mainSimulationLayout.addComponent(graphsLayout);
 		topSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 		mainSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 	}
@@ -185,10 +195,11 @@ public class RunningSimulationsView extends BasicView implements View {
 				.getSimulationDevStateItemBySimulatorId(simulatorId);
 		setFlightControlsInfo(selectedDevicesState, selectedSimulator);
 		// Set PFD info
-		Item selectedPFD = SimulatorsStatus
+		SimulationPFDItem selectedPFD = SimulatorsStatus
 				.getSimulationPFDItemBySimulatorId(simulatorId);
 		setPrimaryFlightDisplayInfo(selectedPFD);
-
+		altitudeChart.addNewPoint(simulatorId, selectedPFD);
+		speedChart.addNewPoint(simulatorId, selectedPFD);
 	}
 
 	private void setFlightControlsInfo(Item selectedDevicesState,
@@ -226,17 +237,15 @@ public class RunningSimulationsView extends BasicView implements View {
 	public void setSimulatorNotSelectedState() {
 		getErrorLabel().setValue(NO_SIMULATOR_SELECTED);
 		mainSimulationLayout.setVisible(false);
-		// simulatorInfoLabel.setVisible(false);
-		// simulatorInfoLayout.setVisible(false);
 	}
 
 	public void setNoSimulationsRunningState(Item selectedSimulator) {
 		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS);
 		mainSimulationLayout.setVisible(false);
-		// simulatorInfoLabel.setVisible(true);
-		// simulatorInfoLayout.setVisible(true);
-		// simulatorInfo.setItemDataSource(selectedSimulator);
-		// simulatorInfo.setReadOnly(true);
+	}
+
+	public void resetUI() {
+		googleMap.clearMap();
 	}
 
 }

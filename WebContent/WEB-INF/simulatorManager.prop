@@ -6,4 +6,4 @@ simulator_get_data_frequency_ms=300
 user_interface_refresh_frequency_ms=300
 write_to_database_frequency_ms=1000
 write_position_to_database_frequency_ms=10000
-update_airplane_position_frequency_ms=2000
+update_airplane_position_frequency_ms=3000

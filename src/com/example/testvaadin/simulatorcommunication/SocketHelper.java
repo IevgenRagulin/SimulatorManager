@@ -139,6 +139,18 @@ public class SocketHelper {
 		return intValue == 0;
 	}
 
+	private static Double metersPerSecondToKts(Double metersPerSecond) {
+		return metersPerSecond * 1.94;
+	}
+
+	private static Double metersToFeet(Double meters) {
+		return meters * 3.2808;
+	}
+
+	private static Double metersPerSecondToFeetPerMin(Double metersPerSecond) {
+		return metersPerSecond * 196.850;
+	}
+
 	private static AllSimulationInfo parseSimulatorResponse(String response) {
 		AllSimulationInfo simData = null;
 		String value = null;
@@ -174,23 +186,23 @@ public class SocketHelper {
 
 			// Altitude corrected
 			value = getValueOf(":ALT:", response);
-			simData.setAltitude_corrected(stringToDouble(value));
+			simData.setAltitude_corrected(metersToFeet(stringToDouble(value)));
 
 			// Altitude standard
 			value = getValueOf(":ALTS:", response);
-			simData.setAltitude_standard(stringToDouble(value));
+			simData.setAltitude_standard(metersToFeet(stringToDouble(value)));
 
 			// Ground altitude
 			value = getValueOf(":GAL:", response);
-			simData.setGroundAltitude(stringToDouble(value));
+			simData.setGroundAltitude(metersToFeet(stringToDouble(value)));
 
 			// IAS
 			value = getValueOf(":IAS:", response);
-			simData.setIAS(stringToDouble(value));
+			simData.setIAS(metersPerSecondToKts(stringToDouble(value)));
 
 			// TAS
 			value = getValueOf(":TAS:", response);
-			simData.setTAS(stringToDouble(value));
+			simData.setTAS(metersPerSecondToKts(stringToDouble(value)));
 
 			// PWR
 			value = getValueOf(":PWR:", response);
@@ -206,7 +218,7 @@ public class SocketHelper {
 
 			// VS
 			value = getValueOf(":VS_:", response);
-			simData.setVS(stringToDouble(value));
+			simData.setVS(metersPerSecondToFeetPerMin(stringToDouble(value)));
 
 			// fflow
 			value = getValueOf(":FFL:", response);

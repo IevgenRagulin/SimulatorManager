@@ -193,7 +193,7 @@ public class DatabaseHelper implements Serializable {
 		FreeformQuery query = new FreeformQuery(
 				"SELECT * FROM SimulationPFDInfo WHERE Simulation_SimulationId=(SELECT SimulationId FROM simulation WHERE Simulator_SimulatorId="
 						+ simulatorId
-						+ "AND IsSimulationOn=true ORDER BY SimulationStartedTime DESC LIMIT 1) ORDER BY \"timestamp\" DESC LIMIT 1",
+						+ "AND IsSimulationOn=true ORDER BY timestamp DESC LIMIT 1) ORDER BY \"timestamp\" DESC LIMIT 1",
 				Arrays.asList("PFDInfoId"), pool);
 		SQLContainer simulationPFD = null;
 		try {
@@ -202,6 +202,27 @@ public class DatabaseHelper implements Serializable {
 			e.printStackTrace();
 		}
 		return getLatestItemFromContainer(simulationPFD);
+	}
+
+	/*
+	 * Gets all simulation pfd info for latest simulation.
+	 */
+	public SQLContainer getAllPFDInfoBySimulatorId(String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery("SELECT * "
+				+ "FROM SimulationPfdInfo si1 "
+				+ "WHERE Simulation_SimulationId = (SELECT SimulationId "
+				+ "FROM simulation " + "WHERE Simulator_SimulatorId = "
+				+ simulatorId + " AND IsSimulationOn = true "
+				+ "ORDER BY timestamp DESC LIMIT 1) "
+				+ "ORDER BY timestamp ASC; ", Arrays.asList("pfdinfoid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationInfo;
 	}
 
 	/*
@@ -218,9 +239,8 @@ public class DatabaseHelper implements Serializable {
 				+ "WHERE Simulation_SimulationId = (SELECT SimulationId "
 				+ "FROM simulation " + "WHERE Simulator_SimulatorId = "
 				+ simulatorId + " AND IsSimulationOn = true "
-				+ "ORDER BY SimulationStartedTime DESC LIMIT 1) "
-				+ "AND NOT EXISTS " + "(SELECT si2.SimulationInfoId "
-				+ "FROM SimulationInfo si2 "
+				+ "ORDER BY timestamp DESC LIMIT 1) " + "AND NOT EXISTS "
+				+ "(SELECT si2.SimulationInfoId " + "FROM SimulationInfo si2 "
 				+ "WHERE si1.Longtitude = si2.Longtitude "
 				+ "AND si1.Latitude = si2.Latitude "
 				+ "AND si1.SimulationInfoId = (si2.SimulationInfoId - 1 )) "

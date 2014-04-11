@@ -17,7 +17,7 @@ public class SimulationStatusProviderSimpleImpl implements
 
 	// If the simulator has the same position maxSimilarPositions times, we
 	// consider the simulator is not running
-	private static int maxSimilarPositions = 1000;
+	private static int maxSimilarPositions = 10;
 
 	@Override
 	public boolean isSimulatorRunning(AllSimulationInfo dataFromSimulation,
@@ -83,6 +83,8 @@ public class SimulationStatusProviderSimpleImpl implements
 			currentNumbOfRespWithSimilarPosition = 0;
 		}
 		currentNumbOfRespWithSimilarPosition++;
+		System.out.println("number of resp with sim position"
+				+ currentNumbOfRespWithSimilarPosition);
 		simulatorIdNumberOfRespWithSimilarData.put(simulatorId,
 				currentNumbOfRespWithSimilarPosition);
 	}

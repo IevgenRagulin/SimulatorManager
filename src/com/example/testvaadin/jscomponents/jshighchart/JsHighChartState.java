@@ -7,4 +7,6 @@ public class JsHighChartState extends JavaScriptComponentState {
 	public String data;
 	public String title;
 	public String units;
+	public String cssid;
+	public int n;// new point value
 }

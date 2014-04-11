@@ -9,6 +9,7 @@ import com.example.testvaadin.views.RunningSimulationsView;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.ComboBox;
 
 public class SelectSimulatorCombo extends ComboBox {
@@ -58,20 +59,37 @@ public class SelectSimulatorCombo extends ComboBox {
 	 * Based on selected simulator, updates the UI.
 	 */
 	public void handleValueChangeEvent() {
-		// unscheduleUpdates();
+		runningSims.resetUI();
+		updateUI();
+	}
+
+	/* Based on previous simulator selection, updates the UI */
+	public void handleUpdatingValues() {
+		System.out.println("updating ui");
+		updateUI();
+	}
+
+	private boolean isLastSimInDbRunning(Property<?> simulatorId) {
+		final SQLContainer latestSimulationCont = runningSims
+				.getDBHelp()
+				.getLatestSimulationContainer(simulatorId.getValue().toString());
+		Item lastSimDb = runningSims.getDBHelp().getLatestItemFromContainer(
+				latestSimulationCont);
+		Boolean isLastSimInDbOn = (Boolean) lastSimDb.getItemProperty(
+				ColumnNames.getIssimulationon()).getValue();
+		return (isLastSimInDbOn != null) && (isLastSimInDbOn);
+	}
+
+	private void updateUI() {
 		String value = (String) SelectSimulatorCombo.this.getValue();
 		RowId rowId = simulatorsIdNamesMapping.get(value);
 		Item selectedSimulator = runningSims.getDBHelp()
 				.getNewSimulatorContainer().getItem(rowId);
 		Property<?> simulatorId = runningSims.getSimulatorIdByRowId(rowId);
-
 		// If simulator is selected
 		if (selectedSimulator != null) {
-			final Item latestRunningSimulation = runningSims.getDBHelp()
-					.getLatestRunningSimulationOnSimulatorWithId(
-							simulatorId.getValue().toString());
 			// If there are no running simulations on simulator
-			if (latestRunningSimulation == null) {
+			if (!isLastSimInDbRunning(simulatorId)) {
 				runningSims.setNoSimulationsRunningState(selectedSimulator);
 			} else {
 				runningSims.setAllSimulationSimulatorData(selectedSimulator);
