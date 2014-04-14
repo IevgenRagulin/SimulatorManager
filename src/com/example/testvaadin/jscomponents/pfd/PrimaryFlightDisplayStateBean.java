@@ -1,6 +1,10 @@
 package com.example.testvaadin.jscomponents.pfd;
 
-public class PrimaryFlightDisplayStateBean {
+import java.io.Serializable;
+
+public class PrimaryFlightDisplayStateBean implements Serializable {
+	private static final long serialVersionUID = 570874937764548937L;
+
 	private int a;// altitude
 	private int s;// speed
 	private int r;// roll

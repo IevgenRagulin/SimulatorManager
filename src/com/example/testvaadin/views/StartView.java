@@ -80,7 +80,7 @@ public class StartView extends VerticalLayout implements View {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				navigator.navigateTo(NavigatorUI.RUNNINGSIMULATIONS);
+				navigator.navigateTo(NavigatorUI.VIEWINGSIMULATIONS);
 			}
 		});
 	}

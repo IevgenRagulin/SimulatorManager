@@ -5,14 +5,13 @@ var altitudeCssId;
 var titleAlt = "Altitude";
 
 com_example_testvaadin_jscomponents_jshighchart_JsHighChartAltitude = function() 
- {
-     
-     window.altitudeCssId = this.getState().cssid;
+ { 
+    window.altitudeCssId = this.getState().cssid;
+	window.dataaaAltitude = $.parseJSON(this.getState().data);
+	$(document).ready(readDataAndDrawAltitude(window.altitudeCssId));
+
     this.onStateChange = function() 
     {
-    	if (!this.getState().data) {
-  
-    	} 
     	if (window.dataaaAltitude.length==0) {
     		window.dataaaAltitude = $.parseJSON(this.getState().data);
     		$(document).ready(readDataAndDrawAltitude(window.altitudeCssId));

@@ -39,7 +39,7 @@ public class SimulationsUpdater {
 		}
 	};
 	static {
-		System.out.println("GOING TO SCHEDULE AT FIXED RATE");
+		// System.out.println("GOING TO SCHEDULE AT FIXED RATE");
 		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS,
 				TimeUnit.MILLISECONDS);
 	}

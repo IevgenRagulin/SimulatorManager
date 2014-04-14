@@ -3,6 +3,7 @@ package com.example.testvaadin.data;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collection;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.RowId;
@@ -84,6 +85,9 @@ public class DatabaseHelper implements Serializable {
 		return latestItem;
 	}
 
+	/*
+	 * Gets LATEST simulation devices state item by simulator id
+	 */
 	public Item getSimulationDevicesStateBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
@@ -104,6 +108,10 @@ public class DatabaseHelper implements Serializable {
 		initConnectionPool();
 	}
 
+	/*
+	 * If simulator container has been created before, returns it. If it hasn't
+	 * been created before, creates it, returns it.
+	 */
 	public SQLContainer getSimulatorContainer() {
 		if (simulatorContainer == null) {
 			TableQuery tq = new TableQuery("simulator", pool);
@@ -117,6 +125,9 @@ public class DatabaseHelper implements Serializable {
 		return simulatorContainer;
 	}
 
+	/*
+	 * Creates simulator SQLcontainer, returns it
+	 */
 	public SQLContainer getNewSimulatorContainer() {
 		SQLContainer newSimulatorContainer = null;
 		TableQuery tq = new TableQuery("simulator", pool);
@@ -129,6 +140,9 @@ public class DatabaseHelper implements Serializable {
 		return newSimulatorContainer;
 	}
 
+	/*
+	 * Returns simulation SQLcontainer
+	 */
 	public SQLContainer getSimulationContainer() {
 		TableQuery tq = new TableQuery("simulation", pool);
 		tq.setVersionColumn("Timestamp");
@@ -141,6 +155,27 @@ public class DatabaseHelper implements Serializable {
 		return simulationContainer;
 	}
 
+	/*
+	 * Returns SQLContainer with all simulations for simulator with id
+	 */
+	public SQLContainer getSimulationContainerOnSimulatorWithId(
+			String simulatorId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM simulation where simulator_simulatorid="
+						+ simulatorId + " ORDER BY timestamp",
+				Arrays.asList("simulationid"), pool);
+		SQLContainer simulationPFD = null;
+		query.setDelegate(new FreeFormQueryDelegateSimulationsImpl(simulatorId));
+		try {
+			simulationPFD = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationPFD;
+	}
+
+	/* Returns simulation info SQLContainer */
 	public SQLContainer getSimulationInfoContainer() {
 		TableQuery tq = new TableQuery("simulationinfo", pool);
 		tq.setVersionColumn("timestamp");
@@ -153,6 +188,7 @@ public class DatabaseHelper implements Serializable {
 		return simulationDevicesStateContainer;
 	}
 
+	/* Returns simulation devices state SQLContainer */
 	public SQLContainer getSimulationDevicesStateContainer() {
 		TableQuery tq = new TableQuery("simulationdevicesstate", pool);
 		tq.setVersionColumn("timestamp");
@@ -274,4 +310,44 @@ public class DatabaseHelper implements Serializable {
 		return getLatestItemFromContainer(simulationInfo);
 	}
 
+	/*
+	 * Checks if the last simulation on simulator with simulatorId running
+	 * according to database
+	 */
+	public boolean isLastSimInDbRunning(String simulatorId) {
+		final SQLContainer latestSimulationCont = this
+				.getLatestSimulationContainer(simulatorId);
+		Item lastSimDb = this.getLatestItemFromContainer(latestSimulationCont);
+		Boolean isLastSimInDbOn = (Boolean) lastSimDb.getItemProperty(
+				ColumnNames.getIssimulationon()).getValue();
+		return (isLastSimInDbOn != null) && (isLastSimInDbOn);
+	}
+
+	/*
+	 * 
+	 */
+	public Item getSimulatorItemBySimulationId(RowId simulationId) {
+		return null;
+	}
+
+	/*
+	 * Get Simulator item by simulatorId
+	 */
+	public Item getSimulatorItemBySimulatorId(String simulatorId) {
+		SQLContainer simulatorContainer = getNewSimulatorContainer();
+		Collection<?> itemIds = simulatorContainer.getItemIds();
+		Item simulatorItem = null;
+		for (Object itemId : itemIds) {
+			String itemSimulatorId = ((RowId) itemId).getId()[0].toString();
+			if (itemSimulatorId.equals(simulatorId)) {
+				simulatorItem = (Item) simulatorContainer.getItem(itemId);
+			}
+		}
+		if (simulatorItem == null) {
+			throw new IllegalArgumentException(
+					"There is no simulator with such simulator id in database: "
+							+ simulatorId);
+		}
+		return simulatorItem;
+	}
 }

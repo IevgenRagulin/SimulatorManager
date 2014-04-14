@@ -64,7 +64,11 @@ public class FlightPathGoogleMap extends GoogleMap {
 		latestCoordinatesWindow.setWidth("100px");
 	}
 
-	private void initMapWithDataForSimulationWithId(String simulatorId) {
+	/*
+	 * Initializes map with latest simulation info for simulator with id
+	 * simulatorId. Modifies marker position
+	 */
+	private void initMapWithDataForSimulatorWithId(String simulatorId) {
 		SQLContainer simulationInfoData = view.getDBHelp()
 				.getAllSimulationInfoBySimulatorId(simulatorId);
 		Double trueCourse = SimulatorsStatus
@@ -142,7 +146,7 @@ public class FlightPathGoogleMap extends GoogleMap {
 				.getUpdateAirplanePositionFrequency()
 				/ ApplicationConfiguration.getRefreshUiFrequency());
 		if (!isMapInitializedWithMapHistory) {
-			initMapWithDataForSimulationWithId(simulatorId);
+			initMapWithDataForSimulatorWithId(simulatorId);
 			isMapInitializedWithMapHistory = true;
 		}
 		if (shouldWeAddMarkerOnMap()) {

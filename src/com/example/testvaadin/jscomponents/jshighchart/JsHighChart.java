@@ -25,6 +25,10 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 		stateBean = new JsHighChartStateBean(cssid);
 	}
 
+	public void resetChart() {
+		isChartInitializedWithMapHistory = false;
+	}
+
 	public void addNewPoint(String simulatorId, int newValue) {
 		if (!isChartInitializedWithMapHistory) {
 			System.out.println("INIT DATA");

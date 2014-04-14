@@ -5,7 +5,10 @@ var speedCssId;
 var titleSpeed = "Indicated airspeed";
 com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function() 
  {
-     window.speedCssId = this.getState().cssid;
+    window.speedCssId = this.getState().cssid;
+	window.dataaaSpeed = $.parseJSON(this.getState().data);
+	$(document).ready(readDataAndDrawSpeed(window.speedCssId));
+	
     this.onStateChange = function() 
     {
     	if (window.dataaaSpeed.length==0) {

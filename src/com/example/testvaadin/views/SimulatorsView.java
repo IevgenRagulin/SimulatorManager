@@ -2,7 +2,7 @@ package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SimulatorForm;
-import com.example.testvaadin.components.SimulatorList;
+import com.example.testvaadin.components.SimulatorListSimulatorsView;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
@@ -26,7 +26,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	// }
 
-	private SimulatorList simulatorList;
+	private SimulatorListSimulatorsView simulatorList;
 	private DatabaseHelper dbHelp = new DatabaseHelper();
 
 	private FormLayout editorLayout = new FormLayout();
@@ -48,7 +48,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 		return simulatorForm;
 	}
 
-	public SimulatorList getSimulatorList() {
+	public SimulatorListSimulatorsView getSimulatorList() {
 		return simulatorList;
 	}
 
@@ -62,11 +62,10 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 		initLayout();
 		initEditor();
 		addClickListeners();
-
 	}
 
 	private void initSimulatorList() {
-		simulatorList = new SimulatorList(this);
+		simulatorList = new SimulatorListSimulatorsView(this);
 	}
 
 	private void initLayout() {
