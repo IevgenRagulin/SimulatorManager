@@ -127,11 +127,11 @@ public class DatabaseUpdater {
 				ColumnNames.getAileron()).setValue(simDevStBean.getEleron());
 		simDevStCont
 				.getContainerProperty(newSimDvStId, ColumnNames.getRudder())
-				.setValue(simDevStBean.getRudder().intValue());
+				.setValue(simDevStBean.getRudder());
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getThrottle()).setValue(simDevStBean.getThrottle());
 		simDevStCont.getContainerProperty(newSimDvStId, ColumnNames.getFlaps())
-				.setValue(simDevStBean.getFlaps().intValue());
+				.setValue(simDevStBean.getFlaps());
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getSpeedbrakes()).setValue(
 				simDevStBean.getSpeedbrakes());

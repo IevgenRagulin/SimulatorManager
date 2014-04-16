@@ -11,13 +11,15 @@ com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function()
 	
     this.onStateChange = function() 
     {
-    	if (window.dataaaSpeed.length==0) {
-    		window.dataaaSpeed = $.parseJSON(this.getState().data);
-    		$(document).ready(readDataAndDrawSpeed(window.speedCssId));
-    	}
     	var newPoint = this.getState().n;
-    	var x = (new Date()).getTime();// current time. TODO: Instead of generating time here, pass it from server
-    	window.seriesSpeed.addPoint([x,newPoint], true, false);
+    	if (newPoint != -100) {//-100 means that newPoint variable was not initialized
+			var x = (new Date()).getTime();// current time. TODO: Instead of
+											// generating time here, pass it from
+											// server
+			window.seriesSpeed.addPoint([ x, newPoint ], true, false);
+		} else {
+			window.seriesAltitude.show();
+		}
     };
     
     function readDataAndDrawSpeed(cssid)
@@ -70,7 +72,9 @@ com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function()
 				data : window.dataaaSpeed,
 				tooltip: {
 					valueDecimals: 2
-				}
+				},
+				animation: false,
+				turboThreshold: 0//if we don't set it, graph stops working when there are more then 1000 points
 			}]
 		});
     }

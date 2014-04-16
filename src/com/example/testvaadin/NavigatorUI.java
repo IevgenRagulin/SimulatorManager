@@ -6,6 +6,7 @@ import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.views.ChooseSimulationView;
 import com.example.testvaadin.views.ControlSimulationsView;
 import com.example.testvaadin.views.DatabaseManagementView;
+import com.example.testvaadin.views.PastSimulationsView;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.example.testvaadin.views.SimulatorsView;
 import com.example.testvaadin.views.StartView;
@@ -29,6 +30,7 @@ public class NavigatorUI extends UI {
 	public static final String MANAGESIMULATORS = "Manage simulators";
 	public static final String VIEWINGSIMULATIONS = "Viewing simulations";
 	public static final String RUNNINGSIMULATIONS = "Running simulations";
+	public static final String PASTSIMULATIONS = "Past simulations";
 	public static final String CONTROLSIMULATIONS = "Control simulations";
 	public static final String DATABASE_MANAGEMENT = "Manage database";
 	protected static RunningSimulationsView runningSimulationsView;
@@ -54,6 +56,8 @@ public class NavigatorUI extends UI {
 		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(
 				this.navigator));
 		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(
+				this.navigator));
+		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(
 				this.navigator));
 		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(
 				this.navigator));

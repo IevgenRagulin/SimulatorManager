@@ -48,8 +48,8 @@ CREATE TABLE simulation
   Simulator_SimulatorId integer NOT NULL,
   IsSimulationOn boolean,
   IsSimulationPaused boolean,
-  SimulationStartedTime time without time zone,
-  SimulationEndedTime time without time zone,
+  SimulationStartedTime timestamp without time zone,
+  SimulationEndedTime timestamp without time zone,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulation_pkey PRIMARY KEY (SimulationId),
   CONSTRAINT simulation_Simulator_SimulatorId_fkey FOREIGN KEY (Simulator_SimulatorId)

@@ -6,7 +6,7 @@ import java.util.Collection;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.simulatorcommunication.SimulatorsStatus;
-import com.example.testvaadin.views.RunningSimulationsView;
+import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
@@ -39,10 +39,10 @@ public class FlightPathGoogleMap extends GoogleMap {
 	// should add new coord on the map
 	private static int addedCount = 0;
 
-	private RunningSimulationsView view = null;
+	private SimulationsView view = null;
 
 	public FlightPathGoogleMap(LatLon center, double zoom,
-			String apiKeyOrClientId, RunningSimulationsView view) {
+			String apiKeyOrClientId, SimulationsView view) {
 		super(center, zoom, apiKeyOrClientId);
 		this.view = view;
 		setMapConfiguration();

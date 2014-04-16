@@ -8,5 +8,10 @@ public class JsHighChartState extends JavaScriptComponentState {
 	public String title;
 	public String units;
 	public String cssid;
-	public int n;// new point value
+	// new point value. -100 means not initialized
+	public int n = -100;
+	// clickedID. Id of the primary flight display in
+	// database corresponding to point on graph where
+	// user has clicked
+	public int clId = -100;
 }

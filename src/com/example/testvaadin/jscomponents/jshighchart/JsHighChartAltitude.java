@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.items.SimulationPFDItem;
-import com.example.testvaadin.views.RunningSimulationsView;
+import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
@@ -12,7 +12,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class JsHighChartAltitude extends JsHighChart {
 	private static final long serialVersionUID = 8808324160034287613L;
 
-	public JsHighChartAltitude(RunningSimulationsView view, String cssid) {
+	public JsHighChartAltitude(SimulationsView view, String cssid) {
 		super(view, cssid);
 	}
 
@@ -20,7 +20,7 @@ public class JsHighChartAltitude extends JsHighChart {
 	public void initChartWithDataForSimulatorWithId(String simulatorId,
 			int newAltitude) {
 		SQLContainer simulationPfdData = view.getDBHelp()
-				.getAllPFDInfoBySimulatorId(simulatorId);
+				.getLatestPFDInfoBySimulatorId(simulatorId);
 		if (simulationPfdData.size() > 0) {
 			addOldDataToChart(simulationPfdData, ColumnNames.getAltitude());
 		} else {
@@ -35,6 +35,13 @@ public class JsHighChartAltitude extends JsHighChart {
 			SimulationPFDItem simulationPfdItem) {
 		int newAltitude = simulationPfdItem.getBean().getAltitude().intValue();
 		super.addNewPoint(simulatorId, newAltitude);
+	}
+
+	@Override
+	public void initChartWithDataForSimulationWithId(String simulationId) {
+		SQLContainer simulationPfdData = view.getDBHelp()
+				.getPFDInfoBySimulationId(simulationId);
+		addOldDataToChart(simulationPfdData, ColumnNames.getAltitude());
 	}
 
 }

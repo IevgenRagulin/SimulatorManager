@@ -45,8 +45,8 @@ CREATE TABLE simulation
   simulator_simulatorid integer NOT NULL,
   issimulationon boolean,
   issimulationpaused boolean,
-  simulationstartedtime time without time zone,
-  simulationendedtime time without time zone,
+  simulationstartedtime timestamp without time zone,
+  simulationendedtime timestamp without time zone,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulation_pkey PRIMARY KEY (simulationid)
 )
@@ -77,9 +77,9 @@ CREATE TABLE simulationdevicesstate
   simulation_simulationid integer NOT NULL,
   elevator double precision,
   eleron double precision,
-  rudder integer,
+  rudder double precision,
   throttle double precision,
-  flaps integer,
+  flaps double precision,
   speedbrakes double precision,
   elevatortrim double precision,
   ailerontrim double precision,

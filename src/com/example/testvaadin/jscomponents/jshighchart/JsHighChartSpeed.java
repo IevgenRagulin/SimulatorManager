@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.items.SimulationPFDItem;
-import com.example.testvaadin.views.RunningSimulationsView;
+import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
@@ -12,8 +12,8 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 public class JsHighChartSpeed extends JsHighChart {
 	private static final long serialVersionUID = -5499980900026438314L;
 
-	public JsHighChartSpeed(RunningSimulationsView view, String title,
-			String units, String cssid) {
+	public JsHighChartSpeed(SimulationsView view, String title, String units,
+			String cssid) {
 		super(view, cssid);
 	}
 
@@ -21,7 +21,7 @@ public class JsHighChartSpeed extends JsHighChart {
 	public void initChartWithDataForSimulatorWithId(String simulatorId,
 			int newSpeed) {
 		SQLContainer simulationPfdData = view.getDBHelp()
-				.getAllPFDInfoBySimulatorId(simulatorId);
+				.getLatestPFDInfoBySimulatorId(simulatorId);
 		if (simulationPfdData.size() > 0) {
 			addOldDataToChart(simulationPfdData, ColumnNames.getIas());
 		} else {
@@ -34,5 +34,12 @@ public class JsHighChartSpeed extends JsHighChart {
 			SimulationPFDItem simulationPfdItem) {
 		int newSpeed = simulationPfdItem.getBean().getIas().intValue();
 		super.addNewPoint(simulatorId, newSpeed);
+	}
+
+	@Override
+	public void initChartWithDataForSimulationWithId(String simulationId) {
+		SQLContainer simulationPfdData = view.getDBHelp()
+				.getPFDInfoBySimulationId(simulationId);
+		addOldDataToChart(simulationPfdData, ColumnNames.getIas());
 	}
 }

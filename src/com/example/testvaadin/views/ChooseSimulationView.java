@@ -3,7 +3,9 @@ package com.example.testvaadin.views;
 import com.example.testvaadin.NavigatorUI;
 import com.example.testvaadin.components.SimulationList;
 import com.example.testvaadin.components.SimulatorListChooseSimulationView;
+import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
+import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -49,7 +51,6 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					System.out.println("GOING TO DELETE THIS SIMULATION");
 					simulationList.removeSimulation();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -58,13 +59,25 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 		});
 
 		viewSimButton.addClickListener(new Button.ClickListener() {
+			private static final long serialVersionUID = 2273135571079398635L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				navigator.navigateTo(NavigatorUI.RUNNINGSIMULATIONS + "/"
-						+ getSimulatorList().getValue());
+				if (isSelectedSimulationRunning()) {
+					navigator.navigateTo(NavigatorUI.RUNNINGSIMULATIONS + "/"
+							+ getSimulatorList().getValue());
+				} else {
+					navigator.navigateTo(NavigatorUI.PASTSIMULATIONS + "/"
+							+ getSimulationList().getValue());
+				}
 			}
 		});
+	}
+
+	private boolean isSelectedSimulationRunning() {
+		Item item = getSimulationList().getItem(getSimulationList().getValue());
+		return (Boolean) item.getItemProperty(ColumnNames.getIssimulationon())
+				.getValue();
 	}
 
 	private void initLayout() {

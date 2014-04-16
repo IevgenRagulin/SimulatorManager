@@ -241,9 +241,27 @@ public class DatabaseHelper implements Serializable {
 	}
 
 	/*
+	 * Gets all simulation pfd info for simulation with id.
+	 */
+	public SQLContainer getPFDInfoBySimulationId(String simulationId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery("SELECT * "
+				+ "FROM SimulationPfdInfo "
+				+ "WHERE Simulation_SimulationId = " + simulationId
+				+ "ORDER BY timestamp ASC; ", Arrays.asList("pfdinfoid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationInfo;
+	}
+
+	/*
 	 * Gets all simulation pfd info for latest simulation.
 	 */
-	public SQLContainer getAllPFDInfoBySimulatorId(String simulatorId) {
+	public SQLContainer getLatestPFDInfoBySimulatorId(String simulatorId) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery("SELECT * "
 				+ "FROM SimulationPfdInfo si1 "
@@ -349,5 +367,59 @@ public class DatabaseHelper implements Serializable {
 							+ simulatorId);
 		}
 		return simulatorItem;
+	}
+
+	/*
+	 * Gets pfd info item by pfdinfoid
+	 */
+	public Item getPFDInfoByPfdInfoId(int pfdInfoId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery("SELECT * "
+				+ "FROM SimulationPfdInfo " + "WHERE pfdinfoid = " + pfdInfoId,
+				Arrays.asList("pfdinfoid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getLatestItemFromContainer(simulationInfo);
+	}
+
+	/*
+	 * Gets simulation dev state item info item by pfdinfoid
+	 */
+	public Item getSimulationDevStateInfoByPfdInfoId(int pfdInfoId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM simulationdevicesstate " + "WHERE devstateid = "
+						+ pfdInfoId, Arrays.asList("devstateid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getLatestItemFromContainer(simulationInfo);
+	}
+
+	/*
+	 * Gets simulator item by pfdinfoid
+	 */
+	public Item getSimulatorInfoByPfdInfoId(int pfdInfoId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * FROM simulator "
+						+ "WHERE simulatorid = (SELECT simulator_simulatorid FROM simulation "
+						+ "WHERE simulationid = (SELECT simulation_simulationid FROM "
+						+ "simulationpfdinfo WHERE " + "pfdinfoid = "
+						+ pfdInfoId + "));", Arrays.asList("simulatorid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getLatestItemFromContainer(simulationInfo);
 	}
 }
