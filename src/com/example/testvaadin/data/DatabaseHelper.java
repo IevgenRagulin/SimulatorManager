@@ -310,6 +310,24 @@ public class DatabaseHelper implements Serializable {
 	}
 
 	/*
+	 * Gets all simulation info for simulation with id.
+	 */
+	public SQLContainer getAllSimulationInfoBySimulationId(String simulationId) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery("SELECT * "
+				+ "FROM SimulationInfo " + "WHERE Simulation_SimulationId = "
+				+ simulationId + "ORDER BY \"timestamp\" ASC; ",
+				Arrays.asList("simulationinfoid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationInfo;
+	}
+
+	/*
 	 * Gets latest simulation info record for latest simulation.
 	 */
 	public Item getLatestSimulationInfoBySimulatorId(String simulatorId) {
@@ -339,13 +357,6 @@ public class DatabaseHelper implements Serializable {
 		Boolean isLastSimInDbOn = (Boolean) lastSimDb.getItemProperty(
 				ColumnNames.getIssimulationon()).getValue();
 		return (isLastSimInDbOn != null) && (isLastSimInDbOn);
-	}
-
-	/*
-	 * 
-	 */
-	public Item getSimulatorItemBySimulationId(RowId simulationId) {
-		return null;
 	}
 
 	/*
@@ -414,6 +425,33 @@ public class DatabaseHelper implements Serializable {
 						+ "WHERE simulationid = (SELECT simulation_simulationid FROM "
 						+ "simulationpfdinfo WHERE " + "pfdinfoid = "
 						+ pfdInfoId + "));", Arrays.asList("simulatorid"), pool);
+		SQLContainer simulationInfo = null;
+		try {
+			simulationInfo = new SQLContainer(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return getLatestItemFromContainer(simulationInfo);
+	}
+
+	/*
+	 * Gets simulation info item which corresponds to pfdidinfoid, and whose
+	 * timestamp is the closest to timestamp
+	 */
+	public Item getSimulationInfoItemByPfdInfoIdTimestemp(int pfdInfoId,
+			long timestamp) {
+		@SuppressWarnings("deprecation")
+		FreeformQuery query = new FreeformQuery(
+				"SELECT * "
+						+ "FROM simulationinfo "
+						+ "WHERE simulation_simulationid=(SELECT simulation_simulationid "
+						+ "FROM simulationpfdinfo "
+						+ "WHERE pfdinfoid="
+						+ pfdInfoId
+						+ ") "
+						+ "ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp("
+						+ timestamp + "/1000)::timestamp))) limit 1",
+				Arrays.asList("simulationinfoid"), pool);
 		SQLContainer simulationInfo = null;
 		try {
 			simulationInfo = new SQLContainer(query);

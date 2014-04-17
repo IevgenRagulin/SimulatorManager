@@ -1,6 +1,7 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
+	private static final String SIMULATIONINFOID = "simulationinfoid";
 	private static final String MAXSPEEDONFLAPS = "maxspeedonflaps";
 	private static final String AILERONTRIM = "ailerontrim";
 	private static final String ELEVATORTRIM = "elevatortrim";
@@ -57,7 +58,7 @@ public class ColumnNames {
 			LONGTITUDE, LATITUDE };
 
 	protected static final String[] simulationInfoCols = new String[] {
-			"simulationinfoid", SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
+			SIMULATIONINFOID, SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
 
 	protected static final String[] simulationDevicesStateBeanCols = new String[] {
 			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES,
@@ -290,6 +291,10 @@ public class ColumnNames {
 
 	public static String getElevator() {
 		return ELEVATOR;
+	}
+
+	public static String getSimulationinfoid() {
+		return SIMULATIONINFOID;
 	}
 
 }

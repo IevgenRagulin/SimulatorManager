@@ -196,7 +196,7 @@ public class SimulationsUpdater {
 			DatabaseUpdater.createNewRunningPausedSimulation(lastSimCont,
 					simulatorId);
 		} else if (isLastSimInDBOn && isLastSimInDBPaused) {
-
+			DatabaseUpdater.setSimOnPausedState(lastSimCont, lastSim);
 		} else if (isLastSimInDBOn && !(isLastSimInDBPaused)) {
 			DatabaseUpdater.setSimOnPausedState(lastSimCont, lastSim);
 		} else if (!isLastSimInDBOn && isLastSimInDBPaused) {
@@ -221,6 +221,7 @@ public class SimulationsUpdater {
 			DatabaseUpdater.setSimOnNotPausedState(lastSimCont, lastSim);
 			simulationId = (RowId) lastSimCont.getIdByIndex(0);
 		} else if (isLastSimInDBOn && !(isLastSimInDBPaused)) {
+			DatabaseUpdater.setSimOnNotPausedState(lastSimCont, lastSim);
 			simulationId = (RowId) lastSimCont.getIdByIndex(0);
 		} else if (!isLastSimInDBOn && isLastSimInDBPaused) {
 			throw new IllegalStateException(

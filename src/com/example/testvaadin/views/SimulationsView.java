@@ -2,15 +2,12 @@ package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
-import com.example.testvaadin.components.FlightPathGoogleMap;
-import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.jscomponents.flightcontrols.FlightControls;
 import com.example.testvaadin.jscomponents.jshighchart.JsHighChartAltitude;
 import com.example.testvaadin.jscomponents.jshighchart.JsHighChartSpeed;
 import com.example.testvaadin.jscomponents.pfd.PrimaryFlightDisplay;
 import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -31,8 +28,6 @@ public abstract class SimulationsView extends BasicView {
 	protected Navigator navigator;
 	protected ErrorLabel errorLabel = new ErrorLabel("");
 
-	protected FlightPathGoogleMap googleMap = null;
-
 	/* Custom javascript components */
 	protected PrimaryFlightDisplay primaryFlightDisplay;
 	protected FlightControls flightControls;
@@ -45,10 +40,6 @@ public abstract class SimulationsView extends BasicView {
 	protected JsHighChartAltitude altitudeChart;
 	protected JsHighChartSpeed speedChart;
 
-	public FlightPathGoogleMap getGoogleMap() {
-		return googleMap;
-	}
-
 	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 		return primaryFlightDisplay;
 	}
@@ -60,12 +51,11 @@ public abstract class SimulationsView extends BasicView {
 	public SimulationsView(Navigator navigator) {
 		this.navigator = navigator;
 		initButtonToMainMenu();
-		setClickListeners();
 		initPrimaryFlightDisplay();
 		initControlYoke();
-		initGoogleMaps();
 		initGraphs();
 		initLayout();
+		setClickListeners();
 	}
 
 	protected void initLayout() {
@@ -73,7 +63,6 @@ public abstract class SimulationsView extends BasicView {
 		addComponent(mainSimulationLayout);
 		avionycsLayout.addComponent(primaryFlightDisplay);
 		avionycsLayout.addComponent(flightControls);
-		avionycsLayout.addComponent(googleMap);
 		topSimulationLayout.addComponent(buttonToMainMenu);
 		topSimulationLayout.addComponent(errorLabel);
 		topSimulationLayout.setComponentAlignment(errorLabel,
@@ -111,17 +100,7 @@ public abstract class SimulationsView extends BasicView {
 		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0);
 	}
 
-	private void initGoogleMaps() {
-		System.out.println("going to init google maps" + googleMap);
-		if (googleMap != null) {
-			googleMap.clearMap();
-		} else {
-			System.out.println("going to call google map constructor");
-			googleMap = new FlightPathGoogleMap(
-					new LatLon(60.440963, 22.25122), 4.0,
-					ApplicationConfiguration.getGoogleMapApiKey(), this);
-		}
-	}
+	protected abstract void initGoogleMaps();
 
 	private void initPrimaryFlightDisplay() {
 		primaryFlightDisplay = new PrimaryFlightDisplay(1, 0, 0, 0, 0, 0, 0, 0);
@@ -145,21 +124,7 @@ public abstract class SimulationsView extends BasicView {
 		}
 	}
 
-	protected void setSimulationInfoData(Item selectedSimulationInfo,
-			String simulatorId) {
-		if (selectedSimulationInfo != null) {
-			// Add simulation info data to map
-			googleMap.addLatestCoordinatesForSimulation(selectedSimulationInfo,
-					simulatorId);
-		}
-	}
-
-	protected void resetUI() {
-		primaryFlightDisplay.resetPfd();
-		altitudeChart.resetChart();
-		speedChart.resetChart();
-		googleMap.clearMap();
-	}
+	protected abstract void resetUI();
 
 	/*
 	 * Based on selected simulator, updates the UI.

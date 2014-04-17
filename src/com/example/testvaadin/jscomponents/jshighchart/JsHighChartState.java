@@ -14,4 +14,6 @@ public class JsHighChartState extends JavaScriptComponentState {
 	// database corresponding to point on graph where
 	// user has clicked
 	public int clId = -100;
+	// timestamp. Timestamp of the point corresponding to clicked id
+	public long ts = -100;
 }

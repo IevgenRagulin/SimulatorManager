@@ -36,12 +36,14 @@ public class SimulatorListChooseSimulationView extends Table {
 				if (simulatorId != null) {
 					String simulatorIdStr = ((Integer) (((RowId) simulatorId)
 							.getId()[0])).toString();
-					System.out.println("SETTING simulator id data source"
-							+ simulatorIdStr);
-					view.getSimulationList().setContainerDataSource(
+					view.getSimulationList().setContainerDataSourceAndVisCol(
 							view.getDBHelp()
 									.getSimulationContainerOnSimulatorWithId(
 											simulatorIdStr));
+					System.out
+							.println("CHOSE SIMULATOR 2"
+									+ view.getSimulationList()
+											.getVisibleColumns().length);
 				}
 			}
 

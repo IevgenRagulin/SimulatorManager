@@ -136,6 +136,7 @@ function calculateFlightControlsAnimStep(dif, step) {
 	}
 }
 
+//Animation for setting rudder
 function setRudder() {
 	var dif = window.wantHaveRudder - window.currentRudder;
 	if (shouldWeMakeAnimationStep(dif, 0.05)) {
@@ -151,6 +152,8 @@ function setRudder() {
 	drawAilRudElev();
 }
 
+
+//Animation for setting elevator
 function setElevator() {
 	var dif = window.wantHaveElevator - window.currentElevator;
 	// check if we should continue animating
@@ -167,6 +170,7 @@ function setElevator() {
 	drawAilRudElev();
 }
 
+//Animation for setting aileron
 function setAileron() {
 	var dif = window.wantHaveAileron - window.currentAileron;
 	// check if we should continue animating
@@ -183,6 +187,7 @@ function setAileron() {
 	drawAilRudElev();
 }
 
+//Animation for setting aileron trim
 function setAileronTrim() {
 	var dif = window.wantHaveAileronTrim - window.currentAileronTrim;
 	// check if we should continue animating
@@ -205,6 +210,7 @@ function isFlightControlDataAvailable(value) {
 	return (value != -2);
 }
 
+//Animation for setting rudder trim
 function setRudderTrim() {
 	var dif = window.wantHaveRudderTrim - window.currentRudderTrim;
 	if (shouldWeMakeAnimationStep(dif, 0.05)) {
@@ -220,6 +226,7 @@ function setRudderTrim() {
 	drawAilRudElevTrim();
 }
 
+//Animation for setting elevator trim
 function setElevatorTrim() {
 	var dif = window.wantHaveElevatorTrim - window.currentElevatorTrim;
 	// check if we should continue animating
@@ -283,28 +290,27 @@ function drawAilRudElev() {
 	drawRudderInd();
 }
 
+//Draws moving circle which displays current trim rudder value
 function drawRudderIndTrim() {
 	var ctxRud = document.getElementById('controlRudderTrim').getContext('2d');
-	clearRect(ctxRud, 0, 0, window.rudderBackWidth, window.rudderBackHeight);
 	drawRudderTrim();
-	ctxRud.fillStyle = "red";
-	ctxRud.strokeStyle = "red";
-	/* Draw rudder */
-	var y = window.rudderHeight / 2 + window.yOffsetR;
-	var x = window.rudderWidth / 2 + window.currentRudderTrim
-			* (window.rudderWidth / 2) + window.xOffsetR;
-	fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
+	drawRudderRudderTrimIndHelpFunc(ctxRud, window.currentRudderTrim);
 }
 
+//Draws moving circle which displays current rudder value
 function drawRudderInd() {
 	var ctxRud = document.getElementById('controlRudderB').getContext('2d');
-	clearRect(ctxRud, 0, 0, window.rudderBackWidth, window.rudderBackHeight);
 	drawRudder();
+	drawRudderRudderTrimIndHelpFunc(ctxRud, window.currentRudder);
+}
+
+//Draws moving circle which displays current rudder, trim rudder value
+function drawRudderRudderTrimIndHelpFunc(ctxRud, currentValue) {
 	ctxRud.fillStyle = "red";
 	ctxRud.strokeStyle = "red";
 	/* Draw rudder */
 	var y = window.rudderHeight / 2 + window.yOffsetR;
-	var x = window.rudderWidth / 2 + window.currentRudder
+	var x = window.rudderWidth / 2 + currentValue
 			* (window.rudderWidth / 2) + window.xOffsetR;
 	fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
 }
@@ -359,20 +365,20 @@ function shouldMakeYokeAnimStep(dif, step) {
 	return ((dif > step) || (dif < -step));
 }
 
+//Draw yoke background
 function drawYoke() {
 	var ctx = document.getElementById('controlYokeB').getContext('2d');
-	ctx.beginPath();
-	ctx.fillStyle = "white";
-	// fill rect, clear rect, arc functions is in primaryFlightDisplay.js file
-	clearRect(ctx, 0, 0, ctx.width, ctx.height);
-	fillRect(ctx, (window.yokeWidth / 2) - 4 + window.xOffset, window.yOffset,
-			8, window.yokeHeight);
-	fillRect(ctx, window.xOffset, (window.yokeHeight / 2) - 4 + window.yOffset,
-			window.yokeWidth, 8);
+	drawYokeYokeTrimHelpFunc(ctx);
 }
 
+//Draw yoke trim background
 function drawYokeTrim() {
 	var ctx = document.getElementById('controlYokeTrim').getContext('2d');
+	drawYokeYokeTrimHelpFunc(ctx);
+}
+
+//Draw yoke, yoke trim background
+function drawYokeYokeTrimHelpFunc(ctx) {
 	ctx.beginPath();
 	ctx.fillStyle = "white";
 	// fill rect, clear rect, arc functions is in primaryFlightDisplay.js file
@@ -383,63 +389,66 @@ function drawYokeTrim() {
 			window.yokeWidth, 8);
 }
 
+//Draw rudder background
 function drawRudder() {
 	var ctx = document.getElementById('controlRudderB').getContext('2d');
-	ctx.beginPath();
-	ctx.fillStyle = "white";
-	// fill rect, clear rect, arc functions are in primaryFlightDisplay.js file
-	clearRect(ctx, 0, 0, ctx.width, ctx.height);
-	fillRect(ctx, xOffsetR, (window.rudderHeight / 2) - 4 + yOffsetR,
-			window.rudderWidth, 8);
+	drawRudderRudderTrimHelpFunc(ctx);
 }
 
+//Draw rudder trim background
 function drawRudderTrim() {
 	var ctx = document.getElementById('controlRudderTrim').getContext('2d');
+	drawRudderRudderTrimHelpFunc(ctx);
+}
+
+//Draw rudder, rudder trim background
+function drawRudderRudderTrimHelpFunc(ctx) {
+	clearRect(ctx, 0, 0, window.rudderBackWidth, window.rudderBackHeight);
 	ctx.beginPath();
 	ctx.fillStyle = "white";
 	// fill rect, clear rect, arc functions are in primaryFlightDisplay.js file
-	clearRect(ctx, 0, 0, ctx.width, ctx.height);
 	fillRect(ctx, xOffsetR, (window.rudderHeight / 2) - 4 + yOffsetR,
 			window.rudderWidth, 8);
 }
 
+//Draws bottom moving line for speed brakes
 function drawSpeedBrakesInd() {
 	var ctx = document.getElementById('speedBrakes').getContext('2d');
 	clearRect(ctx, 0, 0, window.speedBrakesWidth, window.speedBrakesHeight);
 	drawSpeedBrakes();
-	ctx.fillStyle = "black";
 	ctx.strokeStyle = "black";
-	ctx.lineWidth = 4;
 	// Transfer speed brakes value 0-1 to 0-45 degrees.
 	var speedBrakesInDeg = 45 * window.currentSpeedBrakes;
-	/* Draw speed brakes */
-	var y = window.speedBrakesWidth
-			* Math.sin((Math.PI / 180) * speedBrakesInDeg);
-	var x = window.speedBrakesWidth
-			* Math.cos((Math.PI / 180) * speedBrakesInDeg);
-	ctx.moveTo(0, 0);
-	ctx.lineTo(x, y);
-	ctx.stroke();
+	/* Draw speed brakes indicator*/
+	drawFlapsSpeedBrHelpFunction(ctx, window.speedBrakesWidth, speedBrakesInDeg);
 }
 
+//Draws bottom moving line for flaps
 function drawFlapsInd() {
 	var ctx = document.getElementById('flaps').getContext('2d');
 	clearRect(ctx, 0, 0, window.flapsWidth, window.flapsHeight);
 	drawFlaps();
 	ctx.strokeStyle = "black";
+	//Make flaps indicator red if flaps are used and speed exceeds max speed on flaps
 	if ((window.currentSpeed > window.maxSpeedOnFlaps)
 			&& (window.currentFlaps > 0.1)) {
 		ctx.strokeStyle = "red";
 	}
+	/* Draw flaps indicator*/
+	drawFlapsSpeedBrHelpFunction(ctx, window.flapsWidth, window.currentFlaps);
+}
+
+//Draws bottom moving line for flaps, speed brakes
+function drawFlapsSpeedBrHelpFunction (ctx, indicatorWidth, currentValue) {
 	ctx.lineWidth = 4;
-	/* Draw speed brakes */
-	var y = window.flapsWidth * Math.sin((Math.PI / 180) * window.currentFlaps);
-	var x = window.flapsWidth * Math.cos((Math.PI / 180) * window.currentFlaps);
+	var y = indicatorWidth * Math.sin((Math.PI / 180) * currentValue);
+	var x = indicatorWidth * Math.cos((Math.PI / 180) * currentValue);
 	ctx.moveTo(0, 0);
 	ctx.lineTo(x, y);
 	ctx.stroke();
 }
 
+//Draws top line for speed brakes
 function drawSpeedBrakes() {
 	var ctx = document.getElementById('speedBrakes').getContext('2d');
 	ctx.beginPath();
@@ -449,6 +458,7 @@ function drawSpeedBrakes() {
 	fillRect(ctx, 0, 0, window.speedBrakesWidth, 2);
 }
 
+//Draws top line for flaps
 function drawFlaps() {
 	var ctx = document.getElementById('flaps').getContext('2d');
 	ctx.beginPath();

@@ -1,6 +1,10 @@
 package com.example.testvaadin.jscomponents.jshighchart;
 
-public class JsHighChartStateBean {
+import java.io.Serializable;
+
+public class JsHighChartStateBean implements Serializable {
+	private static final long serialVersionUID = 5032000954553816757L;
+
 	private String data = new String();
 	private String cssid;
 	private int n = -100;// new point value. -100 means not initialized
@@ -8,10 +12,20 @@ public class JsHighChartStateBean {
 	// database corresponding to point on graph where
 	// user has clicked
 	private int clId = -100;
+	// timestamp. Timestamp of the point corresponding to clicked id
+	public long ts = -100;
 
 	public JsHighChartStateBean(String cssid) {
 		super();
 		this.cssid = cssid;
+	}
+
+	protected long getTimestamp() {
+		return this.ts;
+	}
+
+	protected void setTimestamp(long timestamp) {
+		this.ts = timestamp;
 	}
 
 	protected String getData() {

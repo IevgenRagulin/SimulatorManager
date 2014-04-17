@@ -3,8 +3,12 @@ var initializedSpeed = false;
 var seriesSpeed;
 var speedCssId;
 var titleSpeed = "Indicated airspeed";
+var speedCompomentObj;
 com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function() 
  {
+	//to make object accessible from outside of the function; Used to make RPC calls to the server
+	window.speedCompomentObj = this;
+	//set css id of the component
     window.speedCssId = this.getState().cssid;
 	window.dataaaSpeed = $.parseJSON(this.getState().data);
 	$(document).ready(readDataAndDrawSpeed(window.speedCssId));
@@ -17,9 +21,7 @@ com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function()
 											// generating time here, pass it from
 											// server
 			window.seriesSpeed.addPoint([ x, newPoint ], true, false);
-		} else {
-			window.seriesAltitude.show();
-		}
+		} 
     };
     
     function readDataAndDrawSpeed(cssid)
@@ -33,6 +35,12 @@ com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function()
 							window.initializedSpeed = true;
 							window.seriesSpeed = this.series[0];
 						};
+					},
+					
+					click : function(event) {
+						//Function findIdClosestToClick is in js_highchart_altitude.js file
+						var id = findIdClosestToClick(event.xAxis[0].value);
+						speedCompomentObj.onClick(id, getTimeCorrespondingToId(id));
 					}
 				}
 			},

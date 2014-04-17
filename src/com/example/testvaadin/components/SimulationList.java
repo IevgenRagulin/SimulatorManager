@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.views.ChooseSimulationView;
+import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Table;
@@ -15,11 +16,11 @@ public class SimulationList extends Table {
 	public SimulationList(final ChooseSimulationView view) {
 		this.view = view;
 		setSizeFull();
-		setContainerDataSource(view.getDBHelp().getSimulationContainer());
 		setSelectable(true);
+		setContainerDataSourceAndVisCol(view.getDBHelp()
+				.getSimulationContainer());
 		setImmediate(true);
 		setBuffered(false);
-		setVisibleColumns((Object[]) ColumnNames.getSimulationcols());
 		addValueChangeListener(new Property.ValueChangeListener() {
 			private static final long serialVersionUID = -4721755745740872033L;
 
@@ -30,6 +31,11 @@ public class SimulationList extends Table {
 			}
 
 		});
+	}
+
+	protected void setContainerDataSourceAndVisCol(Container newDataSource) {
+		setContainerDataSource(newDataSource);
+		setVisibleColumns((Object[]) ColumnNames.getSimulationcols());
 	}
 
 	@Override

@@ -118,40 +118,15 @@ function initHtml(e) {
 			+ "</canvas>"
 			+ "<canvas id='verspeed' width='40' height='340' style='position:absolute; margin-left: 350px'>"
 			+ "</canvas>" + "</div>";
-			//+ "<div style='margin-top: 50px; margin-left: 40px'>"
-			//+ "<label id='speedT'>Current speed:</label>"
-			//+ "<label id='speedV'></label><br/>"
-			//+ "<label id='altitudeT'>Current altitude:</label>"
-			//+ "<label id='altitudeV'></label><br/>"
-			//+ "<label id='rollT'>Roll:</label>"
-			//+ "<label id='rollV'></label><br/>"
-			//+ "<label id='pitchT'>Pitch:</label>"
-			//+ "<label id='pitchV'></label><br/>"
-			//+ "<label id='compassT'>Compass:</label>"
-			//+ "<label id='compassV'></label><br/>"
-			//+ "<button id='addPitch'>+10 pitch</button>"
-			//+ "<button id='minusPitch'>-10 pitch</button>"
-			//+ "<button id='addRoll'>+60 roll</button>"
-			//+ "<button id='minusRoll'>-60 roll</button>"
-			//+ "<button id='addAltitude'>+50 altitude</button>"
-			//+ "<button id='minusAltitude'>-50 altitude</button>"
-			//+ "<button id='addSpeed'>+50 speed</button>"
-			//+ "<button id='minusSpeed'>-50 speed</button>"
-			//+ "<button id='addCompass'>+180 compass</button>"
-			//+ "<button id='minusCompass'>-180 compass</button>" + "</div>";
 }
 
 
 
 
 function init() {
-	//drawBackground();
-	//drawSpeedIndicator();
-	//drawHeightIndicator();
 	drawSight();
 	drawCompassIndicator();
 	drawVerticalSpeed();
-	//setClickListeners();
 	drawBankAngleLines();
 }
 
@@ -177,15 +152,6 @@ function update() {
 		console.log("COMPASS NOT SET");
 	}
 }
-
-
-function drawBackground() {
-	var ctx = document.getElementById('pfd').getContext('2d');
-	ctx.fillStyle = 'black';
-	fillRect(ctx, 0, 0, window.backGrW, window.backGrH);
-	ctx.fill();
-}
-
 
 
 function clearRect(ctx, x, y, w, h) {

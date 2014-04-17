@@ -43,6 +43,10 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 		return getStateBean().getClId();
 	}
 
+	public long getTimestamp() {
+		return getStateBean().getTimestamp();
+	}
+
 	public JsHighChart(SimulationsView view, String cssid) {
 		this.view = view;
 		getState().cssid = cssid;
@@ -54,9 +58,10 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 
 			@Override
 			public void call(JSONArray arguments) throws JSONException {
-				System.out.println("ON CLICK ONCLICK ONCLICK ONCLICK");
 				getState().clId = arguments.getInt(0);
 				getStateBean().setClId(arguments.getInt(0));
+				getState().ts = arguments.getLong(1);
+				getStateBean().setTimestamp(arguments.getLong(1));
 				for (ValueChangeListener listener : listeners)
 					listener.valueChange();
 			}

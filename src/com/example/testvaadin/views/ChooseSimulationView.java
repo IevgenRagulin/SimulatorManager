@@ -12,7 +12,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
@@ -21,7 +21,7 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	private Navigator navigator;
 	private SimulationList simulationList;
 	SimulatorListChooseSimulationView simulatorList;
-	private HorizontalLayout bottomLayout = new HorizontalLayout();
+	private HorizontalSplitPanel bottomLayout = new HorizontalSplitPanel();
 	private VerticalLayout actionButtons = new VerticalLayout();
 	private Button deleteButton = new Button("Delete chosen simulation");
 	private Button viewSimButton = new Button("View chosen simulation");
@@ -86,6 +86,7 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 		bottomLayout.setSizeFull();
 		bottomLayout.addComponent(simulationList);
 		bottomLayout.addComponent(actionButtons);
+		bottomLayout.setSplitPosition(80);
 		simulationList.setVisible(false);
 		actionButtons.setVisible(false);
 		actionButtons.addComponent(deleteButton);
