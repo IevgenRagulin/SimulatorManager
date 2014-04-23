@@ -29,18 +29,24 @@ var currentAileron = 0;
 var currentElevator = 0;
 var currentFlaps = 0;
 var currentSpeedBrakes = 0;
+var currentBrakes = false;
 var currentAileronTrim = 0;
 var currentElevatorTrim = 0;
 var currentRudderTrim = 0;
+var currentPaused = false;
+
 
 var wantHaveRudder = 0;
 var wantHaveAileron = 0;
 var wantHaveElevator = 0;
 var wantHaveFlaps = 0;
 var wantHaveSpeedBrakes = 0;
+var wantHaveBrakes = false;
 var wantHaveAileronTrim = 0;
 var wantHaveElevatorTrim = 0;
 var wantHaveRudderTrim = 0;
+var wantHavePaused = false;
+
 
 var currentlyChangingRudder = false;
 var currentlyChangingAileron = false;
@@ -71,8 +77,13 @@ function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
 		window.wantHaveElevatorTrim = this.getState().elt;
 		window.wantHaveFlaps = this.getState().fl;
 		window.wantHaveSpeedBrakes = this.getState().sb;
-		updateFlightControls();
+		window.wantHaveBrakes = this.getState().b;
 		window.maxSpeedOnFlaps = this.getState().maxonflaps;
+		window.wantHavePaused = this.getState().p;
+		console.log("WANT HAVE PAUSED"+this.getState().p);
+		updateFlightControls();
+		
+		
 	};
 }
 
@@ -95,8 +106,12 @@ function initYokeHtml(e) {
 			+ "<canvas id='speedBrakes' width='120' height='120'></canvas>"
 			+ "<div id='flapsV'>Flaps</div>"
 			+ "<canvas id='flaps' width='120' height='120'></canvas>"
-			+ "<div style='margin-top: 10px; margin-left: 40px'>"
-			+ "</div>";
+			+ "<div style='margin-left: 40px'>"
+			+ "</div>" 
+			+ "<canvas id='paused' width='100' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "<div style='margin-left: 40px'>"
+			+ "</div>"
+			+ "<canvas id='brakes' width='100' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>";
 }
 
 function updateFlightControls() {
@@ -124,6 +139,8 @@ function updateFlightControls() {
 	if (!window.currentlyChangingFlaps) {
 		setFlaps();
 	}
+	setBrakes();
+	setSimulationPaused();
 }
 
 // Function for calculating aileron, rudder, elevetor, speed brakes, flaps
@@ -350,6 +367,39 @@ function setFlaps() {
 	document.getElementById('flapsV').innerHTML = "Flaps "
 			+ window.currentFlaps;
 	drawFlapsInd();
+}
+
+function setBrakes() {
+	var canBrakes = document.getElementById('brakes');
+	var ctxBrakes = canBrakes.getContext('2d');
+	ctxBrakes.strokeStyle = 'red';
+	ctxBrakes.fillStyle = 'red';
+	if ((window.wantHaveBrakes)&&(!window.currentBrakes)) {
+		window.currentBrakes = true;
+		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
+		ctxBrakes.fillText("BRAKES ON", 15, 17);
+	} else if ((!window.wantHaveBrakes)&&(window.currentBrakes)){
+		window.currentBrakes = false;
+		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
+		ctxBrakes.fillText("BRAKES OFF", 15, 17);
+	} 
+}
+
+function setSimulationPaused() {
+	var canPaused = document.getElementById('paused');
+	var ctxPaused = canPaused.getContext('2d');
+	ctxPaused.strokeStyle = 'red';
+	ctxPaused.fillStyle = 'red';
+	console.log("set sim paused"+window.wantHavePaused+" current "+window.currentPaused);
+	if ((window.wantHavePaused)&&(!window.currentPaused)) {
+		window.currentPaused = true;
+		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
+		ctxPaused.fillText("PAUSED", 15, 17);
+	} else {
+		window.currentPaused = false;
+		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
+		ctxPaused.fillText("RUNNING", 15, 17);
+	}
 }
 
 function initYoke() {

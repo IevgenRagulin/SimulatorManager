@@ -81,6 +81,8 @@ CREATE TABLE simulationdevicesstate
   throttle double precision,
   flaps double precision,
   speedbrakes double precision,
+  brakes boolean,
+  issimulationpaused boolean,
   elevatortrim double precision,
   ailerontrim double precision,
   ruddertrim double precision,

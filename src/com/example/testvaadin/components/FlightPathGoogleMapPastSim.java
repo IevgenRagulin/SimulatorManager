@@ -23,20 +23,20 @@ public class FlightPathGoogleMapPastSim extends FlightPathGoogleMapBase {
 	}
 
 	public void moveMarkerOnMap(Item item, Double trueCourse) {
-		Double newLongtitude = (Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getLongtitude())).getValue();
-		Double newLatitude = (Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getLatitude())).getValue();
-		LatLon newPosition = new LatLon(newLatitude, newLongtitude);
-		System.out.println("NEW LONG " + newLongtitude);
-		System.out.println("NEW LAT " + newLatitude);
-		latestCoordinatesWindow.setContent(newPosition.getLat() + " "
-				+ newPosition.getLon());
-		newPositionMarker.setPosition(newPosition);
-		newPositionMarker.setIconUrl(getIconUrl(trueCourse));
-		this.lastLatLong = newPosition;
-		addMarker(newPositionMarker);
-		this.markAsDirty();
+		if (item != null) {
+			Double newLongtitude = (Double) ((Property<?>) item
+					.getItemProperty(ColumnNames.getLongtitude())).getValue();
+			Double newLatitude = (Double) ((Property<?>) item
+					.getItemProperty(ColumnNames.getLatitude())).getValue();
+			LatLon newPosition = new LatLon(newLatitude, newLongtitude);
+			latestCoordinatesWindow.setContent(newPosition.getLat() + " "
+					+ newPosition.getLon());
+			newPositionMarker.setPosition(newPosition);
+			newPositionMarker.setIconUrl(getIconUrl(trueCourse));
+			this.lastLatLong = newPosition;
+			addMarker(newPositionMarker);
+			this.markAsDirty();
+		}
 	}
 
 }

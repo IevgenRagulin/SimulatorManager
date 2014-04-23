@@ -12,13 +12,19 @@ public class SimulationDevStateBean implements Serializable {
 	private Double throttle;
 	private Double flaps;
 	private Double speedbrakes;
+	private Boolean brakes;
 	private Double ailerontrim;
 	private Double elevatortrim;
 	private Double ruddertrim;
+	private Boolean issimulationpaused;// is simulation paused. we store it both
+										// in
+
+	// simulation and simulationdevstate tables
 
 	public SimulationDevStateBean(double elevator, double aileron,
 			double rudder, double throttle, double flaps, double speedbrakes,
-			double trimAileron, double trimElevator, double trimRudder) {
+			double trimAileron, double trimElevator, double trimRudder,
+			boolean brakes, boolean paused) {
 		super();
 		this.elevator = elevator;
 		this.aileron = aileron;
@@ -29,6 +35,8 @@ public class SimulationDevStateBean implements Serializable {
 		this.ailerontrim = trimAileron;
 		this.elevatortrim = trimElevator;
 		this.ruddertrim = trimRudder;
+		this.brakes = brakes;
+		this.issimulationpaused = paused;
 	}
 
 	public SimulationDevStateBean(AllSimulationInfo allSimInfo) {
@@ -44,6 +52,8 @@ public class SimulationDevStateBean implements Serializable {
 		this.ailerontrim = allSimInfo.getTrimAileronPosition();
 		this.elevatortrim = allSimInfo.getTrimElevatorPosition();
 		this.ruddertrim = allSimInfo.getTrimRudderPosition();
+		this.brakes = allSimInfo.getBrakes_status();
+		this.issimulationpaused = allSimInfo.getSimulationPaused();
 	}
 
 	public Double getElevator() {
@@ -80,6 +90,18 @@ public class SimulationDevStateBean implements Serializable {
 
 	public Double getRuddertrim() {
 		return ruddertrim;
+	}
+
+	public Boolean getBrakes() {
+		return brakes;
+	}
+
+	public Boolean getIssimulationpaused() {
+		return issimulationpaused;
+	}
+
+	public void setIssimulationpaused(Boolean paused) {
+		this.issimulationpaused = paused;
 	}
 
 }

@@ -144,6 +144,12 @@ public class DatabaseUpdater {
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getRudderTrim()).setValue(
 				simDevStBean.getRuddertrim());
+		simDevStCont
+				.getContainerProperty(newSimDvStId, ColumnNames.getBrakes())
+				.setValue(simDevStBean.getBrakes());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getIssimulationpaused()).setValue(
+				simDevStBean.getIssimulationpaused());
 		commitChangeInSQLContainer(simDevStCont);
 	}
 

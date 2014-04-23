@@ -329,7 +329,7 @@ public class SocketHelper {
 
 			// Brakes
 			value = getValueOf(":BRK:", response);
-			simData.setBrakes_status(stringToDouble(value));
+			simData.setBrakes_status(brakesDoubleToBoolean(value));
 
 			// Switch Master switch
 			value = getValueOf(":SWMA:", response);
@@ -441,6 +441,11 @@ public class SocketHelper {
 			simData.setSimulationPaused(isSimPaused);
 		}
 		return simData;
+	}
+
+	public static boolean brakesDoubleToBoolean(String value) {
+		Double doubleValue = Double.parseDouble(value);
+		return (doubleValue > 0.01);
 	}
 
 	public static boolean stringToBoolean(String value) {

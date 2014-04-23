@@ -19,16 +19,18 @@ public class FlightControls extends AbstractJavaScriptComponent {
 
 	public FlightControls(float aileron, float elevator, float rudder,
 			float aileront, float elevatort, float ruddert, float speedbrakes,
-			float flaps) {
-
+			float flaps, boolean brakes, boolean paused) {
 		getState().ail = aileron;
 		getState().el = elevator;
 		getState().rd = rudder;
 		getState().ailt = aileront;
 		getState().elt = elevatort;
 		getState().rdt = ruddert;
+		getState().b = brakes;
+		getState().p = paused;
 		controlYokeStateBean = new FlightControlsStateBean(aileron, elevator,
-				rudder, aileront, elevatort, ruddert, speedbrakes, flaps);
+				rudder, aileront, elevatort, ruddert, speedbrakes, flaps,
+				brakes, paused);
 		setPrimaryStyleName(CSS_CLASS);
 	}
 
@@ -50,6 +52,11 @@ public class FlightControls extends AbstractJavaScriptComponent {
 				.getItemProperty(ColumnNames.getElevatorTrim())).getValue());
 		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getRudderTrim())).getValue());
+		boolean newBrakes = (Boolean) ((Property<?>) flightControlItem
+				.getItemProperty(ColumnNames.getBrakes())).getValue();
+		boolean newPaused = (Boolean) ((Property<?>) flightControlItem
+				.getItemProperty(ColumnNames.getIssimulationpaused()))
+				.getValue();
 		setAileron(newAileron);
 		setElevator(newElevator);
 		setRudder(newRudder);
@@ -59,7 +66,23 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		setFlaps(newFlaps);
 		setPlaneConfiguration(simulatorItem);
 		setSpeedBrakes(newSpeedBrakes);
+		setBrakes(newBrakes);
+		setPaused(newPaused);
 
+	}
+
+	private void setPaused(boolean newPaused) {
+		if (getStateBean().isPaused() != newPaused) {
+			getState().p = newPaused;
+			getStateBean().setPaused(newPaused);
+		}
+	}
+
+	private void setBrakes(boolean newBrakes) {
+		if (getStateBean().getBrakes() != newBrakes) {
+			getState().b = newBrakes;
+			getStateBean().setBrakes(newBrakes);
+		}
 	}
 
 	private void setRudderTrim(float newRudderTrim) {

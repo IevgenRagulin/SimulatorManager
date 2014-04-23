@@ -1,11 +1,14 @@
 package com.example.testvaadin.views;
 
+import java.util.Collection;
+
 import com.example.testvaadin.NavigatorUI;
 import com.example.testvaadin.components.SimulationList;
 import com.example.testvaadin.components.SimulatorListChooseSimulationView;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -75,7 +78,33 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	}
 
 	private boolean isSelectedSimulationRunning() {
+		System.out.println("SELECTED value " + getSimulationList().getValue());
+		System.out
+				.println("PAGE LENGTH " + getSimulationList().getPageLength());
+
 		Item item = getSimulationList().getItem(getSimulationList().getValue());
+
+		System.out.println("SELECTED ITEM " + item);
+
+		Collection<?> coll = getSimulationList().getContainerDataSource()
+				.getItemIds();
+		for (Object id : coll) {
+			RowId rowId = (RowId) id;
+			System.out.println("Row id " + rowId.getId());
+			Item itemTwo = getSimulationList().getContainerDataSource()
+					.getItem(rowId);
+			if (itemTwo != null) {
+				System.out.println("SIM ID"
+						+ itemTwo
+								.getItemProperty(ColumnNames.getSimulationid())
+								.getValue());
+				System.out.println("SIM IS SIM ON"
+						+ itemTwo.getItemProperty(
+								ColumnNames.getIssimulationon()).getValue());
+			} else {
+				System.out.println("item with id is null " + rowId.getId()[0]);
+			}
+		}
 		return (Boolean) item.getItemProperty(ColumnNames.getIssimulationon())
 				.getValue();
 	}

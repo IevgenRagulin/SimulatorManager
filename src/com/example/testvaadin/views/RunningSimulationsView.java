@@ -39,7 +39,6 @@ public class RunningSimulationsView extends SimulationsView implements View {
 
 		public void refresh(final Refresher source) {
 			RunningSimulationsView.this.updateValues();
-			;
 		}
 	}
 

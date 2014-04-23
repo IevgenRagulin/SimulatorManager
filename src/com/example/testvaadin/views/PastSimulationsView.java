@@ -56,8 +56,8 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 	private void setUi(int pfdClickedId, long timestamp) {
 		Item pfdItem = dbHelp.getPFDInfoByPfdInfoId(pfdClickedId);
-		Item itemDevState = dbHelp
-				.getSimulationDevStateInfoByPfdInfoId(pfdClickedId);
+		Item itemDevState = dbHelp.getSimulationDevStateInfoByPfdInfoId(
+				pfdClickedId, timestamp);
 		Item itemSimulator = dbHelp.getSimulatorInfoByPfdInfoId(pfdClickedId);
 		Item simulationInfoItem = dbHelp
 				.getSimulationInfoItemByPfdInfoIdTimestemp(pfdClickedId,

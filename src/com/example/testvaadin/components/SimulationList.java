@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.views.ChooseSimulationView;
-import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Table;
@@ -33,7 +32,7 @@ public class SimulationList extends Table {
 		});
 	}
 
-	protected void setContainerDataSourceAndVisCol(Container newDataSource) {
+	protected void setContainerDataSourceAndVisCol(SQLContainer newDataSource) {
 		setContainerDataSource(newDataSource);
 		setVisibleColumns((Object[]) ColumnNames.getSimulationcols());
 	}
@@ -59,4 +58,5 @@ public class SimulationList extends Table {
 		this.removeItem(simulationId);
 		commit();
 	}
+
 }

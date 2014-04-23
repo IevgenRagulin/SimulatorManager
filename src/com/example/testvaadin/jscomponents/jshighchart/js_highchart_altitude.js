@@ -9,8 +9,6 @@ com_example_testvaadin_jscomponents_jshighchart_JsHighChartAltitude = function()
 	window.altitudeCompomentObj = this;
 	//set css id of the component
 	window.altitudeCssId = this.getState().cssid;
-	console.log("KUKUKUKUKU");
-	console.log("data"+this.getState().data);
 	window.dataaaAltitude = $.parseJSON(this.getState().data);
 	$(document).ready(readDataAndDrawAltitude(window.altitudeCssId));
 	
@@ -41,6 +39,7 @@ function findIdClosestToClick(time) {
 			closestI = i;
 		}
 	}
+	console.log("TIMESTAMP CLOSEST ID"+closestId);
 	return closestId;
 }
 

@@ -7,59 +7,50 @@ import java.util.List;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.sqlcontainer.RowItem;
-import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
+import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
+import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
-public class FreeFormQueryDelegateSimulationsImpl implements
-		FreeformQueryDelegate {
-	private static final long serialVersionUID = -3906533930214333038L;
+public class FreeFormStatementDelegateSimulationsImpl implements
+		FreeformStatementDelegate {
+	private static final long serialVersionUID = 9191272022216991665L;
 	private String simulatorId = null;
+	private List<Filter> filters;
+	private List<OrderBy> orderBys;
 
 	@Override
 	public String getQueryString(int offset, int limit)
 			throws UnsupportedOperationException {
-		System.out.println("GETTING QUERY STRING offset" + offset);
-		System.out.println("GETTING QUERY STRING limit" + limit);
-
-		return "SELECT * FROM simulation WHERE Simulator_SimulatorId="
-				+ simulatorId + " ORDER BY simulationid LIMIT ALL";
-
-	}
-
-	public FreeFormQueryDelegateSimulationsImpl(String simulatorId) {
-		this.simulatorId = simulatorId;
+		throw new UnsupportedOperationException("Use getQueryStatement method.");
 	}
 
 	@Override
 	public String getCountQuery() throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("Use getCountStatement method.");
 	}
 
 	@Override
 	public void setFilters(List<Filter> filters)
 			throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-
+		this.filters = filters;
 	}
 
 	@Override
 	public void setOrderBy(List<OrderBy> orderBys)
 			throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-
+		this.orderBys = orderBys;
 	}
 
 	@Override
 	public int storeRow(Connection conn, RowItem row)
 			throws UnsupportedOperationException, SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	@Override
 	public boolean removeRow(Connection conn, RowItem row)
 			throws UnsupportedOperationException, SQLException {
+		System.out.println("GOING TO REMOVE ROW FREE FORM DELEGATE " + row);
 		Integer simulationId = (Integer) row.getItemProperty(
 				ColumnNames.getSimulationid()).getValue();
 		removeDataFromReferencingTables(conn, simulationId);
@@ -69,6 +60,54 @@ public class FreeFormQueryDelegateSimulationsImpl implements
 		int rowsChanged = statement.executeUpdate();
 		statement.close();
 		return rowsChanged == 1;
+	}
+
+	@Override
+	public String getContainsRowQueryString(Object... keys)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException(
+				"Please use getContainsRowQueryStatement method.");
+	}
+
+	@Override
+	public StatementHelper getQueryStatement(int offset, int limit)
+			throws UnsupportedOperationException {
+		StatementHelper sh = new StatementHelper();
+		StringBuffer query = new StringBuffer(
+				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
+						+ simulatorId + " ORDER BY simulationid ");
+		if (offset != 0 || limit != 0) {
+			query.append(" LIMIT ").append(limit);
+			query.append(" OFFSET ").append(offset);
+		}
+		sh.setQueryString(query.toString());
+		return sh;
+	}
+
+	@Override
+	public StatementHelper getCountStatement()
+			throws UnsupportedOperationException {
+		StatementHelper sh = new StatementHelper();
+		StringBuffer query = new StringBuffer(
+				"SELECT COUNT(*) FROM simulation WHERE Simulator_SimulatorId="
+						+ simulatorId);
+		sh.setQueryString(query.toString());
+		return sh;
+	}
+
+	@Override
+	public StatementHelper getContainsRowQueryStatement(Object... keys)
+			throws UnsupportedOperationException {
+		StatementHelper sh = new StatementHelper();
+		StringBuffer query = new StringBuffer(
+				"SELECT * FROM simulation WHERE simulationid=?");
+		sh.addParameterValue(keys[0]);
+		sh.setQueryString(query.toString());
+		return sh;
+	}
+
+	public FreeFormStatementDelegateSimulationsImpl(String simulatorId) {
+		this.simulatorId = simulatorId;
 	}
 
 	private void removeDataFromReferencingTables(Connection conn,
@@ -105,23 +144,4 @@ public class FreeFormQueryDelegateSimulationsImpl implements
 		statement.close();
 	}
 
-	@Override
-	public String getContainsRowQueryString(Object... keys) {
-		// TODO Auto-generated method stub
-
-		StringBuffer returnQuery = new StringBuffer(
-				"SELECT * FROM simulation WHERE Simulator_SimulatorId="
-						+ simulatorId + " AND ( ");
-		int i = 0;
-		for (Object key : keys) {
-			Integer strKey = (Integer) key;
-			returnQuery.append("simulationid=");
-			returnQuery.append(strKey);
-			if ((i + 1) != keys.length) {
-				returnQuery.append(" OR ");
-			}
-		}
-		returnQuery.append(")");
-		return returnQuery.toString();
-	}
 }

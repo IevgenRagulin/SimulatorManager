@@ -145,7 +145,7 @@ public class DatabaseHelper implements Serializable {
 	 */
 	public SQLContainer getSimulationContainer() {
 		TableQuery tq = new TableQuery("simulation", pool);
-		tq.setVersionColumn("Timestamp");
+		tq.setVersionColumn("simulationid");
 		SQLContainer simulationContainer = null;
 		try {
 			simulationContainer = new SQLContainer(tq);
@@ -161,17 +161,20 @@ public class DatabaseHelper implements Serializable {
 	public SQLContainer getSimulationContainerOnSimulatorWithId(
 			String simulatorId) {
 		@SuppressWarnings("deprecation")
-		FreeformQuery query = new FreeformQuery(
+		FreeFormQueryTest query = new FreeFormQueryTest(
 				"SELECT * FROM simulation where simulator_simulatorid="
-						+ simulatorId + " ORDER BY timestamp",
+						+ simulatorId + " ORDER BY \"timestamp\" LIMIT ALL ",
 				Arrays.asList("simulationid"), pool);
 		SQLContainer simulationPFD = null;
-		query.setDelegate(new FreeFormQueryDelegateSimulationsImpl(simulatorId));
+		query.setDelegate(new FreeFormStatementDelegateSimulationsImpl(
+				simulatorId));
+
 		try {
 			simulationPFD = new SQLContainer(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return simulationPFD;
 	}
 
@@ -398,13 +401,23 @@ public class DatabaseHelper implements Serializable {
 	}
 
 	/*
-	 * Gets simulation dev state item info item by pfdinfoid
+	 * Gets simulation dev state item info item by pfdinfoid, closest in time to
+	 * timestamp
 	 */
-	public Item getSimulationDevStateInfoByPfdInfoId(int pfdInfoId) {
+	public Item getSimulationDevStateInfoByPfdInfoId(int pfdInfoId,
+			long timestamp) {
 		@SuppressWarnings("deprecation")
 		FreeformQuery query = new FreeformQuery(
-				"SELECT * FROM simulationdevicesstate " + "WHERE devstateid = "
-						+ pfdInfoId, Arrays.asList("devstateid"), pool);
+				"SELECT * "
+						+ "FROM simulationdevicesstate "
+						+ "WHERE simulation_simulationid=(SELECT simulation_simulationid "
+						+ "FROM simulationpfdinfo "
+						+ "WHERE pfdinfoid="
+						+ pfdInfoId
+						+ ") "
+						+ "ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp("
+						+ timestamp + "/1000)::timestamp))) limit 1",
+				Arrays.asList("devstateid"), pool);
 		SQLContainer simulationInfo = null;
 		try {
 			simulationInfo = new SQLContainer(query);

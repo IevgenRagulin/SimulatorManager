@@ -13,6 +13,7 @@ public class ColumnNames {
 	private static final String AILERON = "eleron";
 	private static final String ELEVATOR = "elevator";
 	private static final String SIMULATIONID = "simulationid";
+	private static final String BRAKES = "brakes";
 	private static final String SIMULATIONENDEDTIME = "simulationendedtime";
 	private static final String SIMULATIONSTARTEDTIME = "simulationstartedtime";
 	private static final String ISSIMULATIONPAUSED = "issimulationpaused";
@@ -61,7 +62,7 @@ public class ColumnNames {
 			SIMULATIONINFOID, SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
 
 	protected static final String[] simulationDevicesStateBeanCols = new String[] {
-			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES,
+			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, BRAKES,
 			AILERONTRIM, ELEVATORTRIM, RUDDERTRIM };
 
 	protected static final String[] simulationDevicesStateCols = new String[] {
@@ -271,6 +272,10 @@ public class ColumnNames {
 
 	public static String getSpeedbrakes() {
 		return SPEEDBRAKES;
+	}
+
+	public static String getBrakes() {
+		return BRAKES;
 	}
 
 	public static String getFlaps() {

@@ -116,7 +116,7 @@ public class AllSimulationInfo {
 	int landing_gear_3_status;
 	boolean pitot_heating;
 	Double brakes;
-	Double brakes_status;
+	boolean brakes_status;
 	Double speed_brakes;
 	Double speed_brakes_status;
 
@@ -727,12 +727,12 @@ public class AllSimulationInfo {
 		this.brakes = brakes;
 	}
 
-	public Double getBrakes_status() {
+	public boolean getBrakes_status() {
 		return brakes_status;
 	}
 
-	protected void setBrakes_status(Double brakes_status) {
-		this.brakes_status = brakes_status;
+	protected void setBrakes_status(boolean b) {
+		this.brakes_status = b;
 	}
 
 	public Double getSpeed_brakes() {
