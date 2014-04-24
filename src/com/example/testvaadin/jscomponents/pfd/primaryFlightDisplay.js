@@ -62,8 +62,14 @@ var horizontHasBeenRotated = false;
 
 var darkGray = '404040';
 
+
+var circle;
 function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
 	var e = this.getElement();
+	circle = new createjs.Shape();
+	circle.graphics.beginFill("#FF0000").drawCircle(0,0,5000);
+	createjs.Tween.get(circle).to({scaleX:0.2}, 1000).call(handleComplete);
+	console.log("kuku. target.alpha"+circle.scaleX);
 	resetPfd();
 	initHtml(e);
 	init();
@@ -77,6 +83,12 @@ function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
 		window.wantHaveVerSpeed = this.getState().vs;
 		update();
 	};
+}
+
+function handleComplete() {
+    //console.log("target.alpha"+target.alpha);
+    //console.log("kuku");
+	console.log("kuku");
 }
 
 //Set reset currentlyChangingValue, currentValue global variables to prevent bug when we switch between simulators
@@ -131,6 +143,7 @@ function init() {
 }
 
 function update() {
+	console.log("kuku "+circle.scaleX);
 	if (!window.currentlyChangingPitch) {
 		setPitch();
 	}
@@ -248,10 +261,11 @@ function setRoll() {
 	var can = document.getElementById('pfd');
 	var ctx = can.getContext('2d');
 	// Check if we should continue animating roll
-	if (shouldWeMakeAnimationStep(difRoll, 0.005)) {
+	if (shouldWeMakeAnimationStep(difRoll, 0.005))  {
 		requestAnimationFrame(function() {
 			setRoll();
 		});
+		 
 		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
 		window.currentlyChangingRoll = true;
 	} else {
@@ -712,7 +726,6 @@ function rotateCanvasByRollDegrees(can, roll) {
 // requestAnimationFrame
 function setCompassValue(ctxCompass, compass) {
 	var difCompass = (compass - window.currentCompass) % 360;
-	console.log("severe:setting compass. Compass want"+compass+" comp now"+window.currentCompass+" dif"+difCompass);
 	var compassStep = calculateCompassPitchRollStep(difCompass, 0.05);
 	if (shouldWeMakeAnimationStep(difCompass, 0.05)) {
 		requestAnimationFrame(function() {

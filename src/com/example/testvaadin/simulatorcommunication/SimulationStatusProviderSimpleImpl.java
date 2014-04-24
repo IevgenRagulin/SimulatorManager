@@ -1,16 +1,18 @@
 package com.example.testvaadin.simulatorcommunication;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SimulationStatusProviderSimpleImpl implements
-		SimulationStatusProviderInt {
+public class SimulationStatusProviderSimpleImpl {
 	// If simulator is not responding we increase this number by 1. This is used
 	// to figure out if simulator is currently running
-	protected static volatile Map<String, Integer> simulatorIdNumberOfFailedRequests = new HashMap<String, Integer>();
+	protected static volatile Map<String, Integer> simulatorIdNumberOfFailedRequests = Collections
+			.synchronizedMap(new HashMap<String, Integer>());
 	// If simulator's position has not changed we increase this number by 1.
 	// This is used to figure out if simulator is currently running
-	protected static volatile Map<String, Integer> simulatorIdNumberOfRespWithSimilarData = new HashMap<String, Integer>();
+	protected static volatile Map<String, Integer> simulatorIdNumberOfRespWithSimilarData = Collections
+			.synchronizedMap(new HashMap<String, Integer>());
 	// If the simulator doesn't respond maxFailedTolearatedRequests times, we
 	// consider it not running
 	private static int maxFailedTolearatedRequests = 5;
@@ -19,10 +21,10 @@ public class SimulationStatusProviderSimpleImpl implements
 	// consider the simulator is not running
 	private static int maxSimilarPositions = 10;
 
-	@Override
-	public synchronized boolean isSimulatorRunning(
+	public static boolean isSimulatorRunning(
 			AllSimulationInfo dataFromSimulation, String simulatorId) {
-		updateSimulatorRespondStatistic(dataFromSimulation, simulatorId);
+		SimulationStatusProviderSimpleImpl.updateSimulatorRespondStatistic(
+				dataFromSimulation, simulatorId);
 		Integer currentNumbOfFailed = simulatorIdNumberOfFailedRequests
 				.get(simulatorId);
 		Integer currentNumbOfRespWithSimilarData = simulatorIdNumberOfRespWithSimilarData
@@ -36,7 +38,7 @@ public class SimulationStatusProviderSimpleImpl implements
 		return true;
 	}
 
-	private synchronized void updateSimulatorRespondStatistic(
+	private static void updateSimulatorRespondStatistic(
 			AllSimulationInfo dataFromSimulation, String simulatorId) {
 		// if simulator doesn't respond increase number of failed requests
 		if (dataFromSimulation == null) {
@@ -57,18 +59,15 @@ public class SimulationStatusProviderSimpleImpl implements
 		}
 	}
 
-	protected synchronized static void setNumOfFailedReqToZero(
-			String simulatorId) {
+	protected static void setNumOfFailedReqToZero(String simulatorId) {
 		simulatorIdNumberOfFailedRequests.put(simulatorId, 0);
 	}
 
-	protected synchronized static void setNumOfSimilarPosDataToZero(
-			String simulatorId) {
+	protected static void setNumOfSimilarPosDataToZero(String simulatorId) {
 		simulatorIdNumberOfRespWithSimilarData.put(simulatorId, 0);
 	}
 
-	protected synchronized static void increaseNumberOfFailedRequests(
-			String simulatorId) {
+	protected static void increaseNumberOfFailedRequests(String simulatorId) {
 		Integer currentNumbOfFailed = simulatorIdNumberOfFailedRequests
 				.get(simulatorId);
 		if (currentNumbOfFailed == null) {
@@ -78,7 +77,7 @@ public class SimulationStatusProviderSimpleImpl implements
 				++currentNumbOfFailed);
 	}
 
-	protected synchronized static void increaseNumberOfRespWithSimilarPosition(
+	protected static void increaseNumberOfRespWithSimilarPosition(
 			String simulatorId) {
 		Integer currentNumbOfRespWithSimilarPosition = simulatorIdNumberOfRespWithSimilarData
 				.get(simulatorId);

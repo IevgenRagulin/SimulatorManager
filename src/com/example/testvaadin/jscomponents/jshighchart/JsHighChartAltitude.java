@@ -35,6 +35,7 @@ public class JsHighChartAltitude extends JsHighChart {
 			SimulationPFDItem simulationPfdItem) {
 		int newAltitude = simulationPfdItem.getBean().getAltitude().intValue();
 		super.addNewPoint(simulatorId, newAltitude);
+		markAsDirty();
 	}
 
 	@Override

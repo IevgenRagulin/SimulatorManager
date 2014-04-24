@@ -125,8 +125,7 @@ public class SimulationsUpdater {
 		Boolean isLastSimInDBPaused = null;
 		// is simulator on or paused based on simulators response
 		Boolean isCurrentSimulationPaused = null;
-		SimulationStatusProviderSimpleImpl simStatusChecker = new SimulationStatusProviderSimpleImpl();
-		Boolean isCurrentSimulationRunning = simStatusChecker
+		Boolean isCurrentSimulationRunning = SimulationStatusProviderSimpleImpl
 				.isSimulatorRunning(dataFromSimulator, simulatorId);
 		if (lastSimDb != null) {
 			isLastSimInDBOn = (Boolean) lastSimDb.getItemProperty(

@@ -15,7 +15,7 @@ import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
 public class DatabaseHelper implements Serializable {
 	private static final long serialVersionUID = -5027557673512708776L;
-	JDBCConnectionPool pool = null;
+	private static JDBCConnectionPool pool = null;
 	private SQLContainer simulatorContainer = null;
 
 	/*
@@ -160,7 +160,6 @@ public class DatabaseHelper implements Serializable {
 	 */
 	public SQLContainer getSimulationContainerOnSimulatorWithId(
 			String simulatorId) {
-		@SuppressWarnings("deprecation")
 		FreeFormQueryTest query = new FreeFormQueryTest(
 				"SELECT * FROM simulation where simulator_simulatorid="
 						+ simulatorId + " ORDER BY \"timestamp\" LIMIT ALL ",
@@ -217,13 +216,15 @@ public class DatabaseHelper implements Serializable {
 	}
 
 	private void initConnectionPool() {
-		try {
-			pool = new SimpleJDBCConnectionPool("org.postgresql.Driver",
-					ApplicationConfiguration.getDbUrl(),
-					ApplicationConfiguration.getDbUserName(),
-					ApplicationConfiguration.getDbUserPassword(), 2, 5);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (pool == null) {
+			try {
+				pool = new SimpleJDBCConnectionPool("org.postgresql.Driver",
+						ApplicationConfiguration.getDbUrl(),
+						ApplicationConfiguration.getDbUserName(),
+						ApplicationConfiguration.getDbUserPassword(), 2, 5);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

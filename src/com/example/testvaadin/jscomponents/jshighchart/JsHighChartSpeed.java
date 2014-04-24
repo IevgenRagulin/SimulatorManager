@@ -34,6 +34,7 @@ public class JsHighChartSpeed extends JsHighChart {
 			SimulationPFDItem simulationPfdItem) {
 		int newSpeed = simulationPfdItem.getBean().getIas().intValue();
 		super.addNewPoint(simulatorId, newSpeed);
+		markAsDirty();
 	}
 
 	@Override

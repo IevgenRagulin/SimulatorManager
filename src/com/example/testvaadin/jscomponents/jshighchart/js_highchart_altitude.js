@@ -39,7 +39,6 @@ function findIdClosestToClick(time) {
 			closestI = i;
 		}
 	}
-	console.log("TIMESTAMP CLOSEST ID"+closestId);
 	return closestId;
 }
 

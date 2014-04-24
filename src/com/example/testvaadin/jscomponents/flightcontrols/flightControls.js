@@ -395,7 +395,7 @@ function setSimulationPaused() {
 		window.currentPaused = true;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
 		ctxPaused.fillText("PAUSED", 15, 17);
-	} else {
+	} else if ((!window.wantHavePaused)&&(window.currentPaused)){
 		window.currentPaused = false;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
 		ctxPaused.fillText("RUNNING", 15, 17);

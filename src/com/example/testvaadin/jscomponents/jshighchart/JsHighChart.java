@@ -58,12 +58,19 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 
 			@Override
 			public void call(JSONArray arguments) throws JSONException {
-				getState().clId = arguments.getInt(0);
-				getStateBean().setClId(arguments.getInt(0));
-				getState().ts = arguments.getLong(1);
-				getStateBean().setTimestamp(arguments.getLong(1));
-				for (ValueChangeListener listener : listeners)
-					listener.valueChange();
+				try {
+					getState().clId = arguments.getInt(0);
+					getStateBean().setClId(arguments.getInt(0));
+					getState().ts = arguments.getLong(1);
+					getStateBean().setTimestamp(arguments.getLong(1));
+					for (ValueChangeListener listener : listeners)
+						listener.valueChange();
+				} catch (Exception e) {
+					System.err
+							.println("Exception happened in "
+									+ JsHighChart.class
+									+ " while getting arguments from RPC call after clicking on a graph");
+				}
 			}
 		});
 
