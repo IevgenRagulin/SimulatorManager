@@ -15,11 +15,11 @@ public class SimulationStatusProviderSimpleImpl {
 			.synchronizedMap(new HashMap<String, Integer>());
 	// If the simulator doesn't respond maxFailedTolearatedRequests times, we
 	// consider it not running
-	private static int maxFailedTolearatedRequests = 5;
+	private static int maxFailedTolearatedRequests = 10;
 
 	// If the simulator has the same position maxSimilarPositions times, we
 	// consider the simulator is not running
-	private static int maxSimilarPositions = 10;
+	private static int maxSimilarPositions = 10000;
 
 	public static boolean isSimulatorRunning(
 			AllSimulationInfo dataFromSimulation, String simulatorId) {

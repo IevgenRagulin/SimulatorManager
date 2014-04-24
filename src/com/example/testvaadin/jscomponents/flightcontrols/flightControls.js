@@ -68,6 +68,8 @@ function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
 	var e = this.getElement();
 	initYokeHtml(e);
 	initYoke();
+	setBrakes();
+	setSimulationPaused();
 	this.onStateChange = function() {
 		window.wantHaveRudder = this.getState().rd;
 		window.wantHaveAileron = this.getState().ail;
@@ -374,28 +376,29 @@ function setBrakes() {
 	var ctxBrakes = canBrakes.getContext('2d');
 	ctxBrakes.strokeStyle = 'red';
 	ctxBrakes.fillStyle = 'red';
-	if ((window.wantHaveBrakes)&&(!window.currentBrakes)) {
+	if (window.wantHaveBrakes) {
 		window.currentBrakes = true;
 		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
 		ctxBrakes.fillText("BRAKES ON", 15, 17);
-	} else if ((!window.wantHaveBrakes)&&(window.currentBrakes)){
+	} else {
 		window.currentBrakes = false;
 		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
 		ctxBrakes.fillText("BRAKES OFF", 15, 17);
 	} 
 }
 
+
+
 function setSimulationPaused() {
 	var canPaused = document.getElementById('paused');
 	var ctxPaused = canPaused.getContext('2d');
 	ctxPaused.strokeStyle = 'red';
 	ctxPaused.fillStyle = 'red';
-	console.log("set sim paused"+window.wantHavePaused+" current "+window.currentPaused);
-	if ((window.wantHavePaused)&&(!window.currentPaused)) {
+	if (window.wantHavePaused) {
 		window.currentPaused = true;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
 		ctxPaused.fillText("PAUSED", 15, 17);
-	} else if ((!window.wantHavePaused)&&(window.currentPaused)){
+	} else {
 		window.currentPaused = false;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
 		ctxPaused.fillText("RUNNING", 15, 17);

@@ -125,19 +125,22 @@ public class DatabaseHelper implements Serializable {
 		return simulatorContainer;
 	}
 
+	public void updateSimulatorContainer() {
+		getNewSimulatorContainer();
+	}
+
 	/*
 	 * Creates simulator SQLcontainer, returns it
 	 */
 	public SQLContainer getNewSimulatorContainer() {
-		SQLContainer newSimulatorContainer = null;
 		TableQuery tq = new TableQuery("simulator", pool);
 		tq.setVersionColumn("timestamp");
 		try {
-			newSimulatorContainer = new SQLContainer(tq);
+			simulatorContainer = new SQLContainer(tq);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return newSimulatorContainer;
+		return simulatorContainer;
 	}
 
 	/*

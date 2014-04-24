@@ -132,6 +132,7 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	}
 
 	private void initSimulatorList() {
+		System.out.println("INIT SIMULATOR LIST");
 		simulatorList = new SimulatorListChooseSimulationView(this);
 	}
 

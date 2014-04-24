@@ -27,7 +27,7 @@ public class SimulationsUpdater {
 			.getSimulatorGetDataFrequency();
 
 	private final static ScheduledExecutorService scheduler = Executors
-			.newScheduledThreadPool(1);
+			.newScheduledThreadPool(10);
 	private static final Runnable beeper = new Runnable() {
 		@Override
 		public void run() {
@@ -42,6 +42,7 @@ public class SimulationsUpdater {
 		// System.out.println("GOING TO SCHEDULE AT FIXED RATE");
 		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS,
 				TimeUnit.MILLISECONDS);
+
 	}
 
 	private SimulationsUpdater() {

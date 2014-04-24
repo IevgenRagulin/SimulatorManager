@@ -26,6 +26,7 @@ public class SimulatorListChooseSimulationView extends Table {
 				updateSimulationsList();
 			}
 		});
+		markAsDirty();
 	};
 
 	public void updateSimulationsList() {
