@@ -98,6 +98,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				simulatorForm.addSimulator();
+				// dbHelp.updateSimulatorContainer();
 			}
 		});
 	}
@@ -107,6 +108,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				simulatorForm.removeSimulator();
+				// dbHelp.updateSimulatorContainer();
 			}
 		});
 	}

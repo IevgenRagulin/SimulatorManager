@@ -108,6 +108,19 @@ public class DatabaseHelper implements Serializable {
 		initConnectionPool();
 	}
 
+	private void initConnectionPool() {
+		if (pool == null) {
+			try {
+				pool = new SimpleJDBCConnectionPool("org.postgresql.Driver",
+						ApplicationConfiguration.getDbUrl(),
+						ApplicationConfiguration.getDbUserName(),
+						ApplicationConfiguration.getDbUserPassword(), 2, 10);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/*
 	 * If simulator container has been created before, returns it. If it hasn't
 	 * been created before, creates it, returns it.
@@ -125,22 +138,19 @@ public class DatabaseHelper implements Serializable {
 		return simulatorContainer;
 	}
 
-	public void updateSimulatorContainer() {
-		getNewSimulatorContainer();
-	}
-
 	/*
 	 * Creates simulator SQLcontainer, returns it
 	 */
 	public SQLContainer getNewSimulatorContainer() {
+		SQLContainer newSqlContainer = null;
 		TableQuery tq = new TableQuery("simulator", pool);
 		tq.setVersionColumn("timestamp");
 		try {
-			simulatorContainer = new SQLContainer(tq);
+			newSqlContainer = new SQLContainer(tq);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return simulatorContainer;
+		return newSqlContainer;
 	}
 
 	/*
@@ -216,19 +226,6 @@ public class DatabaseHelper implements Serializable {
 			e.printStackTrace();
 		}
 		return simulationDevicesStateContainer;
-	}
-
-	private void initConnectionPool() {
-		if (pool == null) {
-			try {
-				pool = new SimpleJDBCConnectionPool("org.postgresql.Driver",
-						ApplicationConfiguration.getDbUrl(),
-						ApplicationConfiguration.getDbUserName(),
-						ApplicationConfiguration.getDbUserPassword(), 2, 5);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public Item getSimulationPFDBySimulatorId(String simulatorId) {

@@ -40,7 +40,7 @@ public class NavigatorUI extends UI {
 		initApplicationConfiguration();
 		// we do it to initialize static stuff in SimulationUpdater class
 		try {
-			Class.forName("com.example.testvaadin.simulatorcommunication.SimulationsUpdater");
+			Class.forName("com.example.testvaadin.simulatorcommunication.UpdatesScheduler");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

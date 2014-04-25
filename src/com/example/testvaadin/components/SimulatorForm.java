@@ -81,6 +81,10 @@ public class SimulatorForm extends FieldGroup {
 	@SuppressWarnings("unchecked")
 	public void addSimulator() {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
+		System.out.println("SIMULATOR ID" + simulatorId);
+		System.out.println("SIMULATOR NAME"
+				+ app.getSimulatorList().getContainerProperty(simulatorId,
+						ColumnNames.getSimulatorNamePropName()));
 
 		app.getSimulatorList()
 				.getContainerProperty(simulatorId,
