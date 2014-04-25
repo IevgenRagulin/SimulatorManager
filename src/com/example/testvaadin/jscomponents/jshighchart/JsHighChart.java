@@ -82,7 +82,6 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 
 	public void addNewPoint(String simulatorId, int newValue) {
 		if (!isChartInitializedWithMapHistory) {
-			System.out.println("INIT DATA");
 			initChartWithDataForSimulatorWithId(simulatorId, newValue);
 			isChartInitializedWithMapHistory = true;
 		} else if (!this.getStateBean().getData().equals("")) {
@@ -90,7 +89,6 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 			// client together with shared state.
 			// If we don't make it empty, server sends to much data and
 			// performance gets worse
-			System.out.println("going to change state");
 			getState().data = "";
 			this.getStateBean().setData("");
 		}

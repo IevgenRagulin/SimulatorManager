@@ -7,6 +7,7 @@ var altitudeCompomentObj;
 com_example_testvaadin_jscomponents_jshighchart_JsHighChartAltitude = function() {
 	//to make object accessible from outside of the function; Used to make RPC calls to the server
 	window.altitudeCompomentObj = this;
+	window.initializedAltitude = false;
 	//set css id of the component
 	window.altitudeCssId = this.getState().cssid;
 	window.dataaaAltitude = $.parseJSON(this.getState().data);

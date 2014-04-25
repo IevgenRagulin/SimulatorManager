@@ -2,7 +2,6 @@ package com.example.testvaadin.simulatorcommunication;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -71,15 +70,15 @@ public class UpdatesScheduler {
 			SimulationsUpdater simUpdater = new SimulationsUpdater(simulatorId,
 					simulatorHostname, simulatorPort);
 			if (isPreviousTaskOnThisSimFinished(simulatorId)) {
-				System.out.println("before submitting task "
-						+ (new Date().getTime()) + " simid" + simulatorId);
+				// System.out.println("before submitting task "
+				// + (new Date().getTime()) + " simid" + simulatorId);
 				Future submittedTask = schedulerSimulationUpdater
 						.submit(simUpdater);
 				isTaskFinished.put(simulatorId, submittedTask);
 			} else {
-				System.out
-						.println("No, prev task on this simulator is not finished"
-								+ simulatorId);
+				// System.out
+				// .println("No, prev task on this simulator is not finished"
+				// + simulatorId);
 			}
 		}
 	}

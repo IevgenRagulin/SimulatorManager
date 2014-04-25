@@ -8,6 +8,7 @@ com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function()
  {
 	//to make object accessible from outside of the function; Used to make RPC calls to the server
 	window.speedCompomentObj = this;
+	window.initializedSpeed = false;
 	//set css id of the component
     window.speedCssId = this.getState().cssid;
 	window.dataaaSpeed = $.parseJSON(this.getState().data);

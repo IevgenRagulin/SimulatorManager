@@ -22,10 +22,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	public RunningSimulationsView(Navigator navigator) {
 		super(navigator);
 		this.initGoogleMaps();
-		System.out.println("avionycs" + avionycsLayout);
-		System.out.println("suepr google map" + googleMap);
 		avionycsLayout.addComponent(googleMap);
-		initPageRefresher();
+
 	}
 
 	public FlightPathGoogleMapRunningSim getGoogleMap() {
@@ -49,6 +47,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 		} else {
 			selectedSimulatorId = event.getParameters();
 			this.handleValueChangeEvent();
+			initPageRefresher();
 		}
 	}
 
@@ -65,6 +64,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 
 	private void setAllSimulationSimulatorData(Item selectedSimulator) {
 		getErrorLabel().setValue("Chosen simulator id: " + selectedSimulatorId);
+		System.out.println("Setting all simulator data " + selectedSimulatorId);
 		mainSimulationLayout.setVisible(true);
 		String simulatorId = selectedSimulator
 				.getItemProperty(ColumnNames.getSimulatorIdPropName())
@@ -135,8 +135,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	@Override
 	protected void resetUI() {
 		primaryFlightDisplay.resetPfd();
-		altitudeChart.resetChart();
-		speedChart.resetChart();
+		// initGraphs();
 		googleMap.clearMap();
 	}
 
