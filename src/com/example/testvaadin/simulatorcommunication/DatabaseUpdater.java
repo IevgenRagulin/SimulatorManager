@@ -14,7 +14,7 @@ import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
 public class DatabaseUpdater {
-	private static final double HALF_METER = 0.5;
+	protected static final double HALF_METER = 0.5;
 	private static DatabaseHelper dbHelp = new DatabaseHelper();
 
 	// in combination with saveToDbFrequency used to determine if we should save
@@ -34,7 +34,8 @@ public class DatabaseUpdater {
 		Integer simulationIdInt = Integer.valueOf(simulationId.toString());
 		addedCount = (addedCount + 1) % saveToDbFrequency;
 		addedSimInfoCount = (addedSimInfoCount + 1) % saveSimInfoToDbFrequency;
-		if (hasPlaneMoved(simulatorId) && (shouldWeSaveDataToDb())) {
+		if (hasPlaneMovedMoreThan(simulatorId, HALF_METER)
+				&& (shouldWeSaveDataToDb())) {
 			addDevicesStateInfoToDatabase(simulationIdInt, simulatorId);
 			if (shouldWeSaveSimulationInfoToDatabase()) {
 				addSimulationInfoInfoToDatabase(simulationIdInt, simulatorId);
@@ -56,9 +57,10 @@ public class DatabaseUpdater {
 	}
 
 	/*
-	 * Returns true if the plane has moved more than HALF_METER
+	 * Returns true if the plane has moved n a distance more then @distInMeters
 	 */
-	public static boolean hasPlaneMoved(String simulatorId) {
+	public static boolean hasPlaneMovedMoreThan(String simulatorId,
+			double halfMeter) {
 		boolean hasPlaneMoved = true;
 		SimulationInfoItem currentSimItem = SimulatorsStatus
 				.getSimulationInfoItemBySimulatorId(simulatorId);
@@ -70,7 +72,7 @@ public class DatabaseUpdater {
 			Double currentLatitude = currentSimItem.getBean().getLatitude();
 			Double currentLongtitude = currentSimItem.getBean().getLongtitude();
 			if (distanceBetweenTwoPoints(prevLatitude, prevLongtitude,
-					currentLatitude, currentLongtitude) > HALF_METER) {
+					currentLatitude, currentLongtitude) > halfMeter) {
 				hasPlaneMoved = true;
 			} else {
 				hasPlaneMoved = false;

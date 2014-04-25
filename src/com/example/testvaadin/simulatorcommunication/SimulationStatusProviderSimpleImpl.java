@@ -16,6 +16,8 @@ public class SimulationStatusProviderSimpleImpl {
 	// If the simulator doesn't respond maxFailedTolearatedRequests times, we
 	// consider it not running
 	private static int maxFailedTolearatedRequests = 10;
+	protected static final double HALF_METER = 0.5;
+	private static final double FIVE_KM = 5000;
 
 	// If the simulator has the same position maxSimilarPositions times, we
 	// consider the simulator is not running
@@ -49,7 +51,7 @@ public class SimulationStatusProviderSimpleImpl {
 		}
 		// if simulator's position hasn't changed and it's not paused increase
 		// number of responses with similar data
-		if (!DatabaseUpdater.hasPlaneMoved(simulatorId)
+		if (!hasPlaneMovedMoreThan(simulatorId, HALF_METER)
 				&& (dataFromSimulation != null)
 				&& (!dataFromSimulation.getSimulationPaused())) {
 			SimulationStatusProviderSimpleImpl
@@ -57,6 +59,26 @@ public class SimulationStatusProviderSimpleImpl {
 		} else {
 			setNumOfSimilarPosDataToZero(simulatorId);
 		}
+		// If simulator's position has changed too much (i.e. 5kms), it means
+		// that the airplane has been moved to a new position
+		// not by flying there, but by setting the position through X-Plane.
+		// This means, we should finish this simulation, and start a new one
+		if (hasPlaneMovedMoreThan(simulatorId, FIVE_KM)) {
+			setNumOfFailedReqToMax(simulatorId);
+		}
+	}
+
+	private static void setNumOfFailedReqToMax(String simulatorId) {
+		simulatorIdNumberOfFailedRequests.put(simulatorId,
+				maxFailedTolearatedRequests + 1);
+	}
+
+	/*
+	 * Checks if the airplane has move on a distance more then @distInMeters
+	 */
+	private static boolean hasPlaneMovedMoreThan(String simulatorId,
+			double distInMeters) {
+		return DatabaseUpdater.hasPlaneMovedMoreThan(simulatorId, distInMeters);
 	}
 
 	protected static void setNumOfFailedReqToZero(String simulatorId) {
