@@ -5,8 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 @SuppressWarnings("serial")
-@com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js",
-		"tweenjs-0.5.1.min.js", "easeljs-0.7.1.min.js" })
+@com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js" })
 public class PrimaryFlightDisplay extends
 		com.vaadin.ui.AbstractJavaScriptComponent {
 

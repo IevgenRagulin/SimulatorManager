@@ -30,9 +30,13 @@ public class SimulationsUpdater implements Runnable {
 
 	@Override
 	public void run() {
-		updateSimulationStateData();
-		SimulationItem simulationItem = getLatestSimulationData();
-		SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
+		try {
+			updateSimulationStateData();
+			SimulationItem simulationItem = getLatestSimulationData();
+			SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void updateSimulatorStatusInAThread(final String simulatorId,
@@ -46,12 +50,12 @@ public class SimulationsUpdater implements Runnable {
 		// System.out.println("Going to contact simulator " + simulatorId);
 		AllSimulationInfo allSimInfo = SocketHelper.getSimulationData(
 				simulatorHostname, simulatorPort);
-		// System.out.println("contacted simulator " + simulatorId);
 		if (allSimInfo != null) {
 			updateSimulDevStateData(allSimInfo);
 			updateSimulInfoData(allSimInfo);
 			updateSimulPFDData(allSimInfo);
 		}
+
 		updateSimulationStateInDatabase(allSimInfo);
 	}
 

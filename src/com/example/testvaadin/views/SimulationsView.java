@@ -98,7 +98,7 @@ public abstract class SimulationsView extends BasicView {
 	private void initControlYoke() {
 		// -2 means the device doesn't send data
 		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0, true,
-				false);
+				false, 3, 0, 0, 0);
 	}
 
 	protected abstract void initGoogleMaps();

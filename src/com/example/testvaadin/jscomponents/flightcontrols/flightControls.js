@@ -35,7 +35,6 @@ var currentElevatorTrim = 0;
 var currentRudderTrim = 0;
 var currentPaused = false;
 
-
 var wantHaveRudder = 0;
 var wantHaveAileron = 0;
 var wantHaveElevator = 0;
@@ -46,7 +45,9 @@ var wantHaveAileronTrim = 0;
 var wantHaveElevatorTrim = 0;
 var wantHaveRudderTrim = 0;
 var wantHavePaused = false;
-
+var wantHaveLandG_1 = 0;
+var wantHaveLandG_2 = 0;
+var wantHaveLandG_3 = 0;
 
 var currentlyChangingRudder = false;
 var currentlyChangingAileron = false;
@@ -64,7 +65,10 @@ var yOffset = (window.yokeBackHeight - window.yokeHeight) / 2;
 var xOffsetR = (window.rudderBackWidth - window.rudderWidth) / 2;
 var yOffsetR = (window.rudderBackHeight - window.rudderHeight) / 2;
 
+var numberOfLandingGears = 0;
+
 function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
+
 	var e = this.getElement();
 	initYokeHtml(e);
 	initYoke();
@@ -82,16 +86,17 @@ function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
 		window.wantHaveBrakes = this.getState().b;
 		window.maxSpeedOnFlaps = this.getState().maxonflaps;
 		window.wantHavePaused = this.getState().p;
-		console.log("WANT HAVE PAUSED"+this.getState().p);
+		window.wantHaveLandG_1 = this.getState().landg_1;
+		window.wantHaveLandG_2 = this.getState().landg_2;
+		window.wantHaveLandG_3 = this.getState().landg_3;
+		window.numberOfLandingGears = this.numoflandg;
 		updateFlightControls();
-		
-		
 	};
 }
 
 function initYokeHtml(e) {
 	e.innerHTML = e.innerHTML
-			+"<div style='float:left'>"
+			+ "<div style='float:left'>"
 			+ "<div>Control Yoke</div>"
 			+ "<canvas id='controlYokeB' width='115' height='115' style='margin-bottom: 38px; background-color: black;'>"
 			+ "Your browser doesn't support canvas."
@@ -105,15 +110,23 @@ function initYokeHtml(e) {
 			+ "</div>"
 			+ "<div style='float: left; margin-left: 10px'>"
 			+ "<div id='speedBrakesV'>Speed brakes</div>"
-			+ "<canvas id='speedBrakes' width='120' height='120'></canvas>"
+			+ "<canvas id='speedBrakes' width='120' height='70'></canvas>"
 			+ "<div id='flapsV'>Flaps</div>"
-			+ "<canvas id='flaps' width='120' height='120'></canvas>"
-			+ "<div style='margin-left: 40px'>"
-			+ "</div>" 
-			+ "<canvas id='paused' width='100' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "<canvas id='flaps' width='120' height='70'></canvas>"
 			+ "<div style='margin-left: 40px'>"
 			+ "</div>"
-			+ "<canvas id='brakes' width='100' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>";
+			+ "<div style='float: left; height: 100px'>"
+			+ "<canvas id='paused' width='120' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "<div style='margin-left: 40px'>"
+			+ "</div>"
+			+ "<canvas id='brakes' width='120' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "<div></div>"
+			+ "<canvas id='landing_gear_1' width='120' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "<div></div>"
+			+ "<canvas id='landing_gear_2' width='120' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "<div></div>"
+			+ "<canvas id='landing_gear_3' width='120' height='30' style='background-color: black; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;'></canvas>"
+			+ "</div>";
 }
 
 function updateFlightControls() {
@@ -143,6 +156,7 @@ function updateFlightControls() {
 	}
 	setBrakes();
 	setSimulationPaused();
+	setLandingGears();
 }
 
 // Function for calculating aileron, rudder, elevetor, speed brakes, flaps
@@ -155,7 +169,7 @@ function calculateFlightControlsAnimStep(dif, step) {
 	}
 }
 
-//Animation for setting rudder
+// Animation for setting rudder
 function setRudder() {
 	var dif = window.wantHaveRudder - window.currentRudder;
 	if (shouldWeMakeAnimationStep(dif, 0.05)) {
@@ -171,8 +185,7 @@ function setRudder() {
 	drawAilRudElev();
 }
 
-
-//Animation for setting elevator
+// Animation for setting elevator
 function setElevator() {
 	var dif = window.wantHaveElevator - window.currentElevator;
 	// check if we should continue animating
@@ -187,9 +200,10 @@ function setElevator() {
 	}
 	window.currentElevator = window.currentElevator + dif;
 	drawAilRudElev();
+
 }
 
-//Animation for setting aileron
+// Animation for setting aileron
 function setAileron() {
 	var dif = window.wantHaveAileron - window.currentAileron;
 	// check if we should continue animating
@@ -206,7 +220,7 @@ function setAileron() {
 	drawAilRudElev();
 }
 
-//Animation for setting aileron trim
+// Animation for setting aileron trim
 function setAileronTrim() {
 	var dif = window.wantHaveAileronTrim - window.currentAileronTrim;
 	// check if we should continue animating
@@ -229,7 +243,7 @@ function isFlightControlDataAvailable(value) {
 	return (value != -2);
 }
 
-//Animation for setting rudder trim
+// Animation for setting rudder trim
 function setRudderTrim() {
 	var dif = window.wantHaveRudderTrim - window.currentRudderTrim;
 	if (shouldWeMakeAnimationStep(dif, 0.05)) {
@@ -245,7 +259,7 @@ function setRudderTrim() {
 	drawAilRudElevTrim();
 }
 
-//Animation for setting elevator trim
+// Animation for setting elevator trim
 function setElevatorTrim() {
 	var dif = window.wantHaveElevatorTrim - window.currentElevatorTrim;
 	// check if we should continue animating
@@ -261,7 +275,6 @@ function setElevatorTrim() {
 	window.currentElevatorTrim = window.currentElevatorTrim + dif;
 	drawAilRudElevTrim();
 }
-
 
 function drawAilRudElevTrim() {
 	var ctx = document.getElementById('controlYokeTrim').getContext('2d');
@@ -309,28 +322,28 @@ function drawAilRudElev() {
 	drawRudderInd();
 }
 
-//Draws moving circle which displays current trim rudder value
+// Draws moving circle which displays current trim rudder value
 function drawRudderIndTrim() {
 	var ctxRud = document.getElementById('controlRudderTrim').getContext('2d');
 	drawRudderTrim();
 	drawRudderRudderTrimIndHelpFunc(ctxRud, window.currentRudderTrim);
 }
 
-//Draws moving circle which displays current rudder value
+// Draws moving circle which displays current rudder value
 function drawRudderInd() {
 	var ctxRud = document.getElementById('controlRudderB').getContext('2d');
 	drawRudder();
 	drawRudderRudderTrimIndHelpFunc(ctxRud, window.currentRudder);
 }
 
-//Draws moving circle which displays current rudder, trim rudder value
+// Draws moving circle which displays current rudder, trim rudder value
 function drawRudderRudderTrimIndHelpFunc(ctxRud, currentValue) {
 	ctxRud.fillStyle = "red";
 	ctxRud.strokeStyle = "red";
 	/* Draw rudder */
 	var y = window.rudderHeight / 2 + window.yOffsetR;
-	var x = window.rudderWidth / 2 + currentValue
-			* (window.rudderWidth / 2) + window.xOffsetR;
+	var x = window.rudderWidth / 2 + currentValue * (window.rudderWidth / 2)
+			+ window.xOffsetR;
 	fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
 }
 
@@ -379,15 +392,13 @@ function setBrakes() {
 	if (window.wantHaveBrakes) {
 		window.currentBrakes = true;
 		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
-		ctxBrakes.fillText("BRAKES ON", 15, 17);
+		ctxBrakes.fillText("BRAKES ON", 5, 17);
 	} else {
 		window.currentBrakes = false;
 		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
-		ctxBrakes.fillText("BRAKES OFF", 15, 17);
-	} 
+		ctxBrakes.fillText("BRAKES OFF", 5, 17);
+	}
 }
-
-
 
 function setSimulationPaused() {
 	var canPaused = document.getElementById('paused');
@@ -397,11 +408,53 @@ function setSimulationPaused() {
 	if (window.wantHavePaused) {
 		window.currentPaused = true;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
-		ctxPaused.fillText("PAUSED", 15, 17);
+		ctxPaused.fillText("PAUSED", 5, 17);
 	} else {
 		window.currentPaused = false;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
-		ctxPaused.fillText("RUNNING", 15, 17);
+		ctxPaused.fillText("RUNNING", 5, 17);
+	}
+}
+
+function setLandingGears() {
+	if (window.numberOfLandingGears==0) {
+		window.wantHaveLandG_1 = -1;
+		window.wantHaveLandG_2 = -1;
+		window.wantHaveLandG_3 = -1;
+	}
+	if (window.numberOfLandingGears==1) {
+		window.wantHaveLandG_2 = -1;
+		window.wantHaveLandG_3 = -1;
+	}
+	if (window.numberOfLandingGears==2) {
+		window.wantHaveLandG_3 = -1;
+	}
+	if (window.numberOfLandingGears==3) {
+	}
+	setLandingGearElement(1, window.wantHaveLandG_1);
+	setLandingGearElement(2, window.wantHaveLandG_2);
+	setLandingGearElement(3, window.wantHaveLandG_3);
+	
+}
+
+function setLandingGearElement(landGearNum, wantHaveValue) {
+	var canLandGear = document.getElementById('landing_gear_' + landGearNum);
+	var ctxLandGear = canLandGear.getContext('2d');
+	ctxLandGear.strokeStyle = 'red';
+	ctxLandGear.fillStyle = 'red';
+	if (wantHaveValue == 0) {
+		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
+		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "UP", 5, 17);
+	} else if (wantHaveValue == 1) {
+		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
+		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "DOWN", 5, 17);
+	} else if (wantHaveValue == 2) {
+		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
+		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "MOVING", 5,
+				17);
+	} else if (wantHaveValue == -1) {
+		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
+		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "N/A", 5, 17);
 	}
 }
 
@@ -418,19 +471,19 @@ function shouldMakeYokeAnimStep(dif, step) {
 	return ((dif > step) || (dif < -step));
 }
 
-//Draw yoke background
+// Draw yoke background
 function drawYoke() {
 	var ctx = document.getElementById('controlYokeB').getContext('2d');
 	drawYokeYokeTrimHelpFunc(ctx);
 }
 
-//Draw yoke trim background
+// Draw yoke trim background
 function drawYokeTrim() {
 	var ctx = document.getElementById('controlYokeTrim').getContext('2d');
 	drawYokeYokeTrimHelpFunc(ctx);
 }
 
-//Draw yoke, yoke trim background
+// Draw yoke, yoke trim background
 function drawYokeYokeTrimHelpFunc(ctx) {
 	ctx.beginPath();
 	ctx.fillStyle = "white";
@@ -442,19 +495,19 @@ function drawYokeYokeTrimHelpFunc(ctx) {
 			window.yokeWidth, 8);
 }
 
-//Draw rudder background
+// Draw rudder background
 function drawRudder() {
 	var ctx = document.getElementById('controlRudderB').getContext('2d');
 	drawRudderRudderTrimHelpFunc(ctx);
 }
 
-//Draw rudder trim background
+// Draw rudder trim background
 function drawRudderTrim() {
 	var ctx = document.getElementById('controlRudderTrim').getContext('2d');
 	drawRudderRudderTrimHelpFunc(ctx);
 }
 
-//Draw rudder, rudder trim background
+// Draw rudder, rudder trim background
 function drawRudderRudderTrimHelpFunc(ctx) {
 	clearRect(ctx, 0, 0, window.rudderBackWidth, window.rudderBackHeight);
 	ctx.beginPath();
@@ -464,7 +517,7 @@ function drawRudderRudderTrimHelpFunc(ctx) {
 			window.rudderWidth, 8);
 }
 
-//Draws bottom moving line for speed brakes
+// Draws bottom moving line for speed brakes
 function drawSpeedBrakesInd() {
 	var ctx = document.getElementById('speedBrakes').getContext('2d');
 	clearRect(ctx, 0, 0, window.speedBrakesWidth, window.speedBrakesHeight);
@@ -472,27 +525,28 @@ function drawSpeedBrakesInd() {
 	ctx.strokeStyle = "black";
 	// Transfer speed brakes value 0-1 to 0-45 degrees.
 	var speedBrakesInDeg = 45 * window.currentSpeedBrakes;
-	/* Draw speed brakes indicator*/
+	/* Draw speed brakes indicator */
 	drawFlapsSpeedBrHelpFunction(ctx, window.speedBrakesWidth, speedBrakesInDeg);
 }
 
-//Draws bottom moving line for flaps
+// Draws bottom moving line for flaps
 function drawFlapsInd() {
 	var ctx = document.getElementById('flaps').getContext('2d');
 	clearRect(ctx, 0, 0, window.flapsWidth, window.flapsHeight);
 	drawFlaps();
 	ctx.strokeStyle = "black";
-	//Make flaps indicator red if flaps are used and speed exceeds max speed on flaps
+	// Make flaps indicator red if flaps are used and speed exceeds max speed on
+	// flaps
 	if ((window.currentSpeed > window.maxSpeedOnFlaps)
 			&& (window.currentFlaps > 0.1)) {
 		ctx.strokeStyle = "red";
 	}
-	/* Draw flaps indicator*/
+	/* Draw flaps indicator */
 	drawFlapsSpeedBrHelpFunction(ctx, window.flapsWidth, window.currentFlaps);
 }
 
-//Draws bottom moving line for flaps, speed brakes
-function drawFlapsSpeedBrHelpFunction (ctx, indicatorWidth, currentValue) {
+// Draws bottom moving line for flaps, speed brakes
+function drawFlapsSpeedBrHelpFunction(ctx, indicatorWidth, currentValue) {
 	ctx.lineWidth = 4;
 	var y = indicatorWidth * Math.sin((Math.PI / 180) * currentValue);
 	var x = indicatorWidth * Math.cos((Math.PI / 180) * currentValue);
@@ -501,7 +555,7 @@ function drawFlapsSpeedBrHelpFunction (ctx, indicatorWidth, currentValue) {
 	ctx.stroke();
 }
 
-//Draws top line for speed brakes
+// Draws top line for speed brakes
 function drawSpeedBrakes() {
 	var ctx = document.getElementById('speedBrakes').getContext('2d');
 	ctx.beginPath();
@@ -511,7 +565,7 @@ function drawSpeedBrakes() {
 	fillRect(ctx, 0, 0, window.speedBrakesWidth, 2);
 }
 
-//Draws top line for flaps
+// Draws top line for flaps
 function drawFlaps() {
 	var ctx = document.getElementById('flaps').getContext('2d');
 	ctx.beginPath();

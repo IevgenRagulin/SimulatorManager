@@ -19,7 +19,9 @@ public class FlightControls extends AbstractJavaScriptComponent {
 
 	public FlightControls(float aileron, float elevator, float rudder,
 			float aileront, float elevatort, float ruddert, float speedbrakes,
-			float flaps, boolean brakes, boolean paused) {
+			float flaps, boolean brakes, boolean paused,
+			int numbOfLandingGears, int landing_gear_1, int landing_gear_2,
+			int landing_gear_3) {
 		getState().ail = aileron;
 		getState().el = elevator;
 		getState().rd = rudder;
@@ -28,9 +30,14 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		getState().rdt = ruddert;
 		getState().b = brakes;
 		getState().p = paused;
+		getState().numoflandg = numbOfLandingGears;
+		getState().landg_1 = landing_gear_1;
+		getState().landg_2 = landing_gear_2;
+		getState().landg_3 = landing_gear_3;
 		controlYokeStateBean = new FlightControlsStateBean(aileron, elevator,
 				rudder, aileront, elevatort, ruddert, speedbrakes, flaps,
-				brakes, paused);
+				brakes, paused, numbOfLandingGears, landing_gear_1,
+				landing_gear_2, landing_gear_3);
 		setPrimaryStyleName(CSS_CLASS);
 	}
 
@@ -57,6 +64,13 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		boolean newPaused = (Boolean) ((Property<?>) flightControlItem
 				.getItemProperty(ColumnNames.getIssimulationpaused()))
 				.getValue();
+		int landingGear_1 = getLandingGearValue(ColumnNames.getLandinggear1(),
+				flightControlItem);
+		int landingGear_2 = getLandingGearValue(ColumnNames.getLandinggear2(),
+				flightControlItem);
+		int landingGear_3 = getLandingGearValue(ColumnNames.getLandinggear3(),
+				flightControlItem);
+
 		setAileron(newAileron);
 		setElevator(newElevator);
 		setRudder(newRudder);
@@ -68,7 +82,35 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		setSpeedBrakes(newSpeedBrakes);
 		setBrakes(newBrakes);
 		setPaused(newPaused);
+		setLandingGear(landingGear_1, landingGear_2, landingGear_3);
+	}
 
+	private int getLandingGearValue(String columnName, Item flightControlItem) {
+		Object propertyValue = ((Property<?>) flightControlItem
+				.getItemProperty(columnName)).getValue();
+		if (propertyValue != null) {
+			return (Integer) propertyValue;
+		} else {
+			return -1;
+		}
+	}
+
+	private void setLandingGear(int landingGear_1, int landingGear_2,
+			int landingGear_3) {
+		System.out.println("set landing gear one two three" + landingGear_1
+				+ " " + landingGear_2 + " " + landingGear_3 + " ");
+		if (getStateBean().getLandg_1() != landingGear_1) {
+			getState().landg_1 = landingGear_1;
+			getStateBean().setLandg_1(landingGear_1);
+		}
+		if (getStateBean().getLandg_2() != landingGear_2) {
+			getState().landg_2 = landingGear_2;
+			getStateBean().setLandg_2(landingGear_2);
+		}
+		if (getStateBean().getLandg_3() != landingGear_3) {
+			getState().landg_3 = landingGear_3;
+			getStateBean().setLandg_3(landingGear_3);
+		}
 	}
 
 	private void setPaused(boolean newPaused) {
@@ -112,6 +154,13 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		if (getStateBean().getMaxonflaps() != maxSpeedOnFlaps) {
 			getState().maxonflaps = maxSpeedOnFlaps;
 			getStateBean().setMaxonflaps(maxSpeedOnFlaps);
+		}
+		int numberOfLandingGears = (Integer) ((Property<?>) simulatorItem
+				.getItemProperty(ColumnNames.getNumberoflandinggears()))
+				.getValue();
+		if (getStateBean().getNumOfLandG() != numberOfLandingGears) {
+			getState().numoflandg = numberOfLandingGears;
+			getStateBean().setNumOfLandG(numberOfLandingGears);
 		}
 
 	}

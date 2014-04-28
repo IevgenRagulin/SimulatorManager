@@ -64,7 +64,6 @@ public class RunningSimulationsView extends SimulationsView implements View {
 
 	private void setAllSimulationSimulatorData(Item selectedSimulator) {
 		getErrorLabel().setValue("Chosen simulator id: " + selectedSimulatorId);
-		System.out.println("Setting all simulator data " + selectedSimulatorId);
 		mainSimulationLayout.setVisible(true);
 		String simulatorId = selectedSimulator
 				.getItemProperty(ColumnNames.getSimulatorIdPropName())
@@ -141,17 +140,13 @@ public class RunningSimulationsView extends SimulationsView implements View {
 
 	@Override
 	protected void initGoogleMaps() {
-		System.out.println("going to init google maps" + googleMap);
 		if (this.googleMap != null) {
 			this.googleMap.clearMap();
 		} else {
-			System.out.println("going to call google map constructor");
 			FlightPathGoogleMapRunningSim googleMap = new FlightPathGoogleMapRunningSim(
 					new LatLon(60.440963, 22.25122), 4.0,
 					ApplicationConfiguration.getGoogleMapApiKey(), this);
 			setGoogleMap(googleMap);
-			System.out.println("after calling google map constructor"
-					+ googleMap);
 		}
 	}
 

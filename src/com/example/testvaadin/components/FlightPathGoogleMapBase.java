@@ -54,6 +54,7 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 				this, newPositionMarker, latestCoordinatesWindow);
 		this.addMarkerClickListener(infoWindowOpener);
 		newPositionMarker.setAnimationEnabled(false);
+
 		latestCoordinatesWindow.setWidth("100px");
 	}
 

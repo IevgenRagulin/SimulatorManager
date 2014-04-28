@@ -13,18 +13,22 @@ public class SimulationDevStateBean implements Serializable {
 	private Double flaps;
 	private Double speedbrakes;
 	private Boolean brakes;
+
 	private Double ailerontrim;
 	private Double elevatortrim;
 	private Double ruddertrim;
 	private Boolean issimulationpaused;// is simulation paused. we store it both
-										// in
-
-	// simulation and simulationdevstate tables
+										// in simulation and simulationdevstate
+										// tables
+	private Integer landinggear_1;
+	private Integer landinggear_2;
+	private Integer landinggear_3;
 
 	public SimulationDevStateBean(double elevator, double aileron,
 			double rudder, double throttle, double flaps, double speedbrakes,
 			double trimAileron, double trimElevator, double trimRudder,
-			boolean brakes, boolean paused) {
+			boolean brakes, boolean paused, int landinggear_1,
+			int landinggear_2, int landinggear_3) {
 		super();
 		this.elevator = elevator;
 		this.aileron = aileron;
@@ -37,6 +41,9 @@ public class SimulationDevStateBean implements Serializable {
 		this.ruddertrim = trimRudder;
 		this.brakes = brakes;
 		this.issimulationpaused = paused;
+		this.landinggear_1 = landinggear_1;
+		this.landinggear_2 = landinggear_2;
+		this.landinggear_3 = landinggear_3;
 	}
 
 	public SimulationDevStateBean(AllSimulationInfo allSimInfo) {
@@ -54,6 +61,9 @@ public class SimulationDevStateBean implements Serializable {
 		this.ruddertrim = allSimInfo.getTrimRudderPosition();
 		this.brakes = allSimInfo.getBrakes_status();
 		this.issimulationpaused = allSimInfo.getSimulationPaused();
+		this.landinggear_1 = allSimInfo.getLanding_gear_1_status();
+		this.landinggear_2 = allSimInfo.getLanding_gear_2_status();
+		this.landinggear_3 = allSimInfo.getLanding_gear_3_status();
 	}
 
 	public Double getElevator() {
@@ -102,6 +112,18 @@ public class SimulationDevStateBean implements Serializable {
 
 	public void setIssimulationpaused(Boolean paused) {
 		this.issimulationpaused = paused;
+	}
+
+	public Integer getLandinggear_1() {
+		return landinggear_1;
+	}
+
+	public Integer getLandinggear_2() {
+		return landinggear_2;
+	}
+
+	public Integer getLandinggear_3() {
+		return landinggear_3;
 	}
 
 }

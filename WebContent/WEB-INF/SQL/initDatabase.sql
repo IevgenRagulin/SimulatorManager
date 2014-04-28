@@ -31,6 +31,7 @@ CREATE TABLE simulator
   minamountoffuel real,
   maxrpm integer,
   numberofengines integer,
+  numberoflandinggears integer,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulator_pkey PRIMARY KEY (simulatorid),
   CONSTRAINT simulator_simulatorname_key UNIQUE (simulatorname)
@@ -86,6 +87,9 @@ CREATE TABLE simulationdevicesstate
   elevatortrim double precision,
   ailerontrim double precision,
   ruddertrim double precision,
+  landinggear_1 int,
+  landinggear_2 int,
+  landinggear_3 int,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulationdevicesstate_pkey PRIMARY KEY (devstateid),
   CONSTRAINT simulationdevicesstate_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)

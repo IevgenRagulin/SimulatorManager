@@ -6,6 +6,7 @@ public class FlightControlsStateBean implements Serializable {
 	private static final long serialVersionUID = -1663050188807660753L;
 	/* Plane configuration */
 	private int maxonflaps;// mas speed on flaps
+	private int numOfLandG;// number of landing gears
 	/* Flight controls status */
 	private float ail;// aileron
 	private float el; // elevator
@@ -17,10 +18,14 @@ public class FlightControlsStateBean implements Serializable {
 	private boolean b; // brakes
 	private float fl; // flaps
 	private boolean p;// simulation paused
+	public int landg_1;// landing gear 1
+	public int landg_2;// landing gear 1
+	public int landg_3;// landing gear 1
 
 	public FlightControlsStateBean(float aileron, float elevator, float rudder,
 			float aileront, float elevatort, float ruddert, float speedbrakes,
-			float flaps, boolean brakes, boolean paused) {
+			float flaps, boolean brakes, boolean paused, int numOfLandG,
+			int landg_1, int landg_2, int landg_3) {
 		this.ail = aileron;
 		this.el = elevator;
 		this.rd = rudder;
@@ -31,6 +36,10 @@ public class FlightControlsStateBean implements Serializable {
 		this.fl = flaps;
 		this.b = brakes;
 		this.p = paused;
+		this.numOfLandG = numOfLandG;
+		this.landg_1 = landg_1;
+		this.landg_2 = landg_2;
+		this.landg_3 = landg_3;
 	}
 
 	protected int getMaxonflaps() {
@@ -119,6 +128,38 @@ public class FlightControlsStateBean implements Serializable {
 
 	public void setPaused(boolean p) {
 		this.p = p;
+	}
+
+	public int getNumOfLandG() {
+		return numOfLandG;
+	}
+
+	protected void setNumOfLandG(int numOfLandG) {
+		this.numOfLandG = numOfLandG;
+	}
+
+	protected int getLandg_1() {
+		return landg_1;
+	}
+
+	protected void setLandg_1(int landg_1) {
+		this.landg_1 = landg_1;
+	}
+
+	protected int getLandg_2() {
+		return landg_2;
+	}
+
+	protected void setLandg_2(int landg_2) {
+		this.landg_2 = landg_2;
+	}
+
+	protected int getLandg_3() {
+		return landg_3;
+	}
+
+	protected void setLandg_3(int landg_3) {
+		this.landg_3 = landg_3;
 	}
 
 }

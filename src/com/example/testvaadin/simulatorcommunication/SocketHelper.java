@@ -355,6 +355,13 @@ public class SocketHelper {
 			value = getValueOf(":SWIG:", response);
 			simData.setIgnition(stringToDouble(value).intValue());
 
+			// Landing gears 1, 2, 3
+			value = getValueOf(":LG_1:", response);
+			simData.setLanding_gear_1_status(doubleToInt(stringToDouble(value)));
+			value = getValueOf(":LG_2:", response);
+			simData.setLanding_gear_2_status(doubleToInt(stringToDouble(value)));
+			value = getValueOf(":LG_3:", response);
+			simData.setLanding_gear_3_status(doubleToInt(stringToDouble(value)));
 			// ///////////////////////////////////////////////////////
 			// AUTOPILOT TARGET VALUES
 			// ///////////////////////////////////////////////////////

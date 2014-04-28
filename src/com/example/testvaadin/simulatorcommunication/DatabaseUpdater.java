@@ -60,7 +60,7 @@ public class DatabaseUpdater {
 	 * Returns true if the plane has moved n a distance more then @distInMeters
 	 */
 	public static boolean hasPlaneMovedMoreThan(String simulatorId,
-			double halfMeter) {
+			double distInMeters) {
 		boolean hasPlaneMoved = true;
 		SimulationInfoItem currentSimItem = SimulatorsStatus
 				.getSimulationInfoItemBySimulatorId(simulatorId);
@@ -72,7 +72,7 @@ public class DatabaseUpdater {
 			Double currentLatitude = currentSimItem.getBean().getLatitude();
 			Double currentLongtitude = currentSimItem.getBean().getLongtitude();
 			if (distanceBetweenTwoPoints(prevLatitude, prevLongtitude,
-					currentLatitude, currentLongtitude) > halfMeter) {
+					currentLatitude, currentLongtitude) > distInMeters) {
 				hasPlaneMoved = true;
 			} else {
 				hasPlaneMoved = false;
@@ -120,41 +120,69 @@ public class DatabaseUpdater {
 		SimulationDevStateBean simDevStBean = SimulatorsStatus
 				.getSimulationDevStateItemBySimulatorId(simulatorId).getBean();
 		RowId newSimDvStId = (RowId) simDevStCont.addItem();
+		// set reference key to simulation id
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getSimulationidForeignKey()).setValue(
 				simulationIdInt);
+		// save elevator
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getElevator()).setValue(simDevStBean.getElevator());
+		// save aileron
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getAileron()).setValue(simDevStBean.getEleron());
+		// save rudder
 		simDevStCont
 				.getContainerProperty(newSimDvStId, ColumnNames.getRudder())
 				.setValue(simDevStBean.getRudder());
+		// save throttle
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getThrottle()).setValue(simDevStBean.getThrottle());
+		// save flaps
 		simDevStCont.getContainerProperty(newSimDvStId, ColumnNames.getFlaps())
 				.setValue(simDevStBean.getFlaps());
+		// save speed brakes
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getSpeedbrakes()).setValue(
 				simDevStBean.getSpeedbrakes());
+		// save aileron trim
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getAileronTrim()).setValue(
 				simDevStBean.getAilerontrim());
+		// save elevator trim
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getElevatorTrim()).setValue(
 				simDevStBean.getElevatortrim());
+		// save rudder trim
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getRudderTrim()).setValue(
 				simDevStBean.getRuddertrim());
+		// save brakes status
 		simDevStCont
 				.getContainerProperty(newSimDvStId, ColumnNames.getBrakes())
 				.setValue(simDevStBean.getBrakes());
+		// save is simulation paused data
 		simDevStCont.getContainerProperty(newSimDvStId,
 				ColumnNames.getIssimulationpaused()).setValue(
 				simDevStBean.getIssimulationpaused());
+		// save landing gear data
+		System.out.println("land gear 1" + simDevStBean.getLandinggear_1());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getLandinggear1()).setValue(
+				simDevStBean.getLandinggear_1());
+		System.out.println("land gear 2" + simDevStBean.getLandinggear_2());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getLandinggear2()).setValue(
+				simDevStBean.getLandinggear_2());
+		System.out.println("land gear 3" + simDevStBean.getLandinggear_3());
+		simDevStCont.getContainerProperty(newSimDvStId,
+				ColumnNames.getLandinggear3()).setValue(
+				simDevStBean.getLandinggear_3());
 		commitChangeInSQLContainer(simDevStCont);
 	}
 
+	/*
+	 * Adds primary flight display info to database
+	 */
 	@SuppressWarnings("unchecked")
 	private static void addPfdInfoToDatabase(Integer simulationIdInt,
 			String simulatorId) {
@@ -221,6 +249,9 @@ public class DatabaseUpdater {
 		return id;
 	}
 
+	/*
+	 * Create new simulation session which is in RUNNING, NOT PAUSED state
+	 */
 	@SuppressWarnings("unchecked")
 	public static RowId createNewRunningNotPausedSimulation(
 			SQLContainer lastSimCont, String simulatorId) {
@@ -236,6 +267,9 @@ public class DatabaseUpdater {
 		return id;
 	}
 
+	/*
+	 * Set simulation to RUNNING, PAUSED state
+	 */
 	@SuppressWarnings("unchecked")
 	public static void setSimOnPausedState(SQLContainer lastSimCont,
 			Item simulation) {
@@ -246,6 +280,9 @@ public class DatabaseUpdater {
 		commitChangeInSQLContainer(lastSimCont);
 	}
 
+	/*
+	 * Set simulation to RUNNING, NOT PAUSED state
+	 */
 	@SuppressWarnings("unchecked")
 	public static void setSimOnNotPausedState(SQLContainer lastSimCont,
 			Item simulation) {
@@ -266,6 +303,9 @@ public class DatabaseUpdater {
 		}
 	}
 
+	/*
+	 * Set simulation to OFF, NOT PAUSED state
+	 */
 	@SuppressWarnings("unchecked")
 	public static void setSimOffNotPausedState(SQLContainer lastSimCont,
 			Item lastSim) {

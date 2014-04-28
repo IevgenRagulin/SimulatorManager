@@ -148,7 +148,6 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 
 	protected void setNewValue(int newValue) {
 		if (getStateBean().getN() != newValue) {
-			System.out.println("going to set new value, state changed");
 			getStateBean().setN(newValue);
 			this.getState().n = newValue;
 		}

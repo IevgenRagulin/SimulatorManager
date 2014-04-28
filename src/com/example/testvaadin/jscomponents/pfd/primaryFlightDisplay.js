@@ -61,15 +61,10 @@ var currentlyRotatingHorizont = false;
 var horizontHasBeenRotated = false;
 
 var darkGray = '404040';
-
-
-var circle;
+//var currentPitchShape = new createjs.Shape();
 function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
+	//window.currentPitchShape.x=0;
 	var e = this.getElement();
-	circle = new createjs.Shape();
-	circle.graphics.beginFill("#FF0000").drawCircle(0,0,5000);
-	createjs.Tween.get(circle).to({scaleX:0.2}, 1000).call(handleComplete);
-	console.log("kuku. target.alpha"+circle.scaleX);
 	resetPfd();
 	initHtml(e);
 	init();
@@ -86,9 +81,6 @@ function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
 }
 
 function handleComplete() {
-    //console.log("target.alpha"+target.alpha);
-    //console.log("kuku");
-	console.log("kuku");
 }
 
 //Set reset currentlyChangingValue, currentValue global variables to prevent bug when we switch between simulators
@@ -143,7 +135,6 @@ function init() {
 }
 
 function update() {
-	console.log("kuku "+circle.scaleX);
 	if (!window.currentlyChangingPitch) {
 		setPitch();
 	}
@@ -161,9 +152,7 @@ function update() {
 	}
 	if (!window.currentlyChangingVerSpeed) {
 		setVerticalSpeed();
-	} else {
-		console.log("COMPASS NOT SET");
-	}
+	} 
 }
 
 

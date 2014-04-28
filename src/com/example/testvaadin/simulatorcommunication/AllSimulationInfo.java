@@ -110,10 +110,9 @@ public class AllSimulationInfo {
 	// outside
 	Double flaps;
 	Double flaps_status;
-	int landing_gear;
-	int landing_gear_1_status;
-	int landing_gear_2_status;
-	int landing_gear_3_status;
+	Integer landing_gear_1_status;
+	Integer landing_gear_2_status;
+	Integer landing_gear_3_status;
 	boolean pitot_heating;
 	Double brakes;
 	boolean brakes_status;
@@ -679,35 +678,27 @@ public class AllSimulationInfo {
 		this.flaps_status = flaps_status;
 	}
 
-	public int getLanding_gear() {
-		return landing_gear;
-	}
-
-	protected void setLanding_gear(int landing_gear) {
-		this.landing_gear = landing_gear;
-	}
-
-	public int getLanding_gear_1_status() {
+	public Integer getLanding_gear_1_status() {
 		return landing_gear_1_status;
 	}
 
-	protected void setLanding_gear_1_status(int landing_gear_1_status) {
+	protected void setLanding_gear_1_status(Integer landing_gear_1_status) {
 		this.landing_gear_1_status = landing_gear_1_status;
 	}
 
-	public int getLanding_gear_2_status() {
+	public Integer getLanding_gear_2_status() {
 		return landing_gear_2_status;
 	}
 
-	protected void setLanding_gear_2_status(int landing_gear_2_status) {
+	protected void setLanding_gear_2_status(Integer landing_gear_2_status) {
 		this.landing_gear_2_status = landing_gear_2_status;
 	}
 
-	public int getLanding_gear_3_status() {
+	public Integer getLanding_gear_3_status() {
 		return landing_gear_3_status;
 	}
 
-	protected void setLanding_gear_3_status(int landing_gear_3_status) {
+	protected void setLanding_gear_3_status(Integer landing_gear_3_status) {
 		this.landing_gear_3_status = landing_gear_3_status;
 	}
 

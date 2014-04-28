@@ -14,6 +14,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.ui.TextField;
 
 public class SimulatorForm extends FieldGroup {
+	private static final int DEFAULT_NUM_OF_LANDING_GEARS = 3;
 	private static final long serialVersionUID = 5886087581072819926L;
 	private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
 	private static final Object DEFAULT_MAX_SPEED_ON_FLAPS = 200;
@@ -103,6 +104,9 @@ public class SimulatorForm extends FieldGroup {
 				.getContainerProperty(simulatorId,
 						ColumnNames.getMaxspeedonflaps())
 				.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
+		app.getSimulatorList()
+				.getContainerProperty(simulatorId,
+						ColumnNames.getNumberoflandinggears()).setValue(DEFAULT_NUM_OF_LANDING_GEARS);
 		commit();
 	}
 

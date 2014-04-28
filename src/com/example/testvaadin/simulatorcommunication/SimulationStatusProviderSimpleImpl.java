@@ -64,6 +64,8 @@ public class SimulationStatusProviderSimpleImpl {
 		// not by flying there, but by setting the position through X-Plane.
 		// This means, we should finish this simulation, and start a new one
 		if (hasPlaneMovedMoreThan(simulatorId, FIVE_KM)) {
+			System.out.println("Plane with simulatorid has moved too much"
+					+ simulatorId);
 			setNumOfFailedReqToMax(simulatorId);
 		}
 	}

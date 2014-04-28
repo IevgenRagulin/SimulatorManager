@@ -1,6 +1,7 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
+	private static final String NUMBEROFLANDINGGEARS = "numberoflandinggears";
 	private static final String SIMULATIONINFOID = "simulationinfoid";
 	private static final String MAXSPEEDONFLAPS = "maxspeedonflaps";
 	private static final String AILERONTRIM = "ailerontrim";
@@ -35,6 +36,9 @@ public class ColumnNames {
 	protected static final String SIMID = "simulatorid";
 	protected static final String PORT = "port";
 	protected static final String HOSTNAME = "hostname";
+	private static final String LANDINGGEAR_1 = "landinggear_1";
+	private static final String LANDINGGEAR_2 = "landinggear_2";
+	private static final String LANDINGGEAR_3 = "landinggear_3";
 
 	protected static final String[] simulatorCols = new String[] { SIMNAME,
 			PLANESIM, SIMID, HOSTNAME, PORT, "minspeed", "maxspeed",
@@ -42,7 +46,7 @@ public class ColumnNames {
 			"mintempcht1", "mintempcht2", "mintempegt1", "mintempegt2",
 			"maxtempcht1", "maxtempcht2", "maxtempegt1", "maxtempegt2",
 			"manifoldpressure", "power", "maxamountoffuel", "minamountoffuel",
-			"maxrpm", "numberofengines" };
+			"maxrpm", "numberofengines", NUMBEROFLANDINGGEARS };
 
 	protected static final String SIMULATORID_FOREIGN_KEY = "simulator_simulatorid";
 	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
@@ -68,7 +72,7 @@ public class ColumnNames {
 	protected static final String[] simulationDevicesStateCols = new String[] {
 			"devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, AILERON, RUDDER,
 			THROTTLE, FLAPS, SPEEDBRAKES, AILERONTRIM, ELEVATORTRIM,
-			RUDDERTRIM, TIMESTAMP };
+			RUDDERTRIM, TIMESTAMP, LANDINGGEAR_1, LANDINGGEAR_2, LANDINGGEAR_3 };
 
 	protected static final String[] simulationBeanPfdInfo = new String[] {
 			ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE,
@@ -300,6 +304,22 @@ public class ColumnNames {
 
 	public static String getSimulationinfoid() {
 		return SIMULATIONINFOID;
+	}
+
+	public static String getNumberoflandinggears() {
+		return NUMBEROFLANDINGGEARS;
+	}
+
+	public static String getLandinggear1() {
+		return LANDINGGEAR_1;
+	}
+
+	public static String getLandinggear2() {
+		return LANDINGGEAR_2;
+	}
+
+	public static String getLandinggear3() {
+		return LANDINGGEAR_3;
 	}
 
 }
