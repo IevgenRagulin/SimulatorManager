@@ -148,6 +148,10 @@ public class RunningSimulationsView extends SimulationsView implements View {
 					ApplicationConfiguration.getGoogleMapApiKey(), this);
 			setGoogleMap(googleMap);
 		}
+		// this.googleMap.ex
+		// PasswordField field = null;
+		// GoogleMapWidget widget = null;
+		// widget.
 	}
 
 	private void setGoogleMap(FlightPathGoogleMapRunningSim googleMap) {

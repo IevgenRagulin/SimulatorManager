@@ -12,7 +12,6 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.tapio.googlemaps.GoogleMap;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapInfoWindow;
-import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 
 public abstract class FlightPathGoogleMapBase extends GoogleMap {
@@ -24,7 +23,7 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 	protected ArrayList<LatLon> planePathPoints = new ArrayList<LatLon>();
 	protected GoogleMapPolyline flightPath = new GoogleMapPolyline(
 			planePathPoints, "#d31717", 0.8, 3);
-	GoogleMapMarker newPositionMarker = new GoogleMapMarker();
+	GoogleMapMarkerExtension newPositionMarker = new GoogleMapMarkerExtension();
 	protected GoogleMapInfoWindow latestCoordinatesWindow = new GoogleMapInfoWindow(
 			"", newPositionMarker);
 	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0,
@@ -39,7 +38,17 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 		super(center, zoom, apiKeyOrClientId);
 		this.view = view;
 		setMapConfiguration();
+		// MarkerOptions markerOptions = MarkerOptions.create();
+		// MarkerImage markerImage = MarkerImage.
+		// Icon icon = Icon.newInstance(
+		// "http://labs.google.com/ridefinder/images/mm_20_red.png");
+		// markerOptions.set
+
+		// newPositionMarker.setAnchor(new Lat));
+
 	}
+
+	// private void addMarker
 
 	private void setMapConfiguration() {
 		setMapType(GoogleMap.MapType.Terrain);
@@ -56,6 +65,7 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 		newPositionMarker.setAnimationEnabled(false);
 
 		latestCoordinatesWindow.setWidth("100px");
+
 	}
 
 	public void addOldDataToMap(SQLContainer simulationInfoData,

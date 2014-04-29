@@ -17,10 +17,22 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
-		// System.out.println("From " + host + " " + response);
+		System.out.println("From " + host + " " + response);
 		closeSocket(queryProcessorSocket);
 		simData = parseSimulatorResponse(response);
+
+		getEngineData(host, port);
 		return simData;
+	}
+
+	private static void getEngineData(String host, int port) {
+		String query = "GET:ENGINE:END:";
+		Socket queryProcessorSocket = createSocket(host, port);
+		PrintWriter out = getPrintWriter(queryProcessorSocket);
+		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
+		out = writeQuery(query, out);
+		String response = getResponseFromSocket(queryProcessorReader);
+		System.out.println("From " + host + " engines " + response);
 	}
 
 	private static PrintWriter getPrintWriter(Socket queryProcessorSocket) {
