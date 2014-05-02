@@ -37,8 +37,10 @@
 		<dependency org="com.vaadin" name="vaadin-client" rev="&vaadin.version;"
 			 conf="widgetset-compile->default" />
 			 
-		<!-- Google maps add-on -->	 
-		<dependency org="com.vaadin.tapio" name="googlemaps" rev="0.8.0" />
+		<!-- Google maps add-on 
+		<dependency org="com.vaadin.tapio" name="googlemaps" rev="0.8.0" />	--> 
+		<dependency org="com.github.rwl" name="gwt-maps" rev="3.8.0-pre1"/>
+            
 
 		<!-- Compiler for custom widget sets. Should not be deployed -->
 		<dependency org="com.vaadin" name="vaadin-client-compiler"
