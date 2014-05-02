@@ -2,14 +2,11 @@ package com.example.testvaadin.beans;
 
 import java.io.Serializable;
 
-import com.example.testvaadin.simulatorcommunication.AllSimulationInfo;
-
 public class SimulationPFDBean implements Serializable {
 
 	private static final long serialVersionUID = -5185271892922972352L;
 	private Double roll;
 	private Double pitch;
-	private Double yaw;
 	private Double ias;
 	private Double altitude;
 	private Double groundaltitude;
@@ -29,13 +26,12 @@ public class SimulationPFDBean implements Serializable {
 		this.truecourse = allSimInfo.getTT();
 	}
 
-	public SimulationPFDBean(Double roll, Double pitch, Double yaw, Double ias,
+	public SimulationPFDBean(Double roll, Double pitch, Double ias,
 			Double altitude, Double groundAltitude, Double verticalSpeed,
 			Double heading, Double truecourse) {
 		super();
 		this.roll = roll;
 		this.pitch = pitch;
-		this.yaw = yaw;
 		this.ias = ias;
 		this.altitude = altitude;
 		this.groundaltitude = groundAltitude;
@@ -50,10 +46,6 @@ public class SimulationPFDBean implements Serializable {
 
 	public Double getPitch() {
 		return pitch;
-	}
-
-	public Double getYaw() {
-		return yaw;
 	}
 
 	public Double getIas() {

@@ -2,8 +2,6 @@ package com.example.testvaadin.beans;
 
 import java.io.Serializable;
 
-import com.example.testvaadin.simulatorcommunication.AllSimulationInfo;
-
 public class SimulationDevStateBean implements Serializable {
 	private static final long serialVersionUID = -7396039034348717995L;
 	private Double elevator;

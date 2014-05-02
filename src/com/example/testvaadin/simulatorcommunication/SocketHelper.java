@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.example.testvaadin.beans.AllEngineInfo;
+import com.example.testvaadin.beans.AllSimulationInfo;
+
 public class SocketHelper {
 
 	public static AllSimulationInfo getSimulationData(String host, int port) {
@@ -17,22 +20,218 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
-		System.out.println("From " + host + " " + response);
 		closeSocket(queryProcessorSocket);
+		System.out.println("From " + host + " " + response);
 		simData = parseSimulatorResponse(response);
 
-		getEngineData(host, port);
 		return simData;
 	}
 
-	private static void getEngineData(String host, int port) {
+	public static AllEngineInfo getEngineData(String host, int port) {
+		AllEngineInfo engineData = null;
 		String query = "GET:ENGINE:END:";
 		Socket queryProcessorSocket = createSocket(host, port);
 		PrintWriter out = getPrintWriter(queryProcessorSocket);
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
+		closeSocket(queryProcessorSocket);
 		System.out.println("From " + host + " engines " + response);
+		// if we got some data, parse it
+		if ((response != null) && (response.length() > 15)) {
+			engineData = parseEngineResponse(response);
+		}
+		return engineData;
+	}
+
+	private static AllEngineInfo parseEngineResponse(String response) {
+		AllEngineInfo engineData = null;
+		String value = null;
+		if (response != null) {
+			engineData = new AllEngineInfo();
+
+			// RPM
+			value = getValueOf(":E1RPM:", response);
+			engineData.setE1rpm(stringToFloat(value));
+			value = getValueOf(":E2RPM:", response);
+			engineData.setE2rpm(stringToFloat(value));
+			value = getValueOf(":E3RPM:", response);
+			engineData.setE3rpm(stringToFloat(value));
+			value = getValueOf(":E4RPM:", response);
+			engineData.setE4rpm(stringToFloat(value));
+
+			// PWR (Watt)
+			value = getValueOf(":E1PWR:", response);
+			engineData.setE1pwr(stringToFloat(value));
+			value = getValueOf(":E2PWR:", response);
+			engineData.setE2pwr(stringToFloat(value));
+			value = getValueOf(":E3PWR:", response);
+			engineData.setE3pwr(stringToFloat(value));
+			value = getValueOf(":E4PWR:", response);
+			engineData.setE4pwr(stringToFloat(value));
+
+			// PWR percent
+			value = getValueOf(":E1PWP:", response);
+			engineData.setE1pwp(stringToFloat(value));
+			value = getValueOf(":E2PWP:", response);
+			engineData.setE2pwp(stringToFloat(value));
+			value = getValueOf(":E3PWP:", response);
+			engineData.setE3pwp(stringToFloat(value));
+			value = getValueOf(":E4PWP:", response);
+			engineData.setE4pwp(stringToFloat(value));
+
+			// Manifold pressure
+			value = getValueOf(":E1MP_:", response);
+			engineData.setE1mp_(stringToFloat(value));
+			value = getValueOf(":E2MP_:", response);
+			engineData.setE2mp_(stringToFloat(value));
+			value = getValueOf(":E3MP_:", response);
+			engineData.setE3mp_(stringToFloat(value));
+			value = getValueOf(":E4MP_:", response);
+			engineData.setE4mp_(stringToFloat(value));
+
+			// EGT1
+			value = getValueOf(":E1ET1:", response);
+			engineData.setE1et1(stringToFloat(value));
+			value = getValueOf(":E2ET1:", response);
+			engineData.setE2et1(stringToFloat(value));
+			value = getValueOf(":E3ET1:", response);
+			engineData.setE3et1(stringToFloat(value));
+			value = getValueOf(":E4ET1:", response);
+			engineData.setE4et1(stringToFloat(value));
+
+			// EGT2
+			value = getValueOf(":E1ET2:", response);
+			engineData.setE1et2(stringToFloat(value));
+			value = getValueOf(":E2ET2:", response);
+			engineData.setE2et2(stringToFloat(value));
+			value = getValueOf(":E3ET2:", response);
+			engineData.setE3et2(stringToFloat(value));
+			value = getValueOf(":E4ET2:", response);
+			engineData.setE4et2(stringToFloat(value));
+
+			// CHT1
+			value = getValueOf(":E1CT1:", response);
+			engineData.setE1ct1(stringToFloat(value));
+			value = getValueOf(":E2CT1:", response);
+			engineData.setE2ct1(stringToFloat(value));
+			value = getValueOf(":E3CT1:", response);
+			engineData.setE3ct1(stringToFloat(value));
+			value = getValueOf(":E4CT1:", response);
+			engineData.setE4ct1(stringToFloat(value));
+
+			// CHT2
+			value = getValueOf(":E1CT2:", response);
+			engineData.setE1ct2(stringToFloat(value));
+			value = getValueOf(":E2CT2:", response);
+			engineData.setE2ct2(stringToFloat(value));
+			value = getValueOf(":E3CT2:", response);
+			engineData.setE3ct2(stringToFloat(value));
+			value = getValueOf(":E4CT2:", response);
+			engineData.setE4ct2(stringToFloat(value));
+
+			// Suction temperature
+			value = getValueOf(":E1EST:", response);
+			engineData.setE1est(stringToFloat(value));
+			value = getValueOf(":E2EST:", response);
+			engineData.setE2est(stringToFloat(value));
+			value = getValueOf(":E3EST:", response);
+			engineData.setE3est(stringToFloat(value));
+			value = getValueOf(":E4EST:", response);
+			engineData.setE4est(stringToFloat(value));
+
+			// Fuel flow
+			value = getValueOf(":E1FF_:", response);
+			engineData.setE1ff_(stringToFloat(value));
+			value = getValueOf(":E2FF_:", response);
+			engineData.setE2ff_(stringToFloat(value));
+			value = getValueOf(":E3FF_:", response);
+			engineData.setE3ff_(stringToFloat(value));
+			value = getValueOf(":E4FF_:", response);
+			engineData.setE4ff_(stringToFloat(value));
+
+			// Fuel pressure
+			value = getValueOf(":E1FP_:", response);
+			engineData.setE1fp_(stringToFloat(value));
+			value = getValueOf(":E2FP_:", response);
+			engineData.setE2fp_(stringToFloat(value));
+			value = getValueOf(":E3FP_:", response);
+			engineData.setE3fp_(stringToFloat(value));
+			value = getValueOf(":E4FP_:", response);
+			engineData.setE4fp_(stringToFloat(value));
+
+			// Oil pressure
+			value = getValueOf(":E1OP_:", response);
+			engineData.setE1op_(stringToFloat(value));
+			value = getValueOf(":E2OP_:", response);
+			engineData.setE2op_(stringToFloat(value));
+			value = getValueOf(":E3OP_:", response);
+			engineData.setE3op_(stringToFloat(value));
+			value = getValueOf(":E4OP_:", response);
+			engineData.setE4op_(stringToFloat(value));
+
+			// Oil temperature
+			value = getValueOf(":E1OT_:", response);
+			engineData.setE1ot_(stringToFloat(value));
+			value = getValueOf(":E2OT_:", response);
+			engineData.setE2ot_(stringToFloat(value));
+			value = getValueOf(":E3OT_:", response);
+			engineData.setE3ot_(stringToFloat(value));
+			value = getValueOf(":E4OT_:", response);
+			engineData.setE4ot_(stringToFloat(value));
+
+			// N1 - jet engine
+			value = getValueOf(":E1N1_:", response);
+			engineData.setE1n1_(stringToFloat(value));
+			value = getValueOf(":E2N1_:", response);
+			engineData.setE2n1_(stringToFloat(value));
+			value = getValueOf(":E3N1_:", response);
+			engineData.setE3n1_(stringToFloat(value));
+			value = getValueOf(":E4N1_:", response);
+			engineData.setE4n1_(stringToFloat(value));
+
+			// N2 - jet engine
+			value = getValueOf(":E2N2_:", response);
+			engineData.setE1n2_(stringToFloat(value));
+			value = getValueOf(":E2N2_:", response);
+			engineData.setE2n2_(stringToFloat(value));
+			value = getValueOf(":E3N2_:", response);
+			engineData.setE3n2_(stringToFloat(value));
+			value = getValueOf(":E4N2_:", response);
+			engineData.setE4n2_(stringToFloat(value));
+
+			// Vibration gauch - jet engine
+			value = getValueOf(":E1VIB:", response);
+			engineData.setE1vib(stringToFloat(value));
+			value = getValueOf(":E2VIB:", response);
+			engineData.setE2vib(stringToFloat(value));
+			value = getValueOf(":E3VIB:", response);
+			engineData.setE3vib(stringToFloat(value));
+			value = getValueOf(":E4VIB:", response);
+			engineData.setE4vib(stringToFloat(value));
+
+			// Voltage. Electric motor - system voltage
+			value = getValueOf(":E1VLT:", response);
+			engineData.setE1vlt(stringToFloat(value));
+			value = getValueOf(":E2VLT:", response);
+			engineData.setE2vlt(stringToFloat(value));
+			value = getValueOf(":E3VLT:", response);
+			engineData.setE3vlt(stringToFloat(value));
+			value = getValueOf(":E4VLT:", response);
+			engineData.setE4vlt(stringToFloat(value));
+
+			// Current.
+			value = getValueOf(":E1AMP:", response);
+			engineData.setE1amp(stringToFloat(value));
+			value = getValueOf(":E2AMP:", response);
+			engineData.setE2amp(stringToFloat(value));
+			value = getValueOf(":E3AMP:", response);
+			engineData.setE3amp(stringToFloat(value));
+			value = getValueOf(":E4AMP:", response);
+			engineData.setE4amp(stringToFloat(value));
+
+		}
+		return engineData;
 	}
 
 	private static PrintWriter getPrintWriter(Socket queryProcessorSocket) {
@@ -131,6 +330,14 @@ public class SocketHelper {
 	private static Double stringToDouble(String strVal) {
 		if (strVal != null) {
 			return Double.parseDouble(strVal);
+		} else {
+			return null;
+		}
+	}
+
+	private static Float stringToFloat(String strVal) {
+		if (strVal != null) {
+			return Float.parseFloat(strVal);
 		} else {
 			return null;
 		}

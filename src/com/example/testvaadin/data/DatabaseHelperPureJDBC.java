@@ -125,6 +125,7 @@ public class DatabaseHelperPureJDBC {
 			// string
 			// in order to not execute empty statements
 			if (!queries[i].trim().equals("")) {
+				System.out.println("Executing query " + queries[i]);
 				statement.executeUpdate(queries[i]);
 			}
 		}

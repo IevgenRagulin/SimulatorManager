@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.testvaadin.beans.AllSimulationInfo;
+
 public class SimulationStatusProviderSimpleImpl {
 	// If simulator is not responding we increase this number by 1. This is used
 	// to figure out if simulator is currently running

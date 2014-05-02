@@ -2,8 +2,6 @@ package com.example.testvaadin.beans;
 
 import java.io.Serializable;
 
-import com.example.testvaadin.simulatorcommunication.AllSimulationInfo;
-
 public class SimulationInfoBean implements Serializable {
 
 	private static final long serialVersionUID = 3769922290842743952L;

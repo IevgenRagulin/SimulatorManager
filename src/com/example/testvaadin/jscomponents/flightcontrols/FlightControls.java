@@ -97,8 +97,6 @@ public class FlightControls extends AbstractJavaScriptComponent {
 
 	private void setLandingGear(int landingGear_1, int landingGear_2,
 			int landingGear_3) {
-		System.out.println("set landing gear one two three" + landingGear_1
-				+ " " + landingGear_2 + " " + landingGear_3 + " ");
 		if (getStateBean().getLandg_1() != landingGear_1) {
 			getState().landg_1 = landingGear_1;
 			getStateBean().setLandg_1(landingGear_1);

@@ -38,25 +38,10 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 			String apiKeyOrClientId, SimulationsView view) {
 
 		super(center, zoom, apiKeyOrClientId);
-		/*
-		 * This is needed to position the marker's image's center at the
-		 * coordinate By default bottom center of the marker's image is located
-		 * at the coordinate. All 6 values need to be set, otherwise anchoring
-		 * will not work
-		 */
-		newPositionMarker.setAnchX(15.0);
-		newPositionMarker.setAnchY(15.0);
-		newPositionMarker.setOrigX(0.0);
-		newPositionMarker.setOrigY(0.0);
-		newPositionMarker.setSizeX(30.0);
-		newPositionMarker.setSizeY(30.0);
-
 		this.view = view;
 		setMapConfiguration();
 
 	}
-
-	// private void addMarker
 
 	private void setMapConfiguration() {
 		setMapType(GoogleMap.MapType.Terrain);
@@ -71,9 +56,7 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 				this, newPositionMarker, latestCoordinatesWindow);
 		this.addMarkerClickListener(infoWindowOpener);
 		newPositionMarker.setAnimationEnabled(false);
-
 		latestCoordinatesWindow.setWidth("100px");
-
 	}
 
 	public void addOldDataToMap(SQLContainer simulationInfoData,
@@ -151,9 +134,19 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 
 	protected void addMarkerOnMap(LatLon newPosition, Double trueCourse) {
 		newPositionMarker.setPosition(newPosition);
-		// newPositionMarker.setIconUrl(getIconUrl(trueCourse));
 		newPositionMarker.setIconUrl(getIconUrl(trueCourse));
-
+		/*
+		 * This is needed to position the marker's image's center at the
+		 * coordinate By default bottom center of the marker's image is located
+		 * at the coordinate. All 6 values need to be set, otherwise anchoring
+		 * will not work
+		 */
+		newPositionMarker.setAnchX(15.0);
+		newPositionMarker.setAnchY(15.0);
+		newPositionMarker.setOrigX(0.0);
+		newPositionMarker.setOrigY(0.0);
+		newPositionMarker.setSizeX(30.0);// set width of the icon
+		newPositionMarker.setSizeY(30.0);// set height of the icon
 		this.lastLatLong = newPosition;
 		addLatestCoordinatesToFlightPath(newPosition);
 		addMarker(newPositionMarker);

@@ -1,4 +1,4 @@
-package com.example.testvaadin.simulatorcommunication;
+package com.example.testvaadin.beans;
 
 public class AllSimulationInfo {
 	// System
@@ -178,7 +178,7 @@ public class AllSimulationInfo {
 		return simulationPaused;
 	}
 
-	protected void setSimulationPaused(Boolean simulationPaused) {
+	public void setSimulationPaused(Boolean simulationPaused) {
 		this.simulationPaused = simulationPaused;
 	}
 
@@ -190,7 +190,7 @@ public class AllSimulationInfo {
 		return aileron;
 	}
 
-	protected void setAileron(Double aileron) {
+	public void setAileron(Double aileron) {
 		this.aileron = aileron;
 	}
 
@@ -198,7 +198,7 @@ public class AllSimulationInfo {
 		return rudder;
 	}
 
-	protected void setRudder(Double rudder) {
+	public void setRudder(Double rudder) {
 		this.rudder = rudder;
 	}
 
@@ -206,7 +206,7 @@ public class AllSimulationInfo {
 		return elevator;
 	}
 
-	protected void setElevator(Double elevator) {
+	public void setElevator(Double elevator) {
 		this.elevator = elevator;
 	}
 
@@ -214,7 +214,7 @@ public class AllSimulationInfo {
 		return trimAileronPosition;
 	}
 
-	protected void setTrimAileronPosition(Double trimPosition) {
+	public void setTrimAileronPosition(Double trimPosition) {
 		if (trimPosition != null) {
 			this.trimAileronPosition = trimPosition;
 		} else {// if simulator doesn't send data about aileron trim
@@ -226,7 +226,7 @@ public class AllSimulationInfo {
 		return trimRudderPosition;
 	}
 
-	protected void setTrimRudderPosition(Double trimRudderPosition) {
+	public void setTrimRudderPosition(Double trimRudderPosition) {
 		if (trimRudderPosition != null) {
 			this.trimRudderPosition = trimRudderPosition;
 		} else {// if simulator doesn't send data about rudder trim
@@ -238,7 +238,7 @@ public class AllSimulationInfo {
 		return trimElevatorPosition;
 	}
 
-	protected void setTrimElevatorPosition(Double trimElevatorPosition) {
+	public void setTrimElevatorPosition(Double trimElevatorPosition) {
 		if (trimElevatorPosition != null) {
 			this.trimElevatorPosition = trimElevatorPosition;
 		} else { // if simulator doesn't send data about elevator trim
@@ -250,7 +250,7 @@ public class AllSimulationInfo {
 		return throttle;
 	}
 
-	protected void setThrottle(Double throttle) {
+	public void setThrottle(Double throttle) {
 		this.throttle = throttle;
 	}
 
@@ -258,7 +258,7 @@ public class AllSimulationInfo {
 		return fps;
 	}
 
-	protected void setFps(float fps) {
+	public void setFps(float fps) {
 		this.fps = fps;
 	}
 
@@ -266,7 +266,7 @@ public class AllSimulationInfo {
 		return sim_speed;
 	}
 
-	protected void setSim_speed(int sim_speed) {
+	public void setSim_speed(int sim_speed) {
 		this.sim_speed = sim_speed;
 	}
 
@@ -274,7 +274,7 @@ public class AllSimulationInfo {
 		return time;
 	}
 
-	protected void setTime(Double time) {
+	public void setTime(Double time) {
 		this.time = time;
 	}
 
@@ -282,7 +282,7 @@ public class AllSimulationInfo {
 		return altitude_standard;
 	}
 
-	protected void setAltitude_standard(Double altitude_standard) {
+	public void setAltitude_standard(Double altitude_standard) {
 		this.altitude_standard = altitude_standard;
 	}
 
@@ -290,7 +290,7 @@ public class AllSimulationInfo {
 		return altitude_corrected;
 	}
 
-	protected void setAltitude_corrected(Double altitude_corrected) {
+	public void setAltitude_corrected(Double altitude_corrected) {
 		this.altitude_corrected = altitude_corrected;
 	}
 
@@ -298,7 +298,7 @@ public class AllSimulationInfo {
 		return GPSHeight;
 	}
 
-	protected void setGPSHeight(Double gPSHeight) {
+	public void setGPSHeight(Double gPSHeight) {
 		GPSHeight = gPSHeight;
 	}
 
@@ -306,7 +306,7 @@ public class AllSimulationInfo {
 		return groundAltitude;
 	}
 
-	protected void setGroundAltitude(Double groundAltitude) {
+	public void setGroundAltitude(Double groundAltitude) {
 		this.groundAltitude = groundAltitude;
 	}
 
@@ -314,7 +314,7 @@ public class AllSimulationInfo {
 		return IAS;
 	}
 
-	protected void setIAS(Double iAS) {
+	public void setIAS(Double iAS) {
 		IAS = iAS;
 	}
 
@@ -322,7 +322,7 @@ public class AllSimulationInfo {
 		return GS;
 	}
 
-	protected void setGS(Double gS) {
+	public void setGS(Double gS) {
 		GS = gS;
 	}
 
@@ -330,7 +330,7 @@ public class AllSimulationInfo {
 		return TAS;
 	}
 
-	protected void setTAS(Double tAS) {
+	public void setTAS(Double tAS) {
 		TAS = tAS;
 	}
 
@@ -338,7 +338,7 @@ public class AllSimulationInfo {
 		return VS;
 	}
 
-	protected void setVS(Double vS) {
+	public void setVS(Double vS) {
 		VS = vS;
 	}
 
@@ -346,7 +346,7 @@ public class AllSimulationInfo {
 		return dynamic_pressure;
 	}
 
-	protected void setDynamic_pressure(Double dynamic_pressure) {
+	public void setDynamic_pressure(Double dynamic_pressure) {
 		this.dynamic_pressure = dynamic_pressure;
 	}
 
@@ -354,7 +354,7 @@ public class AllSimulationInfo {
 		return static_pressure;
 	}
 
-	protected void setStatic_pressure(Double static_pressure) {
+	public void setStatic_pressure(Double static_pressure) {
 		this.static_pressure = static_pressure;
 	}
 
@@ -362,7 +362,7 @@ public class AllSimulationInfo {
 		return VE;
 	}
 
-	protected void setVE(Double vE) {
+	public void setVE(Double vE) {
 		VE = vE;
 	}
 
@@ -370,7 +370,7 @@ public class AllSimulationInfo {
 		return VN;
 	}
 
-	protected void setVN(Double vN) {
+	public void setVN(Double vN) {
 		VN = vN;
 	}
 
@@ -378,7 +378,7 @@ public class AllSimulationInfo {
 		return VU;
 	}
 
-	protected void setVU(Double vU) {
+	public void setVU(Double vU) {
 		VU = vU;
 	}
 
@@ -386,7 +386,7 @@ public class AllSimulationInfo {
 		return pitch;
 	}
 
-	protected void setPitch(Double pitch) {
+	public void setPitch(Double pitch) {
 		this.pitch = pitch;
 	}
 
@@ -394,7 +394,7 @@ public class AllSimulationInfo {
 		return bank;
 	}
 
-	protected void setBank(Double bank) {
+	public void setBank(Double bank) {
 		this.bank = bank;
 	}
 
@@ -402,7 +402,7 @@ public class AllSimulationInfo {
 		return heading;
 	}
 
-	protected void setHeading(Double heading) {
+	public void setHeading(Double heading) {
 		this.heading = heading;
 	}
 
@@ -410,7 +410,7 @@ public class AllSimulationInfo {
 		return latitude;
 	}
 
-	protected void setLatitude(Double latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
@@ -418,7 +418,7 @@ public class AllSimulationInfo {
 		return longitude;
 	}
 
-	protected void setLongitude(Double longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -426,7 +426,7 @@ public class AllSimulationInfo {
 		return TT;
 	}
 
-	protected void setTT(Double tT) {
+	public void setTT(Double tT) {
 		TT = tT;
 	}
 
@@ -434,7 +434,7 @@ public class AllSimulationInfo {
 		return alpha;
 	}
 
-	protected void setAlpha(Double alpha) {
+	public void setAlpha(Double alpha) {
 		this.alpha = alpha;
 	}
 
@@ -442,7 +442,7 @@ public class AllSimulationInfo {
 		return beta;
 	}
 
-	protected void setBeta(Double beta) {
+	public void setBeta(Double beta) {
 		this.beta = beta;
 	}
 
@@ -450,7 +450,7 @@ public class AllSimulationInfo {
 		return angleOfSideSlip;
 	}
 
-	protected void setAngleOfSideSlip(Double angleOfSideSlip) {
+	public void setAngleOfSideSlip(Double angleOfSideSlip) {
 		this.angleOfSideSlip = angleOfSideSlip;
 	}
 
@@ -458,7 +458,7 @@ public class AllSimulationInfo {
 		return P;
 	}
 
-	protected void setP(Double p) {
+	public void setP(Double p) {
 		P = p;
 	}
 
@@ -466,7 +466,7 @@ public class AllSimulationInfo {
 		return Q;
 	}
 
-	protected void setQ(Double q) {
+	public void setQ(Double q) {
 		Q = q;
 	}
 
@@ -474,7 +474,7 @@ public class AllSimulationInfo {
 		return R;
 	}
 
-	protected void setR(Double r) {
+	public void setR(Double r) {
 		R = r;
 	}
 
@@ -482,7 +482,7 @@ public class AllSimulationInfo {
 		return local_ax;
 	}
 
-	protected void setLocal_ax(Double local_ax) {
+	public void setLocal_ax(Double local_ax) {
 		this.local_ax = local_ax;
 	}
 
@@ -490,7 +490,7 @@ public class AllSimulationInfo {
 		return local_ay;
 	}
 
-	protected void setLocal_ay(Double local_ay) {
+	public void setLocal_ay(Double local_ay) {
 		this.local_ay = local_ay;
 	}
 
@@ -498,7 +498,7 @@ public class AllSimulationInfo {
 		return local_az;
 	}
 
-	protected void setLocal_az(Double local_az) {
+	public void setLocal_az(Double local_az) {
 		this.local_az = local_az;
 	}
 
@@ -506,7 +506,7 @@ public class AllSimulationInfo {
 		return engine_rpm;
 	}
 
-	protected void setEngine_rpm(Double engine_rpm) {
+	public void setEngine_rpm(Double engine_rpm) {
 		this.engine_rpm = engine_rpm;
 	}
 
@@ -514,7 +514,7 @@ public class AllSimulationInfo {
 		return engine_pwr;
 	}
 
-	protected void setEngine_pwr(Double engine_pwr) {
+	public void setEngine_pwr(Double engine_pwr) {
 		this.engine_pwr = engine_pwr;
 	}
 
@@ -522,7 +522,7 @@ public class AllSimulationInfo {
 		return engine_pwr_percent;
 	}
 
-	protected void setEngine_pwr_percent(Double engine_pwr_percent) {
+	public void setEngine_pwr_percent(Double engine_pwr_percent) {
 		this.engine_pwr_percent = engine_pwr_percent;
 	}
 
@@ -530,7 +530,7 @@ public class AllSimulationInfo {
 		return engine_manifold_pressure;
 	}
 
-	protected void setEngine_manifold_pressure(Double engine_manifold_pressure) {
+	public void setEngine_manifold_pressure(Double engine_manifold_pressure) {
 		this.engine_manifold_pressure = engine_manifold_pressure;
 	}
 
@@ -538,7 +538,7 @@ public class AllSimulationInfo {
 		return engine_exh_gas_temp1;
 	}
 
-	protected void setEngine_exh_gas_temp1(Double engine_exh_gas_temp1) {
+	public void setEngine_exh_gas_temp1(Double engine_exh_gas_temp1) {
 		this.engine_exh_gas_temp1 = engine_exh_gas_temp1;
 	}
 
@@ -546,7 +546,7 @@ public class AllSimulationInfo {
 		return engine_exh_gas_temp2;
 	}
 
-	protected void setEngine_exh_gas_temp2(Double engine_exh_gas_temp2) {
+	public void setEngine_exh_gas_temp2(Double engine_exh_gas_temp2) {
 		this.engine_exh_gas_temp2 = engine_exh_gas_temp2;
 	}
 
@@ -554,7 +554,7 @@ public class AllSimulationInfo {
 		return engine_cyl_head_temp1;
 	}
 
-	protected void setEngine_cyl_head_temp1(Double engine_cyl_head_temp1) {
+	public void setEngine_cyl_head_temp1(Double engine_cyl_head_temp1) {
 		this.engine_cyl_head_temp1 = engine_cyl_head_temp1;
 	}
 
@@ -562,7 +562,7 @@ public class AllSimulationInfo {
 		return engine_cyl_head_temp2;
 	}
 
-	protected void setEngine_cyl_head_temp2(Double engine_cyl_head_temp2) {
+	public void setEngine_cyl_head_temp2(Double engine_cyl_head_temp2) {
 		this.engine_cyl_head_temp2 = engine_cyl_head_temp2;
 	}
 
@@ -570,7 +570,7 @@ public class AllSimulationInfo {
 		return engine_suction_temp;
 	}
 
-	protected void setEngine_suction_temp(Double engine_suction_temp) {
+	public void setEngine_suction_temp(Double engine_suction_temp) {
 		this.engine_suction_temp = engine_suction_temp;
 	}
 
@@ -578,7 +578,7 @@ public class AllSimulationInfo {
 		return engine_oil_pressure;
 	}
 
-	protected void setEngine_oil_pressure(Double engine_oil_pressure) {
+	public void setEngine_oil_pressure(Double engine_oil_pressure) {
 		this.engine_oil_pressure = engine_oil_pressure;
 	}
 
@@ -586,7 +586,7 @@ public class AllSimulationInfo {
 		return engine_oil_temp;
 	}
 
-	protected void setEngine_oil_temp(Double engine_oil_temp) {
+	public void setEngine_oil_temp(Double engine_oil_temp) {
 		this.engine_oil_temp = engine_oil_temp;
 	}
 
@@ -594,7 +594,7 @@ public class AllSimulationInfo {
 		return engine_fuel_pressure;
 	}
 
-	protected void setEngine_fuel_pressure(Double engine_fuel_pressure) {
+	public void setEngine_fuel_pressure(Double engine_fuel_pressure) {
 		this.engine_fuel_pressure = engine_fuel_pressure;
 	}
 
@@ -602,7 +602,7 @@ public class AllSimulationInfo {
 		return engine_fuel_flow;
 	}
 
-	protected void setEngine_fuel_flow(Double engine_fuel_flow) {
+	public void setEngine_fuel_flow(Double engine_fuel_flow) {
 		this.engine_fuel_flow = engine_fuel_flow;
 	}
 
@@ -610,7 +610,7 @@ public class AllSimulationInfo {
 		return lfuel;
 	}
 
-	protected void setLfuel(Double lfuel) {
+	public void setLfuel(Double lfuel) {
 		this.lfuel = lfuel;
 	}
 
@@ -618,7 +618,7 @@ public class AllSimulationInfo {
 		return rfuel;
 	}
 
-	protected void setRfuel(Double rfuel) {
+	public void setRfuel(Double rfuel) {
 		this.rfuel = rfuel;
 	}
 
@@ -626,7 +626,7 @@ public class AllSimulationInfo {
 		return tfuel;
 	}
 
-	protected void setTfuel(Double tfuel) {
+	public void setTfuel(Double tfuel) {
 		this.tfuel = tfuel;
 	}
 
@@ -634,7 +634,7 @@ public class AllSimulationInfo {
 		return battery_temp;
 	}
 
-	protected void setBattery_temp(Double battery_temp) {
+	public void setBattery_temp(Double battery_temp) {
 		this.battery_temp = battery_temp;
 	}
 
@@ -642,7 +642,7 @@ public class AllSimulationInfo {
 		return battery_voltage;
 	}
 
-	protected void setBattery_voltage(Double battery_voltage) {
+	public void setBattery_voltage(Double battery_voltage) {
 		this.battery_voltage = battery_voltage;
 	}
 
@@ -650,7 +650,7 @@ public class AllSimulationInfo {
 		return battery_amperage;
 	}
 
-	protected void setBattery_amperage(Double battery_amperage) {
+	public void setBattery_amperage(Double battery_amperage) {
 		this.battery_amperage = battery_amperage;
 	}
 
@@ -658,7 +658,7 @@ public class AllSimulationInfo {
 		return battery_capacity;
 	}
 
-	protected void setBattery_capacity(Double battery_capacity) {
+	public void setBattery_capacity(Double battery_capacity) {
 		this.battery_capacity = battery_capacity;
 	}
 
@@ -666,7 +666,7 @@ public class AllSimulationInfo {
 		return flaps;
 	}
 
-	protected void setFlaps(Double flaps) {
+	public void setFlaps(Double flaps) {
 		this.flaps = flaps;
 	}
 
@@ -674,7 +674,7 @@ public class AllSimulationInfo {
 		return flaps_status;
 	}
 
-	protected void setFlaps_status(Double flaps_status) {
+	public void setFlaps_status(Double flaps_status) {
 		this.flaps_status = flaps_status;
 	}
 
@@ -682,7 +682,7 @@ public class AllSimulationInfo {
 		return landing_gear_1_status;
 	}
 
-	protected void setLanding_gear_1_status(Integer landing_gear_1_status) {
+	public void setLanding_gear_1_status(Integer landing_gear_1_status) {
 		this.landing_gear_1_status = landing_gear_1_status;
 	}
 
@@ -690,7 +690,7 @@ public class AllSimulationInfo {
 		return landing_gear_2_status;
 	}
 
-	protected void setLanding_gear_2_status(Integer landing_gear_2_status) {
+	public void setLanding_gear_2_status(Integer landing_gear_2_status) {
 		this.landing_gear_2_status = landing_gear_2_status;
 	}
 
@@ -698,7 +698,7 @@ public class AllSimulationInfo {
 		return landing_gear_3_status;
 	}
 
-	protected void setLanding_gear_3_status(Integer landing_gear_3_status) {
+	public void setLanding_gear_3_status(Integer landing_gear_3_status) {
 		this.landing_gear_3_status = landing_gear_3_status;
 	}
 
@@ -706,7 +706,7 @@ public class AllSimulationInfo {
 		return pitot_heating;
 	}
 
-	protected void setPitot_heating(boolean pitot_heating) {
+	public void setPitot_heating(boolean pitot_heating) {
 		this.pitot_heating = pitot_heating;
 	}
 
@@ -714,7 +714,7 @@ public class AllSimulationInfo {
 		return brakes;
 	}
 
-	protected void setBrakes(Double brakes) {
+	public void setBrakes(Double brakes) {
 		this.brakes = brakes;
 	}
 
@@ -722,7 +722,7 @@ public class AllSimulationInfo {
 		return brakes_status;
 	}
 
-	protected void setBrakes_status(boolean b) {
+	public void setBrakes_status(boolean b) {
 		this.brakes_status = b;
 	}
 
@@ -730,7 +730,7 @@ public class AllSimulationInfo {
 		return speed_brakes;
 	}
 
-	protected void setSpeed_brakes(Double speed_brakes) {
+	public void setSpeed_brakes(Double speed_brakes) {
 		this.speed_brakes = speed_brakes;
 	}
 
@@ -738,7 +738,7 @@ public class AllSimulationInfo {
 		return speed_brakes_status;
 	}
 
-	protected void setSpeed_brakes_status(Double speed_brakes_status) {
+	public void setSpeed_brakes_status(Double speed_brakes_status) {
 		this.speed_brakes_status = speed_brakes_status;
 	}
 
@@ -746,7 +746,7 @@ public class AllSimulationInfo {
 		return master_switch;
 	}
 
-	protected void setMaster_switch(boolean master_switch) {
+	public void setMaster_switch(boolean master_switch) {
 		this.master_switch = master_switch;
 	}
 
@@ -754,7 +754,7 @@ public class AllSimulationInfo {
 		return accu;
 	}
 
-	protected void setAccu(boolean accu) {
+	public void setAccu(boolean accu) {
 		this.accu = accu;
 	}
 
@@ -762,7 +762,7 @@ public class AllSimulationInfo {
 		return gen;
 	}
 
-	protected void setGen(boolean gen) {
+	public void setGen(boolean gen) {
 		this.gen = gen;
 	}
 
@@ -770,7 +770,7 @@ public class AllSimulationInfo {
 		return ignition;
 	}
 
-	protected void setIgnition(int ignition) {
+	public void setIgnition(int ignition) {
 		this.ignition = ignition;
 	}
 
@@ -778,7 +778,7 @@ public class AllSimulationInfo {
 		return QNH;
 	}
 
-	protected void setQNH(Double qNH) {
+	public void setQNH(Double qNH) {
 		QNH = qNH;
 	}
 
@@ -786,7 +786,7 @@ public class AllSimulationInfo {
 		return avionic_switch;
 	}
 
-	protected void setAvionic_switch(boolean avionic_switch) {
+	public void setAvionic_switch(boolean avionic_switch) {
 		this.avionic_switch = avionic_switch;
 	}
 
@@ -794,7 +794,7 @@ public class AllSimulationInfo {
 		return efis;
 	}
 
-	protected void setEfis(boolean efis) {
+	public void setEfis(boolean efis) {
 		this.efis = efis;
 	}
 
@@ -802,7 +802,7 @@ public class AllSimulationInfo {
 		return comm_nav;
 	}
 
-	protected void setComm_nav(boolean comm_nav) {
+	public void setComm_nav(boolean comm_nav) {
 		this.comm_nav = comm_nav;
 	}
 
@@ -810,7 +810,7 @@ public class AllSimulationInfo {
 		return position_light;
 	}
 
-	protected void setPosition_light(boolean position_light) {
+	public void setPosition_light(boolean position_light) {
 		this.position_light = position_light;
 	}
 
@@ -818,7 +818,7 @@ public class AllSimulationInfo {
 		return data_switch;
 	}
 
-	protected void setData_switch(boolean data_switch) {
+	public void setData_switch(boolean data_switch) {
 		this.data_switch = data_switch;
 	}
 
@@ -826,7 +826,7 @@ public class AllSimulationInfo {
 		return optional_switch;
 	}
 
-	protected void setOptional_switch(boolean optional_switch) {
+	public void setOptional_switch(boolean optional_switch) {
 		this.optional_switch = optional_switch;
 	}
 
@@ -834,7 +834,7 @@ public class AllSimulationInfo {
 		return sw_status_master_switch;
 	}
 
-	protected void setSw_status_master_switch(boolean sw_status_master_switch) {
+	public void setSw_status_master_switch(boolean sw_status_master_switch) {
 		this.sw_status_master_switch = sw_status_master_switch;
 	}
 
@@ -842,7 +842,7 @@ public class AllSimulationInfo {
 		return sw_status_accu;
 	}
 
-	protected void setSw_status_accu(boolean sw_status_accu) {
+	public void setSw_status_accu(boolean sw_status_accu) {
 		this.sw_status_accu = sw_status_accu;
 	}
 
@@ -850,7 +850,7 @@ public class AllSimulationInfo {
 		return sw_status_gen;
 	}
 
-	protected void setSw_status_gen(boolean sw_status_gen) {
+	public void setSw_status_gen(boolean sw_status_gen) {
 		this.sw_status_gen = sw_status_gen;
 	}
 
@@ -858,7 +858,7 @@ public class AllSimulationInfo {
 		return sw_status_avionic_switch;
 	}
 
-	protected void setSw_status_avionic_switch(boolean sw_status_avionic_switch) {
+	public void setSw_status_avionic_switch(boolean sw_status_avionic_switch) {
 		this.sw_status_avionic_switch = sw_status_avionic_switch;
 	}
 
@@ -866,7 +866,7 @@ public class AllSimulationInfo {
 		return sw_status_efis;
 	}
 
-	protected void setSw_status_efis(boolean sw_status_efis) {
+	public void setSw_status_efis(boolean sw_status_efis) {
 		this.sw_status_efis = sw_status_efis;
 	}
 
@@ -874,7 +874,7 @@ public class AllSimulationInfo {
 		return ap_ias;
 	}
 
-	protected void setAp_ias(Double ap_ias) {
+	public void setAp_ias(Double ap_ias) {
 		this.ap_ias = ap_ias;
 	}
 
@@ -882,7 +882,7 @@ public class AllSimulationInfo {
 		return ap_alt;
 	}
 
-	protected void setAp_alt(Double ap_alt) {
+	public void setAp_alt(Double ap_alt) {
 		this.ap_alt = ap_alt;
 	}
 
@@ -890,7 +890,7 @@ public class AllSimulationInfo {
 		return ap_hea;
 	}
 
-	protected void setAp_hea(Double ap_hea) {
+	public void setAp_hea(Double ap_hea) {
 		this.ap_hea = ap_hea;
 	}
 
@@ -898,7 +898,7 @@ public class AllSimulationInfo {
 		return ap_tt;
 	}
 
-	protected void setAp_tt(Double ap_tt) {
+	public void setAp_tt(Double ap_tt) {
 		this.ap_tt = ap_tt;
 	}
 
@@ -906,7 +906,7 @@ public class AllSimulationInfo {
 		return ap_vs;
 	}
 
-	protected void setAp_vs(Double ap_vs) {
+	public void setAp_vs(Double ap_vs) {
 		this.ap_vs = ap_vs;
 	}
 
@@ -914,7 +914,7 @@ public class AllSimulationInfo {
 		return ap_mode;
 	}
 
-	protected void setAp_mode(int ap_mode) {
+	public void setAp_mode(int ap_mode) {
 		this.ap_mode = ap_mode;
 	}
 
@@ -922,7 +922,7 @@ public class AllSimulationInfo {
 		return temperature;
 	}
 
-	protected void setTemperature(Double temperature) {
+	public void setTemperature(Double temperature) {
 		this.temperature = temperature;
 	}
 
@@ -930,7 +930,7 @@ public class AllSimulationInfo {
 		return temperature_cabin;
 	}
 
-	protected void setTemperature_cabin(Double temperature_cabin) {
+	public void setTemperature_cabin(Double temperature_cabin) {
 		this.temperature_cabin = temperature_cabin;
 	}
 
@@ -938,7 +938,7 @@ public class AllSimulationInfo {
 		return wind_speed;
 	}
 
-	protected void setWind_speed(Double wind_speed) {
+	public void setWind_speed(Double wind_speed) {
 		this.wind_speed = wind_speed;
 	}
 
@@ -946,7 +946,7 @@ public class AllSimulationInfo {
 		return wind_direction;
 	}
 
-	protected void setWind_direction(Double wind_direction) {
+	public void setWind_direction(Double wind_direction) {
 		this.wind_direction = wind_direction;
 	}
 
@@ -954,7 +954,7 @@ public class AllSimulationInfo {
 		return test0;
 	}
 
-	protected void setTest0(Double test0) {
+	public void setTest0(Double test0) {
 		this.test0 = test0;
 	}
 
@@ -962,7 +962,7 @@ public class AllSimulationInfo {
 		return test1;
 	}
 
-	protected void setTest1(Double test1) {
+	public void setTest1(Double test1) {
 		this.test1 = test1;
 	}
 
@@ -970,7 +970,7 @@ public class AllSimulationInfo {
 		return test2;
 	}
 
-	protected void setTest2(Double test2) {
+	public void setTest2(Double test2) {
 		this.test2 = test2;
 	}
 
@@ -978,7 +978,7 @@ public class AllSimulationInfo {
 		return test3;
 	}
 
-	protected void setTest3(Double test3) {
+	public void setTest3(Double test3) {
 		this.test3 = test3;
 	}
 
@@ -986,7 +986,7 @@ public class AllSimulationInfo {
 		return test4;
 	}
 
-	protected void setTest4(Double test4) {
+	public void setTest4(Double test4) {
 		this.test4 = test4;
 	}
 
@@ -994,7 +994,7 @@ public class AllSimulationInfo {
 		return test5;
 	}
 
-	protected void setTest5(Double test5) {
+	public void setTest5(Double test5) {
 		this.test5 = test5;
 	}
 
@@ -1002,7 +1002,7 @@ public class AllSimulationInfo {
 		return test6;
 	}
 
-	protected void setTest6(Double test6) {
+	public void setTest6(Double test6) {
 		this.test6 = test6;
 	}
 
@@ -1010,7 +1010,7 @@ public class AllSimulationInfo {
 		return test7;
 	}
 
-	protected void setTest7(Double test7) {
+	public void setTest7(Double test7) {
 		this.test7 = test7;
 	}
 
@@ -1018,7 +1018,7 @@ public class AllSimulationInfo {
 		return test8;
 	}
 
-	protected void setTest8(Double test8) {
+	public void setTest8(Double test8) {
 		this.test8 = test8;
 	}
 
@@ -1026,7 +1026,7 @@ public class AllSimulationInfo {
 		return test9;
 	}
 
-	protected void setTest9(Double test9) {
+	public void setTest9(Double test9) {
 		this.test9 = test9;
 	}
 

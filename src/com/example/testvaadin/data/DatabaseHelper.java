@@ -216,6 +216,19 @@ public class DatabaseHelper implements Serializable {
 		return simulationDevicesStateContainer;
 	}
 
+	/* Returns simulation engines state SQLContainer */
+	public SQLContainer getSimulationEnginesStateContainer() {
+		TableQuery tq = new TableQuery("simulationenginesstate", pool);
+		tq.setVersionColumn("timestamp");
+		SQLContainer simulationEnginesStateContainer = null;
+		try {
+			simulationEnginesStateContainer = new SQLContainer(tq);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return simulationEnginesStateContainer;
+	}
+
 	public SQLContainer getSimulationPFDContainer() {
 		TableQuery tq = new TableQuery("simulationpfdinfo", pool);
 		tq.setVersionColumn("timestamp");

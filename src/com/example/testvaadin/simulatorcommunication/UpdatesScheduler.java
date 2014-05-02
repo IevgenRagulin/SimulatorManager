@@ -69,6 +69,8 @@ public class UpdatesScheduler {
 			int simulatorPort = getSimulatorPortFromSimItem(simulatorItem);
 			SimulationsUpdater simUpdater = new SimulationsUpdater(simulatorId,
 					simulatorHostname, simulatorPort);
+			System.out.println("going to update " + simulatorHostname
+					+ simulatorPort);
 			if (isPreviousTaskOnThisSimFinished(simulatorId)) {
 				// System.out.println("before submitting task "
 				// + (new Date().getTime()) + " simid" + simulatorId);
@@ -76,9 +78,9 @@ public class UpdatesScheduler {
 						.submit(simUpdater);
 				isTaskFinished.put(simulatorId, submittedTask);
 			} else {
-				// System.out
-				// .println("No, prev task on this simulator is not finished"
-				// + simulatorId);
+				System.out
+						.println("No, prev task on this simulator is not finished"
+								+ simulatorId);
 			}
 		}
 	}

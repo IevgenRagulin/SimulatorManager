@@ -1,5 +1,7 @@
 package com.example.testvaadin.simulatorcommunication;
 
+import com.example.testvaadin.beans.AllEngineInfo;
+import com.example.testvaadin.beans.AllSimulationInfo;
 import com.example.testvaadin.beans.SimulationBean;
 import com.example.testvaadin.beans.SimulationDevStateBean;
 import com.example.testvaadin.beans.SimulationInfoBean;
@@ -7,6 +9,7 @@ import com.example.testvaadin.beans.SimulationPFDBean;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.example.testvaadin.items.SimulationDevStateItem;
+import com.example.testvaadin.items.SimulationEnginesStateItem;
 import com.example.testvaadin.items.SimulationInfoItem;
 import com.example.testvaadin.items.SimulationItem;
 import com.example.testvaadin.items.SimulationPFDItem;
@@ -50,13 +53,20 @@ public class SimulationsUpdater implements Runnable {
 		// System.out.println("Going to contact simulator " + simulatorId);
 		AllSimulationInfo allSimInfo = SocketHelper.getSimulationData(
 				simulatorHostname, simulatorPort);
+		AllEngineInfo allEngineInfo = SocketHelper.getEngineData(
+				simulatorHostname, simulatorPort);
+
 		if (allSimInfo != null) {
 			updateSimulDevStateData(allSimInfo);
 			updateSimulInfoData(allSimInfo);
 			updateSimulPFDData(allSimInfo);
 		}
 
-		updateSimulationStateInDatabase(allSimInfo);
+		if (allEngineInfo != null) {
+			updateSimulEnginesStateData(allEngineInfo);
+		}
+
+		updateSimulationStateInDatabase(allSimInfo, allEngineInfo);
 	}
 
 	/*
@@ -64,7 +74,7 @@ public class SimulationsUpdater implements Runnable {
 	 * from simulator to database TODO: abstract checking status to interface
 	 */
 	private void updateSimulationStateInDatabase(
-			AllSimulationInfo dataFromSimulator) {
+			AllSimulationInfo dataFromSimulator, AllEngineInfo allEngineInfo) {
 		SQLContainer lastSimCont = dbHelp
 				.getLatestSimulationContainer(simulatorId);
 		Item lastSimDb = dbHelp.getLatestItemFromContainer(lastSimCont);
@@ -147,6 +157,11 @@ public class SimulationsUpdater implements Runnable {
 			DatabaseUpdater.createNewRunningPausedSimulation(lastSimCont,
 					simulatorId);
 		}
+		// TODO DELETE THIS!!!!!!!
+		System.out.println("SIMULATOR IS PAUSED. GOING TO SAVE DATA");
+		RowId simulationId = (RowId) lastSimCont.getIdByIndex(0);
+		DatabaseUpdater.addSimulationInfoToDatabase(lastSimCont, simulatorId,
+				simulationId);
 	}
 
 	private void updateSimulationStateInDatabaseSimulatorOn(
@@ -193,6 +208,12 @@ public class SimulationsUpdater implements Runnable {
 		SimulationDevStateBean bean = new SimulationDevStateBean(allSimInfo);
 		SimulationDevStateItem item = new SimulationDevStateItem(bean);
 		SimulatorsStatus.setSimulationDevStateItem(simulatorId, item);
+	}
+
+	private void updateSimulEnginesStateData(AllEngineInfo allSimInfoBean) {
+		SimulationEnginesStateItem item = new SimulationEnginesStateItem(
+				allSimInfoBean);
+		SimulatorsStatus.setSimulationEnginesStateItem(simulatorId, item);
 	}
 
 	public SimulationItem getLatestSimulationData() {
