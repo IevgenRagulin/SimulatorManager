@@ -33,6 +33,7 @@ CREATE TABLE simulator
   maxrpm integer,
   numberofengines integer,
   numberoflandinggears integer,
+  active boolean DEFAULT FALSE,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulator_pkey PRIMARY KEY (simulatorid),
   CONSTRAINT simulator_simulatorname_key UNIQUE (simulatorname)

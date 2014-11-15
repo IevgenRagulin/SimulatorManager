@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.ColumnNamesEnum;
 import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -84,29 +85,16 @@ public class SimulatorForm extends FieldGroup {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
 		System.out.println("SIMULATOR ID" + simulatorId);
 		System.out.println("SIMULATOR NAME"
-				+ app.getSimulatorList().getContainerProperty(simulatorId,
-						ColumnNames.getSimulatorNamePropName()));
+				+ app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorNamePropName()));
 
-		app.getSimulatorList()
-				.getContainerProperty(simulatorId,
-						ColumnNames.getSimulatorNamePropName())
-				.setValue(
-						"New" + random.nextInt(MAXRANDOM - MINRANDOM)
-								+ MINRANDOM);
-		app.getSimulatorList()
-				.getContainerProperty(simulatorId,
-						ColumnNames.getSimulatorPortName()).setValue(12322);
-		app.getSimulatorList()
-				.getContainerProperty(simulatorId,
-						ColumnNames.getSimulatorHostname())
-				.setValue(FAKE_HOSTNAME);
-		app.getSimulatorList()
-				.getContainerProperty(simulatorId,
-						ColumnNames.getMaxspeedonflaps())
-				.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
-		app.getSimulatorList()
-				.getContainerProperty(simulatorId,
-						ColumnNames.getNumberoflandinggears()).setValue(DEFAULT_NUM_OF_LANDING_GEARS);
+		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorNamePropName())
+				.setValue("New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
+		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorPortName()).setValue(12322);
+		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorHostname()).setValue(FAKE_HOSTNAME);
+		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getMaxspeedonflaps()).setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
+		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getNumberoflandinggears())
+				.setValue(DEFAULT_NUM_OF_LANDING_GEARS);
+		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNamesEnum.active.toString()).setValue(false);
 		commit();
 	}
 

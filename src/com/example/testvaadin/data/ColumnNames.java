@@ -34,52 +34,42 @@ public class ColumnNames {
 	protected static final String SIMNAME = "simulatorname";
 	protected static final String PLANESIM = "aircraftmodel";
 	protected static final String SIMID = "simulatorid";
+	protected static final String SIMULATORACTIVE = "active";
 	protected static final String PORT = "port";
 	protected static final String HOSTNAME = "hostname";
 	private static final String LANDINGGEAR_1 = "landinggear_1";
 	private static final String LANDINGGEAR_2 = "landinggear_2";
 	private static final String LANDINGGEAR_3 = "landinggear_3";
 
-	protected static final String[] simulatorCols = new String[] { SIMNAME,
-			PLANESIM, SIMID, HOSTNAME, PORT, "minspeed", "maxspeed",
-			"highspeed", MAXSPEEDONFLAPS, "minspeedonflaps", "hasgears",
-			"mintempcht1", "mintempcht2", "mintempegt1", "mintempegt2",
-			"maxtempcht1", "maxtempcht2", "maxtempegt1", "maxtempegt2",
-			"manifoldpressure", "power", "maxamountoffuel", "minamountoffuel",
-			"maxrpm", "numberofengines", NUMBEROFLANDINGGEARS };
+	protected static final String[] simulatorCols = new String[] { SIMNAME, PLANESIM, SIMID, HOSTNAME, PORT, "minspeed", "maxspeed",
+			"highspeed", MAXSPEEDONFLAPS, "minspeedonflaps", "hasgears", "mintempcht1", "mintempcht2", "mintempegt1", "mintempegt2",
+			"maxtempcht1", "maxtempcht2", "maxtempegt1", "maxtempegt2", "manifoldpressure", "power", "maxamountoffuel", "minamountoffuel",
+			"maxrpm", "numberofengines", NUMBEROFLANDINGGEARS, ColumnNamesEnum.active.toString() };
 
 	protected static final String SIMULATORID_FOREIGN_KEY = "simulator_simulatorid";
 	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
 
-	protected static final String[] simulationCols = new String[] {
-			SIMULATIONID, SIMULATORID_FOREIGN_KEY, ISSIMULATIONON,
+	protected static final String[] simulationCols = new String[] { SIMULATIONID, SIMULATORID_FOREIGN_KEY, ISSIMULATIONON,
 			ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME, SIMULATIONENDEDTIME };
 
-	protected static final String[] simulationBeanCols = new String[] {
-			ISSIMULATIONON, ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME,
+	protected static final String[] simulationBeanCols = new String[] { ISSIMULATIONON, ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME,
 			SIMULATIONENDEDTIME };
 
-	protected static final String[] simulationInfoBeanCols = new String[] {
-			LONGTITUDE, LATITUDE };
+	protected static final String[] simulationInfoBeanCols = new String[] { LONGTITUDE, LATITUDE };
 
-	protected static final String[] simulationInfoCols = new String[] {
-			SIMULATIONINFOID, SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
+	protected static final String[] simulationInfoCols = new String[] { SIMULATIONINFOID, SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
 
-	protected static final String[] simulationDevicesStateBeanCols = new String[] {
-			ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, BRAKES,
-			AILERONTRIM, ELEVATORTRIM, RUDDERTRIM };
+	protected static final String[] simulationDevicesStateBeanCols = new String[] { ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS,
+			SPEEDBRAKES, BRAKES, AILERONTRIM, ELEVATORTRIM, RUDDERTRIM };
 
-	protected static final String[] simulationDevicesStateCols = new String[] {
-			"devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, AILERON, RUDDER,
-			THROTTLE, FLAPS, SPEEDBRAKES, AILERONTRIM, ELEVATORTRIM,
-			RUDDERTRIM, TIMESTAMP, LANDINGGEAR_1, LANDINGGEAR_2, LANDINGGEAR_3 };
+	protected static final String[] simulationDevicesStateCols = new String[] { "devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, AILERON,
+			RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, AILERONTRIM, ELEVATORTRIM, RUDDERTRIM, TIMESTAMP, LANDINGGEAR_1, LANDINGGEAR_2,
+			LANDINGGEAR_3 };
 
-	protected static final String[] simulationBeanPfdInfo = new String[] {
-			ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE,
-			VERTICALSPEED };
+	protected static final String[] simulationBeanPfdInfo = new String[] { ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE,
+			GROUNDALTITUDE, VERTICALSPEED };
 
-	protected static final String[] simulationPfdInfo = new String[] {
-			PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, HEADING,
+	protected static final String[] simulationPfdInfo = new String[] { PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, HEADING,
 			TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE, VERTICALSPEED };
 
 	public static String getSimulationid() {

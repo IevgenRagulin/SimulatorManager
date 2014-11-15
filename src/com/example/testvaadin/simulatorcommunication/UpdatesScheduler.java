@@ -10,24 +10,27 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.ColumnNamesEnum;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
 public class UpdatesScheduler {
-	protected static DatabaseHelper dbHelp = new DatabaseHelper();
-	protected static final int UPDATE_RATE_MS = ApplicationConfiguration
-			.getSimulatorGetDataFrequency();
 
-	private final static ScheduledExecutorService scheduler = Executors
-			.newScheduledThreadPool(1);
-	private static ExecutorService schedulerSimulationUpdater = Executors
-			.newFixedThreadPool(2);
+	final static Logger logger = LoggerFactory.getLogger(UpdatesScheduler.class);
+
+	protected static DatabaseHelper dbHelp = new DatabaseHelper();
+	protected static final int UPDATE_RATE_MS = ApplicationConfiguration.getSimulatorGetDataFrequency();
+
+	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private static ExecutorService schedulerSimulationUpdater = Executors.newFixedThreadPool(2);
 	private static int numberOfSimulators = 2;
-	private static Map<String, Future> isTaskFinished = Collections
-			.synchronizedMap(new HashMap<String, Future>());
+	private static Map<String, Future> isTaskFinished = Collections.synchronizedMap(new HashMap<String, Future>());
 
 	private static final Runnable beeper = new Runnable() {
 		@Override
@@ -40,8 +43,7 @@ public class UpdatesScheduler {
 		}
 	};
 	static {
-		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS,
-				TimeUnit.MILLISECONDS);
+		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS, TimeUnit.MILLISECONDS);
 
 	}
 
@@ -53,8 +55,7 @@ public class UpdatesScheduler {
 		if (numberOfSimulators != simulatorContainer.size()) {
 			numberOfSimulators = simulatorContainer.size();
 			schedulerSimulationUpdater.shutdownNow();
-			schedulerSimulationUpdater = Executors
-					.newFixedThreadPool(numberOfSimulators);
+			schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfSimulators);
 		}
 		UpdatesScheduler.updateSimulatorsStatus(simulatorContainer);
 	}
@@ -64,23 +65,19 @@ public class UpdatesScheduler {
 		// Iterate over simulators, update information about running simulations
 		for (Object itemId : itemIds) {
 			Item simulatorItem = simulatorContainer.getItem(itemId);
-			String simulatorId = getSimulatorIdFromSimItem(simulatorItem);
-			String simulatorHostname = getSimulatorHostnameFromSimItem(simulatorItem);
-			int simulatorPort = getSimulatorPortFromSimItem(simulatorItem);
-			SimulationsUpdater simUpdater = new SimulationsUpdater(simulatorId,
-					simulatorHostname, simulatorPort);
-			System.out.println("going to update " + simulatorHostname
-					+ simulatorPort);
-			if (isPreviousTaskOnThisSimFinished(simulatorId)) {
-				// System.out.println("before submitting task "
-				// + (new Date().getTime()) + " simid" + simulatorId);
-				Future submittedTask = schedulerSimulationUpdater
-						.submit(simUpdater);
-				isTaskFinished.put(simulatorId, submittedTask);
-			} else {
-				System.out
-						.println("No, prev task on this simulator is not finished"
-								+ simulatorId);
+			// check if simulator.active is set to true in db
+			if (getSimulatorActiveFromSimItem(simulatorItem)) {
+				String simulatorId = getSimulatorIdFromSimItem(simulatorItem);
+				String simulatorHostname = getSimulatorHostnameFromSimItem(simulatorItem);
+				int simulatorPort = getSimulatorPortFromSimItem(simulatorItem);
+				SimulationsUpdater simUpdater = new SimulationsUpdater(simulatorId, simulatorHostname, simulatorPort);
+				logger.info("Going to update hostname:portname {} {}", simulatorHostname, simulatorPort);
+				if (isPreviousTaskOnThisSimFinished(simulatorId)) {
+					Future submittedTask = schedulerSimulationUpdater.submit(simUpdater);
+					isTaskFinished.put(simulatorId, submittedTask);
+				} else {
+					logger.info("No, prev task on this simulator is not finished. Simulator id: {} " + simulatorId);
+				}
 			}
 		}
 	}
@@ -95,21 +92,20 @@ public class UpdatesScheduler {
 		}
 	}
 
+	private static boolean getSimulatorActiveFromSimItem(Item simulatorItem) {
+		return (Boolean) simulatorItem.getItemProperty(ColumnNamesEnum.active.toString()).getValue();
+	}
+
 	private static String getSimulatorIdFromSimItem(Item simulatorItem) {
-		return simulatorItem
-				.getItemProperty(ColumnNames.getSimulatorIdPropName())
-				.getValue().toString();
+		return simulatorItem.getItemProperty(ColumnNames.getSimulatorIdPropName()).getValue().toString();
 	}
 
 	private static String getSimulatorHostnameFromSimItem(Item simulatorItem) {
-		return simulatorItem
-				.getItemProperty(ColumnNames.getSimulatorHostname()).getValue()
-				.toString();
+		return simulatorItem.getItemProperty(ColumnNames.getSimulatorHostname()).getValue().toString();
 	}
 
 	private static int getSimulatorPortFromSimItem(Item simulatorItem) {
-		return (Integer) simulatorItem.getItemProperty(
-				ColumnNames.getSimulatorPortName()).getValue();
+		return (Integer) simulatorItem.getItemProperty(ColumnNames.getSimulatorPortName()).getValue();
 	}
 
 }
