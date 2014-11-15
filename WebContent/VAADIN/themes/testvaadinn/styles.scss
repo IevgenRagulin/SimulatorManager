@@ -1,9 +1,9 @@
 @import "addons.scss";
-@import "testvaadin.scss";
+@import "testvaadinn.scss";
 
 /* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
-/* The actual styles should be defined in testvaadin.scss */
-.testvaadin {
+/* The actual styles should be defined in testvaadinn.scss */
+.testvaadinn {
   @include addons;
-  @include testvaadin;
+  @include testvaadinn;
 }

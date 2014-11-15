@@ -21,7 +21,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
-@Theme("testvaadin")
+@Theme("testvaadinn")
 public class NavigatorUI extends UI {
 
 	final static Logger logger = LoggerFactory.getLogger(NavigatorUI.class);

@@ -5,9 +5,9 @@
 
 /* This contains all of your theme.*/
 /* If somebody wants to extend the theme she will include this mixin. */
-@mixin testvaadin {
+@mixin testvaadinn {
   /* Include all the styles from the reindeer theme */
-  @include reindeer;
+  @include valo;
 
   /* Insert your theme rules here */
   .runningSimulationsErrorLabel {

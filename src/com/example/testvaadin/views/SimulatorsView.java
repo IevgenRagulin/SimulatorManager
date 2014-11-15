@@ -4,7 +4,6 @@ import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorListSimulatorsView;
 import com.example.testvaadin.data.DatabaseHelper;
-import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -16,7 +15,6 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-@Theme("testvaadin")
 public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	private SimulatorListSimulatorsView simulatorList;
