@@ -5,9 +5,9 @@ import java.util.Collection;
 
 import com.example.testvaadin.beans.SimulationInfoBean;
 import com.example.testvaadin.data.ApplicationConfiguration;
-import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.example.testvaadin.data.SimulationCols;
+import com.example.testvaadin.data.SimulationInfoCols;
 import com.example.testvaadin.items.SimulationDevStateItem;
 import com.example.testvaadin.items.SimulationEnginesStateItem;
 import com.example.testvaadin.items.SimulationInfoItem;
@@ -117,7 +117,7 @@ public class DatabaseUpdater {
 		RowId newSimDvStId = (RowId) simDevStCont.addItem();
 		Collection<?> itemPropIds = simDevStItem.getItemPropertyIds();
 		// set reference key to simulation id
-		simDevStCont.getContainerProperty(newSimDvStId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
+		simDevStCont.getContainerProperty(newSimDvStId, SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationIdInt);
 
 		// Set values: elevator, eleron, rudder, throttle...
 		for (Object prop : itemPropIds) {
@@ -139,7 +139,7 @@ public class DatabaseUpdater {
 		SimulationPFDItem simPfdItem = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
 		RowId newPfdId = (RowId) simPfdCont.addItem();
 		// set reference key to simulation id
-		simPfdCont.getContainerProperty(newPfdId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
+		simPfdCont.getContainerProperty(newPfdId, SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationIdInt);
 
 		Collection<?> itemPropIds = simPfdItem.getItemPropertyIds();
 		// set values roll, pitch, heading, truecourse...
@@ -158,9 +158,9 @@ public class DatabaseUpdater {
 		SQLContainer simInfoCont = dbHelp.getSimulationInfoContainer();
 		SimulationInfoBean simInfoBean = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId).getBean();
 		RowId newInfoId = (RowId) simInfoCont.addItem();
-		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
-		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getLongtitude()).setValue(simInfoBean.getLongtitude());
-		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getLatitude()).setValue(simInfoBean.getLatitude());
+		simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationIdInt);
+		simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.longtitude.toString()).setValue(simInfoBean.getLongtitude());
+		simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.latitude.toString()).setValue(simInfoBean.getLatitude());
 		commitChangeInSQLContainer(simInfoCont);
 
 	}
@@ -182,7 +182,8 @@ public class DatabaseUpdater {
 
 			RowId newSimEngStId = (RowId) simEnginesStCont.addItem();
 			// set reference key to simulation id
-			simEnginesStCont.getContainerProperty(newSimEngStId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
+			simEnginesStCont.getContainerProperty(newSimEngStId, SimulationInfoCols.simulation_simulationid.toString()).setValue(
+					simulationIdInt);
 			Collection<?> itemPropIds = simEnginesInfoItem.getItemPropertyIds();
 			// set values E1RPM, E1PWR, E1PWP...
 			for (Object prop : itemPropIds) {

@@ -2,7 +2,6 @@ package com.example.testvaadin.data;
 
 public class ColumnNames {
 
-	private static final String SIMULATIONINFOID = "simulationinfoid";
 	private static final String AILERONTRIM = "ailerontrim";
 	private static final String ELEVATORTRIM = "elevatortrim";
 	private static final String RUDDERTRIM = "ruddertrim";
@@ -13,8 +12,6 @@ public class ColumnNames {
 	private static final String AILERON = "eleron";
 	private static final String ELEVATOR = "elevator";
 	private static final String BRAKES = "brakes";
-	private static final String LATITUDE = "latitude";
-	private static final String LONGTITUDE = "longtitude";
 	private static final String TIMESTAMP = "timestamp";
 	private static final String VERTICALSPEED = "verticalspeed";
 	private static final String GROUNDALTITUDE = "groundaltitude";
@@ -30,28 +27,25 @@ public class ColumnNames {
 	private static final String LANDINGGEAR_2 = "landinggear_2";
 	private static final String LANDINGGEAR_3 = "landinggear_3";
 
-	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
-
 	protected static final String[] simulationBeanCols = new String[] { SimulationCols.issimulationon.toString(),
 			SimulationCols.issimulationpaused.toString(), SimulationCols.simulationstartedtime.toString(),
 			SimulationCols.simulationendedtime.toString() };
 
-	protected static final String[] simulationInfoBeanCols = new String[] { LONGTITUDE, LATITUDE };
-
-	protected static final String[] simulationInfoCols = new String[] { SIMULATIONINFOID, SIMULATIONID_FOREIGN_KEY, LONGTITUDE, LATITUDE };
+	protected static final String[] simulationInfoBeanCols = new String[] { SimulationInfoCols.longtitude.toString(),
+			SimulationInfoCols.latitude.toString() };
 
 	protected static final String[] simulationDevicesStateBeanCols = new String[] { ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS,
 			SPEEDBRAKES, BRAKES, AILERONTRIM, ELEVATORTRIM, RUDDERTRIM };
 
-	protected static final String[] simulationDevicesStateCols = new String[] { "devstateid", SIMULATIONID_FOREIGN_KEY, ELEVATOR, AILERON,
-			RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, AILERONTRIM, ELEVATORTRIM, RUDDERTRIM, TIMESTAMP, LANDINGGEAR_1, LANDINGGEAR_2,
-			LANDINGGEAR_3 };
+	protected static final String[] simulationDevicesStateCols = new String[] { "devstateid",
+			SimulationInfoCols.simulation_simulationid.toString(), ELEVATOR, AILERON, RUDDER, THROTTLE, FLAPS, SPEEDBRAKES, AILERONTRIM,
+			ELEVATORTRIM, RUDDERTRIM, TIMESTAMP, LANDINGGEAR_1, LANDINGGEAR_2, LANDINGGEAR_3 };
 
 	protected static final String[] simulationBeanPfdInfo = new String[] { ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE,
 			GROUNDALTITUDE, VERTICALSPEED };
 
-	protected static final String[] simulationPfdInfo = new String[] { PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, HEADING,
-			TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE, VERTICALSPEED };
+	protected static final String[] simulationPfdInfo = new String[] { PFDINFOID, SimulationInfoCols.simulation_simulationid.toString(),
+			ROLL, PITCH, HEADING, TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE, VERTICALSPEED };
 
 	public static String getTrueCourse() {
 		return TRUE_COURSE;
@@ -66,10 +60,6 @@ public class ColumnNames {
 		return simulationBeanCols;
 	}
 
-	public static String getSimulationIdForeignKeyPropName() {
-		return SIMULATIONID_FOREIGN_KEY;
-	}
-
 	public static String[] getSimulationDevicesStateBeanCols() {
 		return simulationDevicesStateBeanCols;
 	}
@@ -80,10 +70,6 @@ public class ColumnNames {
 
 	public static String[] getSimulationInfoBeanCols() {
 		return simulationInfoBeanCols;
-	}
-
-	public static String[] getSimulationInfoCols() {
-		return simulationInfoCols;
 	}
 
 	public static String getTimestamp() {
@@ -122,14 +108,6 @@ public class ColumnNames {
 		return PFDINFOID;
 	}
 
-	public static String getSimulationidForeignKey() {
-		return SIMULATIONID_FOREIGN_KEY;
-	}
-
-	public static String[] getSimulationinfocols() {
-		return simulationInfoCols;
-	}
-
 	public static String[] getSimulationdevicesstatecols() {
 		return simulationDevicesStateCols;
 	}
@@ -140,14 +118,6 @@ public class ColumnNames {
 
 	public static String[] getSimulationpfdinfo() {
 		return simulationPfdInfo;
-	}
-
-	public static String getLatitude() {
-		return LATITUDE;
-	}
-
-	public static String getLongtitude() {
-		return LONGTITUDE;
 	}
 
 	public static String getAileronTrim() {
@@ -188,10 +158,6 @@ public class ColumnNames {
 
 	public static String getElevator() {
 		return ELEVATOR;
-	}
-
-	public static String getSimulationinfoid() {
-		return SIMULATIONINFOID;
 	}
 
 	public static String getLandinggear1() {
