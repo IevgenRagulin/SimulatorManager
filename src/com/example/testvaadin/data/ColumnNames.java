@@ -12,12 +12,7 @@ public class ColumnNames {
 	private static final String RUDDER = "rudder";
 	private static final String AILERON = "eleron";
 	private static final String ELEVATOR = "elevator";
-	private static final String SIMULATIONID = "simulationid";
 	private static final String BRAKES = "brakes";
-	private static final String SIMULATIONENDEDTIME = "simulationendedtime";
-	private static final String SIMULATIONSTARTEDTIME = "simulationstartedtime";
-	private static final String ISSIMULATIONPAUSED = "issimulationpaused";
-	private static final String ISSIMULATIONON = "issimulationon";
 	private static final String LATITUDE = "latitude";
 	private static final String LONGTITUDE = "longtitude";
 	private static final String TIMESTAMP = "timestamp";
@@ -35,14 +30,11 @@ public class ColumnNames {
 	private static final String LANDINGGEAR_2 = "landinggear_2";
 	private static final String LANDINGGEAR_3 = "landinggear_3";
 
-	protected static final String SIMULATORID_FOREIGN_KEY = "simulator_simulatorid";
 	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
 
-	protected static final String[] simulationCols = new String[] { SIMULATIONID, SIMULATORID_FOREIGN_KEY, ISSIMULATIONON,
-			ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME, SIMULATIONENDEDTIME };
-
-	protected static final String[] simulationBeanCols = new String[] { ISSIMULATIONON, ISSIMULATIONPAUSED, SIMULATIONSTARTEDTIME,
-			SIMULATIONENDEDTIME };
+	protected static final String[] simulationBeanCols = new String[] { SimulationCols.issimulationon.toString(),
+			SimulationCols.issimulationpaused.toString(), SimulationCols.simulationstartedtime.toString(),
+			SimulationCols.simulationendedtime.toString() };
 
 	protected static final String[] simulationInfoBeanCols = new String[] { LONGTITUDE, LATITUDE };
 
@@ -61,28 +53,8 @@ public class ColumnNames {
 	protected static final String[] simulationPfdInfo = new String[] { PFDINFOID, SIMULATIONID_FOREIGN_KEY, ROLL, PITCH, HEADING,
 			TRUE_COURSE, IAS, ALTITUDE, GROUNDALTITUDE, VERTICALSPEED };
 
-	public static String getSimulationid() {
-		return SIMULATIONID;
-	}
-
 	public static String getTrueCourse() {
 		return TRUE_COURSE;
-	}
-
-	public static String getSimulationendedtime() {
-		return SIMULATIONENDEDTIME;
-	}
-
-	public static String getSimulationstartedtime() {
-		return SIMULATIONSTARTEDTIME;
-	}
-
-	public static String getIssimulationpaused() {
-		return ISSIMULATIONPAUSED;
-	}
-
-	public static String getIssimulationon() {
-		return ISSIMULATIONON;
 	}
 
 	public static String[] getSimulatorMainCols() {
@@ -90,16 +62,8 @@ public class ColumnNames {
 				SimulatorCols.aircraftmodel.toString() };
 	}
 
-	public static String[] getSimulationCols() {
-		return simulationCols;
-	}
-
 	public static String[] getSimulationBeanCols() {
 		return simulationBeanCols;
-	}
-
-	public static String getSimulatorIdForeignKeyPropName() {
-		return SIMULATORID_FOREIGN_KEY;
 	}
 
 	public static String getSimulationIdForeignKeyPropName() {
@@ -158,16 +122,8 @@ public class ColumnNames {
 		return PFDINFOID;
 	}
 
-	public static String getSimulatoridForeignKey() {
-		return SIMULATORID_FOREIGN_KEY;
-	}
-
 	public static String getSimulationidForeignKey() {
 		return SIMULATIONID_FOREIGN_KEY;
-	}
-
-	public static String[] getSimulationcols() {
-		return simulationCols;
 	}
 
 	public static String[] getSimulationinfocols() {

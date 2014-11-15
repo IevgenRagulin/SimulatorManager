@@ -3,7 +3,7 @@ package com.example.testvaadin.beans;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulationCols;
 import com.vaadin.data.Item;
 
 public class SimulationBean implements Serializable {
@@ -13,8 +13,7 @@ public class SimulationBean implements Serializable {
 	private Date simulationstartedtime;
 	private Date simulationendedtime;
 
-	public SimulationBean(boolean issimulationon, boolean issimulationpaused,
-			Date simulationstartedtime, Date simulationendedtime) {
+	public SimulationBean(boolean issimulationon, boolean issimulationpaused, Date simulationstartedtime, Date simulationendedtime) {
 		super();
 		this.issimulationon = issimulationon;
 		this.issimulationpaused = issimulationpaused;
@@ -24,14 +23,10 @@ public class SimulationBean implements Serializable {
 
 	public SimulationBean(Item item) {
 		if (item != null) {
-			this.issimulationon = (Boolean) item.getItemProperty(
-					ColumnNames.getIssimulationon()).getValue();
-			this.issimulationpaused = (Boolean) item.getItemProperty(
-					ColumnNames.getIssimulationpaused()).getValue();
-			this.simulationstartedtime = (Date) item.getItemProperty(
-					ColumnNames.getSimulationstartedtime()).getValue();
-			this.simulationendedtime = (Date) item.getItemProperty(
-					ColumnNames.getSimulationendedtime()).getValue();
+			this.issimulationon = (Boolean) item.getItemProperty(SimulationCols.issimulationon.toString()).getValue();
+			this.issimulationpaused = (Boolean) item.getItemProperty(SimulationCols.issimulationpaused.toString()).getValue();
+			this.simulationstartedtime = (Date) item.getItemProperty(SimulationCols.simulationstartedtime.toString()).getValue();
+			this.simulationendedtime = (Date) item.getItemProperty(SimulationCols.simulationendedtime.toString()).getValue();
 		}
 	}
 

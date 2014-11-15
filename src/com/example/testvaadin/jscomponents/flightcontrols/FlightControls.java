@@ -1,6 +1,7 @@
 package com.example.testvaadin.jscomponents.flightcontrols;
 
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulationCols;
 import com.example.testvaadin.data.SimulatorCols;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -51,7 +52,8 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getRudderTrim()))
 				.getValue());
 		boolean newBrakes = (Boolean) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getBrakes())).getValue();
-		boolean newPaused = (Boolean) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getIssimulationpaused())).getValue();
+		boolean newPaused = (Boolean) ((Property<?>) flightControlItem.getItemProperty(SimulationCols.issimulationpaused.toString()))
+				.getValue();
 		int landingGear_1 = getLandingGearValue(ColumnNames.getLandinggear1(), flightControlItem);
 		int landingGear_2 = getLandingGearValue(ColumnNames.getLandinggear2(), flightControlItem);
 		int landingGear_3 = getLandingGearValue(ColumnNames.getLandinggear3(), flightControlItem);

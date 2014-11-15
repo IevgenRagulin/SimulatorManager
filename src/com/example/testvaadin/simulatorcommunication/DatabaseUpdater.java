@@ -7,6 +7,7 @@ import com.example.testvaadin.beans.SimulationInfoBean;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.DatabaseHelper;
+import com.example.testvaadin.data.SimulationCols;
 import com.example.testvaadin.items.SimulationDevStateItem;
 import com.example.testvaadin.items.SimulationEnginesStateItem;
 import com.example.testvaadin.items.SimulationInfoItem;
@@ -24,27 +25,22 @@ public class DatabaseUpdater {
 	private static int addedCount = 0;
 	private static int addedSimInfoCount = 0;
 
-	public static void addSimulationInfoToDatabase(SQLContainer lastSimCont,
-			String simulatorId, RowId simulationId) {
-		int saveToDbFrequency = Math.round(ApplicationConfiguration
-				.getWriteToDbFrequency()
+	public static void addSimulationInfoToDatabase(SQLContainer lastSimCont, String simulatorId, RowId simulationId) {
+		int saveToDbFrequency = Math.round(ApplicationConfiguration.getWriteToDbFrequency()
 				/ ApplicationConfiguration.getSimulatorGetDataFrequency());
-		int saveSimInfoToDbFrequency = Math.round(ApplicationConfiguration
-				.getWritePositionToDbFrequency()
+		int saveSimInfoToDbFrequency = Math.round(ApplicationConfiguration.getWritePositionToDbFrequency()
 				/ ApplicationConfiguration.getSimulatorGetDataFrequency());
 
 		Integer simulationIdInt = Integer.valueOf(simulationId.toString());
 		addedCount = (addedCount + 1) % saveToDbFrequency;
 		addedSimInfoCount = (addedSimInfoCount + 1) % saveSimInfoToDbFrequency;
-		if (hasPlaneMovedMoreThan(simulatorId, HALF_METER)
-				&& (shouldWeSaveDataToDb())) {
+		if (hasPlaneMovedMoreThan(simulatorId, HALF_METER) && (shouldWeSaveDataToDb())) {
 			addDevicesStateInfoToDatabase(simulationIdInt, simulatorId);
 			if (shouldWeSaveSimulationInfoToDatabase()) {
 				addSimulationInfoInfoToDatabase(simulationIdInt, simulatorId);
 			}
 			addPfdInfoToDatabase(simulationIdInt, simulatorId);
-			System.out
-					.println("going to add engines info to dtb" + simulatorId);
+			System.out.println("going to add engines info to dtb" + simulatorId);
 			// addEnginesInfoToDatabase(simulationIdInt, simulatorId);
 		}
 		// TODO: MOVE IT UP
@@ -66,20 +62,16 @@ public class DatabaseUpdater {
 	/*
 	 * Returns true if the plane has moved n a distance more then @distInMeters
 	 */
-	public static boolean hasPlaneMovedMoreThan(String simulatorId,
-			double distInMeters) {
+	public static boolean hasPlaneMovedMoreThan(String simulatorId, double distInMeters) {
 		boolean hasPlaneMoved = true;
-		SimulationInfoItem currentSimItem = SimulatorsStatus
-				.getSimulationInfoItemBySimulatorId(simulatorId);
-		SimulationInfoItem prevSimItem = SimulatorsStatus
-				.getPrevSimulationInfoItemBySimulatorId(simulatorId);
+		SimulationInfoItem currentSimItem = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
+		SimulationInfoItem prevSimItem = SimulatorsStatus.getPrevSimulationInfoItemBySimulatorId(simulatorId);
 		if (prevSimItem != null) {
 			Double prevLatitude = prevSimItem.getBean().getLatitude();
 			Double prevLongtitude = prevSimItem.getBean().getLongtitude();
 			Double currentLatitude = currentSimItem.getBean().getLatitude();
 			Double currentLongtitude = currentSimItem.getBean().getLongtitude();
-			if (distanceBetweenTwoPoints(prevLatitude, prevLongtitude,
-					currentLatitude, currentLongtitude) > distInMeters) {
+			if (distanceBetweenTwoPoints(prevLatitude, prevLongtitude, currentLatitude, currentLongtitude) > distInMeters) {
 				hasPlaneMoved = true;
 			} else {
 				hasPlaneMoved = false;
@@ -90,11 +82,9 @@ public class DatabaseUpdater {
 	}
 
 	// calculates distance between two points in meters
-	private static double distanceBetweenTwoPoints(double lat1, double lon1,
-			double lat2, double lon2) {
+	private static double distanceBetweenTwoPoints(double lat1, double lon1, double lat2, double lon2) {
 		double theta = lon1 - lon2;
-		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
-				+ Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
 				* Math.cos(deg2rad(theta));
 		dist = Math.acos(dist);
 		dist = rad2deg(dist);
@@ -121,27 +111,20 @@ public class DatabaseUpdater {
 	 * Saves data about devices state to database
 	 */
 	@SuppressWarnings("unchecked")
-	private static void addDevicesStateInfoToDatabase(Integer simulationIdInt,
-			String simulatorId) {
+	private static void addDevicesStateInfoToDatabase(Integer simulationIdInt, String simulatorId) {
 		SQLContainer simDevStCont = dbHelp.getSimulationDevicesStateContainer();
-		SimulationDevStateItem simDevStItem = SimulatorsStatus
-				.getSimulationDevStateItemBySimulatorId(simulatorId);
+		SimulationDevStateItem simDevStItem = SimulatorsStatus.getSimulationDevStateItemBySimulatorId(simulatorId);
 		RowId newSimDvStId = (RowId) simDevStCont.addItem();
 		Collection<?> itemPropIds = simDevStItem.getItemPropertyIds();
 		// set reference key to simulation id
-		simDevStCont.getContainerProperty(newSimDvStId,
-				ColumnNames.getSimulationidForeignKey()).setValue(
-				simulationIdInt);
+		simDevStCont.getContainerProperty(newSimDvStId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
 
 		// Set values: elevator, eleron, rudder, throttle...
 		for (Object prop : itemPropIds) {
 			String propertyName = ((String) prop);
 			// System.out.println(itemStr
 			// + simDevStItem.getItemProperty(itemStr).getValue());
-			simDevStCont.getContainerProperty(newSimDvStId, propertyName)
-					.setValue(
-							simDevStItem.getItemProperty(propertyName)
-									.getValue());
+			simDevStCont.getContainerProperty(newSimDvStId, propertyName).setValue(simDevStItem.getItemProperty(propertyName).getValue());
 		}
 
 		commitChangeInSQLContainer(simDevStCont);
@@ -151,16 +134,12 @@ public class DatabaseUpdater {
 	 * Adds primary flight display info to database
 	 */
 	@SuppressWarnings("unchecked")
-	private static void addPfdInfoToDatabase(Integer simulationIdInt,
-			String simulatorId) {
+	private static void addPfdInfoToDatabase(Integer simulationIdInt, String simulatorId) {
 		SQLContainer simPfdCont = dbHelp.getSimulationPFDContainer();
-		SimulationPFDItem simPfdItem = SimulatorsStatus
-				.getSimulationPFDItemBySimulatorId(simulatorId);
+		SimulationPFDItem simPfdItem = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
 		RowId newPfdId = (RowId) simPfdCont.addItem();
 		// set reference key to simulation id
-		simPfdCont.getContainerProperty(newPfdId,
-				ColumnNames.getSimulationidForeignKey()).setValue(
-				simulationIdInt);
+		simPfdCont.getContainerProperty(newPfdId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
 
 		Collection<?> itemPropIds = simPfdItem.getItemPropertyIds();
 		// set values roll, pitch, heading, truecourse...
@@ -168,28 +147,20 @@ public class DatabaseUpdater {
 			String propertyName = ((String) prop);
 			// System.out.println(propertyName
 			// + simPfdItem.getItemProperty(propertyName).getValue());
-			simPfdCont.getContainerProperty(newPfdId, propertyName).setValue(
-					simPfdItem.getItemProperty(propertyName).getValue());
+			simPfdCont.getContainerProperty(newPfdId, propertyName).setValue(simPfdItem.getItemProperty(propertyName).getValue());
 		}
 		commitChangeInSQLContainer(simPfdCont);
 
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void addSimulationInfoInfoToDatabase(
-			Integer simulationIdInt, String simulatorId) {
+	private static void addSimulationInfoInfoToDatabase(Integer simulationIdInt, String simulatorId) {
 		SQLContainer simInfoCont = dbHelp.getSimulationInfoContainer();
-		SimulationInfoBean simInfoBean = SimulatorsStatus
-				.getSimulationInfoItemBySimulatorId(simulatorId).getBean();
+		SimulationInfoBean simInfoBean = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId).getBean();
 		RowId newInfoId = (RowId) simInfoCont.addItem();
-		simInfoCont.getContainerProperty(newInfoId,
-				ColumnNames.getSimulationidForeignKey()).setValue(
-				simulationIdInt);
-		simInfoCont
-				.getContainerProperty(newInfoId, ColumnNames.getLongtitude())
-				.setValue(simInfoBean.getLongtitude());
-		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getLatitude())
-				.setValue(simInfoBean.getLatitude());
+		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
+		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getLongtitude()).setValue(simInfoBean.getLongtitude());
+		simInfoCont.getContainerProperty(newInfoId, ColumnNames.getLatitude()).setValue(simInfoBean.getLatitude());
 		commitChangeInSQLContainer(simInfoCont);
 
 	}
@@ -198,15 +169,11 @@ public class DatabaseUpdater {
 	 * Saves data about engines state to database
 	 */
 	@SuppressWarnings("unchecked")
-	private static void addEnginesInfoToDatabase(Integer simulationIdInt,
-			String simulatorId) {
-		SimulationEnginesStateItem simEnginesInfoItem = SimulatorsStatus
-				.getSimulationEngineItemBySimulatorId(simulatorId);
+	private static void addEnginesInfoToDatabase(Integer simulationIdInt, String simulatorId) {
+		SimulationEnginesStateItem simEnginesInfoItem = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
 		if (simEnginesInfoItem != null) {
-			SQLContainer simEnginesStCont = dbHelp
-					.getSimulationEnginesStateContainer();
-			Collection<?> itemPropIdsCont = simEnginesStCont
-					.getContainerPropertyIds();
+			SQLContainer simEnginesStCont = dbHelp.getSimulationEnginesStateContainer();
+			Collection<?> itemPropIdsCont = simEnginesStCont.getContainerPropertyIds();
 			System.out.println("item prop ids cont" + itemPropIdsCont);
 			for (Object prop : itemPropIdsCont) {
 				String propertyName = ((String) prop);
@@ -215,40 +182,27 @@ public class DatabaseUpdater {
 
 			RowId newSimEngStId = (RowId) simEnginesStCont.addItem();
 			// set reference key to simulation id
-			simEnginesStCont.getContainerProperty(newSimEngStId,
-					ColumnNames.getSimulationidForeignKey()).setValue(
-					simulationIdInt);
+			simEnginesStCont.getContainerProperty(newSimEngStId, ColumnNames.getSimulationidForeignKey()).setValue(simulationIdInt);
 			Collection<?> itemPropIds = simEnginesInfoItem.getItemPropertyIds();
 			// set values E1RPM, E1PWR, E1PWP...
 			for (Object prop : itemPropIds) {
 				String propertyName = ((String) prop);
-				System.out.println(propertyName
-						+ simEnginesInfoItem.getItemProperty(propertyName)
-								.getValue());
+				System.out.println(propertyName + simEnginesInfoItem.getItemProperty(propertyName).getValue());
 
-				System.out.println("Property"
-						+ simEnginesStCont.getContainerProperty(newSimEngStId,
-								propertyName));
-				simEnginesStCont.getContainerProperty(newSimEngStId,
-						propertyName).setValue(
-						simEnginesInfoItem.getItemProperty(propertyName)
-								.getValue());
+				System.out.println("Property" + simEnginesStCont.getContainerProperty(newSimEngStId, propertyName));
+				simEnginesStCont.getContainerProperty(newSimEngStId, propertyName).setValue(
+						simEnginesInfoItem.getItemProperty(propertyName).getValue());
 			}
 			commitChangeInSQLContainer(simEnginesStCont);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static RowId createNewRunningPausedSimulation(
-			SQLContainer lastSimCont, String simulatorId) {
+	public static RowId createNewRunningPausedSimulation(SQLContainer lastSimCont, String simulatorId) {
 		RowId id = (RowId) lastSimCont.addItem();
-		lastSimCont.getContainerProperty(id,
-				ColumnNames.getSimulatoridForeignKey()).setValue(
-				Integer.valueOf(simulatorId));
-		lastSimCont.getContainerProperty(id, ColumnNames.getIssimulationon())
-				.setValue(true);
-		lastSimCont.getContainerProperty(id,
-				ColumnNames.getIssimulationpaused()).setValue(true);
+		lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(Integer.valueOf(simulatorId));
+		lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(true);
+		lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(true);
 		commitChangeInSQLContainer(lastSimCont);
 		return id;
 	}
@@ -257,16 +211,11 @@ public class DatabaseUpdater {
 	 * Create new simulation session which is in RUNNING, NOT PAUSED state
 	 */
 	@SuppressWarnings("unchecked")
-	public static RowId createNewRunningNotPausedSimulation(
-			SQLContainer lastSimCont, String simulatorId) {
+	public static RowId createNewRunningNotPausedSimulation(SQLContainer lastSimCont, String simulatorId) {
 		RowId id = (RowId) lastSimCont.addItem();
-		lastSimCont.getContainerProperty(id,
-				ColumnNames.getSimulatoridForeignKey()).setValue(
-				Integer.valueOf(simulatorId));
-		lastSimCont.getContainerProperty(id, ColumnNames.getIssimulationon())
-				.setValue(true);
-		lastSimCont.getContainerProperty(id,
-				ColumnNames.getIssimulationpaused()).setValue(false);
+		lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(Integer.valueOf(simulatorId));
+		lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(true);
+		lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(false);
 		commitChangeInSQLContainer(lastSimCont);
 		return id;
 	}
@@ -275,12 +224,9 @@ public class DatabaseUpdater {
 	 * Set simulation to RUNNING, PAUSED state
 	 */
 	@SuppressWarnings("unchecked")
-	public static void setSimOnPausedState(SQLContainer lastSimCont,
-			Item simulation) {
-		simulation.getItemProperty(ColumnNames.getIssimulationon()).setValue(
-				SimulatorsStatus.SIMULATION_ON);
-		simulation.getItemProperty(ColumnNames.getIssimulationpaused())
-				.setValue(SimulatorsStatus.SIMULATION_PAUSED);
+	public static void setSimOnPausedState(SQLContainer lastSimCont, Item simulation) {
+		simulation.getItemProperty(SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_ON);
+		simulation.getItemProperty(SimulationCols.issimulationpaused.toString()).setValue(SimulatorsStatus.SIMULATION_PAUSED);
 		commitChangeInSQLContainer(lastSimCont);
 	}
 
@@ -288,12 +234,9 @@ public class DatabaseUpdater {
 	 * Set simulation to RUNNING, NOT PAUSED state
 	 */
 	@SuppressWarnings("unchecked")
-	public static void setSimOnNotPausedState(SQLContainer lastSimCont,
-			Item simulation) {
-		simulation.getItemProperty(ColumnNames.getIssimulationon()).setValue(
-				SimulatorsStatus.SIMULATION_ON);
-		simulation.getItemProperty(ColumnNames.getIssimulationpaused())
-				.setValue(SimulatorsStatus.SIMULATION_NOT_PAUSED);
+	public static void setSimOnNotPausedState(SQLContainer lastSimCont, Item simulation) {
+		simulation.getItemProperty(SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_ON);
+		simulation.getItemProperty(SimulationCols.issimulationpaused.toString()).setValue(SimulatorsStatus.SIMULATION_NOT_PAUSED);
 		commitChangeInSQLContainer(lastSimCont);
 	}
 
@@ -311,12 +254,9 @@ public class DatabaseUpdater {
 	 * Set simulation to OFF, NOT PAUSED state
 	 */
 	@SuppressWarnings("unchecked")
-	public static void setSimOffNotPausedState(SQLContainer lastSimCont,
-			Item lastSim) {
-		lastSim.getItemProperty(ColumnNames.getIssimulationon()).setValue(
-				SimulatorsStatus.SIMULATION_OFF);
-		lastSim.getItemProperty(ColumnNames.getIssimulationpaused()).setValue(
-				SimulatorsStatus.SIMULATION_NOT_PAUSED);
+	public static void setSimOffNotPausedState(SQLContainer lastSimCont, Item lastSim) {
+		lastSim.getItemProperty(SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_OFF);
+		lastSim.getItemProperty(SimulationCols.issimulationpaused.toString()).setValue(SimulatorsStatus.SIMULATION_NOT_PAUSED);
 		commitChangeInSQLContainer(lastSimCont);
 	}
 }

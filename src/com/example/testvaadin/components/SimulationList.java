@@ -2,7 +2,7 @@ package com.example.testvaadin.components;
 
 import java.sql.SQLException;
 
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulationCols;
 import com.example.testvaadin.views.ChooseSimulationView;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
@@ -16,8 +16,7 @@ public class SimulationList extends Table {
 		this.view = view;
 		setSizeFull();
 		setSelectable(true);
-		setContainerDataSourceAndVisCol(view.getDBHelp()
-				.getSimulationContainer());
+		setContainerDataSourceAndVisCol(view.getDBHelp().getSimulationContainer());
 		setImmediate(true);
 		setBuffered(false);
 		addValueChangeListener(new Property.ValueChangeListener() {
@@ -34,7 +33,7 @@ public class SimulationList extends Table {
 
 	protected void setContainerDataSourceAndVisCol(SQLContainer newDataSource) {
 		setContainerDataSource(newDataSource);
-		setVisibleColumns((Object[]) ColumnNames.getSimulationcols());
+		setVisibleColumns((Object[]) SimulationCols.getSimulationCols());
 	}
 
 	@Override
@@ -43,8 +42,7 @@ public class SimulationList extends Table {
 			/* Commit the data entered in the person form to the actual item. */
 			super.commit();
 			/* Commit changes to the database. */
-			SQLContainer container = (SQLContainer) this
-					.getContainerDataSource();
+			SQLContainer container = (SQLContainer) this.getContainerDataSource();
 			container.commit();
 		} catch (UnsupportedOperationException e) {
 			e.printStackTrace();
