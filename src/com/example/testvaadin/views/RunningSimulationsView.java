@@ -2,7 +2,7 @@ package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.FlightPathGoogleMapRunningSim;
 import com.example.testvaadin.data.ApplicationConfiguration;
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.items.SimulationPFDItem;
 import com.example.testvaadin.simulatorcommunication.SimulatorsStatus;
 import com.github.wolfie.refresher.Refresher;
@@ -66,7 +66,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	private void setAllSimulationSimulatorData(Item selectedSimulator) {
 		getErrorLabel().setValue("Chosen simulator id: " + selectedSimulatorId);
 		mainSimulationLayout.setVisible(true);
-		String simulatorId = selectedSimulator.getItemProperty(ColumnNames.getSimulatorIdPropName()).getValue().toString();
+		String simulatorId = selectedSimulator.getItemProperty(SimulatorCols.simulatorid.toString()).getValue().toString();
 		// Set simulation data
 		// Item selectedSimulation =
 		// SimulatorsStatus.getSimulationItemBySimulatorId(simulatorId);

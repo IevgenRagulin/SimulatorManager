@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
@@ -25,20 +26,17 @@ public class SelectSimulatorCombo extends ComboBox {
 
 	public void initSelectSimulator() {
 		this.setImmediate(true);
-		Collection<?> itemIds = runningSims.getDBHelp().getSimulatorContainer()
-				.getItemIds();
+		Collection<?> itemIds = runningSims.getDBHelp().getSimulatorContainer().getItemIds();
 		this.removeAllItems();
 		for (Object itemId : itemIds) {
 			Property<?> simulatorName = getSimulatorNameById((RowId) itemId);
 			this.addItem(simulatorName.getValue());
-			simulatorsIdNamesMapping.put((String) simulatorName.getValue(),
-					(RowId) itemId);
+			simulatorsIdNamesMapping.put((String) simulatorName.getValue(), (RowId) itemId);
 		}
 	}
 
 	private Property<?> getSimulatorNameById(RowId itemId) {
-		return runningSims.getDBHelp().getSimulatorContainer().getItem(itemId)
-				.getItemProperty(ColumnNames.getSimulatorNamePropName());
+		return runningSims.getDBHelp().getSimulatorContainer().getItem(itemId).getItemProperty(SimulatorCols.simulatorname.toString());
 	}
 
 	private void setEventListeners() {
@@ -46,8 +44,7 @@ public class SelectSimulatorCombo extends ComboBox {
 			private static final long serialVersionUID = -2862814943819650227L;
 
 			@Override
-			public void valueChange(
-					com.vaadin.data.Property.ValueChangeEvent event) {
+			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 				// handleValueChangeEvent();
 			}
 		});

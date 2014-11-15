@@ -14,9 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.example.testvaadin.data.ApplicationConfiguration;
-import com.example.testvaadin.data.ColumnNames;
-import com.example.testvaadin.data.ColumnNamesEnum;
 import com.example.testvaadin.data.DatabaseHelper;
+import com.example.testvaadin.data.SimulatorCols;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
@@ -93,19 +92,19 @@ public class UpdatesScheduler {
 	}
 
 	private static boolean getSimulatorActiveFromSimItem(Item simulatorItem) {
-		return (Boolean) simulatorItem.getItemProperty(ColumnNamesEnum.active.toString()).getValue();
+		return (Boolean) simulatorItem.getItemProperty(SimulatorCols.active.toString()).getValue();
 	}
 
 	private static String getSimulatorIdFromSimItem(Item simulatorItem) {
-		return simulatorItem.getItemProperty(ColumnNames.getSimulatorIdPropName()).getValue().toString();
+		return simulatorItem.getItemProperty(SimulatorCols.simulatorid.toString()).getValue().toString();
 	}
 
 	private static String getSimulatorHostnameFromSimItem(Item simulatorItem) {
-		return simulatorItem.getItemProperty(ColumnNames.getSimulatorHostname()).getValue().toString();
+		return simulatorItem.getItemProperty(SimulatorCols.hostname.toString()).getValue().toString();
 	}
 
 	private static int getSimulatorPortFromSimItem(Item simulatorItem) {
-		return (Integer) simulatorItem.getItemProperty(ColumnNames.getSimulatorPortName()).getValue();
+		return (Integer) simulatorItem.getItemProperty(SimulatorCols.port.toString()).getValue();
 	}
 
 }

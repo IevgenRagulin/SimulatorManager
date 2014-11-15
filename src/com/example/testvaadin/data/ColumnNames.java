@@ -1,9 +1,8 @@
 package com.example.testvaadin.data;
 
 public class ColumnNames {
-	private static final String NUMBEROFLANDINGGEARS = "numberoflandinggears";
+
 	private static final String SIMULATIONINFOID = "simulationinfoid";
-	private static final String MAXSPEEDONFLAPS = "maxspeedonflaps";
 	private static final String AILERONTRIM = "ailerontrim";
 	private static final String ELEVATORTRIM = "elevatortrim";
 	private static final String RUDDERTRIM = "ruddertrim";
@@ -31,20 +30,10 @@ public class ColumnNames {
 	private static final String PITCH = "pitch";
 	private static final String ROLL = "roll";
 	private static final String PFDINFOID = "pfdinfoid";
-	protected static final String SIMNAME = "simulatorname";
-	protected static final String PLANESIM = "aircraftmodel";
-	protected static final String SIMID = "simulatorid";
 	protected static final String SIMULATORACTIVE = "active";
-	protected static final String PORT = "port";
-	protected static final String HOSTNAME = "hostname";
 	private static final String LANDINGGEAR_1 = "landinggear_1";
 	private static final String LANDINGGEAR_2 = "landinggear_2";
 	private static final String LANDINGGEAR_3 = "landinggear_3";
-
-	protected static final String[] simulatorCols = new String[] { SIMNAME, PLANESIM, SIMID, HOSTNAME, PORT, "minspeed", "maxspeed",
-			"highspeed", MAXSPEEDONFLAPS, "minspeedonflaps", "hasgears", "mintempcht1", "mintempcht2", "mintempegt1", "mintempegt2",
-			"maxtempcht1", "maxtempcht2", "maxtempegt1", "maxtempegt2", "manifoldpressure", "power", "maxamountoffuel", "minamountoffuel",
-			"maxrpm", "numberofengines", NUMBEROFLANDINGGEARS, ColumnNamesEnum.active.toString() };
 
 	protected static final String SIMULATORID_FOREIGN_KEY = "simulator_simulatorid";
 	protected static final String SIMULATIONID_FOREIGN_KEY = "simulation_simulationid";
@@ -76,10 +65,6 @@ public class ColumnNames {
 		return SIMULATIONID;
 	}
 
-	public static String getMaxspeedonflaps() {
-		return MAXSPEEDONFLAPS;
-	}
-
 	public static String getTrueCourse() {
 		return TRUE_COURSE;
 	}
@@ -101,15 +86,8 @@ public class ColumnNames {
 	}
 
 	public static String[] getSimulatorMainCols() {
-		return new String[] { SIMID, SIMNAME, PLANESIM };
-	}
-
-	public static String[] getSimulatorCols() {
-		return simulatorCols;
-	}
-
-	public static String getSimulatorIdPropName() {
-		return SIMID;
+		return new String[] { SimulatorCols.simulatorid.toString(), SimulatorCols.simulatorname.toString(),
+				SimulatorCols.aircraftmodel.toString() };
 	}
 
 	public static String[] getSimulationCols() {
@@ -118,18 +96,6 @@ public class ColumnNames {
 
 	public static String[] getSimulationBeanCols() {
 		return simulationBeanCols;
-	}
-
-	public static String getSimulatorNamePropName() {
-		return SIMNAME;
-	}
-
-	public static String getSimulatorPortName() {
-		return PORT;
-	}
-
-	public static String getSimulatorHostname() {
-		return HOSTNAME;
 	}
 
 	public static String getSimulatorIdForeignKeyPropName() {
@@ -190,30 +156,6 @@ public class ColumnNames {
 
 	public static String getPfdinfoid() {
 		return PFDINFOID;
-	}
-
-	public static String getSimname() {
-		return SIMNAME;
-	}
-
-	public static String getPlanesim() {
-		return PLANESIM;
-	}
-
-	public static String getSimid() {
-		return SIMID;
-	}
-
-	public static String getPort() {
-		return PORT;
-	}
-
-	public static String getHostname() {
-		return HOSTNAME;
-	}
-
-	public static String[] getSimulatorcols() {
-		return simulatorCols;
 	}
 
 	public static String getSimulatoridForeignKey() {
@@ -294,10 +236,6 @@ public class ColumnNames {
 
 	public static String getSimulationinfoid() {
 		return SIMULATIONINFOID;
-	}
-
-	public static String getNumberoflandinggears() {
-		return NUMBEROFLANDINGGEARS;
 	}
 
 	public static String getLandinggear1() {

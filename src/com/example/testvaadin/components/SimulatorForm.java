@@ -5,8 +5,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Random;
 
-import com.example.testvaadin.data.ColumnNames;
-import com.example.testvaadin.data.ColumnNamesEnum;
+import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -32,7 +31,7 @@ public class SimulatorForm extends FieldGroup {
 	private void initSimulatorForm() {
 		setBuffered(false);
 		StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();
-		for (String fieldName : ColumnNames.getSimulatorCols()) {
+		for (String fieldName : SimulatorCols.getSimulatorCols()) {
 			TextField field = createInputField(fieldName);
 			app.getEditorLayout().addComponent(field);
 			this.bind(field, fieldName);
@@ -44,7 +43,7 @@ public class SimulatorForm extends FieldGroup {
 	}
 
 	private boolean isUnformattedIntConverterNeeded(String fieldName) {
-		return fieldName.equals(ColumnNames.getSimulatorPortName());
+		return fieldName.equals(SimulatorCols.port.toString());
 	}
 
 	private StringToIntegerConverter getStringToIntegerConverter() {
@@ -83,18 +82,15 @@ public class SimulatorForm extends FieldGroup {
 	@SuppressWarnings("unchecked")
 	public void addSimulator() {
 		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
-		System.out.println("SIMULATOR ID" + simulatorId);
-		System.out.println("SIMULATOR NAME"
-				+ app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorNamePropName()));
-
-		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorNamePropName())
+		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatorname.toString())
 				.setValue("New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
-		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorPortName()).setValue(12322);
-		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getSimulatorHostname()).setValue(FAKE_HOSTNAME);
-		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getMaxspeedonflaps()).setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
-		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNames.getNumberoflandinggears())
+		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.port.toString()).setValue(12322);
+		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.hostname.toString()).setValue(FAKE_HOSTNAME);
+		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.maxspeedonflaps.toString())
+				.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
+		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.numberoflandinggears.toString())
 				.setValue(DEFAULT_NUM_OF_LANDING_GEARS);
-		app.getSimulatorList().getContainerProperty(simulatorId, ColumnNamesEnum.active.toString()).setValue(false);
+		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.active.toString()).setValue(false);
 		commit();
 	}
 
