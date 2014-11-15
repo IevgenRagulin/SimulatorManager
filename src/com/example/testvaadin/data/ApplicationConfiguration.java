@@ -1,11 +1,17 @@
 package com.example.testvaadin.data;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
+import com.example.testvaadin.NavigatorUI;
 import com.vaadin.server.VaadinService;
 
 public class ApplicationConfiguration {
+	
+	final static Logger logger = LoggerFactory.getLogger(ApplicationConfiguration.class);
+	
 	private static final String BASEPATH = VaadinService.getCurrent()
 			.getBaseDirectory().getAbsolutePath();
 	private static final String CONF_FILE_PATH = BASEPATH
@@ -40,6 +46,8 @@ public class ApplicationConfiguration {
 	private static Integer updateAirplanePositionFrequency = null;
 
 	public static void initApplicationConfigFromConfFile() {
+		logger.info("Going to init application configuration from file...");
+		
 		try {
 			PropertiesConfiguration propConf = new PropertiesConfiguration(
 					CONF_FILE_PATH);

@@ -18,6 +18,8 @@ public class DatabaseHelper implements Serializable {
 	private static JDBCConnectionPool pool = null;
 	private SQLContainer simulatorContainer = null;
 
+
+	
 	/*
 	 * Returns an Item with the currently running simulation on simulator with
 	 * id simulatorId If there is more than one simulation currently running

@@ -19,13 +19,6 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("testvaadin")
 public class SimulatorsView extends HorizontalSplitPanel implements View {
 
-	// @WebServlet(value = "/*", asyncSupported = true)
-	// @VaadinServletConfiguration(productionMode = false, ui =
-	// TestvaadinUI.class)
-	// public static class Servlet extends VaadinServlet {
-
-	// }
-
 	private SimulatorListSimulatorsView simulatorList;
 	private DatabaseHelper dbHelp = new DatabaseHelper();
 

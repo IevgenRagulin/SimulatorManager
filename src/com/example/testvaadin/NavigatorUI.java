@@ -2,7 +2,11 @@ package com.example.testvaadin;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.testvaadin.data.ApplicationConfiguration;
+import com.example.testvaadin.data.DatabaseHelperPureJDBC;
 import com.example.testvaadin.views.ChooseSimulationView;
 import com.example.testvaadin.views.ControlSimulationsView;
 import com.example.testvaadin.views.DatabaseManagementView;
@@ -19,6 +23,9 @@ import com.vaadin.ui.UI;
 
 @Theme("testvaadin")
 public class NavigatorUI extends UI {
+
+	final static Logger logger = LoggerFactory.getLogger(NavigatorUI.class);
+
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = NavigatorUI.class, widgetset = "com.example.testvaadin.widgetset.TestvaadinWidgetset")
 	public static class Servlet extends VaadinServlet {
@@ -37,6 +44,7 @@ public class NavigatorUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
+		logger.info("Going to init application");
 		initApplicationConfiguration();
 		// we do it to initialize static stuff in SimulationUpdater class
 		try {
@@ -44,31 +52,30 @@ public class NavigatorUI extends UI {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		DatabaseHelperPureJDBC.initDatabaseIfNeeded();
 		getPage().setTitle("Main menu");
 		navigator = new Navigator(this, this);
+
 		createRegisterViews();
 	}
 
+	/**
+	 * Create and register the views
+	 */
 	private void createRegisterViews() {
-		// Create and register the views
 		navigator.addView("", new StartView(this.navigator));
 		navigator.addView(MANAGESIMULATORS, new SimulatorsView(this.navigator));
-		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(
-				this.navigator));
-		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(
-				this.navigator));
-		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(
-				this.navigator));
-		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(
-				this.navigator));
-		navigator.addView(DATABASE_MANAGEMENT, new DatabaseManagementView(
-				this.navigator));
+		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(this.navigator));
+		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(this.navigator));
+		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
+		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(this.navigator));
+		navigator.addView(DATABASE_MANAGEMENT, new DatabaseManagementView(this.navigator));
 	}
 
-	/*
-	 * Important: reads the application configuration data from the file: dtb
-	 * username, password, google maps apikey etc., and sets it to static fields
-	 * of ApplicationConfiguration class
+	/**
+	 * Reads the application configuration data from the file: dtb username,
+	 * password, google maps apikey etc., and sets it to static fields of
+	 * ApplicationConfiguration class
 	 */
 	private void initApplicationConfiguration() {
 		ApplicationConfiguration.initApplicationConfigFromConfFile();

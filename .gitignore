@@ -1,3 +1,5 @@
 build/
 WebContent/VAADIN/gwt-unitCache/
 WebContent/Vaadin/widgetsets/
+WebContent/VAADIN/widgetsets/
+*~

@@ -16,6 +16,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public abstract class SimulationsView extends BasicView {
+
 	private static final long serialVersionUID = 6450588437869904764L;
 	protected static final String ALTITUDE_CHART_ID = "altitudeChartId";
 	protected String SPEED_CHART_ID = "speedChartId";
@@ -65,8 +66,7 @@ public abstract class SimulationsView extends BasicView {
 		avionycsLayout.addComponent(flightControls);
 		topSimulationLayout.addComponent(buttonToMainMenu);
 		topSimulationLayout.addComponent(errorLabel);
-		topSimulationLayout.setComponentAlignment(errorLabel,
-				Alignment.TOP_LEFT);
+		topSimulationLayout.setComponentAlignment(errorLabel, Alignment.TOP_LEFT);
 		mainSimulationLayout.addComponent(avionycsLayout);
 		mainSimulationLayout.addComponent(graphsLayout);
 		topSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
@@ -89,16 +89,14 @@ public abstract class SimulationsView extends BasicView {
 	protected void initGraphs() {
 		altitudeChart = new JsHighChartAltitude(this, ALTITUDE_CHART_ID);
 		altitudeChart.setId(ALTITUDE_CHART_ID);
-		speedChart = new JsHighChartSpeed(this, "Speed", "Knots",
-				SPEED_CHART_ID);
+		speedChart = new JsHighChartSpeed(this, "Speed", "Knots", SPEED_CHART_ID);
 		speedChart.setId(SPEED_CHART_ID);
 
 	}
 
 	private void initControlYoke() {
 		// -2 means the device doesn't send data
-		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0, true,
-				false, 3, 0, 0, 0);
+		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0, true, false, 3, 0, 0, 0);
 	}
 
 	protected abstract void initGoogleMaps();
@@ -117,11 +115,9 @@ public abstract class SimulationsView extends BasicView {
 		}
 	}
 
-	protected void setFlightControlsInfo(Item selectedDevicesState,
-			Item selectedSimulator) {
+	protected void setFlightControlsInfo(Item selectedDevicesState, Item selectedSimulator) {
 		if (selectedDevicesState != null) {
-			flightControls.updateIndividualFlightControlValues(
-					selectedDevicesState, selectedSimulator);
+			flightControls.updateIndividualFlightControlValues(selectedDevicesState, selectedSimulator);
 		}
 	}
 

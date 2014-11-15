@@ -1,5 +1,9 @@
 package com.example.testvaadin.views;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.example.testvaadin.NavigatorUI;
 import com.example.testvaadin.components.FlightPathGoogleMapPastSim;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.ColumnNames;
@@ -12,7 +16,12 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 
 public class PastSimulationsView extends SimulationsView implements View {
+	
 	private static final long serialVersionUID = -3892686063360142032L;
+	
+	final static Logger logger = LoggerFactory.getLogger(PastSimulationsView.class);
+	
+	
 	private String selectedSimulationId;
 	protected static final String NO_SIMULATION_SELECTED = "Please, select simulation";
 
@@ -111,8 +120,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 	@Override
 	protected void initGoogleMaps() {
-
-		System.out.println("going to init google maps" + googleMap);
+		logger.info("Going to init google maps. Google maps object: {}", googleMap);
 		if (googleMap != null) {
 			googleMap.clearMap();
 		} else {
@@ -125,8 +133,8 @@ public class PastSimulationsView extends SimulationsView implements View {
 	}
 
 	private void setGoogleMap(FlightPathGoogleMapPastSim googleMap) {
+		logger.info("Going to set google maps to: {}", googleMap);
 		this.googleMap = googleMap;
-		System.out.println("PAS SIM VIEW. THIS. GOOGLE MAP" + this.googleMap);
 	}
 
 	@Override

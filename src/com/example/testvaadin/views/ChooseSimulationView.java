@@ -2,6 +2,9 @@ package com.example.testvaadin.views;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.testvaadin.NavigatorUI;
 import com.example.testvaadin.components.SimulationList;
 import com.example.testvaadin.components.SimulatorListChooseSimulationView;
@@ -20,6 +23,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public class ChooseSimulationView extends VerticalSplitPanel implements View {
+	
+	final static Logger logger = LoggerFactory.getLogger(ChooseSimulationView.class);
+	
 	private static final long serialVersionUID = 1279140216863014337L;
 	private Navigator navigator;
 	private SimulationList simulationList;
@@ -132,7 +138,7 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	}
 
 	private void initSimulatorList() {
-		System.out.println("INIT SIMULATOR LIST");
+		logger.debug("Going to init simulator list");
 		simulatorList = new SimulatorListChooseSimulationView(this);
 	}
 
