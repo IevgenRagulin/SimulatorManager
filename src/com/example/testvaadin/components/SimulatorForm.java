@@ -31,10 +31,10 @@ public class SimulatorForm extends FieldGroup {
 
 	public SimulatorForm(SimulatorsView app) {
 		this.app = app;
-		initSimulatorForm();
+		init();
 	}
 
-	private void initSimulatorForm() {
+	private void init() {
 		setBuffered(false);
 		StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();
 		for (SimulatorCols colName : SimulatorCols.values()) {

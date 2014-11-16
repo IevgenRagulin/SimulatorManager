@@ -24,6 +24,10 @@ public class SimulatorListSimulatorsView extends Table {
 				Object simulatorId = SimulatorListSimulatorsView.this.getValue();
 				if (simulatorId != null) {
 					app.getSimulatorForm().setItemDataSource(SimulatorListSimulatorsView.this.getItem(simulatorId));
+					app.getSelectedSimulatorName().setValue(
+							"<b>Selected simulator: "
+									+ SimulatorListSimulatorsView.this.getItem(simulatorId)
+											.getItemProperty(SimulatorCols.simulatorname.toString()).getValue().toString() + "</b>");
 				}
 				app.getEditorLayout().setVisible(simulatorId != null);
 			}
