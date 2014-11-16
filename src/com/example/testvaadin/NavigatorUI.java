@@ -47,7 +47,6 @@ public class NavigatorUI extends UI {
 	protected void init(VaadinRequest request) {
 		logger.info("Going to initialize application");
 		VerticalLayout mainLayout = new VerticalLayout();
-		mainLayout.addComponent(new SimpleLoginForm());
 		logger.info("Added login form");
 
 		initApplicationConfiguration();

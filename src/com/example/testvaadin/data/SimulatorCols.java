@@ -1,6 +1,10 @@
 package com.example.testvaadin.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum SimulatorCols {
+
 	active("Is active", "If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
 	simulatorid("Simulator id"), // simulator.simulatorid
 	simulatorname("Simulator name"), // simulator.simulatorname
@@ -29,6 +33,8 @@ public enum SimulatorCols {
 	numberofengines("Number of engines"), //
 	numberoflandinggears("Number of landing gears"), //
 	timestamp("Timestamp");
+
+	final static Logger logger = LoggerFactory.getLogger(SimulatorCols.class);
 
 	private String name;
 	private String description = "";
@@ -59,13 +65,18 @@ public enum SimulatorCols {
 		SimulatorCols[] cols = values();
 		String[] strColsNames = new String[cols.length];
 		for (int i = 0; i < cols.length; i++) {
+			logger.info("Getting simulator cols names" + cols[i].getName());
 			strColsNames[i] = cols[i].getName();
 		}
 		return strColsNames;
 	}
 
 	public static String[] getSimulatorMainCols() {
-		return new String[] { simulatorid.toString(), simulatorname.toString(), aircraftmodel.toString() };
+		return new String[] { active.toString(), simulatorid.toString(), simulatorname.toString(), aircraftmodel.toString() };
+	}
+
+	public static String[] getSimulatorMainColsNames() {
+		return new String[] { active.name, simulatorid.name, simulatorname.name, aircraftmodel.name };
 	}
 
 	public String getName() {
