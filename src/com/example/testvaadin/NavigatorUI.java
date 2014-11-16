@@ -57,7 +57,7 @@ public class NavigatorUI extends UI {
 			e.printStackTrace();
 		}
 		DatabaseHelperPureJDBC.initDatabaseIfNeeded();
-		getPage().setTitle("Main menu");
+		getPage().setTitle("Simulator manager");
 		navigator = new Navigator(this, this);
 
 		createRegisterViews();

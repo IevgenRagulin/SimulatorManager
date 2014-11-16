@@ -74,6 +74,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	private void initLeftLayout() {
 		buttonToMainMenu = new ButtonToMainMenu(navigator);
+		addSimulatorButton.setStyleName("simulatorsAddSimulator");
 		VerticalLayout leftLayout = new VerticalLayout();
 		addComponent(leftLayout);
 		leftLayout.setMargin(new MarginInfo(true, false, true, true));

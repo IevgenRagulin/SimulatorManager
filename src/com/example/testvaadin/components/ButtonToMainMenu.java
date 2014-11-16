@@ -8,6 +8,7 @@ public class ButtonToMainMenu extends Button {
 
 	public ButtonToMainMenu(final Navigator navigator) {
 		super("Go to start page");
+		setStyleName("simulatorGoToMainMenu");
 		this.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -4243499910765394003L;
 

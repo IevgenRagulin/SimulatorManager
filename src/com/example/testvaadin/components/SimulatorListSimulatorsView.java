@@ -29,7 +29,9 @@ public class SimulatorListSimulatorsView extends Table {
 									+ SimulatorListSimulatorsView.this.getItem(simulatorId)
 											.getItemProperty(SimulatorCols.simulatorname.toString()).getValue().toString() + "</b>");
 				}
+				// make editor visible only if simulator has been selected
 				app.getEditorLayout().setVisible(simulatorId != null);
+				app.getSelectedSimulatorName().setVisible(simulatorId != null);
 			}
 
 		});
