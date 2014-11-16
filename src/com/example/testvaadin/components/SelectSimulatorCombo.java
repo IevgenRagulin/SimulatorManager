@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.vaadin.data.Property;

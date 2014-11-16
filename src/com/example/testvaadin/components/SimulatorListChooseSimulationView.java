@@ -1,6 +1,6 @@
 package com.example.testvaadin.components;
 
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.ChooseSimulationView;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
@@ -17,7 +17,7 @@ public class SimulatorListChooseSimulationView extends Table {
 		setSelectable(true);
 		setImmediate(true);
 		setBuffered(false);
-		setVisibleColumns((Object[]) ColumnNames.getSimulatorMainCols());
+		setVisibleColumns((Object[]) SimulatorCols.getSimulatorMainCols());
 		addValueChangeListener(new Property.ValueChangeListener() {
 			private static final long serialVersionUID = -4721755745740872033L;
 
@@ -30,23 +30,18 @@ public class SimulatorListChooseSimulationView extends Table {
 	};
 
 	public void updateSimulationsList() {
-		RowId simulatorId = (RowId) SimulatorListChooseSimulationView.this
-				.getValue();
+		RowId simulatorId = (RowId) SimulatorListChooseSimulationView.this.getValue();
 		// Make simulations list visible only if some simulator is
 		// selected
 		view.getSimulationList().setVisible(simulatorId != null);
 		// Make buttons visible only if simulation list is visible and
 		// some value is selected
-		view.getActionButtons().setVisible(
-				view.getSimulationList().isVisible()
-						&& (view.getSimulationList().getValue() != null));
+		view.getActionButtons().setVisible(view.getSimulationList().isVisible() && (view.getSimulationList().getValue() != null));
 		// Set simulations list if some simulator is selected
 		if (simulatorId != null) {
-			String simulatorIdStr = ((Integer) (((RowId) simulatorId).getId()[0]))
-					.toString();
+			String simulatorIdStr = ((Integer) (((RowId) simulatorId).getId()[0])).toString();
 			view.getSimulationList().setContainerDataSourceAndVisCol(
-					view.getDBHelp().getSimulationContainerOnSimulatorWithId(
-							simulatorIdStr));
+					view.getDBHelp().getSimulationContainerOnSimulatorWithId(simulatorIdStr));
 		}
 	}
 

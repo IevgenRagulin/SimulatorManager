@@ -2,7 +2,7 @@ package com.example.testvaadin.jscomponents.jshighchart;
 
 import java.util.Date;
 
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulationPfdInfoCols;
 import com.example.testvaadin.items.SimulationPFDItem;
 import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.annotations.JavaScript;
@@ -17,22 +17,18 @@ public class JsHighChartAltitude extends JsHighChart {
 	}
 
 	@Override
-	public void initChartWithDataForSimulatorWithId(String simulatorId,
-			int newAltitude) {
-		SQLContainer simulationPfdData = view.getDBHelp()
-				.getLatestPFDInfoBySimulatorId(simulatorId);
+	public void initChartWithDataForSimulatorWithId(String simulatorId, int newAltitude) {
+		SQLContainer simulationPfdData = view.getDBHelp().getLatestPFDInfoBySimulatorId(simulatorId);
 		if (simulationPfdData.size() > 0) {
-			addOldDataToChart(simulationPfdData, ColumnNames.getAltitude());
+			addOldDataToChart(simulationPfdData, SimulationPfdInfoCols.altitude.toString());
 		} else {
-			String dataToSet = "[[" + (new Date().getTime()) + ","
-					+ newAltitude + "]]";
+			String dataToSet = "[[" + (new Date().getTime()) + "," + newAltitude + "]]";
 			this.getState().data = dataToSet;
 			this.getStateBean().setData(dataToSet);
 		}
 	}
 
-	public void addNewPoint(String simulatorId,
-			SimulationPFDItem simulationPfdItem) {
+	public void addNewPoint(String simulatorId, SimulationPFDItem simulationPfdItem) {
 		int newAltitude = simulationPfdItem.getBean().getAltitude().intValue();
 		super.addNewPoint(simulatorId, newAltitude);
 		markAsDirty();
@@ -40,9 +36,8 @@ public class JsHighChartAltitude extends JsHighChart {
 
 	@Override
 	public void initChartWithDataForSimulationWithId(String simulationId) {
-		SQLContainer simulationPfdData = view.getDBHelp()
-				.getPFDInfoBySimulationId(simulationId);
-		addOldDataToChart(simulationPfdData, ColumnNames.getAltitude());
+		SQLContainer simulationPfdData = view.getDBHelp().getPFDInfoBySimulationId(simulationId);
+		addOldDataToChart(simulationPfdData, SimulationPfdInfoCols.altitude.toString());
 	}
 
 }

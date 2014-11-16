@@ -1,13 +1,12 @@
 package com.example.testvaadin.jscomponents.pfd;
 
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulationPfdInfoCols;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 @SuppressWarnings("serial")
 @com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js" })
-public class PrimaryFlightDisplay extends
-		com.vaadin.ui.AbstractJavaScriptComponent {
+public class PrimaryFlightDisplay extends com.vaadin.ui.AbstractJavaScriptComponent {
 
 	private final String CSS_CLASS = "PFD_DISPLAY";
 
@@ -18,8 +17,7 @@ public class PrimaryFlightDisplay extends
 	 */
 	private PrimaryFlightDisplayStateBean pfdStateBean;
 
-	public PrimaryFlightDisplay(final int resetpfd, final int altitude,
-			final int speed, final int roll, final int pitch,
+	public PrimaryFlightDisplay(final int resetpfd, final int altitude, final int speed, final int roll, final int pitch,
 			final int heading, final int truecourse, final float verticalspeed) {
 		getState().rpfd = resetpfd;
 		getState().a = altitude;
@@ -28,8 +26,7 @@ public class PrimaryFlightDisplay extends
 		getState().p = pitch;
 		getState().h = heading;
 		getState().tc = truecourse;
-		pfdStateBean = new PrimaryFlightDisplayStateBean(altitude, speed, roll,
-				pitch, heading, truecourse, verticalspeed, resetpfd);
+		pfdStateBean = new PrimaryFlightDisplayStateBean(altitude, speed, roll, pitch, heading, truecourse, verticalspeed, resetpfd);
 		setPrimaryStyleName(CSS_CLASS);
 	}
 
@@ -55,40 +52,30 @@ public class PrimaryFlightDisplay extends
 	}
 
 	public void updateIndividualPFDValues(Item item) {
-		int newRoll = doubleToInt((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getRoll())).getValue());
-		int newPitch = doubleToInt((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getPitch())).getValue());
-		int newHeading = doubleToInt((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getHeading())).getValue());
-		int newTrueCourse = doubleToInt((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getTrueCourse())).getValue());
-		int newIAS = doubleToInt((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getIas())).getValue());
-		int newAltitude = doubleToInt((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getAltitude())).getValue());
+		int newRoll = doubleToInt((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.roll.toString())).getValue());
+		int newPitch = doubleToInt((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.pitch.toString())).getValue());
+		int newHeading = doubleToInt((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.heading.toString())).getValue());
+		int newTrueCourse = doubleToInt((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.truecourse.toString()))
+				.getValue());
+		int newIAS = doubleToInt((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.ias.toString())).getValue());
+		int newAltitude = doubleToInt((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.altitude.toString())).getValue());
 		// float newGroundAltitude = doubleToRoundedFloat((Double)
 		// ((Property<?>) item
 		// .getItemProperty(ColumnNames.getGroundaltitude())).getValue());
-		float newVertSpeed = doubleToRoundedFloat((Double) ((Property<?>) item
-				.getItemProperty(ColumnNames.getVerticalspeed())).getValue());
+		float newVertSpeed = doubleToRoundedFloat((Double) ((Property<?>) item.getItemProperty(SimulationPfdInfoCols.verticalspeed
+				.toString())).getValue());
 
-		setNewValues(newRoll, newPitch, newHeading, newTrueCourse, newIAS,
-				newAltitude, newVertSpeed);
+		setNewValues(newRoll, newPitch, newHeading, newTrueCourse, newIAS, newAltitude, newVertSpeed);
 		// getState().rpfd = 0;
 	}
 
 	/*
 	 * If any data has changed, set all data to state bean.
 	 */
-	private void setNewValues(int newRoll, int newPitch, int newHeading,
-			int newTrueCourse, int newIas, int newAltitude, float newVertSpeed) {
-		if ((getStateBean().getVerticalspeed() != newVertSpeed)
-				|| (getStateBean().getTruecourse() != newTrueCourse)
-				|| (getStateBean().getRoll() != newRoll)
-				|| (getStateBean().getPitch() != newPitch)
-				|| (getStateBean().getHeading() != newHeading)
-				|| (getStateBean().getAltitude() != newAltitude)
+	private void setNewValues(int newRoll, int newPitch, int newHeading, int newTrueCourse, int newIas, int newAltitude, float newVertSpeed) {
+		if ((getStateBean().getVerticalspeed() != newVertSpeed) || (getStateBean().getTruecourse() != newTrueCourse)
+				|| (getStateBean().getRoll() != newRoll) || (getStateBean().getPitch() != newPitch)
+				|| (getStateBean().getHeading() != newHeading) || (getStateBean().getAltitude() != newAltitude)
 				|| (getStateBean().getSpeed() != newIas)) {
 			setVerticalSpeed(newVertSpeed);
 			setTrueCourse(newTrueCourse);

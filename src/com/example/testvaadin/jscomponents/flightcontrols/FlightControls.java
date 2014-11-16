@@ -1,7 +1,7 @@
 package com.example.testvaadin.jscomponents.flightcontrols;
 
-import com.example.testvaadin.data.ColumnNames;
 import com.example.testvaadin.data.SimulationCols;
+import com.example.testvaadin.data.SimulationDevStateCols;
 import com.example.testvaadin.data.SimulatorCols;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -39,24 +39,29 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	}
 
 	public void updateIndividualFlightControlValues(Item flightControlItem, Item simulatorItem) {
-		float newAileron = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getAileron())).getValue());
-		float newElevator = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getElevator())).getValue());
-		float newRudder = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getRudder())).getValue());
-		float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getSpeedbrakes()))
+		float newAileron = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.eleron.toString())).getValue());
+		float newElevator = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.elevator
+				.toString())).getValue());
+		float newRudder = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.rudder.toString()))
 				.getValue());
-		float newFlaps = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getFlaps())).getValue());
-		float newAileronTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getAileronTrim()))
+		float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.speedbrakes
+				.toString())).getValue());
+		float newFlaps = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.flaps.toString()))
 				.getValue());
-		float newElevatorTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getElevatorTrim()))
-				.getValue());
-		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getRudderTrim()))
-				.getValue());
-		boolean newBrakes = (Boolean) ((Property<?>) flightControlItem.getItemProperty(ColumnNames.getBrakes())).getValue();
+		float newAileronTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.ailerontrim
+				.toString())).getValue());
+		float newElevatorTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.elevatortrim
+				.toString())).getValue());
+		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.ruddertrim
+				.toString())).getValue());
+		boolean newBrakes = (Boolean) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.brakes.toString()))
+				.getValue();
 		boolean newPaused = (Boolean) ((Property<?>) flightControlItem.getItemProperty(SimulationCols.issimulationpaused.toString()))
 				.getValue();
-		int landingGear_1 = getLandingGearValue(ColumnNames.getLandinggear1(), flightControlItem);
-		int landingGear_2 = getLandingGearValue(ColumnNames.getLandinggear2(), flightControlItem);
-		int landingGear_3 = getLandingGearValue(ColumnNames.getLandinggear3(), flightControlItem);
+		int landingGear_1 = getLandingGearValue(SimulationDevStateCols.landinggear_1.toString(), flightControlItem);
+		int landingGear_2 = getLandingGearValue(SimulationDevStateCols.landinggear_2.toString(), flightControlItem);
+		int landingGear_3 = getLandingGearValue(SimulationDevStateCols.landinggear_3.toString(), flightControlItem);
 
 		setAileron(newAileron);
 		setElevator(newElevator);

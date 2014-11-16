@@ -37,4 +37,8 @@ public enum SimulatorCols {
 		}
 		return strCols;
 	}
+
+	public static String[] getSimulatorMainCols() {
+		return new String[] { simulatorid.toString(), simulatorname.toString(), aircraftmodel.toString() };
+	}
 }

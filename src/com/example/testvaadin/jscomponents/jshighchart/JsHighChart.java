@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.example.testvaadin.data.ColumnNames;
+import com.example.testvaadin.data.SimulationPfdInfoCols;
 import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.Item;
@@ -16,9 +16,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 
-@JavaScript({
-		"http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",
-		"highstock.js" })
+@JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", "highstock.js" })
 public abstract class JsHighChart extends AbstractJavaScriptComponent {
 	private static final long serialVersionUID = -9172268881960130470L;
 	protected boolean isChartInitializedWithMapHistory = false;
@@ -66,10 +64,8 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 					for (ValueChangeListener listener : listeners)
 						listener.valueChange();
 				} catch (Exception e) {
-					System.err
-							.println("Exception happened in "
-									+ JsHighChart.class
-									+ " while getting arguments from RPC call after clicking on a graph");
+					System.err.println("Exception happened in " + JsHighChart.class
+							+ " while getting arguments from RPC call after clicking on a graph");
 				}
 			}
 		});
@@ -95,14 +91,11 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 		setNewValue(newValue);
 	}
 
-	public abstract void initChartWithDataForSimulatorWithId(
-			String simulatorId, int newValue);
+	public abstract void initChartWithDataForSimulatorWithId(String simulatorId, int newValue);
 
-	public abstract void initChartWithDataForSimulationWithId(
-			String simulationId);
+	public abstract void initChartWithDataForSimulationWithId(String simulationId);
 
-	protected void addOldDataToChart(SQLContainer simulationPfdData,
-			String itemPropertyName) {
+	protected void addOldDataToChart(SQLContainer simulationPfdData, String itemPropertyName) {
 		StringBuffer oldValues = new StringBuffer();
 		oldValues.append("[");
 		Collection<?> simulationPfdIds = simulationPfdData.getItemIds();
@@ -111,13 +104,10 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 			counter++;
 			RowId rowId = (RowId) id;
 			Item pfdItem = simulationPfdData.getItem(rowId);
-			int value = ((Double) pfdItem.getItemProperty(itemPropertyName)
-					.getValue()).intValue();
-			long timestampMilis = ((java.sql.Timestamp) pfdItem
-					.getItemProperty(ColumnNames.getTimestamp()).getValue())
+			int value = ((Double) pfdItem.getItemProperty(itemPropertyName).getValue()).intValue();
+			long timestampMilis = ((java.sql.Timestamp) pfdItem.getItemProperty(SimulationPfdInfoCols.timestamp.toString()).getValue())
 					.getTime();
-			int pfdId = (Integer) pfdItem.getItemProperty(
-					ColumnNames.getPfdinfoid()).getValue();
+			int pfdId = (Integer) pfdItem.getItemProperty(SimulationPfdInfoCols.pfdinfoid.toString()).getValue();
 			oldValues.append("{\"x\": ");
 			oldValues.append(timestampMilis);
 			oldValues.append(", ");
