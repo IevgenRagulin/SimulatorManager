@@ -5,12 +5,18 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Random;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 
 public class SimulatorForm extends FieldGroup {
@@ -31,19 +37,41 @@ public class SimulatorForm extends FieldGroup {
 	private void initSimulatorForm() {
 		setBuffered(false);
 		StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();
-		for (String fieldName : SimulatorCols.getSimulatorCols()) {
-			TextField field = createInputField(fieldName);
-			app.getEditorLayout().addComponent(field);
-			this.bind(field, fieldName);
-			if (isUnformattedIntConverterNeeded(fieldName)) {
+		for (SimulatorCols colName : SimulatorCols.values()) {
+			// check if this is an active field which is a boolean
+			if (colName.equals(SimulatorCols.active)) {
+				CheckBox checkbox = new CheckBox(colName.getName());
+				addValueChangeListener(checkbox);
+				addFieldToForm(checkbox, colName);
+			}
+			// check if this is a timestamp field
+			else if (colName.equals(SimulatorCols.timestamp)) {
+				DateField dateField = new DateField(colName.getName());
+				dateField.setResolution(Resolution.SECOND);
+				addFieldToForm(dateField, colName);
+				// check if this is a port which is a numeric
+			} else if (colName.equals(SimulatorCols.port)) {
+				TextField field = createInputField(colName.getName());
 				field.setConverter(plainIntegerConverter);
+				addFieldToForm(field, colName);
+			} else {
+				TextField field = createInputField(colName.getName());
+				addFieldToForm(field, colName);
 			}
 		}
+
 		app.getEditorLayout().addComponent(app.getRemoveSimulatorButton());
 	}
 
-	private boolean isUnformattedIntConverterNeeded(String fieldName) {
-		return fieldName.equals(SimulatorCols.port.toString());
+	@SuppressWarnings("rawtypes")
+	private void addFieldToForm(AbstractField field, SimulatorCols colName) {
+		app.getEditorLayout().addComponent(field);
+		if (!StringUtils.isEmpty(colName.getDescription())) {
+			field.setDescription(colName.getDescription());
+		} else {
+			field.setDescription(colName.getName());
+		}
+		this.bind(field, colName.toString());
 	}
 
 	private StringToIntegerConverter getStringToIntegerConverter() {
@@ -68,7 +96,8 @@ public class SimulatorForm extends FieldGroup {
 		return field;
 	}
 
-	private void addValueChangeListener(TextField field) {
+	@SuppressWarnings("rawtypes")
+	private void addValueChangeListener(AbstractField field) {
 		field.addValueChangeListener(new ValueChangeListener() {
 			private static final long serialVersionUID = 1L;
 

@@ -70,12 +70,11 @@ public class UpdatesScheduler {
 				String simulatorHostname = getSimulatorHostnameFromSimItem(simulatorItem);
 				int simulatorPort = getSimulatorPortFromSimItem(simulatorItem);
 				SimulationsUpdater simUpdater = new SimulationsUpdater(simulatorId, simulatorHostname, simulatorPort);
-				logger.info("Going to update hostname:portname {} {}", simulatorHostname, simulatorPort);
 				if (isPreviousTaskOnThisSimFinished(simulatorId)) {
 					Future submittedTask = schedulerSimulationUpdater.submit(simUpdater);
 					isTaskFinished.put(simulatorId, submittedTask);
 				} else {
-					logger.info("No, prev task on this simulator is not finished. Simulator id: {} " + simulatorId);
+					logger.info("No, prev task on this simulator is not finished. Simulator id: {} ", simulatorId);
 				}
 			}
 		}

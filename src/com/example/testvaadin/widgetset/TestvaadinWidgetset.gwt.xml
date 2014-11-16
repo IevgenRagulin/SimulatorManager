@@ -37,4 +37,6 @@
     <inherits name="com.vaadin.tapio.googlemaps.WidgetSet" />
 
     <inherits name="com.vaadin.DefaultWidgetSet" />
+
+    <inherits name="com.ejt.vaadin.loginform.WidgetSet" />
 </module>

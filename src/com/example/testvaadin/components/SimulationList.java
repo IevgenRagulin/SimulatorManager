@@ -33,7 +33,8 @@ public class SimulationList extends Table {
 
 	protected void setContainerDataSourceAndVisCol(SQLContainer newDataSource) {
 		setContainerDataSource(newDataSource);
-		setVisibleColumns((Object[]) SimulationCols.getSimulationCols());
+		setColumnHeaders(SimulationCols.getSimulationColsNames());
+		setVisibleColumns((Object[]) SimulationCols.getVisibleCols());
 	}
 
 	@Override

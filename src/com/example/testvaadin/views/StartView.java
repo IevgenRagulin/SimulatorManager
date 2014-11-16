@@ -13,11 +13,11 @@ import com.vaadin.ui.VerticalLayout;
 public class StartView extends VerticalLayout implements View {
 
 	private static final long serialVersionUID = 7495049073810117367L;
-	private Button buttonToManager = new Button("Go to simulator manager");
-	Button buttonToViewingSimulations = new Button("Go to viewing simulations");
-	Button buttonToControllingSimulations = new Button(
-			"Go to controlling simulations");
-	Button buttonToDatabaseManagement = new Button("Go to database management");
+	private Button buttonToManager = new Button("Simulator manager");
+	Button buttonToViewingSimulations = new Button("View simulations");
+	// Button buttonToControllingSimulations = new
+	// Button("Control simulations");
+	Button buttonToDatabaseManagement = new Button("Database management");
 	private Navigator navigator;
 
 	public StartView(final Navigator navigator) {
@@ -25,7 +25,7 @@ public class StartView extends VerticalLayout implements View {
 		setSizeFull();
 		addComponent(buttonToManager);
 		addComponent(buttonToViewingSimulations);
-		addComponent(buttonToControllingSimulations);
+		// addComponent(buttonToControllingSimulations);
 		addComponent(buttonToDatabaseManagement);
 		addClickListeners();
 		setAllignments();
@@ -38,7 +38,7 @@ public class StartView extends VerticalLayout implements View {
 	private void addClickListeners() {
 		addButtonToManagerListener();
 		addButtonToViewingSimulationsListener();
-		addButtonToControllingSimulationsListner();
+		// addButtonToControllingSimulationsListner();
 		addButtonToDatabaseManagementListner();
 	}
 
@@ -53,25 +53,12 @@ public class StartView extends VerticalLayout implements View {
 		});
 	}
 
-	private void addButtonToControllingSimulationsListner() {
-		buttonToControllingSimulations.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = -4243499910765394003L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				navigator.navigateTo(NavigatorUI.CONTROLSIMULATIONS);
-			}
-		});
-	}
-
 	private void setAllignments() {
 		setComponentAlignment(buttonToManager, Alignment.MIDDLE_CENTER);
-		setComponentAlignment(buttonToViewingSimulations,
-				Alignment.MIDDLE_CENTER);
-		setComponentAlignment(buttonToControllingSimulations,
-				Alignment.MIDDLE_CENTER);
-		setComponentAlignment(buttonToDatabaseManagement,
-				Alignment.MIDDLE_CENTER);
+		setComponentAlignment(buttonToViewingSimulations, Alignment.MIDDLE_CENTER);
+		// setComponentAlignment(buttonToControllingSimulations,
+		// Alignment.MIDDLE_CENTER);
+		setComponentAlignment(buttonToDatabaseManagement, Alignment.MIDDLE_CENTER);
 	}
 
 	private void addButtonToViewingSimulationsListener() {

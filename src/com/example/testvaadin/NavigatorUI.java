@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.DatabaseHelperPureJDBC;
 import com.example.testvaadin.views.ChooseSimulationView;
+import com.example.testvaadin.views.ConfigurationView;
 import com.example.testvaadin.views.ControlSimulationsView;
-import com.example.testvaadin.views.DatabaseManagementView;
 import com.example.testvaadin.views.PastSimulationsView;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.example.testvaadin.views.SimulatorsView;
@@ -20,6 +20,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 @Theme("testvaadinn")
 public class NavigatorUI extends UI {
@@ -44,7 +45,11 @@ public class NavigatorUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-		logger.info("Going to init application");
+		logger.info("Going to initialize application");
+		VerticalLayout mainLayout = new VerticalLayout();
+		mainLayout.addComponent(new SimpleLoginForm());
+		logger.info("Added login form");
+
 		initApplicationConfiguration();
 		// we do it to initialize static stuff in SimulationUpdater class
 		try {
@@ -69,7 +74,7 @@ public class NavigatorUI extends UI {
 		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(this.navigator));
 		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
 		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(this.navigator));
-		navigator.addView(DATABASE_MANAGEMENT, new DatabaseManagementView(this.navigator));
+		navigator.addView(DATABASE_MANAGEMENT, new ConfigurationView(this.navigator));
 	}
 
 	/**
