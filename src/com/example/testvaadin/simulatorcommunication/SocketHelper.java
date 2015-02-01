@@ -21,7 +21,7 @@ public class SocketHelper {
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
 		closeSocket(queryProcessorSocket);
-		System.out.println("From " + host + " " + response);
+		//System.out.println("From " + host + " " + response);
 		simData = parseSimulatorResponse(response);
 
 		return simData;
@@ -36,7 +36,7 @@ public class SocketHelper {
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
 		closeSocket(queryProcessorSocket);
-		System.out.println("From " + host + " engines " + response);
+		// System.out.println("From " + host + " engines " + response);
 		// if we got some data, parse it
 		if ((response != null) && (response.length() > 15)) {
 			engineData = parseEngineResponse(response);

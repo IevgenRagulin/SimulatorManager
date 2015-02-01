@@ -27,8 +27,8 @@ public class UpdatesScheduler {
 	protected static final int UPDATE_RATE_MS = ApplicationConfiguration.getSimulatorGetDataFrequency();
 
 	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	private static ExecutorService schedulerSimulationUpdater = Executors.newFixedThreadPool(2);
-	private static int numberOfSimulators = 2;
+	private static int numberOfThreads = 1;
+	private static ExecutorService schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfThreads);
 	private static Map<String, Future> isTaskFinished = Collections.synchronizedMap(new HashMap<String, Future>());
 
 	private static final Runnable beeper = new Runnable() {
@@ -51,10 +51,13 @@ public class UpdatesScheduler {
 
 	public static void updateRunningSimsStatus() {
 		SQLContainer simulatorContainer = dbHelp.getNewSimulatorContainer();
-		if (numberOfSimulators != simulatorContainer.size()) {
-			numberOfSimulators = simulatorContainer.size();
+		if (numberOfThreads != simulatorContainer.size()) {
+			logger.info("Number of simulators has changed. Previously we had: {} threads, now: {}. Creating new thread pool. ",numberOfThreads, simulatorContainer.size());
+			numberOfThreads = simulatorContainer.size();
 			schedulerSimulationUpdater.shutdownNow();
-			schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfSimulators);
+			if (numberOfThreads != 0) {
+				schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfThreads);
+			}
 		}
 		UpdatesScheduler.updateSimulatorsStatus(simulatorContainer);
 	}

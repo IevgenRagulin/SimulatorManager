@@ -1,5 +1,7 @@
 package com.example.testvaadin.views;
 
+import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +42,11 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 			@Override
 			public void valueChange() {
-				setUi(altitudeChart.getClickedId(), altitudeChart.getTimestamp());
+				try {
+					setUi(altitudeChart.getClickedId(), altitudeChart.getTimestamp());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		speedChart.addValueChangeListener(new ValueChangeListener() {
@@ -48,7 +54,11 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 			@Override
 			public void valueChange() {
-				setUi(speedChart.getClickedId(), speedChart.getTimestamp());
+				try {
+					setUi(speedChart.getClickedId(), speedChart.getTimestamp());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -61,7 +71,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 		speedChart.initChartWithDataForSimulationWithId(selectedSimulationId);
 	}
 
-	private void setUi(int pfdClickedId, long timestamp) {
+	private void setUi(int pfdClickedId, long timestamp) throws SQLException {
 		Item pfdItem = dbHelp.getPFDInfoByPfdInfoId(pfdClickedId);
 		Item itemDevState = dbHelp.getSimulationDevStateInfoByPfdInfoId(pfdClickedId, timestamp);
 		Item itemSimulator = dbHelp.getSimulatorInfoByPfdInfoId(pfdClickedId);

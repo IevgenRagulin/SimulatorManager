@@ -17,7 +17,7 @@ public class SimulatorsStatus {
 	protected static final boolean SIMULATION_NOT_PAUSED = false;
 
 	// SimulationInfoItem based on current-1 data from the simulator. Used to
-	// determine if the simulator has moved or not
+	// determine if the simulator has moved or not. On application startup this is set to the latest data from db
 	protected static Map<String, SimulationInfoItem> prevSimulatorIdSimInfoItem = Collections
 			.synchronizedMap(new HashMap<String, SimulationInfoItem>());
 
@@ -42,14 +42,16 @@ public class SimulatorsStatus {
 			SimulationItem simItem) {
 		simulatorIdSimItem.put(simulatorId, simItem);
 	}
+	
+	protected static void setPrevSimulatorIdSimInfoItem(String simulatorId, SimulationInfoItem simInfoItem) {
+		prevSimulatorIdSimInfoItem.put(simulatorId, simInfoItem);
+	}
 
 	protected static void setSimulationInfoItem(String simulatorId,
 			SimulationInfoItem simInfoItem) {
 		// Saving old value
 		SimulationInfoItem prevItem = simulatorIdSimInfoItem.get(simulatorId);
-		if (prevItem != null) {
-			prevSimulatorIdSimInfoItem.put(simulatorId, prevItem);
-		}
+		prevSimulatorIdSimInfoItem.put(simulatorId, prevItem);
 		simulatorIdSimInfoItem.put(simulatorId, simInfoItem);
 	}
 
