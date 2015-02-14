@@ -9,7 +9,6 @@ import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.DatabaseHelperPureJDBC;
 import com.example.testvaadin.views.ChooseSimulationView;
 import com.example.testvaadin.views.ConfigurationView;
-import com.example.testvaadin.views.ControlSimulationsView;
 import com.example.testvaadin.views.PastSimulationsView;
 import com.example.testvaadin.views.RunningSimulationsView;
 import com.example.testvaadin.views.SimulatorsView;
@@ -20,7 +19,6 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 
 @Theme("testvaadinn")
 public class NavigatorUI extends UI {
@@ -36,12 +34,12 @@ public class NavigatorUI extends UI {
 
 	private static final long serialVersionUID = -2218352764682942955L;
 	Navigator navigator;
-	public static final String MANAGESIMULATORS = "Manage simulators";
-	public static final String VIEWINGSIMULATIONS = "Viewing simulations";
-	public static final String RUNNINGSIMULATIONS = "Running simulations";
-	public static final String PASTSIMULATIONS = "Past simulations";
-	public static final String CONTROLSIMULATIONS = "Control simulations";
-	public static final String DATABASE_MANAGEMENT = "Manage database";
+	public static final String MANAGESIMULATORS = "ManageSimulators";
+	public static final String VIEWINGSIMULATIONS = "ViewingSimulations";
+	public static final String RUNNINGSIMULATIONS = "RunningSimulations";
+	public static final String PASTSIMULATIONS = "PastSimulations";
+	public static final String CONTROLSIMULATIONS = "ControlSimulations";
+	public static final String CONFIGURATION = "Configuration";
 	protected static RunningSimulationsView runningSimulationsView;
 
 	private boolean uiInitialized = false;
@@ -65,7 +63,7 @@ public class NavigatorUI extends UI {
 			uiInitialized = true;
 		}
 	}
-	
+
 	/**
 	 * Create and register the views
 	 */
@@ -77,7 +75,7 @@ public class NavigatorUI extends UI {
 		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
 		// navigator.addView(CONTROLSIMULATIONS, new
 		// ControlSimulationsView(this.navigator));
-		navigator.addView(DATABASE_MANAGEMENT, new ConfigurationView(this.navigator));
+		navigator.addView(CONFIGURATION, new ConfigurationView(this.navigator));
 	}
 
 	/**

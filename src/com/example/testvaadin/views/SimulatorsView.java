@@ -3,10 +3,12 @@ package com.example.testvaadin.views;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.testvaadin.components.ButtonToMainMenu;
+import com.example.testvaadin.components.MainMenuBar;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorListSimulatorsView;
 import com.example.testvaadin.data.DatabaseHelper;
+import com.example.testvaadin.types.PageType;
+import com.example.testvaadin.util.ResourceUtil;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -20,10 +22,19 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
+/**
+ * Page on which the user can add/remove/modify simulators information
+ * 
+ * @author ievgen
+ *
+ */
 @SuppressWarnings("serial")
-public class SimulatorsView extends HorizontalSplitPanel implements View {
+public class SimulatorsView extends VerticalLayout implements View {
 	final static Logger logger = LoggerFactory.getLogger(SimulatorsView.class);
 
+	private HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
+	private VerticalLayout leftLayout = new VerticalLayout();
+	private VerticalLayout rightLayout = new VerticalLayout();
 	private SimulatorListSimulatorsView simulatorList;
 	private DatabaseHelper dbHelp = new DatabaseHelper();
 
@@ -31,9 +42,10 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	private SimulatorForm simulatorForm;
 	private Button removeSimulatorButton = new Button("Remove simulator");
 	private Button addSimulatorButton = new Button("Add simulator");
-	private ButtonToMainMenu buttonToMainMenu;
 	private Navigator navigator;
-	private Label selectedSimulatorName;
+	private Label selectedSimulatorName = new Label("", ContentMode.HTML);
+
+	private MainMenuBar mainMenu;;
 
 	public Label getSelectedSimulatorName() {
 		return selectedSimulatorName;
@@ -41,10 +53,6 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	public FormLayout getEditorLayout() {
 		return editorLayout;
-	}
-
-	public Button getRemoveSimulatorButton() {
-		return removeSimulatorButton;
 	}
 
 	public SimulatorForm getSimulatorForm() {
@@ -64,8 +72,13 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 		this.navigator = navigator;
 		initSimulatorList();
 		initLayout();
-		initSimulatorForm();
 		addClickListeners();
+	}
+
+	private void initHorizontalSplitPanel() {
+		horizontalSplitPanel.addComponent(leftLayout);
+		horizontalSplitPanel.addComponent(rightLayout);
+		addComponent(horizontalSplitPanel);
 	}
 
 	private void initSimulatorList() {
@@ -73,32 +86,43 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	}
 
 	private void initLayout() {
+		initMenu();
+		addComponent(mainMenu);
+		initHorizontalSplitPanel();
 		initLeftLayout();
 		initRightLayout();
 	}
 
+	private void initMenu() {
+		mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATORS);
+	}
+
 	private void initLeftLayout() {
-		buttonToMainMenu = new ButtonToMainMenu(navigator);
-		addSimulatorButton.setStyleName("simulatorsAddSimulator");
-		VerticalLayout leftLayout = new VerticalLayout();
-		addComponent(leftLayout);
+		initAddSimulatorButton();
+		leftLayout.setSizeFull();
 		leftLayout.setMargin(new MarginInfo(true, false, true, true));
-		leftLayout.addComponent(buttonToMainMenu);
 		leftLayout.addComponent(simulatorList);
 		leftLayout.addComponent(addSimulatorButton);
-		leftLayout.setSizeFull();
 		leftLayout.setExpandRatio(simulatorList, 1);
 	}
 
+	private void initAddSimulatorButton() {
+		addSimulatorButton.setStyleName("simulatorsAddSimulator");
+		addSimulatorButton.setIcon(ResourceUtil.getPlusImgResource());
+	}
+
+	private void initRemoveSimulatorButton() {
+		removeSimulatorButton.setIcon(ResourceUtil.getMinusImgResource());
+	}
+
 	private void initRightLayout() {
-		VerticalLayout rightLayout = new VerticalLayout();
-		addComponent(rightLayout);
 		rightLayout.setMargin(new MarginInfo(true, false, true, true));
-		selectedSimulatorName = new Label("", ContentMode.HTML);
 		rightLayout.addComponent(selectedSimulatorName);
-		editorLayout = new FormLayout();
-		rightLayout.addComponent(editorLayout);
 		editorLayout.setVisible(false);
+		rightLayout.addComponent(editorLayout);
+		initSimulatorForm();
+		initRemoveSimulatorButton();
+		editorLayout.addComponent(removeSimulatorButton);
 	}
 
 	private void initSimulatorForm() {
@@ -106,11 +130,11 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	}
 
 	private void addClickListeners() {
-		initAddButton();
-		initRemoveButton();
+		addAddClickListener();
+		addRemoveClickListener();
 	}
 
-	private void initAddButton() {
+	private void addAddClickListener() {
 		addSimulatorButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -120,7 +144,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 		});
 	}
 
-	private void initRemoveButton() {
+	private void addRemoveClickListener() {
 		removeSimulatorButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -132,7 +156,6 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-
 	}
 
 }

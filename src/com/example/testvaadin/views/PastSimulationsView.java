@@ -34,9 +34,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 	}
 
-	@Override
 	protected void setClickListeners() {
-		super.setClickListeners();
 		altitudeChart.addValueChangeListener(new ValueChangeListener() {
 			private static final long serialVersionUID = -192918332232524200L;
 

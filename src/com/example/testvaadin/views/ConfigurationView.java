@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.example.testvaadin.SimulatorManagerConstants;
 import com.example.testvaadin.components.ButtonConfigurationView;
-import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.ErrorLabel;
+import com.example.testvaadin.components.MainMenuBar;
 import com.example.testvaadin.data.DatabaseHelperPureJDBC;
+import com.example.testvaadin.types.PageType;
+import com.example.testvaadin.util.ResourceUtil;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -31,7 +33,6 @@ public class ConfigurationView extends BasicView implements View {
 
 	private static final long serialVersionUID = 5205148361184720336L;
 	private ErrorLabel errorLabel = new ErrorLabel("");
-	private ButtonToMainMenu buttonToMainMenu;
 
 	private ButtonConfigurationView testDtbConn = new ButtonConfigurationView("Test database connection");
 	private ButtonConfigurationView cleanAllSimInfo = new ButtonConfigurationView("Clean database");
@@ -39,33 +40,57 @@ public class ConfigurationView extends BasicView implements View {
 	private ButtonConfigurationView seeConfigs = new ButtonConfigurationView("View applications configs");
 
 	private Navigator navigator = null;
-	final Window configsWindow;
+	private Window configsWindow;
 	private static final String MAIN_LAYOUT_CLASS = "mainVertLayout";
+	private MainMenuBar mainMenu;
 
 	@Override
 	public void enter(ViewChangeEvent event) {
 		errorLabel.setCaption("");
+		initMenu();
+		// refresh the selected page
+		// mainMenu.checkTheCorrectMenuItem(PageType.CONFIGURATIONS);
 	}
 
 	public ConfigurationView(Navigator navigator) {
 		logger.info("new ConfigurationView()");
 		this.navigator = navigator;
+
+		initLayout();
+		setClickListeners();
+
+	}
+
+	private void initLayout() {
 		setPrimaryStyleName(MAIN_LAYOUT_CLASS);
-		initButtonToMainMenu();
-		addComponent(errorLabel);
-		addComponent(testDtbConn);
-		addComponent(cleanAllSimInfo);
-		addComponent(initAllSimInfo);
-		addComponent(seeConfigs);
-		// window for displaying configs
+		initMenu();
+		addComponent(mainMenu);
+		initButtons();
+		initConfigsWindow();
+	}
+
+	private void initMenu() {
+		mainMenu = MainMenuBar.getInstance(navigator, PageType.CONFIGURATIONS);
+	}
+
+	private void initConfigsWindow() {
 		configsWindow = new Window("Simulator manager configurations");
 		configsWindow.setHeight(null);
 		configsWindow.setWidth("640px");
 		configsWindow.setClosable(true);
 		configsWindow.setResizable(true);
+	}
 
-		setClickListeners();
-
+	private void initButtons() {
+		testDtbConn.setIcon(ResourceUtil.getPingImg());
+		cleanAllSimInfo.setIcon(ResourceUtil.getCleanImg());
+		initAllSimInfo.setIcon(ResourceUtil.getStartImg());
+		seeConfigs.setIcon(ResourceUtil.getSettingsImg());
+		addComponent(errorLabel);
+		addComponent(testDtbConn);
+		addComponent(cleanAllSimInfo);
+		addComponent(initAllSimInfo);
+		addComponent(seeConfigs);
 	}
 
 	private void setClickListeners() {
@@ -131,13 +156,14 @@ public class ConfigurationView extends BasicView implements View {
 		for (String line : lines) {
 			allLines += line + "<br/>";
 		}
-		verticalLayout.addComponent(new Label("<h2>" + path + "</h2>" + "<p>" + allLines + "</p>", ContentMode.HTML));
-		return verticalLayout;
-	}
+		verticalLayout.addComponent(new Label("<h2> Path to configurations: " + path
+				+ "</h2> <h2> Configurations: </h2>" + "<p>" + allLines + "</p>", ContentMode.HTML));
+		verticalLayout
+				.addComponent(new Label(
+						"<p><b>If you wish to change any of these configs, please modify the configuration file and restart the application</b></p>",
+						ContentMode.HTML));
 
-	private void initButtonToMainMenu() {
-		buttonToMainMenu = new ButtonToMainMenu(navigator);
-		addComponent(buttonToMainMenu);
+		return verticalLayout;
 	}
 
 }

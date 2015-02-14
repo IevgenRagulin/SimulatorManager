@@ -33,6 +33,7 @@ public class StartView extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+
 	}
 
 	private void addClickListeners() {
@@ -48,7 +49,7 @@ public class StartView extends VerticalLayout implements View {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				navigator.navigateTo(NavigatorUI.DATABASE_MANAGEMENT);
+				navigator.navigateTo(NavigatorUI.CONFIGURATION);
 			}
 		});
 	}

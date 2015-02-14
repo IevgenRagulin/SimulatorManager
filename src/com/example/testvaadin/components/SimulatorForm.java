@@ -24,13 +24,13 @@ public class SimulatorForm extends FieldGroup {
 	private static final long serialVersionUID = 5886087581072819926L;
 	private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
 	private static final Object DEFAULT_MAX_SPEED_ON_FLAPS = 200;
-	private SimulatorsView app;
+	private SimulatorsView view;
 	private Random random = new Random();
 	private final int MINRANDOM = 1000;
 	private final int MAXRANDOM = 10000;
 
-	public SimulatorForm(SimulatorsView app) {
-		this.app = app;
+	public SimulatorForm(SimulatorsView view) {
+		this.view = view;
 		init();
 	}
 
@@ -59,13 +59,11 @@ public class SimulatorForm extends FieldGroup {
 				addFieldToForm(field, colName);
 			}
 		}
-
-		app.getEditorLayout().addComponent(app.getRemoveSimulatorButton());
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void addFieldToForm(AbstractField field, SimulatorCols colName) {
-		app.getEditorLayout().addComponent(field);
+		view.getEditorLayout().addComponent(field);
 		if (!StringUtils.isEmpty(colName.getDescription())) {
 			field.setDescription(colName.getDescription());
 		} else {
@@ -110,22 +108,23 @@ public class SimulatorForm extends FieldGroup {
 
 	@SuppressWarnings("unchecked")
 	public void addSimulator() {
-		Object simulatorId = app.getDBHelp().getSimulatorContainer().addItem();
-		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatorname.toString())
+		Object simulatorId = view.getDBHelp().getSimulatorContainer().addItem();
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatorname.toString())
 				.setValue("New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
-		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.port.toString()).setValue(12322);
-		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.hostname.toString()).setValue(FAKE_HOSTNAME);
-		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.maxspeedonflaps.toString())
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.port.toString()).setValue(12322);
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.hostname.toString())
+				.setValue(FAKE_HOSTNAME);
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.maxspeedonflaps.toString())
 				.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
-		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.numberoflandinggears.toString())
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.numberoflandinggears.toString())
 				.setValue(DEFAULT_NUM_OF_LANDING_GEARS);
-		app.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.active.toString()).setValue(false);
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.active.toString()).setValue(false);
 		commit();
 	}
 
 	public void removeSimulator() {
-		Object simulatorId = app.getSimulatorList().getValue();
-		app.getSimulatorList().removeItem(simulatorId);
+		Object simulatorId = view.getSimulatorList().getValue();
+		view.getSimulatorList().removeItem(simulatorId);
 		commit();
 	}
 
@@ -135,13 +134,9 @@ public class SimulatorForm extends FieldGroup {
 			/* Commit the data entered in the person form to the actual item. */
 			super.commit();
 			/* Commit changes to the database. */
-			app.getDBHelp().getSimulatorContainer().commit();
-		} catch (UnsupportedOperationException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (CommitException e) {
-			e.printStackTrace();
+			view.getDBHelp().getSimulatorContainer().commit();
+		} catch (UnsupportedOperationException | SQLException | CommitException e) {
+			throw new RuntimeException("Could not commit changes to simulator container. Database problem?", e);
 		}
 	}
 
@@ -150,11 +145,9 @@ public class SimulatorForm extends FieldGroup {
 		try {
 			super.discard();
 			/* On discard, roll back the changes. */
-			app.getDBHelp().getSimulatorContainer().rollback();
-		} catch (UnsupportedOperationException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			view.getDBHelp().getSimulatorContainer().rollback();
+		} catch (UnsupportedOperationException | SQLException e) {
+			throw new RuntimeException("Could not commit changes to simulator container. Database problem?", e);
 		}
 		/* Clear the form */
 		setItemDataSource(null);

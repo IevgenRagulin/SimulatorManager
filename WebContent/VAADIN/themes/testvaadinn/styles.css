@@ -12189,17 +12189,14 @@ div.v-layout.v-horizontal.v-widget {
 	margin-left: 20px;
 }
 
-.testvaadinn .mainVertLayout {
-	margin-left: 40px;
-	margin-top: 10px;
-}
-
 .testvaadinn .btnDtbManagement {
-	width: 200px;
+	width: 270px;
 	margin-top: 20px;
+	height: 45px;
 }
 
-.testvaadinn .simulatorGoToMainMenu {
+.testvaadinn .v-menubar {
+	margin-top: 2px;
 	margin-bottom: 20px;
 }
 

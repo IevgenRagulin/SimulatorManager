@@ -3,7 +3,6 @@ package com.example.testvaadin.views;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.testvaadin.components.ButtonToMainMenu;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -20,7 +19,6 @@ public class ControlSimulationsView extends BasicView implements View {
 	public ControlSimulationsView(Navigator navigator) {
 		logger.info("new ControlSimulationsView()");
 		this.setNavigator(navigator);
-		buttonToMainMenu = new ButtonToMainMenu(navigator);
 		addComponent(buttonToMainMenu);
 		setComponentAlignment(buttonToMainMenu, Alignment.MIDDLE_CENTER);
 	}

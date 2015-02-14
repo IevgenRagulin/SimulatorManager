@@ -45,10 +45,8 @@ public class SimulationList extends Table {
 			/* Commit changes to the database. */
 			SQLContainer container = (SQLContainer) this.getContainerDataSource();
 			container.commit();
-		} catch (UnsupportedOperationException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (UnsupportedOperationException | SQLException e) {
+			throw new RuntimeException("Could not commit simulation list", e);
 		}
 	}
 

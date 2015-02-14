@@ -14,9 +14,6 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.testvaadin.NavigatorUI;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.server.VaadinService;
 
 /*
@@ -24,25 +21,22 @@ import com.vaadin.server.VaadinService;
  */
 public class DatabaseHelperPureJDBC {
 
-	final static Logger logger = LoggerFactory
-			.getLogger(DatabaseHelperPureJDBC.class);
+	final static Logger logger = LoggerFactory.getLogger(DatabaseHelperPureJDBC.class);
 
-	private static final String BASEPATH = VaadinService.getCurrent()
-			.getBaseDirectory().getAbsolutePath();
-	private static final String CLEAN_QUERY_PATH = BASEPATH
-			+ "/WEB-INF/SQL/cleanDatabase.sql";
-	private static final String INIT_QUERY_PATH = BASEPATH
-			+ "/WEB-INF/SQL/initDatabase.sql";
+	private static final String BASEPATH = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+	private static final String CLEAN_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/cleanDatabase.sql";
+	private static final String INIT_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/initDatabase.sql";
 
 	/**
-	 * Gets connections. Uses username, password, db url form @link {@link ApplicationConfiguration}
+	 * Gets connections. Uses username, password, db url form @link
+	 * {@link ApplicationConfiguration}
+	 * 
 	 * @return
 	 * @throws SQLException
 	 */
 	private static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(ApplicationConfiguration.getDbUrl(),
-				ApplicationConfiguration.getDbUserName(),
-				ApplicationConfiguration.getDbUserPassword());
+				ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword());
 	}
 
 	/**
@@ -86,10 +80,10 @@ public class DatabaseHelperPureJDBC {
 		return tableExists;
 	}
 
-
 	/**
 	 * Drops all tables, creates all tables. Returns message describing the
 	 * error or saying that the execution was successful
+	 * 
 	 * @return
 	 */
 	public static String initDatabase() {
@@ -100,8 +94,7 @@ public class DatabaseHelperPureJDBC {
 		try {
 			connection = getConnection();
 			stmt = connection.createStatement();
-			String[] queries = DatabaseHelperPureJDBC
-					.getDtbQueriesFromFile(INIT_QUERY_PATH);
+			String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(INIT_QUERY_PATH);
 			executeArrayOfQueries(queries, connection, stmt);
 		} catch (SQLException e) {
 			initedSuccessfully = "SQL exception occured while initializing database";
@@ -118,6 +111,7 @@ public class DatabaseHelperPureJDBC {
 
 	/**
 	 * Returns if can db conn can be created, false otherwise
+	 * 
 	 * @return
 	 */
 	public static boolean testDatabaseConnection() {
@@ -130,19 +124,15 @@ public class DatabaseHelperPureJDBC {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			closeConnection(connection);
 		}
 		return false;
 	}
 
 	/**
-	 * Deletes all data from all tables. Returns message describing the error or saying that the execution was successful
+	 * Deletes all data from all tables. Returns message describing the error or
+	 * saying that the execution was successful
+	 * 
 	 * @return
 	 */
 	public static String cleanDatabase() {
@@ -153,8 +143,7 @@ public class DatabaseHelperPureJDBC {
 		try {
 			connection = getConnection();
 			stmt = connection.createStatement();
-			String[] queries = DatabaseHelperPureJDBC
-					.getDtbQueriesFromFile(CLEAN_QUERY_PATH);
+			String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(CLEAN_QUERY_PATH);
 			executeArrayOfQueries(queries, connection, stmt);
 		} catch (SQLException e) {
 			cleanedSuccessfully = "SQL exception occured";
@@ -171,13 +160,14 @@ public class DatabaseHelperPureJDBC {
 
 	/**
 	 * Executes array of queries
+	 * 
 	 * @param queries
 	 * @param connection
 	 * @param statement
 	 * @throws SQLException
 	 */
-	private static void executeArrayOfQueries(String[] queries,
-			Connection connection, Statement statement) throws SQLException {
+	private static void executeArrayOfQueries(String[] queries, Connection connection, Statement statement)
+			throws SQLException {
 		for (int i = 0; i < queries.length; i++) {
 			// don't execute empty queries
 			if (!queries[i].trim().equals("")) {
@@ -188,13 +178,14 @@ public class DatabaseHelperPureJDBC {
 	}
 
 	/**
-	 * Reads text file under filePath, returns array of queries. Separator between queries is ;
+	 * Reads text file under filePath, returns array of queries. Separator
+	 * between queries is ;
+	 * 
 	 * @param filePath
 	 * @return
 	 * @throws IOException
 	 */
-	private static String[] getDtbQueriesFromFile(String filePath)
-			throws IOException {
+	private static String[] getDtbQueriesFromFile(String filePath) throws IOException {
 		String s = new String();
 		StringBuffer sb = new StringBuffer();
 		FileReader fr = new FileReader(new File(filePath));
@@ -214,14 +205,10 @@ public class DatabaseHelperPureJDBC {
 	private static void closeStatement(Statement statement) {
 		try {
 			if ((statement != null) && (!statement.isClosed())) {
-				try {
-					statement.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				statement.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Couldn't close statement", e);
 		}
 	}
 
@@ -231,14 +218,10 @@ public class DatabaseHelperPureJDBC {
 	private static void closeConnection(Connection connection) {
 		try {
 			if ((connection != null) && (!connection.isClosed())) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				connection.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Couldn't close database connection", e);
 		}
 	}
 }

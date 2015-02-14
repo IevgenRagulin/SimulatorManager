@@ -4,37 +4,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.example.testvaadin.NavigatorUI;
+import com.example.testvaadin.components.MainMenuBar;
 import com.example.testvaadin.components.SimulationList;
 import com.example.testvaadin.components.SimulatorListChooseSimulationView;
 import com.example.testvaadin.data.DatabaseHelper;
 import com.example.testvaadin.data.SimulationCols;
+import com.example.testvaadin.types.PageType;
 import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class ChooseSimulationView extends VerticalSplitPanel implements View {
+public class ChooseSimulationView extends VerticalLayout implements View {
 
 	final static Logger logger = LoggerFactory.getLogger(ChooseSimulationView.class);
-
 	private static final long serialVersionUID = 1279140216863014337L;
 	private Navigator navigator;
 	private SimulationList simulationList;
-	SimulatorListChooseSimulationView simulatorList;
-	private HorizontalSplitPanel bottomLayout = new HorizontalSplitPanel();
+	private SimulatorListChooseSimulationView simulatorList;
+	private VerticalSplitPanel bottomVerticalSplitPanel = new VerticalSplitPanel();
 	private VerticalLayout actionButtons = new VerticalLayout();
 	private Button deleteButton = new Button("Delete chosen simulation");
 	private Button viewSimButton = new Button("View chosen simulation");
 	protected DatabaseHelper dbHelp = new DatabaseHelper();
+	MainMenuBar mainMenu;
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		logger.info("Entering ChooseSimulationView");
+		setSizeFull();
+		initMenu();
 	}
 
 	public DatabaseHelper getDBHelp() {
@@ -42,13 +49,20 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	}
 
 	public ChooseSimulationView(Navigator navigator) {
+		super();
 		logger.info("new ChooseSimulationView()");
 		this.navigator = navigator;
+		initMenu();
 		initSimulatorList();
 		initSimulationList();
 		initLayout();
-		// initEditor();
 		addClickListeners();
+		setMargin(new MarginInfo(false, false, false, true));
+	}
+
+	private void initMenu() {
+		mainMenu = MainMenuBar.getInstance(navigator, PageType.CHOOSE_SIMULATION);
+		mainMenu.setHeight("35px");
 	}
 
 	private void addClickListeners() {
@@ -60,7 +74,7 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 				try {
 					simulationList.removeSimulation();
 				} catch (Exception e) {
-					e.printStackTrace();
+					throw new RuntimeException("Could not remove simulation", e);
 				}
 			}
 		});
@@ -85,12 +99,19 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	}
 
 	private void initLayout() {
+		addComponent(mainMenu);
+		addComponent(new Label("<p style='text-align: center;'><b>Select simulator</b></p>", ContentMode.HTML));
 		addComponent(simulatorList);
-		addComponent(bottomLayout);
-		bottomLayout.setSizeFull();
-		bottomLayout.addComponent(simulationList);
-		bottomLayout.addComponent(actionButtons);
-		bottomLayout.setSplitPosition(80);
+		addComponent(new Label(
+				"<p style='text-align: center;'><b>Simulation sessions on the selected simulator</b></p>",
+				ContentMode.HTML));
+		addComponent(bottomVerticalSplitPanel);
+		bottomVerticalSplitPanel.setSizeFull();
+		VerticalLayout bottomLeftLayout = new VerticalLayout();
+		bottomVerticalSplitPanel.addComponent(bottomLeftLayout);
+		bottomLeftLayout.addComponent(simulationList);
+		bottomVerticalSplitPanel.addComponent(actionButtons);
+		bottomVerticalSplitPanel.setSplitPosition(80);
 		simulationList.setVisible(false);
 		actionButtons.setVisible(false);
 		actionButtons.addComponent(deleteButton);
@@ -98,14 +119,19 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 		actionButtons.setSizeFull();
 		actionButtons.setComponentAlignment(deleteButton, Alignment.MIDDLE_CENTER);
 		actionButtons.setComponentAlignment(viewSimButton, Alignment.MIDDLE_CENTER);
+
+		setExpandRatio(mainMenu, 1);
+		setExpandRatio(simulatorList, 10);
+		setExpandRatio(bottomVerticalSplitPanel, 10);
 	}
 
 	private void initSimulationList() {
+		logger.info("Going to init simulation list");
 		simulationList = new SimulationList(this);
 	}
 
 	private void initSimulatorList() {
-		logger.debug("Going to init simulator list");
+		logger.info("Going to init simulator list");
 		simulatorList = new SimulatorListChooseSimulationView(this);
 	}
 
