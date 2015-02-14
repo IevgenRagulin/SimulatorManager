@@ -15,6 +15,11 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
+/**
+ * Abstract class which is extended by RunningSimulationsView and PastSimulationsView
+ * @author ievgen
+ *
+ */
 public abstract class SimulationsView extends BasicView {
 
 	private static final long serialVersionUID = 6450588437869904764L;
@@ -128,14 +133,10 @@ public abstract class SimulationsView extends BasicView {
 	 */
 	protected void handleValueChangeEvent() {
 		this.resetUI();
-		updateValues();
+		updateUI();
 	}
 
 	/* Based on previous simulator selection, updates the UI */
-	protected void updateValues() {
-		this.updateUI();
-	}
-
 	protected abstract void updateUI();
 
 }

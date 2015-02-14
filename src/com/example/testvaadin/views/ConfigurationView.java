@@ -5,6 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.testvaadin.SimulatorManagerConstants;
 import com.example.testvaadin.components.ButtonConfigurationView;
 import com.example.testvaadin.components.ButtonToMainMenu;
@@ -23,6 +26,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class ConfigurationView extends BasicView implements View {
+
+	final static Logger logger = LoggerFactory.getLogger(ConfigurationView.class);
+
 	private static final long serialVersionUID = 5205148361184720336L;
 	private ErrorLabel errorLabel = new ErrorLabel("");
 	private ButtonToMainMenu buttonToMainMenu;
@@ -42,6 +48,7 @@ public class ConfigurationView extends BasicView implements View {
 	}
 
 	public ConfigurationView(Navigator navigator) {
+		logger.info("new ConfigurationView()");
 		this.navigator = navigator;
 		setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 		initButtonToMainMenu();
@@ -117,7 +124,8 @@ public class ConfigurationView extends BasicView implements View {
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setMargin(true);
 		// Find the application directory
-		String path = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + SimulatorManagerConstants.CONFIGS_PATH;
+		String path = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath()
+				+ SimulatorManagerConstants.CONFIGS_PATH;
 		List<String> lines = Files.readAllLines(Paths.get(path));
 		String allLines = "";
 		for (String line : lines) {

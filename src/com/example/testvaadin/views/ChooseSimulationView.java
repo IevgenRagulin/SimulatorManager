@@ -42,6 +42,7 @@ public class ChooseSimulationView extends VerticalSplitPanel implements View {
 	}
 
 	public ChooseSimulationView(Navigator navigator) {
+		logger.info("new ChooseSimulationView()");
 		this.navigator = navigator;
 		initSimulatorList();
 		initSimulationList();

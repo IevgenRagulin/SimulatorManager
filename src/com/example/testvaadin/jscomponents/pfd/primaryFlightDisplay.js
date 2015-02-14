@@ -60,7 +60,7 @@ var isItFirstLoad = true;
 var currentlyRotatingHorizont = false;
 var horizontHasBeenRotated = false;
 
-var darkGray = '404040';
+var darkGray = '#404040';
 //var currentPitchShape = new createjs.Shape();
 function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
 	//window.currentPitchShape.x=0;
@@ -100,7 +100,7 @@ function resetPfd() {
 }
 
 function initHtml(e) {
-	console.log("init html");
+	console.log("init htmll");
 	e.innerHTML = e.innerHTML
 			+ "<div id='pfd_whole' style='width: 410px; height: 340px; padding-left: 20px; background-color: black; position:relative;'>"
 			// + "<canvas id='background' width='400' height='340'>"
@@ -135,6 +135,7 @@ function init() {
 }
 
 function update() {
+	//we only do the update if no other update is done it the moment to avoid loops 
 	if (!window.currentlyChangingPitch) {
 		setPitch();
 	}
@@ -177,12 +178,12 @@ function fillRect(ctx, x, y, w, h) {
 }
 
 function fillSky(ctx, x, y, w, h) {
-	ctx.fillStyle = '0080ff';
+	ctx.fillStyle = '#0080ff';
 	fillRect(ctx, x, y, w, h);
 }
 
 function fillGround(ctx, x, y, w, h) {
-	ctx.fillStyle = '804000';
+	ctx.fillStyle = '#804000';
 	fillRect(ctx, x, y, w, h);
 }
 

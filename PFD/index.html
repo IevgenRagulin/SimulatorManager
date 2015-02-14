@@ -1,44 +1,41 @@
-<html>
+<!-- <html>
 
 <head>
 
 </head>
 
 <body onload="init();">
-<h1>PFD</h1>
-<div style="position:relative"> 
-<canvas id="pfd" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
+	<h1>PFD</h1>
+	<div style="position: relative">
+		<canvas id="pfd" width="300" height="300"
+			style="border: 1px solid #000000; position: absolute;">
+Your browser doesn't support canvas. Please, update your browser. 
 </canvas>
-<canvas id="sight" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
+		<canvas id="sight" width="300" height="300"
+			style="border: 1px solid #000000; position: absolute;">
 </canvas>
-<canvas id="speed" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
+		<canvas id="speed" width="300" height="300"
+			style="border: 1px solid #000000; position: absolute;">
 </canvas>
-<canvas id="altitude" width="300" height="300" style="border:1px solid #000000; position: absolute;">
-Your browser doesn't support canvas.
+		<canvas id="altitude" width="300" height="300"
+			style="border: 1px solid #000000; position: absolute;">
 </canvas>
-</div>
-<div style="margin-top: 350px">
-<label id="speedT">Current speed:</label>
-<label id="speedV"></label><br/>
-<label id="altitudeT">Current altitude:</label>
-<label id="altitudeV"></label><br/>
-<label id="rollT">Roll:</label>
-<label id="rollV"></label><br/>
-<label id="pitchT">Pitch:</label>
-<label id="pitchV"></label><br/>
-<button id="addPitch">+10 pitch</button>
-<button id="minusPitch">-10 pitch</button>
-<button id="addRoll">+5 roll</button>
-<button id="minusRoll">-5 roll</button>
-<button id="addAltitude">+50 altitude</button>
-<button id="minusAltitude">-50 altitude</button>
-<button id="addSpeed">+50 speed</button>
-<button id="minusSpeed">-50 speed</button>
-</div>
-<script type="application/javascript">
+	</div>
+	<div style="margin-top: 350px">
+		<label id="speedT">Current speed:</label> <label id="speedV"></label><br />
+		<label id="altitudeT">Current altitude:</label> <label id="altitudeV"></label><br />
+		<label id="rollT">Roll:</label> <label id="rollV"></label><br /> <label
+			id="pitchT">Pitch:</label> <label id="pitchV"></label><br />
+		<button id="addPitch">+10 pitch</button>
+		<button id="minusPitch">-10 pitch</button>
+		<button id="addRoll">+5 roll</button>
+		<button id="minusRoll">-5 roll</button>
+		<button id="addAltitude">+50 altitude</button>
+		<button id="minusAltitude">-50 altitude</button>
+		<button id="addSpeed">+50 speed</button>
+		<button id="minusSpeed">-50 speed</button>
+	</div>
+	<script>
 var sightRadius = 90;
 var sightCenterRadius = 10;
 var sightCenterCenterRadius = 1;
@@ -68,7 +65,8 @@ var currentlyChanginPitch=false;
 
 var horizontWidth = 1000; 
 function init(){
-  document.getElementById("addPitch").addEventListener("click", function() { 
+	console.log("Init function called");
+  /* document.getElementById("addPitch").addEventListener("click", function() { 
 		var newPitch = (currentPitch+10)%360;
 		if (!((currentlyChangingRoll)||(currentlyChangingPitch))) {
 			drawArtificialHorizon(currentRoll, newPitch, 0);
@@ -103,7 +101,7 @@ function init(){
   
   document.getElementById("addAltitude").addEventListener("click", function() { setAltitude(currentAltitude+50);});
   document.getElementById("minusAltitude").addEventListener("click", function() { setAltitude(currentAltitude-50);});
-  //button
+  */ //button
   //button.addEventListener("click", function() { drawArtificialHorizon(currentRoll, currentPitch+5, 0);});
   
   drawSpeedIndicator();
@@ -111,8 +109,8 @@ function init(){
   drawSight();
   drawArtificialHorizon(10,10,0);
   
-  setSpeed(100); 
-  setAltitude(200);  
+  //setSpeed(100); 
+  //setAltitude(200);  
   //setInterval(function(){setSpeed(40);},17);
   //setInterval(clock,5);
 }
@@ -472,4 +470,4 @@ function drawAltitude() {
 
 </script>
 </body>
-</html>
+</html> -->

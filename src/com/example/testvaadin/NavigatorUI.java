@@ -25,6 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("testvaadinn")
 public class NavigatorUI extends UI {
 
+	private static final String APPLICATION_NAME = "Simulator manager";
 	final static Logger logger = LoggerFactory.getLogger(NavigatorUI.class);
 
 	@WebServlet(value = "/*", asyncSupported = true)
@@ -43,26 +44,28 @@ public class NavigatorUI extends UI {
 	public static final String DATABASE_MANAGEMENT = "Manage database";
 	protected static RunningSimulationsView runningSimulationsView;
 
+	private boolean uiInitialized = false;
+
 	@Override
 	protected void init(VaadinRequest request) {
 		logger.info("Going to initialize application");
-		VerticalLayout mainLayout = new VerticalLayout();
-		logger.info("Added login form");
+		if (!uiInitialized) {
+			initApplicationConfiguration();
+			// we do it to initialize static stuff in SimulationUpdater class
+			try {
+				Class.forName("com.example.testvaadin.simulatorcommunication.UpdatesScheduler");
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException("Could not initilize application properly", e);
+			}
+			DatabaseHelperPureJDBC.initDatabaseIfNeeded();
+			getPage().setTitle(APPLICATION_NAME);
+			navigator = new Navigator(this, this);
 
-		initApplicationConfiguration();
-		// we do it to initialize static stuff in SimulationUpdater class
-		try {
-			Class.forName("com.example.testvaadin.simulatorcommunication.UpdatesScheduler");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			createRegisterViews();
+			uiInitialized = true;
 		}
-		DatabaseHelperPureJDBC.initDatabaseIfNeeded();
-		getPage().setTitle("Simulator manager");
-		navigator = new Navigator(this, this);
-
-		createRegisterViews();
 	}
-
+	
 	/**
 	 * Create and register the views
 	 */
@@ -72,7 +75,8 @@ public class NavigatorUI extends UI {
 		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(this.navigator));
 		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(this.navigator));
 		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
-		navigator.addView(CONTROLSIMULATIONS, new ControlSimulationsView(this.navigator));
+		// navigator.addView(CONTROLSIMULATIONS, new
+		// ControlSimulationsView(this.navigator));
 		navigator.addView(DATABASE_MANAGEMENT, new ConfigurationView(this.navigator));
 	}
 

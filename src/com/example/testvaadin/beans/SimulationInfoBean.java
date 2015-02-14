@@ -27,4 +27,11 @@ public class SimulationInfoBean implements Serializable {
 		this.longtitude = allSimInfo.getLongitude();
 		this.latitude = allSimInfo.getLatitude();
 	}
+
+	@Override
+	public String toString() {
+		return "SimulationInfoBean [longtitude=" + longtitude + ", latitude=" + latitude + "]";
+	}
+	
+	
 }

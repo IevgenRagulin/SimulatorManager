@@ -3,10 +3,13 @@ package com.example.testvaadin.components;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.testvaadin.data.SimulationInfoCols;
+import com.example.testvaadin.items.SimulationInfoItem;
 import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.tapio.googlemaps.GoogleMap;
@@ -15,9 +18,11 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapInfoWindow;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 
-public abstract class FlightPathGoogleMapBase extends GoogleMap {
+public abstract class FlightPathBase extends GoogleMap {
 	private static final long serialVersionUID = 523060061909689421L;
-	private static final String PLANE_ICONS_PATH = "VAADIN/themes/testvaadin/plane_icons/";
+	final static Logger logger = LoggerFactory.getLogger(FlightPathBase.class);
+
+	private static final String PLANE_ICONS_PATH = "VAADIN/themes/testvaadinn/plane_icons/";
 	private static final String MAP_STYLE_NAME = "flightPathMap";
 	private final String MAP_WIDTH = "350px";
 	private final String MAP_HEIGHT = "350px";
@@ -25,17 +30,18 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 	protected GoogleMapPolyline flightPath = new GoogleMapPolyline(planePathPoints, "#d31717", 0.8, 3);
 	GoogleMapMarker newPositionMarker = new GoogleMapMarker();
 	protected GoogleMapInfoWindow latestCoordinatesWindow = new GoogleMapInfoWindow("", newPositionMarker);
-	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0, 112.5, 135.0, 157.5, 180.0, 202.5, 225.0, 247.5, 270.0, 292.5,
-			315.0, 337.5 };
+	private final double[] possibleIconPos = { 0, 22.5, 45.0, 67.5, 90.0, 112.5, 135.0, 157.5, 180.0, 202.5, 225.0,
+			247.5, 270.0, 292.5, 315.0, 337.5 };
 
 	protected SimulationsView view = null;
 	protected LatLon lastLatLong = null;
 
-	public FlightPathGoogleMapBase(LatLon center, double zoom, String apiKeyOrClientId, SimulationsView view) {
-
+	public FlightPathBase(LatLon center, double zoom, String apiKeyOrClientId, SimulationsView view) {
 		super(center, zoom, apiKeyOrClientId);
+		logger.info("new FlightPathGoogleMapBase()");
 		this.view = view;
 		setMapConfiguration();
+		addPolyline(this.flightPath);
 
 	}
 
@@ -48,8 +54,8 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 		setHeight(MAP_HEIGHT);
 		setPrimaryStyleName(MAP_STYLE_NAME);
 		// Display coordinates on clicking the marker
-		OpenInfoWindowOnMarkerClickListener infoWindowOpener = new OpenInfoWindowOnMarkerClickListener(this, newPositionMarker,
-				latestCoordinatesWindow);
+		OpenInfoWindowOnMarkerClickListener infoWindowOpener = new OpenInfoWindowOnMarkerClickListener(this,
+				newPositionMarker, latestCoordinatesWindow);
 		this.addMarkerClickListener(infoWindowOpener);
 		newPositionMarker.setAnimationEnabled(false);
 		latestCoordinatesWindow.setWidth("100px");
@@ -57,9 +63,10 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 
 	public void addOldDataToMap(SQLContainer simulationInfoData, Double trueCourse) {
 		planePathPoints = getArrayListOfFlightPathPoints(simulationInfoData);
+		logger.info("addOldDataToMap() - planePathPoints.size: {}", planePathPoints.size());
 		this.flightPath.setCoordinates(planePathPoints);
-		addPolyline(this.flightPath);
 		setCenter(lastLatLong);
+		// add marker to the last position
 		addMarkerOnMap(lastLatLong, trueCourse);
 	}
 
@@ -104,9 +111,9 @@ public abstract class FlightPathGoogleMapBase extends GoogleMap {
 
 	public abstract void clearMap();
 
-	protected void addMarkerOnMap(Item item, Double trueCourse) {
-		Double newLongtitude = (Double) ((Property<?>) item.getItemProperty(SimulationInfoCols.longtitude.toString())).getValue();
-		Double newLatitude = (Double) ((Property<?>) item.getItemProperty(SimulationInfoCols.latitude.toString())).getValue();
+	protected void addMarkerOnMap(SimulationInfoItem item, Double trueCourse) {
+		Double newLongtitude = item.getBean().getLongtitude();
+		Double newLatitude = item.getBean().getLatitude();
 		LatLon newPosition = new LatLon(newLatitude, newLongtitude);
 
 		latestCoordinatesWindow.setContent(newPosition.getLat() + " " + newPosition.getLon());

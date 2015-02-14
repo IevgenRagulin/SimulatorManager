@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import com.example.testvaadin.exception.UnknownSimulatorException;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
@@ -334,7 +335,7 @@ public class DatabaseHelper implements Serializable {
 	/*
 	 * Get Simulator item by simulatorId
 	 */
-	public Item getSimulatorItemBySimulatorId(String simulatorId) {
+	public Item getSimulatorItemBySimulatorId(String simulatorId) throws UnknownSimulatorException {
 		SQLContainer simulatorContainer = getNewSimulatorContainer();
 		Collection<?> itemIds = simulatorContainer.getItemIds();
 		Item simulatorItem = null;
@@ -345,7 +346,7 @@ public class DatabaseHelper implements Serializable {
 			}
 		}
 		if (simulatorItem == null) {
-			throw new IllegalArgumentException("There is no simulator with such simulator id in database: " + simulatorId);
+			throw new UnknownSimulatorException("There is no simulator with such simulator id in database: " + simulatorId);
 		}
 		return simulatorItem;
 	}

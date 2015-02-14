@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.testvaadin.components.FlightPathGoogleMapPastSim;
+import com.example.testvaadin.components.FlightPathPastSim;
 import com.example.testvaadin.data.ApplicationConfiguration;
 import com.example.testvaadin.data.SimulationPfdInfoCols;
 import com.example.testvaadin.jscomponents.jshighchart.JsHighChart.ValueChangeListener;
@@ -25,7 +25,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 	private String selectedSimulationId;
 	protected static final String NO_SIMULATION_SELECTED = "Please, select simulation";
 
-	protected FlightPathGoogleMapPastSim googleMap = null;
+	protected FlightPathPastSim googleMap = null;
 
 	public PastSimulationsView(Navigator navigator) {
 		super(navigator);
@@ -45,7 +45,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 				try {
 					setUi(altitudeChart.getClickedId(), altitudeChart.getTimestamp());
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("Sql exception when clicking on altitude chart ", e);
 				}
 			}
 		});
@@ -57,7 +57,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 				try {
 					setUi(speedChart.getClickedId(), speedChart.getTimestamp());
 				} catch (SQLException e) {
-					e.printStackTrace();
+					throw new RuntimeException("Sql exception when clicking on speed chart ", e);
 				}
 			}
 		});
@@ -65,7 +65,8 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 	@Override
 	protected void updateUI() {
-		// here init google map with old data
+		logger.info("updateUI()");
+		// init google map with old data
 		addFlightPathToMap(selectedSimulationId);
 		altitudeChart.initChartWithDataForSimulationWithId(selectedSimulationId);
 		speedChart.initChartWithDataForSimulationWithId(selectedSimulationId);
@@ -82,15 +83,17 @@ public class PastSimulationsView extends SimulationsView implements View {
 	}
 
 	private void addFlightPathToMap(String simulationId) {
-
-		SQLContainer simulationInfoData = dbHelp.getAllSimulationInfoBySimulationId(simulationId);
-		googleMap.addOldDataToMap(simulationInfoData, 0.0);
+		SQLContainer simulationInfo = dbHelp.getAllSimulationInfoBySimulationId(simulationId);
+		logger.info("addFlightPathToMap - add old data to map for simulation id: {}, containerSize: {}", simulationId,
+				simulationInfo.size());
+		googleMap.addOldDataToMap(simulationInfo, 0.0);
 
 	}
 
 	protected void setGoogleMapInfo(Item simulationInfoItem, Item pfdInfoItem) {
 
-		Double trueCourse = (Double) pfdInfoItem.getItemProperty(SimulationPfdInfoCols.truecourse.toString()).getValue();
+		Double trueCourse = (Double) pfdInfoItem.getItemProperty(SimulationPfdInfoCols.truecourse.toString())
+				.getValue();
 		googleMap.moveMarkerOnMap(simulationInfoItem, trueCourse);
 
 	}
@@ -120,24 +123,19 @@ public class PastSimulationsView extends SimulationsView implements View {
 
 	@Override
 	protected void initGoogleMaps() {
-		logger.info("Going to init google maps. Google maps object: {}", googleMap);
+		logger.info("initGoogleMaps(). Google maps object: {}", googleMap);
 		if (googleMap != null) {
 			googleMap.clearMap();
 		} else {
-			FlightPathGoogleMapPastSim googleMap = new FlightPathGoogleMapPastSim(new LatLon(60.440963, 22.25122), 4.0,
+			logger.info("initGoogleMaps() - creating new FlightPathGoogleMapPastSim");
+			this.googleMap = new FlightPathPastSim(new LatLon(60.440963, 22.25122), 4.0,
 					ApplicationConfiguration.getGoogleMapApiKey(), this);
-			setGoogleMap(googleMap);
 		}
-
-	}
-
-	private void setGoogleMap(FlightPathGoogleMapPastSim googleMap) {
-		logger.info("Going to set google maps to: {}", googleMap);
-		this.googleMap = googleMap;
 	}
 
 	@Override
 	protected void resetUI() {
+		logger.info("resetUI()");
 		primaryFlightDisplay.resetPfd();
 		altitudeChart.resetChart();
 		speedChart.resetChart();

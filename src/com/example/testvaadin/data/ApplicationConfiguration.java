@@ -9,13 +9,11 @@ import com.example.testvaadin.NavigatorUI;
 import com.vaadin.server.VaadinService;
 
 public class ApplicationConfiguration {
-	
+
 	final static Logger logger = LoggerFactory.getLogger(ApplicationConfiguration.class);
-	
-	private static final String BASEPATH = VaadinService.getCurrent()
-			.getBaseDirectory().getAbsolutePath();
-	private static final String CONF_FILE_PATH = BASEPATH
-			+ "/WEB-INF/simulatorManager.prop";
+
+	private static final String BASEPATH = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+	private static final String CONF_FILE_PATH = BASEPATH + "/WEB-INF/simulatorManager.prop";
 	private static final String DB_URL_PROP = "db_url";
 	private static final String DB_USERNAME_PROP = "db_username";
 	private static final String DB_PASS_PROP = "db_password";
@@ -47,22 +45,18 @@ public class ApplicationConfiguration {
 
 	public static void initApplicationConfigFromConfFile() {
 		logger.info("Going to init application configuration from file...");
-		
+
 		try {
-			PropertiesConfiguration propConf = new PropertiesConfiguration(
-					CONF_FILE_PATH);
+			PropertiesConfiguration propConf = new PropertiesConfiguration(CONF_FILE_PATH);
 			setDbUrl(propConf.getString(DB_URL_PROP));
 			setDbUserName(propConf.getString(DB_USERNAME_PROP));
 			setDbUserPassword(propConf.getString(DB_PASS_PROP));
 			setGoogleMapApiKey(propConf.getString(GOOGLE_MAP_API_KEY_PROP));
-			setSimulatorGetDataFrequency(propConf
-					.getInt(SIMULATOR_GET_DATA_FREQ_PROP));
+			setSimulatorGetDataFrequency(propConf.getInt(SIMULATOR_GET_DATA_FREQ_PROP));
 			setRefreshUiFrequency(propConf.getInt(USER_INT_REFRESH_FREQ_PROP));
 			setWriteToDbFrequency(propConf.getInt(WRITE_TO_DB_FREQ_PROP));
-			setWritePositionToDbFrequency(propConf
-					.getInt(WRITE_POS_TO_DB_FREQ_PROP));
-			setUpdateAirplanePositionFrequency(propConf
-					.getInt(UPDATE_AIRPL_POS_FREQ_PROP));
+			setWritePositionToDbFrequency(propConf.getInt(WRITE_POS_TO_DB_FREQ_PROP));
+			setUpdateAirplanePositionFrequency(propConf.getInt(UPDATE_AIRPL_POS_FREQ_PROP));
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
@@ -96,13 +90,11 @@ public class ApplicationConfiguration {
 		ApplicationConfiguration.writeToDbFrequency = writeToDbFrequency;
 	}
 
-	private static void setWritePositionToDbFrequency(
-			Integer writePositionToDbFrequency) {
+	private static void setWritePositionToDbFrequency(Integer writePositionToDbFrequency) {
 		ApplicationConfiguration.writePositionToDbFrequency = writePositionToDbFrequency;
 	}
 
-	private static void setUpdateAirplanePositionFrequency(
-			Integer updateAirplanePositionFrequency) {
+	private static void setUpdateAirplanePositionFrequency(Integer updateAirplanePositionFrequency) {
 		ApplicationConfiguration.updateAirplanePositionFrequency = updateAirplanePositionFrequency;
 	}
 
@@ -140,8 +132,7 @@ public class ApplicationConfiguration {
 
 	public static Integer getSimulatorGetDataFrequency() {
 		if (simulatorGetDataFrequency == null)
-			throw new NullPointerException(
-					"simulatorGetDataFrequency is not set");
+			throw new NullPointerException("simulatorGetDataFrequency is not set");
 		return simulatorGetDataFrequency;
 	}
 
@@ -159,15 +150,13 @@ public class ApplicationConfiguration {
 
 	public static Integer getWritePositionToDbFrequency() {
 		if (writePositionToDbFrequency == null)
-			throw new NullPointerException(
-					"writePositionToDbFrequency is not set");
+			throw new NullPointerException("writePositionToDbFrequency is not set");
 		return writePositionToDbFrequency;
 	}
 
 	public static Integer getUpdateAirplanePositionFrequency() {
 		if (updateAirplanePositionFrequency == null)
-			throw new NullPointerException(
-					"updateAirplanePositionFrequency is not set");
+			throw new NullPointerException("updateAirplanePositionFrequency is not set");
 		return updateAirplanePositionFrequency;
 	}
 

@@ -189,7 +189,7 @@ public class SimulationsUpdater implements Runnable {
 			simulationId = (RowId) dbHelp.getLatestSimulationContainer(
 					simulatorId).getIdByIndex(0);
 		}
-		DatabaseUpdater.addSimulationInfoToDatabase(lastSimCont, simulatorId,
+		DatabaseUpdater.addSimulationInfoToDb(lastSimCont, simulatorId,
 				simulationId);
 	}
 

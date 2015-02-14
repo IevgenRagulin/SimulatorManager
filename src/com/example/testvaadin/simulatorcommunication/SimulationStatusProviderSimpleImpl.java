@@ -24,7 +24,7 @@ public class SimulationStatusProviderSimpleImpl {
 	// consider it not running
 	private static int maxFailedTolearatedRequests = 10;
 	protected static final double HALF_METER = 0.5;
-	private static final double FIVE_KM = 5000;
+	private static final double ONE_KM = 1000; 
 	final static Logger logger = LoggerFactory.getLogger(SimulationStatusProviderSimpleImpl.class);
 
 	// If the simulator has the same position maxSimilarPositions times, we
@@ -71,8 +71,8 @@ public class SimulationStatusProviderSimpleImpl {
 		// that the airplane has been moved to a new position
 		// not by flying there, but by setting the position through X-Plane.
 		// This means, we should finish this simulation, and start a new one
-		if (hasPlaneMovedMoreThan(simulatorId, FIVE_KM)) {
-			logger.info("the plane has moved over distance which is more than {} meters. Probably, previous simulation has finished. Creating new simulation session.", FIVE_KM);
+		if (hasPlaneMovedMoreThan(simulatorId, ONE_KM)) {
+			logger.info("the plane has moved over distance which is more than {} meters. Probably, previous simulation has finished. Creating new simulation session.", ONE_KM);
 			setNumberOfFailedRequests(simulatorId, maxFailedTolearatedRequests+1);
 		}
 	}

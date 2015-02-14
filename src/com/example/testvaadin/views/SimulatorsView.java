@@ -1,5 +1,8 @@
 package com.example.testvaadin.views;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.testvaadin.components.ButtonToMainMenu;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorListSimulatorsView;
@@ -19,6 +22,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class SimulatorsView extends HorizontalSplitPanel implements View {
+	final static Logger logger = LoggerFactory.getLogger(SimulatorsView.class);
 
 	private SimulatorListSimulatorsView simulatorList;
 	private DatabaseHelper dbHelp = new DatabaseHelper();
@@ -56,6 +60,7 @@ public class SimulatorsView extends HorizontalSplitPanel implements View {
 	}
 
 	public SimulatorsView(Navigator navigator) {
+		logger.info("new SimulatorsView()");
 		this.navigator = navigator;
 		initSimulatorList();
 		initLayout();

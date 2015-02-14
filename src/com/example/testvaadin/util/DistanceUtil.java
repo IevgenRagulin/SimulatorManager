@@ -29,7 +29,7 @@ public class DistanceUtil {
 		dist = DistanceUtil.rad2deg(dist);
 		dist = dist * 60 * 1.1515;
 		dist = dist * 1.609344 * 1000;
-		logger.info("Measured distance between lat1: {}, lon1: {}, lat2: {}, lon2: {}. Result: {}", lat1, lon1, lat2, lon2, dist);
+		logger.debug("Measured distance between lat1: {}, lon1: {}, lat2: {}, lon2: {}. Result: {}", lat1, lon1, lat2, lon2, dist);
 		return dist;
 	}
 
@@ -50,7 +50,7 @@ public class DistanceUtil {
 	/**
 	 * Returns true if the plane has moved n a distance more then @distInMeters
 	 * Returns 0 if the plane has not moved too much.
-	 * If there is no information about previous simulations in db, then we return false
+	 * If there is no information about previous simulations in db, then we return true
 	 */
 	public static boolean hasPlaneMovedMoreThan(SimulationInfoItem currentSimItem, SimulationInfoItem prevSimItem, double distInMetersThreshold) {
 		boolean hasPlaneMoved = false;
@@ -61,9 +61,11 @@ public class DistanceUtil {
 			Double currentLatitude = currentSimItem.getBean().getLatitude();
 			Double currentLongtitude = currentSimItem.getBean().getLongtitude();
 			distanceActual = distanceBetweenTwoPoints(prevLatitude, prevLongtitude, currentLatitude, currentLongtitude);
-			if (distanceActual <= distInMetersThreshold) {
-				hasPlaneMoved = false; 
+			if (distanceActual >= distInMetersThreshold) {
+				hasPlaneMoved = true; 
 			} 
+		} else {
+			hasPlaneMoved = true;
 		}
 		if (hasPlaneMoved) {
 			logger.info("Plane has moved or there is no info about simulations for simulator. Has moved over: {} meters. The threshold is: {}", distanceActual, distInMetersThreshold);
