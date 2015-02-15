@@ -53,7 +53,8 @@ public class NavigatorUI extends UI {
 			try {
 				Class.forName("com.example.testvaadin.simulatorcommunication.UpdatesScheduler");
 			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException("Could not initilize application properly", e);
+				throw new IllegalStateException(
+						"Could not initilize application properly", e);
 			}
 			DatabaseHelperPureJDBC.initDatabaseIfNeeded();
 			getPage().setTitle(APPLICATION_NAME);
@@ -70,9 +71,12 @@ public class NavigatorUI extends UI {
 	private void createRegisterViews() {
 		navigator.addView("", new StartView(this.navigator));
 		navigator.addView(MANAGESIMULATORS, new SimulatorsView(this.navigator));
-		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(this.navigator));
-		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(this.navigator));
-		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
+		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(
+				this.navigator));
+		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(
+				this.navigator));
+		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(
+				this.navigator));
 		// navigator.addView(CONTROLSIMULATIONS, new
 		// ControlSimulationsView(this.navigator));
 		navigator.addView(CONFIGURATION, new ConfigurationView(this.navigator));

@@ -24,8 +24,14 @@ public class ResourceUtil {
 			basepath + "/WEB-INF/images/button_images/settings.png"));
 	private final static Resource ev97Img = new FileResource(new File(basepath
 			+ "/WEB-INF/images/ev97.jpg"));
+	private final static Resource ev97MainImg = new FileResource(new File(
+			basepath + "/WEB-INF/images/ev97_main.jpg"));
 	private final static Resource boeing737Img = new FileResource(new File(
 			basepath + "/WEB-INF/images/boeing737.jpg"));
+	private final static Resource simulatorManagerImg = new FileResource(
+			new File(basepath + "/WEB-INF/images/simulatorManager.jpg"));
+	private final static Resource configurationMainImg = new FileResource(
+			new File(basepath + "/WEB-INF/images/configuration-main.jpg"));
 
 	public static Resource getPlusImgResource() {
 		return plusImg;
@@ -55,8 +61,20 @@ public class ResourceUtil {
 		return ev97Img;
 	}
 
+	public static Resource getEv97MainImg() {
+		return ev97MainImg;
+	}
+
 	public static Resource getBoeing737Img() {
 		return boeing737Img;
+	}
+
+	public static Resource getSimulatorManagerImg() {
+		return simulatorManagerImg;
+	}
+
+	public static Resource getConfigurationMainImg() {
+		return configurationMainImg;
 	}
 
 }

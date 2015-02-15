@@ -116,7 +116,7 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 	private void initLayout() {
 		addComponent(mainMenu);
 		addComponent(new Label(
-				"<p style='text-align: center;'><b>Select simulator</b></p>",
+				"<p style='text-align: center;'><b>Select a simulator</b></p>",
 				ContentMode.HTML));
 		addComponent(simulatorList);
 		bottomImage = new Image(
@@ -145,7 +145,7 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 				Alignment.MIDDLE_CENTER);
 
 		setExpandRatio(mainMenu, 1);
-		setExpandRatio(simulatorList, 10);
+		setExpandRatio(simulatorList, 8);
 		setExpandRatio(bottomImage, 10);
 		setExpandRatio(bottomVerticalSplitPanel, 10);
 		bottomVerticalSplitPanel.setVisible(false);

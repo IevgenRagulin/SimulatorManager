@@ -12208,6 +12208,25 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: #F0FFFF;
 }
 
-.testvaadinn #choose-simulation-simulator-list {
-	margin-bottom: 30px;
+.testvaadinn .circular {
+	width: 200px;
+	height: 200px;
+	border-radius: 100px;
+	-webkit-border-radius: 100px;
+	-moz-border-radius: 100px;
+	cursor: pointer;
+}
+
+.testvaadinn .button-main-page {
+	width: 200px;
+	margin-top: 20px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 130%;
+	cursor: pointer;
+	color: #5a5a5a;
+}
+
+.testvaadinn .button-main-page:hover {
+	text-shadow: 1px 1px #5a5a5a;
 }

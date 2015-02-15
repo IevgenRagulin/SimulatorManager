@@ -19,6 +19,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinService;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -60,7 +61,7 @@ public class ConfigurationView extends BasicView implements View {
 	public ConfigurationView(Navigator navigator) {
 		logger.info("new ConfigurationView()");
 		this.navigator = navigator;
-
+		setMargin(new MarginInfo(false, false, false, true));
 		initLayout();
 		setClickListeners();
 
@@ -98,9 +99,12 @@ public class ConfigurationView extends BasicView implements View {
 		addComponent(seeConfigs);
 		testDtbConn
 				.setDescription("Tries to connect to the database which url/username/password is configured in simulatorManager.prop");
-		cleanAllSimInfo.setDescription("Executes a script which removes information about simulations/simulators from all database tables. Warning: this will remove data about all simulators, and simulations");
-		initAllSimInfo.setDescription("Executes a script which sets up the database for the SimulatorManager. Drops all tables, creates new tables. Warning: this will remove data about all simulators, and simulations");
-		seeConfigs.setDescription("Show contents of simulatorManager.props file which contains configurations for the application");
+		cleanAllSimInfo
+				.setDescription("Executes a script which removes information about simulations/simulators from all database tables. Warning: this will remove data about all simulators, and simulations");
+		initAllSimInfo
+				.setDescription("Executes a script which sets up the database for the SimulatorManager. Drops all tables, creates new tables. Warning: this will remove data about all simulators, and simulations");
+		seeConfigs
+				.setDescription("Show contents of simulatorManager.props file which contains configurations for the application");
 	}
 
 	private void setClickListeners() {
