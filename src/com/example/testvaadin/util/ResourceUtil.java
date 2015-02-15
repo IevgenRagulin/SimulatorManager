@@ -21,6 +21,8 @@ public class ResourceUtil {
 			+ "/WEB-INF/images/button_images/start.png"));
 	private final static Resource settingsImg = new FileResource(new File(basepath
 			+ "/WEB-INF/images/button_images/settings.png"));
+	private final static Resource ev97Img = new FileResource(new File(basepath
+			+ "/WEB-INF/images/ev97.jpg"));
 
 	public static Resource getPlusImgResource() {
 		return plusImg;
@@ -44,6 +46,10 @@ public class ResourceUtil {
 
 	public static Resource getSettingsImg() {
 		return settingsImg;
+	}
+	
+	public static Resource getEv97Img() {
+		return ev97Img;
 	}
 
 }

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public enum SimulatorCols {
 
-	active("Is active", "If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
+	active("Is simulator active", "If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
 	simulatorid("Simulator id"), // simulator.simulatorid
 	simulatorname("Simulator name"), // simulator.simulatorname
 	hostname("Hostname"), // simulator.hostname

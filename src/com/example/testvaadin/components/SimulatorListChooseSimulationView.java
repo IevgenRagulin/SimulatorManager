@@ -39,10 +39,12 @@ public class SimulatorListChooseSimulationView extends Table {
 	public void updateSimulationsList() {
 		logger.info("Going to update simulations list");
 		RowId simulatorId = (RowId) SimulatorListChooseSimulationView.this.getValue();
+		logger.info("Simulator with row id {} is selected", simulatorId);
 		// Make simulations list visible only if some simulator is
 		// selected
-		logger.info("Simulator with row id {} is selected", simulatorId);
-		view.getSimulationList().setVisible(simulatorId != null);
+		boolean isSimulationListVisible = (simulatorId != null);
+		view.getSimulationList().setVisible(isSimulationListVisible);
+		view.getSimulationSessionsLabel().setVisible(isSimulationListVisible);
 		// Make buttons visible only if simulation list is visible and
 		// some value is selected
 		view.getActionButtons().setVisible(

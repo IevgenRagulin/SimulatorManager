@@ -3,6 +3,7 @@ package com.example.testvaadin.components;
 import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Table;
 
 public class SimulatorListSimulatorsView extends Table {
@@ -30,7 +31,9 @@ public class SimulatorListSimulatorsView extends Table {
 											.getItemProperty(SimulatorCols.simulatorname.toString()).getValue().toString() + "</b>");
 				}
 				// make editor visible only if simulator has been selected
-				app.getEditorLayout().setVisible(simulatorId != null);
+				boolean shouldEditorBeVisible = simulatorId != null;
+				app.getRightPanelImage().setVisible(!shouldEditorBeVisible);
+				app.getEditorLayout().setVisible(shouldEditorBeVisible);
 				app.getSelectedSimulatorName().setVisible(simulatorId != null);
 			}
 

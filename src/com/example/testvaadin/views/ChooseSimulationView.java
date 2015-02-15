@@ -16,6 +16,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -36,6 +37,7 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 	private Button viewSimButton = new Button("View chosen simulation");
 	protected DatabaseHelper dbHelp = new DatabaseHelper();
 	MainMenuBar mainMenu;
+	Label simulationSessionsLabel;
 
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -102,9 +104,11 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 		addComponent(mainMenu);
 		addComponent(new Label("<p style='text-align: center;'><b>Select simulator</b></p>", ContentMode.HTML));
 		addComponent(simulatorList);
-		addComponent(new Label(
+		simulationSessionsLabel = new Label(
 				"<p style='text-align: center;'><b>Simulation sessions on the selected simulator</b></p>",
-				ContentMode.HTML));
+				ContentMode.HTML);
+		simulationSessionsLabel.setVisible(false);
+		addComponent(simulationSessionsLabel);
 		addComponent(bottomVerticalSplitPanel);
 		bottomVerticalSplitPanel.setSizeFull();
 		VerticalLayout bottomLeftLayout = new VerticalLayout();
@@ -145,6 +149,10 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 
 	public SimulationList getSimulationList() {
 		return simulationList;
+	}
+
+	public Label getSimulationSessionsLabel() {
+		return simulationSessionsLabel;
 	}
 
 }

@@ -14,11 +14,13 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -44,7 +46,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private Button addSimulatorButton = new Button("Add simulator");
 	private Navigator navigator;
 	private Label selectedSimulatorName = new Label("", ContentMode.HTML);
-
+	private Image ev97Img;
 	private MainMenuBar mainMenu;;
 
 	public Label getSelectedSimulatorName() {
@@ -120,8 +122,11 @@ public class SimulatorsView extends VerticalLayout implements View {
 	}
 
 	private void initRightLayout() {
-		rightLayout.setMargin(new MarginInfo(true, false, true, true));
+		rightLayout.setMargin(new MarginInfo(true, true, true, true));
 		rightLayout.addComponent(selectedSimulatorName);
+		ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here", ResourceUtil.getEv97Img());
+		ev97Img.setSizeFull();
+		rightLayout.addComponent(ev97Img); 
 		editorLayout.setVisible(false);
 		rightLayout.addComponent(editorLayout);
 		initSimulatorForm();
@@ -160,6 +165,10 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+	}
+
+	public Image getRightPanelImage() {
+		return ev97Img;
 	}
 
 }
