@@ -26,7 +26,8 @@ import com.vaadin.ui.VerticalSplitPanel;
 
 public class ChooseSimulationView extends VerticalLayout implements View {
 
-	final static Logger logger = LoggerFactory.getLogger(ChooseSimulationView.class);
+	final static Logger logger = LoggerFactory
+			.getLogger(ChooseSimulationView.class);
 	private static final long serialVersionUID = 1279140216863014337L;
 	private Navigator navigator;
 	private SimulationList simulationList;
@@ -44,6 +45,9 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 		logger.info("Entering ChooseSimulationView");
 		setSizeFull();
 		initMenu();
+		// in case we added/removed simulators on simulator management page, the
+		// simulators list on this page needs to be updated
+		simulatorList.updateSimulatorsList();
 	}
 
 	public DatabaseHelper getDBHelp() {
@@ -59,11 +63,12 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 		initSimulationList();
 		initLayout();
 		addClickListeners();
-		setMargin(new MarginInfo(false, false, false, true));
+		setMargin(new MarginInfo(false, true, false, true));
 	}
 
 	private void initMenu() {
-		mainMenu = MainMenuBar.getInstance(navigator, PageType.CHOOSE_SIMULATION);
+		mainMenu = MainMenuBar.getInstance(navigator,
+				PageType.CHOOSE_SIMULATION);
 		mainMenu.setHeight("35px");
 	}
 
@@ -87,9 +92,11 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (isSelectedSimulationRunning()) {
-					navigator.navigateTo(NavigatorUI.RUNNINGSIMULATIONS + "/" + getSimulatorList().getValue());
+					navigator.navigateTo(NavigatorUI.RUNNINGSIMULATIONS + "/"
+							+ getSimulatorList().getValue());
 				} else {
-					navigator.navigateTo(NavigatorUI.PASTSIMULATIONS + "/" + getSimulationList().getValue());
+					navigator.navigateTo(NavigatorUI.PASTSIMULATIONS + "/"
+							+ getSimulationList().getValue());
 				}
 			}
 		});
@@ -97,12 +104,15 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 
 	private boolean isSelectedSimulationRunning() {
 		Item item = getSimulationList().getItem(getSimulationList().getValue());
-		return (Boolean) item.getItemProperty(SimulationCols.issimulationon.toString()).getValue();
+		return (Boolean) item.getItemProperty(
+				SimulationCols.issimulationon.toString()).getValue();
 	}
 
 	private void initLayout() {
 		addComponent(mainMenu);
-		addComponent(new Label("<p style='text-align: center;'><b>Select simulator</b></p>", ContentMode.HTML));
+		addComponent(new Label(
+				"<p style='text-align: center;'><b>Select simulator</b></p>",
+				ContentMode.HTML));
 		addComponent(simulatorList);
 		simulationSessionsLabel = new Label(
 				"<p style='text-align: center;'><b>Simulation sessions on the selected simulator</b></p>",
@@ -121,8 +131,10 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 		actionButtons.addComponent(deleteButton);
 		actionButtons.addComponent(viewSimButton);
 		actionButtons.setSizeFull();
-		actionButtons.setComponentAlignment(deleteButton, Alignment.MIDDLE_CENTER);
-		actionButtons.setComponentAlignment(viewSimButton, Alignment.MIDDLE_CENTER);
+		actionButtons.setComponentAlignment(deleteButton,
+				Alignment.MIDDLE_CENTER);
+		actionButtons.setComponentAlignment(viewSimButton,
+				Alignment.MIDDLE_CENTER);
 
 		setExpandRatio(mainMenu, 1);
 		setExpandRatio(simulatorList, 10);

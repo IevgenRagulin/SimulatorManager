@@ -131,7 +131,7 @@ public class SimulatorForm extends FieldGroup {
 	@Override
 	public void commit() {
 		try {
-			/* Commit the data entered in the person form to the actual item. */
+			/* Commit the data entered in the form to the actual item. */
 			super.commit();
 			/* Commit changes to the database. */
 			view.getDBHelp().getSimulatorContainer().commit();

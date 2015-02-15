@@ -148,7 +148,6 @@ public class SimulatorsView extends VerticalLayout implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				simulatorForm.addSimulator();
-				// dbHelp.updateSimulatorContainer();
 			}
 		});
 	}
