@@ -29,15 +29,20 @@ import com.vaadin.ui.Window;
 
 public class ConfigurationView extends BasicView implements View {
 
-	final static Logger logger = LoggerFactory.getLogger(ConfigurationView.class);
+	final static Logger logger = LoggerFactory
+			.getLogger(ConfigurationView.class);
 
 	private static final long serialVersionUID = 5205148361184720336L;
 	private ErrorLabel errorLabel = new ErrorLabel("");
 
-	private ButtonConfigurationView testDtbConn = new ButtonConfigurationView("Test database connection");
-	private ButtonConfigurationView cleanAllSimInfo = new ButtonConfigurationView("Clean database");
-	private ButtonConfigurationView initAllSimInfo = new ButtonConfigurationView("Init database");
-	private ButtonConfigurationView seeConfigs = new ButtonConfigurationView("View applications configs");
+	private ButtonConfigurationView testDtbConn = new ButtonConfigurationView(
+			"Test database connection");
+	private ButtonConfigurationView cleanAllSimInfo = new ButtonConfigurationView(
+			"Clean database");
+	private ButtonConfigurationView initAllSimInfo = new ButtonConfigurationView(
+			"Init database");
+	private ButtonConfigurationView seeConfigs = new ButtonConfigurationView(
+			"View applications configs");
 
 	private Navigator navigator = null;
 	private Window configsWindow;
@@ -91,6 +96,11 @@ public class ConfigurationView extends BasicView implements View {
 		addComponent(cleanAllSimInfo);
 		addComponent(initAllSimInfo);
 		addComponent(seeConfigs);
+		testDtbConn
+				.setDescription("Tries to connect to the database which url/username/password is configured in simulatorManager.prop");
+		cleanAllSimInfo.setDescription("Executes a script which removes information about simulations/simulators from all database tables. Warning: this will remove data about all simulators, and simulations");
+		initAllSimInfo.setDescription("Executes a script which sets up the database for the SimulatorManager. Drops all tables, creates new tables. Warning: this will remove data about all simulators, and simulations");
+		seeConfigs.setDescription("Show contents of simulatorManager.props file which contains configurations for the application");
 	}
 
 	private void setClickListeners() {
@@ -100,7 +110,8 @@ public class ConfigurationView extends BasicView implements View {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Notification.show(DatabaseHelperPureJDBC.initDatabase(), "", Notification.TYPE_WARNING_MESSAGE);
+				Notification.show(DatabaseHelperPureJDBC.initDatabase(), "",
+						Notification.TYPE_WARNING_MESSAGE);
 			}
 		});
 
@@ -111,9 +122,11 @@ public class ConfigurationView extends BasicView implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (DatabaseHelperPureJDBC.testDatabaseConnection() == true) {
-					Notification.show("Database connection is working", "", Notification.TYPE_HUMANIZED_MESSAGE);
+					Notification.show("Database connection is working", "",
+							Notification.TYPE_HUMANIZED_MESSAGE);
 				} else {
-					Notification.show("Couldn't connect to database", "", Notification.TYPE_ERROR_MESSAGE);
+					Notification.show("Couldn't connect to database", "",
+							Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});
@@ -124,7 +137,8 @@ public class ConfigurationView extends BasicView implements View {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Notification.show(DatabaseHelperPureJDBC.cleanDatabase(), "", Notification.TYPE_WARNING_MESSAGE);
+				Notification.show(DatabaseHelperPureJDBC.cleanDatabase(), "",
+						Notification.TYPE_WARNING_MESSAGE);
 			}
 		});
 
@@ -149,15 +163,17 @@ public class ConfigurationView extends BasicView implements View {
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setMargin(true);
 		// Find the application directory
-		String path = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath()
+		String path = VaadinService.getCurrent().getBaseDirectory()
+				.getAbsolutePath()
 				+ SimulatorManagerConstants.CONFIGS_PATH;
 		List<String> lines = Files.readAllLines(Paths.get(path));
 		String allLines = "";
 		for (String line : lines) {
 			allLines += line + "<br/>";
 		}
-		verticalLayout.addComponent(new Label("<h2> Path to configurations: " + path
-				+ "</h2> <h2> Configurations: </h2>" + "<p>" + allLines + "</p>", ContentMode.HTML));
+		verticalLayout.addComponent(new Label("<h2> Path to configurations: "
+				+ path + "</h2> <h2> Configurations: </h2>" + "<p>" + allLines
+				+ "</p>", ContentMode.HTML));
 		verticalLayout
 				.addComponent(new Label(
 						"<p><b>If you wish to change any of these configs, please modify the configuration file and restart the application</b></p>",

@@ -26,6 +26,11 @@ public class MainMenuBar extends MenuBar {
 	private static final String MENU_MANAGE_SIMULATORS_TEXT = "Manage simulators";
 	private static final String MENU_VIEW_SIMULATIONS_TEXT = "View simulations";
 	private static final String MENU_CONFIGURATION_TEXT = "Configuration";
+	private static final String MENU_HOME_DESCRIPTION = "Go to home page";
+	private static final String MENU_MANAGE_SIMULATORS_DESCRIPTION = "Add/edit/remove simulators' info";
+	private static final String MENU_VIEW_SIMULATIONS_DESCRIPTION  = "View previous/current simulations";
+	private static final String MENU_CONFIGURATION_DESCRIPTION  = "Go to Configurations page";
+	
 	private final PageType pageType;
 
 	public static MainMenuBar getInstance(final Navigator navigator, PageType currentPage) {
@@ -37,10 +42,10 @@ public class MainMenuBar extends MenuBar {
 		this.pageType = currentPage;
 		logger.info("Creating menu bar on page " + currentPage);
 		MenuBar.Command menuClickHandler = getClickHandler(navigator);
-		addMenuItem(MENU_HOME_TEXT, menuClickHandler, currentPage);
-		addMenuItem(MENU_MANAGE_SIMULATORS_TEXT, menuClickHandler, currentPage);
-		addMenuItem(MENU_VIEW_SIMULATIONS_TEXT, menuClickHandler, currentPage);
-		addMenuItem(MENU_CONFIGURATION_TEXT, menuClickHandler, currentPage);
+		addMenuItem(MENU_HOME_TEXT, MENU_HOME_DESCRIPTION, menuClickHandler, currentPage);
+		addMenuItem(MENU_MANAGE_SIMULATORS_TEXT, MENU_MANAGE_SIMULATORS_DESCRIPTION, menuClickHandler, currentPage);
+		addMenuItem(MENU_VIEW_SIMULATIONS_TEXT, MENU_VIEW_SIMULATIONS_DESCRIPTION, menuClickHandler, currentPage);
+		addMenuItem(MENU_CONFIGURATION_TEXT, MENU_CONFIGURATION_DESCRIPTION, menuClickHandler, currentPage);
 		checkTheCorrectMenuItem(currentPage);
 	}
 
@@ -73,9 +78,10 @@ public class MainMenuBar extends MenuBar {
 	 * @param currentPage
 	 * @return
 	 */
-	private MenuItem addMenuItem(String text, MenuBar.Command command, PageType currentPage) {
+	private MenuItem addMenuItem(String text, String description, MenuBar.Command command, PageType currentPage) {
 		MenuItem item = addItem(text, null, command);
 		item.setCheckable(true);
+		item.setDescription(description);
 		return item;
 	}
 
