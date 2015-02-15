@@ -12203,3 +12203,7 @@ div.v-layout.v-horizontal.v-widget {
 .testvaadinn .simulatorsAddSimulator {
 	margin-top: 10px;
 }
+
+.testvaadinn .v-table-body {
+	background-color: white;
+}

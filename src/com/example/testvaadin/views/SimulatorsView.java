@@ -78,7 +78,6 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private void initHorizontalSplitPanel() {
 		horizontalSplitPanel.addComponent(leftLayout);
 		horizontalSplitPanel.addComponent(rightLayout);
-		addComponent(horizontalSplitPanel);
 	}
 
 	private void initSimulatorList() {
@@ -86,8 +85,11 @@ public class SimulatorsView extends VerticalLayout implements View {
 	}
 
 	private void initLayout() {
+		setSizeFull();
 		initMenu();
 		addComponent(mainMenu);
+		addComponent(horizontalSplitPanel); 
+		setExpandRatio(horizontalSplitPanel, 20);
 		initHorizontalSplitPanel();
 		initLeftLayout();
 		initRightLayout();
@@ -100,10 +102,12 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private void initLeftLayout() {
 		initAddSimulatorButton();
 		leftLayout.setSizeFull();
-		leftLayout.setMargin(new MarginInfo(true, false, true, true));
-		leftLayout.addComponent(simulatorList);
+		leftLayout.setMargin(new MarginInfo(false, false, true, true));
+		leftLayout.addComponent(new Label("<b>Managed simulators</b>", ContentMode.HTML));
+		leftLayout.addComponent(simulatorList); 
 		leftLayout.addComponent(addSimulatorButton);
-		leftLayout.setExpandRatio(simulatorList, 1);
+		leftLayout.setExpandRatio(simulatorList, 20);
+		
 	}
 
 	private void initAddSimulatorButton() {
