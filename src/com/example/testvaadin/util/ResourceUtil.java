@@ -8,7 +8,8 @@ import com.vaadin.server.VaadinService;
 
 public class ResourceUtil {
 
-	private final static String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+	private final static String basepath = VaadinService.getCurrent()
+			.getBaseDirectory().getAbsolutePath();
 	private final static Resource plusImg = new FileResource(new File(basepath
 			+ "/WEB-INF/images/button_images/plus.png"));
 	private final static Resource minusImg = new FileResource(new File(basepath
@@ -19,10 +20,12 @@ public class ResourceUtil {
 			+ "/WEB-INF/images/button_images/clean.png"));
 	private final static Resource startImg = new FileResource(new File(basepath
 			+ "/WEB-INF/images/button_images/start.png"));
-	private final static Resource settingsImg = new FileResource(new File(basepath
-			+ "/WEB-INF/images/button_images/settings.png"));
+	private final static Resource settingsImg = new FileResource(new File(
+			basepath + "/WEB-INF/images/button_images/settings.png"));
 	private final static Resource ev97Img = new FileResource(new File(basepath
 			+ "/WEB-INF/images/ev97.jpg"));
+	private final static Resource boeing737Img = new FileResource(new File(
+			basepath + "/WEB-INF/images/boeing737.jpg"));
 
 	public static Resource getPlusImgResource() {
 		return plusImg;
@@ -47,9 +50,13 @@ public class ResourceUtil {
 	public static Resource getSettingsImg() {
 		return settingsImg;
 	}
-	
+
 	public static Resource getEv97Img() {
 		return ev97Img;
+	}
+
+	public static Resource getBoeing737Img() {
+		return boeing737Img;
 	}
 
 }

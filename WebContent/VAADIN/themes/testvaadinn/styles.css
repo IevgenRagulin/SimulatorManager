@@ -12207,3 +12207,7 @@ div.v-layout.v-horizontal.v-widget {
 .testvaadinn .v-table-body {
 	background-color: #F0FFFF;
 }
+
+.testvaadinn #choose-simulation-simulator-list {
+	margin-bottom: 30px;
+}

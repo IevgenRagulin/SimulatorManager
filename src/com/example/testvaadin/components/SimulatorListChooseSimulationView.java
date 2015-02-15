@@ -18,6 +18,7 @@ public class SimulatorListChooseSimulationView extends Table {
 	public SimulatorListChooseSimulationView(final ChooseSimulationView view) {
 		super();
 		this.view = view;
+		setId("choose-simulation-simulator-list");
 		setSizeFull();
 		setDescription("Please, select a simulator");
 		updateSimulatorsList();
@@ -29,7 +30,7 @@ public class SimulatorListChooseSimulationView extends Table {
 				updateSimulationsList();
 			}
 		});
-		
+
 	};
 
 	public void updateSimulationsList() {
@@ -40,8 +41,9 @@ public class SimulatorListChooseSimulationView extends Table {
 		// Make simulations list visible only if some simulator is
 		// selected
 		boolean isSimulationListVisible = (simulatorId != null);
-		view.getSimulationList().setVisible(isSimulationListVisible);
+		view.getBottomVerticalSplitPanel().setVisible(isSimulationListVisible);
 		view.getSimulationSessionsLabel().setVisible(isSimulationListVisible);
+		view.getBottomImage().setVisible(!isSimulationListVisible);
 		// Make buttons visible only if simulation list is visible and
 		// some value is selected
 		view.getActionButtons().setVisible(
@@ -54,6 +56,17 @@ public class SimulatorListChooseSimulationView extends Table {
 			view.getSimulationList().setContainerDataSourceAndVisCol(
 					view.getDBHelp().getSimulationContainerOnSimulatorWithId(
 							simulatorIdStr));
+			updateSimulationsLabelMessage();
+		}
+	}
+
+	private void updateSimulationsLabelMessage() {
+		if (view.getSimulationList().getItemIds().size() > 0) {
+			view.getSimulationSessionsLabel().setValue(
+					ChooseSimulationView.SIMULATIONS_ON_SELECTED_SIMULATOR);
+		} else {
+			view.getSimulationSessionsLabel().setValue(
+					ChooseSimulationView.NO_SIMULATIONS_ON_SELECTED_SIMULATOR);
 		}
 	}
 
