@@ -1,11 +1,12 @@
 package com.example.testvaadin.jscomponents.flightcontrols;
 
-import com.example.testvaadin.data.SimulationCols;
-import com.example.testvaadin.data.SimulationDevStateCols;
-import com.example.testvaadin.data.SimulatorCols;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractJavaScriptComponent;
+
+import cz.vutbr.fit.simulatormanager.data.SimulationCols;
+import cz.vutbr.fit.simulatormanager.data.SimulationDevStateCols;
+import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
 
 @SuppressWarnings("serial")
 @com.vaadin.annotations.JavaScript({ "flightControls.js" })

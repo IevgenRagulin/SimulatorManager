@@ -1,8 +1,9 @@
 package com.example.testvaadin.jscomponents.pfd;
 
-import com.example.testvaadin.data.SimulationPfdInfoCols;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+
+import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
 
 @SuppressWarnings("serial")
 @com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js" })

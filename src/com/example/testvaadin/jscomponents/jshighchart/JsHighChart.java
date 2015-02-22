@@ -7,14 +7,15 @@ import java.util.Collection;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.example.testvaadin.data.SimulationPfdInfoCols;
-import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
+
+import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
 @JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", "highstock.js" })
 public abstract class JsHighChart extends AbstractJavaScriptComponent {

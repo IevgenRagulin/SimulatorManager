@@ -1,14 +1,17 @@
 <h1>X-Plane simulator manager. Application Usage info</h1>
 <h2>Running the application</h2>
-Step 1. <br/>
-Install Apache Tomcat 7.0
-Step 2. <br/>
-Modify tomcat_instalation_directory/conf/tomcat-users.xml file. You need to add the following lines to the file:<br/>
+Step 1. Install Java Runtime Environment 8 or higher. Application doesn't support older versions of Java <br/>
+Step 2. Install Apache Tomcat 7.0 <br/>
+Step 3. Modify tomcat_instalation_directory/conf/tomcat-users.xml file. You need to add the following lines to the file:<br/>
   <role rolename="manager"/> <br/>
   <user username="manager" password="manager" roles="manager"/> <br/>
 Instead of username and password specify the username and password which you want to use for signing in into the application. <br/>
-Step 3. Install PostgreSQL database.<br/>
-Step 4. Modify WebContent/WEB-INF/simulatorManager.prop file. Set db_url property to point to your database. Example: jdbc:postgresql://localhost/postgres. Set db_username and db_password.
+Step 4. Install PostgreSQL database.<br/>
+Step 5. Modify WebContent/WEB-INF/simulatorManager.prop file. Set db_url property to point to your database. Example: jdbc:postgresql://localhost/postgres (postgres here is the name of your database). Set db_username and db_password.<br/>
+Step 6. Run PostgreSQL database. <br/>
+Step 7. Run Apache Tomcat 7.0. <br/>
+Step 8. Deploy .war file to Apache Tomcat. <br/>
+Step 9. 
 
 In order to run the application you need to deploy the application to Tomcat Apache 7.0 application server.
 Other Java servers may also work, but compatibility hasn't been tested.

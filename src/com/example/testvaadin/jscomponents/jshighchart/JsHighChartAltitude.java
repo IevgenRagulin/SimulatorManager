@@ -2,11 +2,12 @@ package com.example.testvaadin.jscomponents.jshighchart;
 
 import java.util.Date;
 
-import com.example.testvaadin.data.SimulationPfdInfoCols;
-import com.example.testvaadin.items.SimulationPFDItem;
-import com.example.testvaadin.views.SimulationsView;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+
+import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
+import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
 @JavaScript({ "js_highchart_altitude.js" })
 public class JsHighChartAltitude extends JsHighChart {
