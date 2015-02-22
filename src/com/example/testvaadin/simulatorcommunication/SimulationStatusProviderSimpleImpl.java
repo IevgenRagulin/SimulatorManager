@@ -24,12 +24,24 @@ public class SimulationStatusProviderSimpleImpl {
 	// consider it not running
 	private static int maxFailedTolearatedRequests = 10;
 	protected static final double HALF_METER = 0.5;
-	private static final double ONE_KM = 1000; 
-	final static Logger logger = LoggerFactory.getLogger(SimulationStatusProviderSimpleImpl.class);
+	private static final double ONE_KM = 1000;
+	final static Logger logger = LoggerFactory
+			.getLogger(SimulationStatusProviderSimpleImpl.class);
 
 	// If the simulator has the same position maxSimilarPositions times, we
 	// consider the simulator is not running
 	private static int maxSimilarPositions = 10000;
+
+	/**
+	 * Ping simulator. Return true if we got some response from simulator
+	 * 
+	 * @param host
+	 * @param port
+	 * @return
+	 */
+	public static boolean isSimulatorResponding(String host, int port) {
+		return (SocketHelper.getSimulationData(host, port) != null);
+	}
 
 	public static boolean isSimulatorRunning(
 			AllSimulationInfo dataFromSimulation, String simulatorId) {
@@ -56,7 +68,7 @@ public class SimulationStatusProviderSimpleImpl {
 					.increaseNumberOfFailedRequests(simulatorId);
 		} else {
 			setNumberOfFailedRequests(simulatorId, 0);
-		} 
+		}
 		// if simulator's position hasn't changed and it's not paused increase
 		// number of responses with similar data
 		if (!hasPlaneMovedMoreThan(simulatorId, HALF_METER)
@@ -72,12 +84,16 @@ public class SimulationStatusProviderSimpleImpl {
 		// not by flying there, but by setting the position through X-Plane.
 		// This means, we should finish this simulation, and start a new one
 		if (hasPlaneMovedMoreThan(simulatorId, ONE_KM)) {
-			logger.info("the plane has moved over distance which is more than {} meters. Probably, previous simulation has finished. Creating new simulation session.", ONE_KM);
-			setNumberOfFailedRequests(simulatorId, maxFailedTolearatedRequests+1);
+			logger.info(
+					"the plane has moved over distance which is more than {} meters. Probably, previous simulation has finished. Creating new simulation session.",
+					ONE_KM);
+			setNumberOfFailedRequests(simulatorId,
+					maxFailedTolearatedRequests + 1);
 		}
 	}
 
-	private static void setNumberOfFailedRequests(String simulatorId, int numberOfFailedRequests) {
+	private static void setNumberOfFailedRequests(String simulatorId,
+			int numberOfFailedRequests) {
 		simulatorIdNumberOfFailedRequests.put(simulatorId,
 				numberOfFailedRequests);
 	}
@@ -87,9 +103,12 @@ public class SimulationStatusProviderSimpleImpl {
 	 */
 	private static boolean hasPlaneMovedMoreThan(String simulatorId,
 			double distInMeters) {
-		SimulationInfoItem currentSimItem = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
-		SimulationInfoItem prevSimItem = SimulatorsStatus.getPrevSimulationInfoItemBySimulatorId(simulatorId);
-		return DistanceUtil.hasPlaneMovedMoreThan(currentSimItem, prevSimItem, distInMeters);
+		SimulationInfoItem currentSimItem = SimulatorsStatus
+				.getSimulationInfoItemBySimulatorId(simulatorId);
+		SimulationInfoItem prevSimItem = SimulatorsStatus
+				.getPrevSimulationInfoItemBySimulatorId(simulatorId);
+		return DistanceUtil.hasPlaneMovedMoreThan(currentSimItem, prevSimItem,
+				distInMeters);
 	}
 
 	protected static void setNumOfFailedReqToZero(String simulatorId) {

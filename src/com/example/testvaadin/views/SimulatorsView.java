@@ -7,6 +7,8 @@ import com.example.testvaadin.components.MainMenuBar;
 import com.example.testvaadin.components.SimulatorForm;
 import com.example.testvaadin.components.SimulatorListSimulatorsView;
 import com.example.testvaadin.data.DatabaseHelper;
+import com.example.testvaadin.data.SimulatorCols;
+import com.example.testvaadin.simulatorcommunication.SimulationStatusProviderSimpleImpl;
 import com.example.testvaadin.types.PageType;
 import com.example.testvaadin.util.ResourceUtil;
 import com.vaadin.navigator.Navigator;
@@ -14,7 +16,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -22,6 +23,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -33,6 +35,9 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class SimulatorsView extends VerticalLayout implements View {
 	final static Logger logger = LoggerFactory.getLogger(SimulatorsView.class);
+
+	final static String PING_SUCCESS_MESSAGE = "Success. The selected simulator is up and running";
+	final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding";
 
 	private HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
 	private VerticalLayout leftLayout = new VerticalLayout();
@@ -47,10 +52,15 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private Navigator navigator;
 	private Label selectedSimulatorName = new Label("", ContentMode.HTML);
 	private Image ev97Img;
-	private MainMenuBar mainMenu;;
+	private MainMenuBar mainMenu;
+	private Button pingSimulatorButton = new Button("Ping simulator");
 
 	public Label getSelectedSimulatorName() {
 		return selectedSimulatorName;
+	}
+
+	public Button getPingSimulatorButton() {
+		return pingSimulatorButton;
 	}
 
 	public FormLayout getEditorLayout() {
@@ -90,7 +100,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 		setSizeFull();
 		initMenu();
 		addComponent(mainMenu);
-		addComponent(horizontalSplitPanel); 
+		addComponent(horizontalSplitPanel);
 		setExpandRatio(horizontalSplitPanel, 20);
 		initHorizontalSplitPanel();
 		initLeftLayout();
@@ -98,18 +108,20 @@ public class SimulatorsView extends VerticalLayout implements View {
 	}
 
 	private void initMenu() {
-		mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATORS);
+		mainMenu = MainMenuBar.getInstance(navigator,
+				PageType.MANAGE_SIMULATORS);
 	}
 
 	private void initLeftLayout() {
 		initAddSimulatorButton();
 		leftLayout.setSizeFull();
 		leftLayout.setMargin(new MarginInfo(false, false, true, true));
-		leftLayout.addComponent(new Label("<b>Managed simulators</b>", ContentMode.HTML));
-		leftLayout.addComponent(simulatorList); 
+		leftLayout.addComponent(new Label("<b>Managed simulators</b>",
+				ContentMode.HTML));
+		leftLayout.addComponent(simulatorList);
 		leftLayout.addComponent(addSimulatorButton);
 		leftLayout.setExpandRatio(simulatorList, 20);
-		
+
 	}
 
 	private void initAddSimulatorButton() {
@@ -124,9 +136,15 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private void initRightLayout() {
 		rightLayout.setMargin(new MarginInfo(true, true, true, true));
 		rightLayout.addComponent(selectedSimulatorName);
-		ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here", ResourceUtil.getEv97Img());
+		pingSimulatorButton
+				.setDescription("Check if selected simulator is up and running");
+		pingSimulatorButton.setVisible(false);
+		rightLayout.addComponent(pingSimulatorButton);
+		ev97Img = new Image(
+				"After selecting simulator on the left, you will be able to configure it here",
+				ResourceUtil.getEv97Img());
 		ev97Img.setSizeFull();
-		rightLayout.addComponent(ev97Img); 
+		rightLayout.addComponent(ev97Img);
 		editorLayout.setVisible(false);
 		rightLayout.addComponent(editorLayout);
 		initSimulatorForm();
@@ -141,6 +159,34 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private void addClickListeners() {
 		addAddClickListener();
 		addRemoveClickListener();
+		addPingClickListener();
+	}
+
+	private void addPingClickListener() {
+		pingSimulatorButton.addClickListener(new ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Object simulatorId = simulatorList.getValue();
+				String host = simulatorList.getItem(simulatorId)
+						.getItemProperty(SimulatorCols.hostname.toString())
+						.getValue().toString();
+				int port = Integer.valueOf(simulatorList.getItem(simulatorId)
+						.getItemProperty(SimulatorCols.port.toString())
+						.getValue().toString());
+
+				boolean isRespoding = SimulationStatusProviderSimpleImpl
+						.isSimulatorResponding(host, port);
+				if (isRespoding) {
+					Notification.show(PING_SUCCESS_MESSAGE, "",
+							Notification.TYPE_HUMANIZED_MESSAGE);
+				} else {
+					Notification.show(PING_FAIL_MESSAGE, "",
+							Notification.TYPE_WARNING_MESSAGE);
+				}
+
+			}
+		});
 	}
 
 	private void addAddClickListener() {

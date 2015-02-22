@@ -3,7 +3,6 @@ package com.example.testvaadin.components;
 import com.example.testvaadin.data.SimulatorCols;
 import com.example.testvaadin.views.SimulatorsView;
 import com.vaadin.data.Property;
-import com.vaadin.ui.Image;
 import com.vaadin.ui.Table;
 
 public class SimulatorListSimulatorsView extends Table {
@@ -22,19 +21,27 @@ public class SimulatorListSimulatorsView extends Table {
 
 			@Override
 			public void valueChange(Property.ValueChangeEvent event) {
-				Object simulatorId = SimulatorListSimulatorsView.this.getValue();
+				Object simulatorId = SimulatorListSimulatorsView.this
+						.getValue();
 				if (simulatorId != null) {
-					app.getSimulatorForm().setItemDataSource(SimulatorListSimulatorsView.this.getItem(simulatorId));
+					app.getSimulatorForm().setItemDataSource(
+							SimulatorListSimulatorsView.this
+									.getItem(simulatorId));
 					app.getSelectedSimulatorName().setValue(
 							"<b>Selected simulator: "
-									+ SimulatorListSimulatorsView.this.getItem(simulatorId)
-											.getItemProperty(SimulatorCols.simulatorname.toString()).getValue().toString() + "</b>");
+									+ SimulatorListSimulatorsView.this
+											.getItem(simulatorId)
+											.getItemProperty(
+													SimulatorCols.simulatorname
+															.toString())
+											.getValue().toString() + "</b>");
 				}
 				// make editor visible only if simulator has been selected
 				boolean shouldEditorBeVisible = simulatorId != null;
 				app.getRightPanelImage().setVisible(!shouldEditorBeVisible);
 				app.getEditorLayout().setVisible(shouldEditorBeVisible);
 				app.getSelectedSimulatorName().setVisible(simulatorId != null);
+				app.getPingSimulatorButton().setVisible(simulatorId != null);
 			}
 
 		});

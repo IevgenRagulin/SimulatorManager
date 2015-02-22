@@ -16,8 +16,10 @@ public class SimulationList extends Table {
 		this.view = view;
 		setSizeFull();
 		setSelectable(true);
-		setContainerDataSourceAndVisCol(view.getDBHelp().getSimulationContainer());
+		setContainerDataSourceAndVisCol(view.getDBHelp()
+				.getSimulationContainer());
 		setImmediate(true);
+
 		setBuffered(false);
 		addValueChangeListener(new Property.ValueChangeListener() {
 			private static final long serialVersionUID = -4721755745740872033L;
@@ -26,6 +28,9 @@ public class SimulationList extends Table {
 			public void valueChange(Property.ValueChangeEvent event) {
 				Object simulationId = SimulationList.this.getValue();
 				view.getActionButtons().setVisible(simulationId != null);
+				view.getFinishSimulationButton().setVisible(
+						simulationId != null
+								&& view.isSelectedSimulationRunning());
 			}
 
 		});
@@ -43,7 +48,8 @@ public class SimulationList extends Table {
 			/* Commit the data entered in the person form to the actual item. */
 			super.commit();
 			/* Commit changes to the database. */
-			SQLContainer container = (SQLContainer) this.getContainerDataSource();
+			SQLContainer container = (SQLContainer) this
+					.getContainerDataSource();
 			container.commit();
 		} catch (UnsupportedOperationException | SQLException e) {
 			throw new RuntimeException("Could not commit simulation list", e);
@@ -54,6 +60,21 @@ public class SimulationList extends Table {
 		Object simulationId = this.getValue();
 		this.removeItem(simulationId);
 		commit();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void finishSimulation() {
+		Object simulationId = this.getValue();
+		this.getItem(simulationId)
+				.getItemProperty(SimulationCols.issimulationon.toString())
+				.setValue(new Boolean(false));
+		this.getItem(simulationId)
+				.getItemProperty(SimulationCols.issimulationpaused.toString())
+				.setValue(new Boolean(false));
+		commit();
+		setContainerDataSourceAndVisCol(view.getDBHelp()
+				.getSimulationContainer());
+
 	}
 
 }

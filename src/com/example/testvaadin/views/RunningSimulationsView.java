@@ -20,7 +20,8 @@ import com.vaadin.tapio.googlemaps.client.LatLon;
 
 public class RunningSimulationsView extends SimulationsView implements View {
 
-	final static Logger logger = LoggerFactory.getLogger(RunningSimulationsView.class);
+	final static Logger logger = LoggerFactory
+			.getLogger(RunningSimulationsView.class);
 
 	protected static final long serialVersionUID = -1785707193097941934L;
 
@@ -66,27 +67,33 @@ public class RunningSimulationsView extends SimulationsView implements View {
 		final Refresher refresher = new Refresher();
 		refresher.addListener(listener);
 		// Set update interval in miliseconds
-		logger.info("initPageRefresher() - set refresh interval: {}", ApplicationConfiguration.getRefreshUiFrequency());
-		refresher.setRefreshInterval(ApplicationConfiguration.getRefreshUiFrequency());
+		logger.info("initPageRefresher() - set refresh interval: {}",
+				ApplicationConfiguration.getRefreshUiFrequency());
+		refresher.setRefreshInterval(ApplicationConfiguration
+				.getRefreshUiFrequency());
 		addExtension(refresher);
 	}
 
 	private void setAllSimulationSimulatorData(Item selectedSimulator) {
 		getErrorLabel().setValue("Chosen simulator id: " + selectedSimulatorId);
 		mainSimulationLayout.setVisible(true);
-		String simulatorId = selectedSimulator.getItemProperty(SimulatorCols.simulatorid.toString()).getValue()
-				.toString();
+		String simulatorId = selectedSimulator
+				.getItemProperty(SimulatorCols.simulatorid.toString())
+				.getValue().toString();
 		// Set simulation data
 		// Item selectedSimulation =
 		// SimulatorsStatus.getSimulationItemBySimulatorId(simulatorId);
 		// Set simulation info data
-		SimulationInfoItem selectedSimulationInfo = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
+		SimulationInfoItem selectedSimulationInfo = SimulatorsStatus
+				.getSimulationInfoItemBySimulatorId(simulatorId);
 		setSimulationInfoData(selectedSimulationInfo, simulatorId);
 		// Set simulation devices state
-		Item selectedDevicesState = SimulatorsStatus.getSimulationDevStateItemBySimulatorId(simulatorId);
+		Item selectedDevicesState = SimulatorsStatus
+				.getSimulationDevStateItemBySimulatorId(simulatorId);
 		setFlightControlsInfo(selectedDevicesState, selectedSimulator);
 		// Set PFD info
-		SimulationPFDItem selectedPFD = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
+		SimulationPFDItem selectedPFD = SimulatorsStatus
+				.getSimulationPFDItemBySimulatorId(simulatorId);
 		if (selectedPFD != null) {
 			setPrimaryFlightDisplayInfo(selectedPFD);
 			altitudeChart.addNewPoint(simulatorId, selectedPFD);
@@ -94,7 +101,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 		}
 	}
 
-	private void setSimulationInfoData(SimulationInfoItem simulationInfo, String simulatorId) {
+	private void setSimulationInfoData(SimulationInfoItem simulationInfo,
+			String simulatorId) {
 		if (simulationInfo != null) {
 			// Add simulation info data to map
 			googleMap.addLatestCoordForSimulation(simulationInfo, simulatorId);
@@ -108,7 +116,9 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	}
 
 	private void setNoSimulationsRunningState() {
-		getErrorLabel().setValue(NO_RUNNING_SIMULATIONS + ". Chosen simulator id: " + selectedSimulatorId);
+		getErrorLabel().setValue(
+				NO_RUNNING_SIMULATIONS + ". Chosen simulator id: "
+						+ selectedSimulatorId);
 		initGoogleMaps();
 		mainSimulationLayout.setVisible(false);
 	}
@@ -116,7 +126,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	protected void updateUI() {
 		Item selectedSimulator = null;
 		try {
-			selectedSimulator = dbHelp.getSimulatorItemBySimulatorId(selectedSimulatorId);
+			selectedSimulator = dbHelp
+					.getSimulatorItemBySimulatorId(selectedSimulatorId);
 			// If simulator is selected
 			if (selectedSimulator != null) {
 				// If there are no running simulations on simulator
@@ -130,7 +141,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 			}
 		} catch (UnknownSimulatorException e) {
 			setSimulatorNotSelectedState();
-			errorLabel.setValue(ERROR_SIMULATOR_NOT_EXISTS + selectedSimulatorId);
+			errorLabel.setValue(ERROR_SIMULATOR_NOT_EXISTS
+					+ selectedSimulatorId);
 		}
 	}
 
@@ -149,7 +161,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 			this.googleMap.clearMap();
 		} else {
 			logger.info("initGoogleMaps() - creating new FlightPathGoogleMapRunningSim");
-			this.googleMap = new FlightPathRunningSim(new LatLon(60.440963, 22.25122), 4.0,
+			this.googleMap = new FlightPathRunningSim(new LatLon(60.440963,
+					22.25122), 4.0,
 					ApplicationConfiguration.getGoogleMapApiKey(), this);
 		}
 	}

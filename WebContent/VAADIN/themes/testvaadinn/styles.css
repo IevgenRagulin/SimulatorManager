@@ -12230,3 +12230,20 @@ div.v-layout.v-horizontal.v-widget {
 .testvaadinn .button-main-page:hover {
 	text-shadow: 1px 1px #5a5a5a;
 }
+
+.testvaadinn .sm-menu-bar {
+	background: black;
+	color: white;
+}
+
+.testvaadinn .v-menubar-menuitem-unchecked:hover {
+	background: #181818;
+}
+
+.testvaadinn .sm-choose-sim-button {
+	margin-top: 30px;
+}
+
+.testvaadinn .sm-conf-button {
+	margin-left: 30px;
+}

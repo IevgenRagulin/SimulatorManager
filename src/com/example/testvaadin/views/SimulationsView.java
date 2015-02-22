@@ -1,10 +1,12 @@
 package com.example.testvaadin.views;
 
 import com.example.testvaadin.components.ErrorLabel;
+import com.example.testvaadin.components.MainMenuBar;
 import com.example.testvaadin.jscomponents.flightcontrols.FlightControls;
 import com.example.testvaadin.jscomponents.jshighchart.JsHighChartAltitude;
 import com.example.testvaadin.jscomponents.jshighchart.JsHighChartSpeed;
 import com.example.testvaadin.jscomponents.pfd.PrimaryFlightDisplay;
+import com.example.testvaadin.types.PageType;
 import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Alignment;
@@ -43,6 +45,7 @@ public abstract class SimulationsView extends BasicView {
 	protected VerticalLayout mainSimulationLayout = new VerticalLayout();
 	protected JsHighChartAltitude altitudeChart;
 	protected JsHighChartSpeed speedChart;
+	protected MainMenuBar mainMenu;
 
 	public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 		return primaryFlightDisplay;
@@ -61,12 +64,15 @@ public abstract class SimulationsView extends BasicView {
 	}
 
 	protected void initLayout() {
+		mainMenu = MainMenuBar.getInstance(navigator, PageType.VIEW_SIMULATION);
+		addComponent(mainMenu);
 		addComponent(topSimulationLayout);
 		addComponent(mainSimulationLayout);
 		avionycsLayout.addComponent(primaryFlightDisplay);
 		avionycsLayout.addComponent(flightControls);
 		topSimulationLayout.addComponent(errorLabel);
-		topSimulationLayout.setComponentAlignment(errorLabel, Alignment.TOP_LEFT);
+		topSimulationLayout.setComponentAlignment(errorLabel,
+				Alignment.TOP_LEFT);
 		mainSimulationLayout.addComponent(avionycsLayout);
 		mainSimulationLayout.addComponent(graphsLayout);
 		topSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
@@ -78,14 +84,16 @@ public abstract class SimulationsView extends BasicView {
 	protected void initGraphs() {
 		altitudeChart = new JsHighChartAltitude(this, ALTITUDE_CHART_ID);
 		altitudeChart.setId(ALTITUDE_CHART_ID);
-		speedChart = new JsHighChartSpeed(this, "Speed", "Knots", SPEED_CHART_ID);
+		speedChart = new JsHighChartSpeed(this, "Speed", "Knots",
+				SPEED_CHART_ID);
 		speedChart.setId(SPEED_CHART_ID);
 
 	}
 
 	private void initControlYoke() {
 		// -2 means the device doesn't send data
-		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0, true, false, 3, 0, 0, 0);
+		flightControls = new FlightControls(0, 0, 0, -2, -2, -2, 0, 0, true,
+				false, 3, 0, 0, 0);
 	}
 
 	protected abstract void initGoogleMaps();
@@ -100,9 +108,11 @@ public abstract class SimulationsView extends BasicView {
 		}
 	}
 
-	protected void setFlightControlsInfo(Item selectedDevicesState, Item selectedSimulator) {
+	protected void setFlightControlsInfo(Item selectedDevicesState,
+			Item selectedSimulator) {
 		if (selectedDevicesState != null) {
-			flightControls.updateIndividualFlightControlValues(selectedDevicesState, selectedSimulator);
+			flightControls.updateIndividualFlightControlValues(
+					selectedDevicesState, selectedSimulator);
 		}
 	}
 

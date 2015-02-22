@@ -19,16 +19,18 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class ConfigurationView extends BasicView implements View {
+
+	private static final String SM_CONF_BUTTON = "sm-conf-button";
 
 	final static Logger logger = LoggerFactory
 			.getLogger(ConfigurationView.class);
@@ -49,6 +51,10 @@ public class ConfigurationView extends BasicView implements View {
 	private Window configsWindow;
 	private static final String MAIN_LAYOUT_CLASS = "mainVertLayout";
 	private MainMenuBar mainMenu;
+	private HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
+	private VerticalLayout leftLayout;
+	private VerticalLayout rightLayout;
+	private Label applicationUsageInfo = new Label();
 
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -61,7 +67,6 @@ public class ConfigurationView extends BasicView implements View {
 	public ConfigurationView(Navigator navigator) {
 		logger.info("new ConfigurationView()");
 		this.navigator = navigator;
-		setMargin(new MarginInfo(false, false, false, true));
 		initLayout();
 		setClickListeners();
 
@@ -71,6 +76,14 @@ public class ConfigurationView extends BasicView implements View {
 		setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 		initMenu();
 		addComponent(mainMenu);
+		addComponent(mainLayout);
+		leftLayout = new VerticalLayout();
+		rightLayout = new VerticalLayout();
+		mainLayout.addComponent(leftLayout);
+		mainLayout.addComponent(rightLayout);
+		applicationUsageInfo.setValue(ResourceUtil.getApplicationUsageInfo());
+		applicationUsageInfo.setContentMode(ContentMode.HTML);
+		rightLayout.addComponent(applicationUsageInfo);
 		initButtons();
 		initConfigsWindow();
 	}
@@ -92,11 +105,15 @@ public class ConfigurationView extends BasicView implements View {
 		cleanAllSimInfo.setIcon(ResourceUtil.getCleanImg());
 		initAllSimInfo.setIcon(ResourceUtil.getStartImg());
 		seeConfigs.setIcon(ResourceUtil.getSettingsImg());
-		addComponent(errorLabel);
-		addComponent(testDtbConn);
-		addComponent(cleanAllSimInfo);
-		addComponent(initAllSimInfo);
-		addComponent(seeConfigs);
+		testDtbConn.setStyleName(SM_CONF_BUTTON);
+		cleanAllSimInfo.setStyleName(SM_CONF_BUTTON);
+		initAllSimInfo.setStyleName(SM_CONF_BUTTON);
+		seeConfigs.setStyleName(SM_CONF_BUTTON);
+		leftLayout.addComponent(errorLabel);
+		leftLayout.addComponent(testDtbConn);
+		leftLayout.addComponent(cleanAllSimInfo);
+		leftLayout.addComponent(initAllSimInfo);
+		leftLayout.addComponent(seeConfigs);
 		testDtbConn
 				.setDescription("Tries to connect to the database which url/username/password is configured in simulatorManager.prop");
 		cleanAllSimInfo

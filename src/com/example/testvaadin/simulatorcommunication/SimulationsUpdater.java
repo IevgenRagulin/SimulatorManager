@@ -48,13 +48,13 @@ public class SimulationsUpdater implements Runnable {
 			SimulationItem simulationItem = getLatestSimulationDataFromDb(simulatorId);
 			SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
 		} catch (Exception e) {
-			logger.info(
+			logger.error(
 					"Exception occured while trying to update simulation state data",
 					e);
 		}
 	}
 
-	protected void updateSimulationStateData()
+	protected synchronized void updateSimulationStateData()
 			throws UnsupportedOperationException, SQLException {
 		AllSimulationInfo allSimInfo = SocketHelper.getSimulationData(
 				simulatorHostname, simulatorPort);
@@ -78,7 +78,7 @@ public class SimulationsUpdater implements Runnable {
 	 * Sets simulation status (running, paused, not running), writes latest data
 	 * from simulator to database TODO: abstract checking status to interface
 	 */
-	private void updateSimulationStateInDatabase(
+	private synchronized void updateSimulationStateInDatabase(
 			AllSimulationInfo dataFromSimulator, AllEngineInfo allEngineInfo)
 			throws UnsupportedOperationException, SQLException {
 		SQLContainer lastSimCont = dbHelp
@@ -121,7 +121,7 @@ public class SimulationsUpdater implements Runnable {
 	/*
 	 * Set simulation to OFF; NOT PAUSED state in database
 	 */
-	private void updateSimulationStateInDatabaseSimulatorOff(
+	private synchronized void updateSimulationStateInDatabaseSimulatorOff(
 			SQLContainer lastSimCont, Item lastSim, Boolean isLastSimInDBOn,
 			Boolean isLastSimInDBPaused) throws UnsupportedOperationException,
 			SQLException {
@@ -136,14 +136,14 @@ public class SimulationsUpdater implements Runnable {
 		}
 	}
 
-	private boolean hasSimulationStateChanged(Boolean isLastSimInDBOn,
-			Boolean isLastSimInDBPaused, Boolean isSimulatorActuallyOn,
-			Boolean isSimulatorActuallyPaused) {
+	private synchronized boolean hasSimulationStateChanged(
+			Boolean isLastSimInDBOn, Boolean isLastSimInDBPaused,
+			Boolean isSimulatorActuallyOn, Boolean isSimulatorActuallyPaused) {
 		return ((!isLastSimInDBOn.equals(isSimulatorActuallyOn)) || (!isLastSimInDBPaused
 				.equals(isSimulatorActuallyPaused)));
 	}
 
-	private void updateSimulationStateInDatabaseSimulatorPaused(
+	private synchronized void updateSimulationStateInDatabaseSimulatorPaused(
 			SQLContainer lastSimCont, Item lastSim, Boolean isLastSimInDBOn,
 			Boolean isLastSimInDBPaused) throws UnsupportedOperationException,
 			SQLException {
@@ -164,7 +164,7 @@ public class SimulationsUpdater implements Runnable {
 		}
 	}
 
-	private void updateSimulationStateInDatabaseSimulatorOn(
+	private synchronized void updateSimulationStateInDatabaseSimulatorOn(
 			SQLContainer lastSimCont, Item lastSim, Boolean isLastSimInDBOn,
 			Boolean isLastSimInDBPaused) throws UnsupportedOperationException,
 			SQLException {
@@ -193,31 +193,34 @@ public class SimulationsUpdater implements Runnable {
 				simulationId);
 	}
 
-	private void updateSimulPFDData(AllSimulationInfo allSimInfo) {
+	private synchronized void updateSimulPFDData(AllSimulationInfo allSimInfo) {
 		SimulationPFDBean simPFDBean = new SimulationPFDBean(allSimInfo);
 		SimulationPFDItem simPFDItem = new SimulationPFDItem(simPFDBean);
 		SimulatorsStatus.setSimulationPFDItem(simulatorId, simPFDItem);
 	}
 
-	private void updateSimulInfoData(AllSimulationInfo allSimInfo) {
+	private synchronized void updateSimulInfoData(AllSimulationInfo allSimInfo) {
 		SimulationInfoBean simInfoBean = new SimulationInfoBean(allSimInfo);
 		SimulationInfoItem simInfoItem = new SimulationInfoItem(simInfoBean);
 		SimulatorsStatus.setSimulationInfoItem(simulatorId, simInfoItem);
 	}
 
-	private void updateSimulDevStateData(AllSimulationInfo allSimInfo) {
+	private synchronized void updateSimulDevStateData(
+			AllSimulationInfo allSimInfo) {
 		SimulationDevStateBean bean = new SimulationDevStateBean(allSimInfo);
 		SimulationDevStateItem item = new SimulationDevStateItem(bean);
 		SimulatorsStatus.setSimulationDevStateItem(simulatorId, item);
 	}
 
-	private void updateSimulEnginesStateData(AllEngineInfo allSimInfoBean) {
+	private synchronized void updateSimulEnginesStateData(
+			AllEngineInfo allSimInfoBean) {
 		SimulationEnginesStateItem item = new SimulationEnginesStateItem(
 				allSimInfoBean);
 		SimulatorsStatus.setSimulationEnginesStateItem(simulatorId, item);
 	}
- 
-	public SimulationItem getLatestSimulationDataFromDb(String simulatorId) {
+
+	public synchronized SimulationItem getLatestSimulationDataFromDb(
+			String simulatorId) {
 		SimulationDao simulationDao = new SimulationDao();
 		Item latestRunningSimulation = simulationDao
 				.getLatestRunningSimulationOnSimulatorWithId(simulatorId);

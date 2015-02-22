@@ -40,6 +40,8 @@ public class MainMenuBar extends MenuBar {
 
 	private MainMenuBar(final Navigator navigator, PageType currentPage) {
 		super();
+		setStyleName("sm-menu-bar");
+		setWidth("100%");
 		this.pageType = currentPage;
 		logger.info("Creating menu bar on page " + currentPage);
 		MenuBar.Command menuClickHandler = getClickHandler(navigator);
@@ -92,6 +94,7 @@ public class MainMenuBar extends MenuBar {
 	private MenuItem addMenuItem(String text, String description,
 			MenuBar.Command command, PageType currentPage) {
 		MenuItem item = addItem(text, null, command);
+		item.setStyleName("sm-menu-item");
 		item.setCheckable(true);
 		item.setDescription(description);
 		return item;

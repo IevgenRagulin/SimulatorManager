@@ -1,13 +1,18 @@
 package com.example.testvaadin.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinService;
 
 public class ResourceUtil {
-
+	final static Logger LOG = LoggerFactory.getLogger(ResourceUtil.class);
 	private final static String basepath = VaadinService.getCurrent()
 			.getBaseDirectory().getAbsolutePath();
 	private final static Resource plusImg = new FileResource(new File(basepath
@@ -32,6 +37,8 @@ public class ResourceUtil {
 			new File(basepath + "/WEB-INF/images/simulatorManager.jpg"));
 	private final static Resource configurationMainImg = new FileResource(
 			new File(basepath + "/WEB-INF/images/configuration-main.jpg"));
+	private final static File applicationUsageInfo = new File(basepath
+			+ "/WEB-INF/applicationUsageInfo.html");
 
 	public static Resource getPlusImgResource() {
 		return plusImg;
@@ -77,4 +84,20 @@ public class ResourceUtil {
 		return configurationMainImg;
 	}
 
+	public static String getApplicationUsageInfo() {
+		LOG.info("Going to read application usage info from file");
+		StringBuilder usageInfoStr = new StringBuilder();
+		try {
+			Files.lines(applicationUsageInfo.toPath()).forEach(
+					s -> usageInfoStr.append(s));
+			String usageInfo = usageInfoStr.toString();
+			LOG.info("Read application usage info from file: {}", usageInfo);
+			return usageInfo;
+		} catch (IOException e) {
+			LOG.error("Error reading application usage info from file", e);
+			throw new RuntimeException(
+					"Couldn't read application usage info file ", e);
+		}
+
+	}
 }
