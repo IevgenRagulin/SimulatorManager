@@ -1,4 +1,4 @@
-package com.example.testvaadin.jscomponents.jshighchart;
+package cz.vutbr.fit.simulatormanager.jscomponents.jshighchart;
 
 import java.io.Serializable;
 

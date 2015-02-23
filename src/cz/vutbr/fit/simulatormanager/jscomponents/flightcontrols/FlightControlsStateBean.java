@@ -1,4 +1,4 @@
-package com.example.testvaadin.jscomponents.flightcontrols;
+package cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols;
 
 import java.io.Serializable;
 

@@ -30,7 +30,7 @@ public class SimulatormanagerUI extends UI {
 			.getLogger(SimulatormanagerUI.class);
 
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = SimulatormanagerUI.class, widgetset = "com.example.testvaadin.widgetset.TestvaadinWidgetset")
+	@VaadinServletConfiguration(productionMode = false, ui = SimulatormanagerUI.class, widgetset = "cz.vutbr.fit.simulatormanager.widgetset.SimulatorManagerWidgetset")
 	public static class Servlet extends VaadinServlet {
 		private static final long serialVersionUID = -5802992110157497963L;
 	}

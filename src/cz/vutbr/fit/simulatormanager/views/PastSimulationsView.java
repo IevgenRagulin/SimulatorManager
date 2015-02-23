@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.testvaadin.jscomponents.jshighchart.JsHighChart.ValueChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
@@ -17,6 +16,7 @@ import cz.vutbr.fit.simulatormanager.components.FlightPathPastSim;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChart.ValueChangeListener;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 
 public class PastSimulationsView extends SimulationsView implements View {

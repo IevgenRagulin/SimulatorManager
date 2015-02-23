@@ -1,4 +1,4 @@
-package com.example.testvaadin.jscomponents.pfd;
+package cz.vutbr.fit.simulatormanager.jscomponents.pfd;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

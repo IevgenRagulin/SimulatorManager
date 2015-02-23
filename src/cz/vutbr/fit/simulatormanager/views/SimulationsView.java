@@ -1,9 +1,5 @@
 package cz.vutbr.fit.simulatormanager.views;
 
-import com.example.testvaadin.jscomponents.flightcontrols.FlightControls;
-import com.example.testvaadin.jscomponents.jshighchart.JsHighChartAltitude;
-import com.example.testvaadin.jscomponents.jshighchart.JsHighChartSpeed;
-import com.example.testvaadin.jscomponents.pfd.PrimaryFlightDisplay;
 import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Alignment;
@@ -13,6 +9,10 @@ import com.vaadin.ui.VerticalLayout;
 
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
+import cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols.FlightControls;
+import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartAltitude;
+import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartSpeed;
+import cz.vutbr.fit.simulatormanager.jscomponents.pfd.PrimaryFlightDisplay;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 
 /**

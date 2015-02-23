@@ -62,7 +62,7 @@ var horizontHasBeenRotated = false;
 
 var darkGray = '#404040';
 //var currentPitchShape = new createjs.Shape();
-function com_example_testvaadin_jscomponents_pfd_PrimaryFlightDisplay() {
+function cz_vutbr_fit_simulatormanager_jscomponents_pfd_PrimaryFlightDisplay() {
 	//window.currentPitchShape.x=0;
 	var e = this.getElement();
 	resetPfd();

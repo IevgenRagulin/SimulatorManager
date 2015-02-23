@@ -4,7 +4,8 @@ var seriesSpeed;
 var speedCssId;
 var titleSpeed = "Indicated airspeed";
 var speedCompomentObj;
-com_example_testvaadin_jscomponents_jshighchart_JsHighChartSpeed = function() 
+
+cz_vutbr_fit_simulatormanager_jscomponents_jshighchart_JsHighChartSpeed = function() 
  {
 	//to make object accessible from outside of the function; Used to make RPC calls to the server
 	window.speedCompomentObj = this;

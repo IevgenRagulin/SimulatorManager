@@ -66,8 +66,8 @@ var xOffsetR = (window.rudderBackWidth - window.rudderWidth) / 2;
 var yOffsetR = (window.rudderBackHeight - window.rudderHeight) / 2;
 
 var numberOfLandingGears = 0;
-
-function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
+function cz_vutbr_fit_simulatormanager_jscomponents_flightcontrols_FlightControls() {
+//function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
 
 	var e = this.getElement();
 	initYokeHtml(e);
