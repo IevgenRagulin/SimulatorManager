@@ -3,7 +3,7 @@ package cz.vutbr.fit.simulatormanager.components;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 
 public class SimulatorListSimulatorsView extends Table {
@@ -22,20 +22,14 @@ public class SimulatorListSimulatorsView extends Table {
 
 			@Override
 			public void valueChange(Property.ValueChangeEvent event) {
-				Object simulatorId = SimulatorListSimulatorsView.this
-						.getValue();
+				Object simulatorId = SimulatorListSimulatorsView.this.getValue();
 				if (simulatorId != null) {
-					app.getSimulatorForm().setItemDataSource(
-							SimulatorListSimulatorsView.this
-									.getItem(simulatorId));
+					app.getSimulatorForm().setItemDataSource(SimulatorListSimulatorsView.this.getItem(simulatorId));
 					app.getSelectedSimulatorName().setValue(
 							"<b>Selected simulator: "
-									+ SimulatorListSimulatorsView.this
-											.getItem(simulatorId)
-											.getItemProperty(
-													SimulatorCols.simulatorname
-															.toString())
-											.getValue().toString() + "</b>");
+									+ SimulatorListSimulatorsView.this.getItem(simulatorId)
+											.getItemProperty(SimulatorCols.simulatorname.toString()).getValue()
+											.toString() + "</b>");
 				}
 				// make editor visible only if simulator has been selected
 				boolean shouldEditorBeVisible = simulatorId != null;

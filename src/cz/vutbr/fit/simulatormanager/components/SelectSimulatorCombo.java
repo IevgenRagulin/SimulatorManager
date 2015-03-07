@@ -8,7 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.ui.ComboBox;
 
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.views.RunningSimulationsView;
 
 public class SelectSimulatorCombo extends ComboBox {

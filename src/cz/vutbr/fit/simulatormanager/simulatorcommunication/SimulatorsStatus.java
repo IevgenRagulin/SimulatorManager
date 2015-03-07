@@ -11,13 +11,14 @@ import cz.vutbr.fit.simulatormanager.items.SimulationItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 
 public class SimulatorsStatus {
-	protected static final boolean SIMULATION_ON = true;
-	protected static final boolean SIMULATION_OFF = false;
-	protected static final boolean SIMULATION_PAUSED = true;
-	protected static final boolean SIMULATION_NOT_PAUSED = false;
+	public static final boolean SIMULATION_ON = true;
+	public static final boolean SIMULATION_OFF = false;
+	public static final boolean SIMULATION_PAUSED = true;
+	public static final boolean SIMULATION_NOT_PAUSED = false;
 
 	// SimulationInfoItem based on current-1 data from the simulator. Used to
-	// determine if the simulator has moved or not. On application startup this is set to the latest data from db
+	// determine if the simulator has moved or not. On application startup this
+	// is set to the latest data from db
 	protected static Map<String, SimulationInfoItem> prevSimulatorIdSimInfoItem = Collections
 			.synchronizedMap(new HashMap<String, SimulationInfoItem>());
 
@@ -42,8 +43,9 @@ public class SimulatorsStatus {
 			SimulationItem simItem) {
 		simulatorIdSimItem.put(simulatorId, simItem);
 	}
-	
-	protected static void setPrevSimulatorIdSimInfoItem(String simulatorId, SimulationInfoItem simInfoItem) {
+
+	protected static void setPrevSimulatorIdSimInfoItem(String simulatorId,
+			SimulationInfoItem simInfoItem) {
 		prevSimulatorIdSimInfoItem.put(simulatorId, simInfoItem);
 	}
 

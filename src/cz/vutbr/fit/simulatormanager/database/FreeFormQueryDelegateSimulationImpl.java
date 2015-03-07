@@ -1,4 +1,4 @@
-package cz.vutbr.fit.simulatormanager.data;
+package cz.vutbr.fit.simulatormanager.database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,6 +10,8 @@ import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.TemporaryRowId;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
+
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 
 public class FreeFormQueryDelegateSimulationImpl implements FreeformQueryDelegate {
 

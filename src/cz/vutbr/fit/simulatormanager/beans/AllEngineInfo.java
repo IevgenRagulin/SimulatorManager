@@ -662,4 +662,25 @@ public class AllEngineInfo implements Serializable {
 		return serialVersionUID;
 	}
 
+	@Override
+	public String toString() {
+		return "AllEngineInfo [e1rpm=" + e1rpm + ", e1pwr=" + e1pwr + ", e1pwp=" + e1pwp + ", e1mp_=" + e1mp_
+				+ ", e1et1=" + e1et1 + ", e1et2=" + e1et2 + ", e1ct1=" + e1ct1 + ", e1ct2=" + e1ct2 + ", e1est="
+				+ e1est + ", e1ff_=" + e1ff_ + ", e1fp_=" + e1fp_ + ", e1op_=" + e1op_ + ", e1ot_=" + e1ot_
+				+ ", e1n1_=" + e1n1_ + ", e1n2_=" + e1n2_ + ", e1vib=" + e1vib + ", e1vlt=" + e1vlt + ", e1amp="
+				+ e1amp + ", e2rpm=" + e2rpm + ", e2pwr=" + e2pwr + ", e2pwp=" + e2pwp + ", e2mp_=" + e2mp_
+				+ ", e2et1=" + e2et1 + ", e2et2=" + e2et2 + ", e2ct1=" + e2ct1 + ", e2ct2=" + e2ct2 + ", e2est="
+				+ e2est + ", e2ff_=" + e2ff_ + ", e2fp_=" + e2fp_ + ", e2op_=" + e2op_ + ", e2ot_=" + e2ot_
+				+ ", e2n1_=" + e2n1_ + ", e2n2_=" + e2n2_ + ", e2vib=" + e2vib + ", e2vlt=" + e2vlt + ", e2amp="
+				+ e2amp + ", e3rpm=" + e3rpm + ", e3pwr=" + e3pwr + ", e3pwp=" + e3pwp + ", e3mp_=" + e3mp_
+				+ ", e3et1=" + e3et1 + ", e3et2=" + e3et2 + ", e3ct1=" + e3ct1 + ", e3ct2=" + e3ct2 + ", e3est="
+				+ e3est + ", e3ff_=" + e3ff_ + ", e3fp_=" + e3fp_ + ", e3op_=" + e3op_ + ", e3ot_=" + e3ot_
+				+ ", e3n1_=" + e3n1_ + ", e3n2_=" + e3n2_ + ", e3vib=" + e3vib + ", e3vlt=" + e3vlt + ", e3amp="
+				+ e3amp + ", e4rpm=" + e4rpm + ", e4pwr=" + e4pwr + ", e4pwp=" + e4pwp + ", e4mp_=" + e4mp_
+				+ ", e4et1=" + e4et1 + ", e4et2=" + e4et2 + ", e4ct1=" + e4ct1 + ", e4ct2=" + e4ct2 + ", e4est="
+				+ e4est + ", e4ff_=" + e4ff_ + ", e4fp_=" + e4fp_ + ", e4op_=" + e4op_ + ", e4ot_=" + e4ot_
+				+ ", e4n1_=" + e4n1_ + ", e4n2_=" + e4n2_ + ", e4vib=" + e4vib + ", e4vlt=" + e4vlt + ", e4amp="
+				+ e4amp + "]";
+	}
+
 }

@@ -10,15 +10,13 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
 public class SimulationStateFieldGroup extends FieldGroup {
-	private static final long serialVersionUID = -1726362933655786619L;
+	private static final long serialVersionUID = 1L;
 
-	public SimulationStateFieldGroup(String[] fieldNames,
-			HorizontalLayout horizontalLayout) {
+	public SimulationStateFieldGroup(String[] fieldNames, HorizontalLayout horizontalLayout) {
 		initSimulatorInfo(fieldNames, horizontalLayout);
 	}
 
-	private void initSimulatorInfo(String[] fieldNames,
-			HorizontalLayout horizontalLayout) {
+	private void initSimulatorInfo(String[] fieldNames, HorizontalLayout horizontalLayout) {
 		setBuffered(false);
 
 		for (String fieldName : fieldNames) {

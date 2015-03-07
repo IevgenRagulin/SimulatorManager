@@ -15,7 +15,7 @@ import com.vaadin.tapio.googlemaps.client.LatLon;
 import cz.vutbr.fit.simulatormanager.components.FlightPathPastSim;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
-import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChart.ValueChangeListener;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 

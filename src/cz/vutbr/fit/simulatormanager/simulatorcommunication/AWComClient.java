@@ -7,29 +7,47 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.AllSimulationInfo;
 
-public class SocketHelper {
+public class AWComClient {
+
+	private final static Logger LOG = LoggerFactory.getLogger(SimulationStatusProviderSimpleImpl.class);
+
+	private static final String GET_DATA_QUERY = "GET:DATA:END:";
+	private static final String GET_ENGINE_QUERY = "GET:ENGINE:END:";
 
 	public static AllSimulationInfo getSimulationData(String host, int port) {
 		AllSimulationInfo simData = null;
-		String query = "GET:DATA:END:";
+		String query = GET_DATA_QUERY;
 		Socket queryProcessorSocket = createSocket(host, port);
 		PrintWriter out = getPrintWriter(queryProcessorSocket);
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
 		out = writeQuery(query, out);
 		String response = getResponseFromSocket(queryProcessorReader);
 		closeSocket(queryProcessorSocket);
-		//System.out.println("From " + host + " " + response);
+		// System.out.println("From " + host + " " + response);
+		LOG.debug("Got simulation data on {}:{}. {}", host, port, response);
 		simData = parseSimulatorResponse(response);
 
 		return simData;
 	}
 
+	/**
+	 * Get engine data from simulator
+	 * 
+	 * @param host
+	 *            where simulator is located
+	 * @param port
+	 *            port on which AWCom is installed on this simulator
+	 * @return
+	 */
 	public static AllEngineInfo getEngineData(String host, int port) {
 		AllEngineInfo engineData = null;
-		String query = "GET:ENGINE:END:";
+		String query = GET_ENGINE_QUERY;
 		Socket queryProcessorSocket = createSocket(host, port);
 		PrintWriter out = getPrintWriter(queryProcessorSocket);
 		BufferedReader queryProcessorReader = getQueryProcessorReader(queryProcessorSocket);
@@ -38,6 +56,7 @@ public class SocketHelper {
 		closeSocket(queryProcessorSocket);
 		// System.out.println("From " + host + " engines " + response);
 		// if we got some data, parse it
+		LOG.debug("Got engine data on {}:{}. {}", host, port, response);
 		if ((response != null) && (response.length() > 15)) {
 			engineData = parseEngineResponse(response);
 		}
@@ -258,8 +277,7 @@ public class SocketHelper {
 		DataOutputStream queryProcessorDos = null;
 		if (socket != null) {
 			try {
-				queryProcessorDos = new DataOutputStream(
-						socket.getOutputStream());
+				queryProcessorDos = new DataOutputStream(socket.getOutputStream());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -272,8 +290,7 @@ public class SocketHelper {
 		BufferedReader queryProcessorReader = null;
 		if (socket != null) {
 			try {
-				queryProcessorReader = new BufferedReader(
-						new InputStreamReader(socket.getInputStream()));
+				queryProcessorReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -288,8 +305,7 @@ public class SocketHelper {
 		return out;
 	}
 
-	private static String getResponseFromSocket(
-			BufferedReader queryProcessorReader) {
+	private static String getResponseFromSocket(BufferedReader queryProcessorReader) {
 		String response = null;
 		if (queryProcessorReader != null) {
 			try {
@@ -330,31 +346,28 @@ public class SocketHelper {
 	private static Double stringToDouble(String strVal) {
 		if (strVal != null) {
 			return Double.parseDouble(strVal);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	private static Float stringToFloat(String strVal) {
 		if (strVal != null) {
 			return Float.parseFloat(strVal);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	private static Integer doubleToInt(Double dblVal) {
 		if (dblVal != null) {
 			return dblVal.intValue();
-		} else {
-			return null;
 		}
+		return null;
+
 	}
 
 	private static Boolean isSimulationPaused(Integer intValue) {
 		if (intValue == null)
-			throw new IllegalArgumentException(
-					"Simulator doesn't send information about its Paused or not status");
+			throw new IllegalArgumentException("Simulator doesn't send information about its Paused or not status");
 		return intValue == 0;
 	}
 

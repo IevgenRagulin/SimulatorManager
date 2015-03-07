@@ -3,7 +3,90 @@ DROP TABLE IF EXISTS simulationdevicesstate;
 DROP TABLE IF EXISTS simulationinfo;
 DROP TABLE IF EXISTS simulationpfdinfo;
 DROP TABLE IF EXISTS simulation;
+DROP TABLE IF EXISTS enginemodel;
+DROP TABLE IF EXISTS simulatormodel;
 DROP TABLE IF EXISTS simulator;
+
+CREATE TABLE simulatormodel
+(
+  simulatormodelid serial NOT NULL,
+  simulatormodelname character varying(255) NOT NULL,
+  minspeed integer,
+  maxspeed integer,
+  highspeed integer,
+  maxspeedonflaps integer NOT NULL,
+  minspeedonflaps integer,
+  hasgears boolean,
+  numberoflandinggears integer,
+  "timestamp" timestamp without time zone DEFAULT now(),
+  CONSTRAINT simulatormodel_pkey PRIMARY KEY (simulatormodelid),
+  CONSTRAINT simulatormodel_simulatormodelname_key UNIQUE (simulatormodelname)
+)
+
+
+CREATE TABLE enginemodel 
+(
+  enginemodelid serial NOT NULL,
+  simulatormodelid integer,
+  enginemodelorder integer,
+  rpm boolean DEFAULT true,
+  minrpm real,
+  maxrpm real,
+  pwr boolean DEFAULT true,
+  minpwr real,
+  maxpwr real,
+  pwp boolean DEFAULT true,
+  minpwp real,
+  maxpwp real,
+  mp boolean DEFAULT true,
+  minmp real,
+  maxmp real,
+  egt1 boolean DEFAULT true,
+  minegt1 real,
+  maxegt1 real,
+  egt2 boolean DEFAULT true,
+  minegt2 real,
+  maxegt2 real,
+  cht1 boolean DEFAULT true,
+  mincht1 real,
+  maxcht1 real,
+  cht2 boolean DEFAULT true,
+  mincht2 real,
+  maxcht2 real,
+  est boolean DEFAULT true,
+  minest real,
+  maxest real,
+  ff boolean DEFAULT true,
+  minff real,
+  maxff real,
+  fp boolean DEFAULT true,
+  minfp real,
+  maxfp real,
+  op boolean DEFAULT true,
+  minop real,
+  maxop real,
+  ot boolean DEFAULT true,
+  minot real,
+  maxot real,
+  n1 boolean DEFAULT true,
+  minn1 real,
+  maxn1 real,
+  n2 boolean DEFAULT true,
+  minn2 real,
+  maxn2 real,
+  vib boolean DEFAULT true,
+  minvib real,
+  maxvib real,
+  vlt boolean DEFAULT true,
+  minvlt real,
+  maxvlt real,
+  amp boolean DEFAULT true,
+  minamp real,
+  maxamp real,
+  "timestamp" timestamp without time zone DEFAULT now(),
+   CONSTRAINT enginemodel_pkey PRIMARY KEY (enginemodelid),
+   CONSTRAINT enginemodel_enginemodelorder_key UNIQUE (simulatormodelid, enginemodelorder)
+)
 
 CREATE TABLE simulator
 (

@@ -15,7 +15,7 @@ import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapInfoWindow;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapPolyline;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationInfoCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationInfoCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.simulatormanager.data;
+package cz.vutbr.fit.simulatormanager.database.columns;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

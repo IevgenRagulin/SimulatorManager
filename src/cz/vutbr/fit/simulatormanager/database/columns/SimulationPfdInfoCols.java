@@ -1,4 +1,4 @@
-package cz.vutbr.fit.simulatormanager.data;
+package cz.vutbr.fit.simulatormanager.database.columns;
 
 public enum SimulationPfdInfoCols {
 	pfdinfoid, //

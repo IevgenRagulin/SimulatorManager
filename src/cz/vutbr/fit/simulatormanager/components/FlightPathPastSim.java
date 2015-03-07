@@ -7,7 +7,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationInfoCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationInfoCols;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
 /**

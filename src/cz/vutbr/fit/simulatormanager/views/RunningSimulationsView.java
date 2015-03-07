@@ -13,7 +13,7 @@ import com.vaadin.tapio.googlemaps.client.LatLon;
 
 import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;

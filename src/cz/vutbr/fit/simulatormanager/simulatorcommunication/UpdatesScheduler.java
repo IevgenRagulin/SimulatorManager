@@ -17,26 +17,21 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelper;
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 
 public class UpdatesScheduler {
 
-	final static Logger logger = LoggerFactory
-			.getLogger(UpdatesScheduler.class);
+	final static Logger logger = LoggerFactory.getLogger(UpdatesScheduler.class);
 
 	protected static DatabaseHelper dbHelp = new DatabaseHelper();
-	protected static final int UPDATE_RATE_MS = ApplicationConfiguration
-			.getSimulatorGetDataFrequency();
+	protected static final int UPDATE_RATE_MS = ApplicationConfiguration.getSimulatorGetDataFrequency();
 
-	private final static ScheduledExecutorService scheduler = Executors
-			.newScheduledThreadPool(1);
+	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private static int numberOfThreads = 1;
-	private static ExecutorService schedulerSimulationUpdater = Executors
-			.newFixedThreadPool(numberOfThreads);
+	private static ExecutorService schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfThreads);
 	// map of tasks. key - simulator id
-	private static Map<String, Future> isTaskFinished = Collections
-			.synchronizedMap(new HashMap<String, Future>());
+	private static Map<String, Future> isTaskFinished = Collections.synchronizedMap(new HashMap<String, Future>());
 
 	private static final Runnable beeper = new Runnable() {
 		@Override
@@ -44,15 +39,12 @@ public class UpdatesScheduler {
 			try {
 				updateRunningSimsStatus();
 			} catch (Exception e) {
-				logger.error(
-						"Unexpected exception during updating running sims status",
-						e);
+				logger.error("Unexpected exception during updating running sims status", e);
 			}
 		}
 	};
 	static {
-		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS,
-				TimeUnit.MILLISECONDS);
+		scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS, TimeUnit.MILLISECONDS);
 
 	}
 
@@ -68,8 +60,7 @@ public class UpdatesScheduler {
 			numberOfThreads = simulatorContainer.size();
 			schedulerSimulationUpdater.shutdownNow();
 			if (numberOfThreads != 0) {
-				schedulerSimulationUpdater = Executors
-						.newFixedThreadPool(numberOfThreads);
+				schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfThreads);
 			}
 		}
 		UpdatesScheduler.updateSimulatorsStatus(simulatorContainer);
@@ -85,18 +76,14 @@ public class UpdatesScheduler {
 				String simulatorId = getSimulatorIdFromSimItem(simulatorItem);
 				String simulatorHostname = getSimulatorHostnameFromSimItem(simulatorItem);
 				int simulatorPort = getSimulatorPortFromSimItem(simulatorItem);
-				SimulationsUpdater simUpdater = new SimulationsUpdater(
-						simulatorId, simulatorHostname, simulatorPort);
+				SimulationsUpdater simUpdater = new SimulationsUpdater(simulatorId, simulatorHostname, simulatorPort);
 				// we don't want 2 threads to be updating the same simulator at
 				// the same time
 				if (isPreviousTaskOnThisSimFinished(simulatorId)) {
-					Future submittedTask = schedulerSimulationUpdater
-							.submit(simUpdater);
+					Future submittedTask = schedulerSimulationUpdater.submit(simUpdater);
 					isTaskFinished.put(simulatorId, submittedTask);
 				} else {
-					logger.info(
-							"No, prev task on this simulator is not finished. Simulator id: {} ",
-							simulatorId);
+					logger.debug("No, prev task on this simulator is not finished. Simulator id: {} ", simulatorId);
 				}
 			}
 		}
@@ -112,24 +99,19 @@ public class UpdatesScheduler {
 	}
 
 	private static boolean getSimulatorActiveFromSimItem(Item simulatorItem) {
-		return (Boolean) simulatorItem.getItemProperty(
-				SimulatorCols.active.toString()).getValue();
+		return (Boolean) simulatorItem.getItemProperty(SimulatorCols.active.toString()).getValue();
 	}
 
 	private static String getSimulatorIdFromSimItem(Item simulatorItem) {
-		return simulatorItem
-				.getItemProperty(SimulatorCols.simulatorid.toString())
-				.getValue().toString();
+		return simulatorItem.getItemProperty(SimulatorCols.simulatorid.toString()).getValue().toString();
 	}
 
 	private static String getSimulatorHostnameFromSimItem(Item simulatorItem) {
-		return simulatorItem.getItemProperty(SimulatorCols.hostname.toString())
-				.getValue().toString();
+		return simulatorItem.getItemProperty(SimulatorCols.hostname.toString()).getValue().toString();
 	}
 
 	private static int getSimulatorPortFromSimItem(Item simulatorItem) {
-		return (Integer) simulatorItem.getItemProperty(
-				SimulatorCols.port.toString()).getValue();
+		return (Integer) simulatorItem.getItemProperty(SimulatorCols.port.toString()).getValue();
 	}
 
 }

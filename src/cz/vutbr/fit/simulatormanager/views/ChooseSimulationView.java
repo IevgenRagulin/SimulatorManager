@@ -21,8 +21,8 @@ import cz.vutbr.fit.simulatormanager.SimulatormanagerUI;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulationList;
 import cz.vutbr.fit.simulatormanager.components.SimulatorListChooseSimulationView;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelper;
-import cz.vutbr.fit.simulatormanager.data.SimulationCols;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 

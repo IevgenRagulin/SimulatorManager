@@ -12,9 +12,9 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
 import cz.vutbr.fit.simulatormanager.beans.SimulationInfoBean;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelper;
-import cz.vutbr.fit.simulatormanager.data.SimulationCols;
-import cz.vutbr.fit.simulatormanager.data.SimulationInfoCols;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationInfoCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationEnginesStateItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;

@@ -17,12 +17,12 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 
 public class SimulatorForm extends FieldGroup {
+	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_NUM_OF_LANDING_GEARS = 3;
-	private static final long serialVersionUID = 5886087581072819926L;
 	private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
 	private static final Object DEFAULT_MAX_SPEED_ON_FLAPS = 200;
 	private SimulatorsView view;

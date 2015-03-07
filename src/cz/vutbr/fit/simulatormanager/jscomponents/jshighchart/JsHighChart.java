@@ -14,7 +14,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
 @JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", "highstock.js" })

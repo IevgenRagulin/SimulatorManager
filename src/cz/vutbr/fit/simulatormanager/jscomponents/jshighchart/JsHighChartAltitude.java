@@ -5,7 +5,7 @@ import java.util.Date;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 

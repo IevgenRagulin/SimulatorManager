@@ -21,8 +21,8 @@ import com.vaadin.ui.VerticalLayout;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulatorForm;
 import cz.vutbr.fit.simulatormanager.components.SimulatorListSimulatorsView;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelper;
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.SimulationStatusProviderSimpleImpl;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
@@ -31,11 +31,11 @@ import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
  * Page on which the user can add/remove/modify simulators information
  * 
  * @author ievgen
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class SimulatorsView extends VerticalLayout implements View {
-	final static Logger logger = LoggerFactory.getLogger(SimulatorsView.class);
+	final static Logger LOG = LoggerFactory.getLogger(SimulatorsView.class);
 
 	final static String PING_SUCCESS_MESSAGE = "Success. The selected simulator is up and running";
 	final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding";
@@ -81,7 +81,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 	}
 
 	public SimulatorsView(Navigator navigator) {
-		logger.info("new SimulatorsView()");
+		LOG.info("new SimulatorsView()");
 		this.navigator = navigator;
 		initSimulatorList();
 		initLayout();
@@ -109,16 +109,14 @@ public class SimulatorsView extends VerticalLayout implements View {
 	}
 
 	private void initMenu() {
-		mainMenu = MainMenuBar.getInstance(navigator,
-				PageType.MANAGE_SIMULATORS);
+		mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATORS);
 	}
 
 	private void initLeftLayout() {
 		initAddSimulatorButton();
 		leftLayout.setSizeFull();
 		leftLayout.setMargin(new MarginInfo(false, false, true, true));
-		leftLayout.addComponent(new Label("<b>Managed simulators</b>",
-				ContentMode.HTML));
+		leftLayout.addComponent(new Label("<b>Managed simulators</b>", ContentMode.HTML));
 		leftLayout.addComponent(simulatorList);
 		leftLayout.addComponent(addSimulatorButton);
 		leftLayout.setExpandRatio(simulatorList, 20);
@@ -137,12 +135,10 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private void initRightLayout() {
 		rightLayout.setMargin(new MarginInfo(true, true, true, true));
 		rightLayout.addComponent(selectedSimulatorName);
-		pingSimulatorButton
-				.setDescription("Check if selected simulator is up and running");
+		pingSimulatorButton.setDescription("Check if selected simulator is up and running");
 		pingSimulatorButton.setVisible(false);
 		rightLayout.addComponent(pingSimulatorButton);
-		ev97Img = new Image(
-				"After selecting simulator on the left, you will be able to configure it here",
+		ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here",
 				ResourceUtil.getEv97Img());
 		ev97Img.setSizeFull();
 		rightLayout.addComponent(ev97Img);
@@ -169,21 +165,16 @@ public class SimulatorsView extends VerticalLayout implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Object simulatorId = simulatorList.getValue();
-				String host = simulatorList.getItem(simulatorId)
-						.getItemProperty(SimulatorCols.hostname.toString())
+				String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString())
 						.getValue().toString();
 				int port = Integer.valueOf(simulatorList.getItem(simulatorId)
-						.getItemProperty(SimulatorCols.port.toString())
-						.getValue().toString());
+						.getItemProperty(SimulatorCols.port.toString()).getValue().toString());
 
-				boolean isRespoding = SimulationStatusProviderSimpleImpl
-						.isSimulatorResponding(host, port);
+				boolean isRespoding = SimulationStatusProviderSimpleImpl.isSimulatorResponding(host, port);
 				if (isRespoding) {
-					Notification.show(PING_SUCCESS_MESSAGE, "",
-							Notification.TYPE_HUMANIZED_MESSAGE);
+					Notification.show(PING_SUCCESS_MESSAGE, "", Notification.TYPE_HUMANIZED_MESSAGE);
 				} else {
-					Notification.show(PING_FAIL_MESSAGE, "",
-							Notification.TYPE_WARNING_MESSAGE);
+					Notification.show(PING_FAIL_MESSAGE, "", Notification.TYPE_WARNING_MESSAGE);
 				}
 
 			}

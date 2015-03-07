@@ -1,25 +1,30 @@
-package cz.vutbr.fit.simulatormanager.data;
+package cz.vutbr.fit.simulatormanager.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
 
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
+
 public class FreeFormQueryDelegateSimulationsImpl implements FreeformQueryDelegate {
-	private static final long serialVersionUID = -3906533930214333038L;
+	private static final long serialVersionUID = 1L;
+	final static Logger LOG = LoggerFactory.getLogger(FreeFormQueryDelegateSimulationsImpl.class);
+
 	private String simulatorId = null;
 
 	@Override
 	public String getQueryString(int offset, int limit) throws UnsupportedOperationException {
-		System.out.println("GETTING QUERY STRING offset" + offset);
-		System.out.println("GETTING QUERY STRING limit" + limit);
-
-		return "SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId + " ORDER BY simulationid LIMIT ALL";
+		return "SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId
+				+ " ORDER BY simulationid LIMIT ALL";
 
 	}
 
@@ -69,21 +74,24 @@ public class FreeFormQueryDelegateSimulationsImpl implements FreeformQueryDelega
 	}
 
 	private void removeDataFromSimulationInfo(Connection conn, Integer simulationId) throws SQLException {
-		PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationinfo WHERE simulation_simulationid = ?");
+		PreparedStatement statement = conn
+				.prepareStatement("DELETE FROM simulationinfo WHERE simulation_simulationid = ?");
 		statement.setInt(1, simulationId);
 		statement.executeUpdate();
 		statement.close();
 	}
 
 	private void removeDataFromSimulationPfdInfo(Connection conn, Integer simulationId) throws SQLException {
-		PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationpfdinfo WHERE simulation_simulationid = ?");
+		PreparedStatement statement = conn
+				.prepareStatement("DELETE FROM simulationpfdinfo WHERE simulation_simulationid = ?");
 		statement.setInt(1, simulationId);
 		statement.executeUpdate();
 		statement.close();
 	}
 
 	private void removeDataFromSimulationDevStateInfo(Connection conn, Integer simulationId) throws SQLException {
-		PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationdevicesstate WHERE simulation_simulationid = ?");
+		PreparedStatement statement = conn
+				.prepareStatement("DELETE FROM simulationdevicesstate WHERE simulation_simulationid = ?");
 		statement.setInt(1, simulationId);
 		statement.executeUpdate();
 		statement.close();
@@ -91,19 +99,18 @@ public class FreeFormQueryDelegateSimulationsImpl implements FreeformQueryDelega
 
 	@Override
 	public String getContainsRowQueryString(Object... keys) {
-		// TODO Auto-generated method stub
-
-		StringBuffer returnQuery = new StringBuffer("SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId + " AND ( ");
+		StringBuffer query = new StringBuffer("SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId
+				+ " AND ( ");
 		int i = 0;
 		for (Object key : keys) {
 			Integer strKey = (Integer) key;
-			returnQuery.append("simulationid=");
-			returnQuery.append(strKey);
+			query.append("simulationid=");
+			query.append(strKey);
 			if ((i + 1) != keys.length) {
-				returnQuery.append(" OR ");
+				query.append(" OR ");
 			}
 		}
-		returnQuery.append(")");
-		return returnQuery.toString();
+		query.append(")");
+		return query.toString();
 	}
 }

@@ -7,13 +7,12 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.ui.Table;
 
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.views.ChooseSimulationView;
 
 public class SimulatorListChooseSimulationView extends Table {
-	final static Logger logger = LoggerFactory
-			.getLogger(SimulatorListChooseSimulationView.class);
-	private static final long serialVersionUID = -3406488565393821554L;
+	final static Logger LOG = LoggerFactory.getLogger(SimulatorListChooseSimulationView.class);
+	private static final long serialVersionUID = 1L;
 	private ChooseSimulationView view = null;
 
 	public SimulatorListChooseSimulationView(final ChooseSimulationView view) {
@@ -35,10 +34,9 @@ public class SimulatorListChooseSimulationView extends Table {
 	};
 
 	public void updateSimulationsList() {
-		logger.info("Going to update simulations list");
-		RowId simulatorId = (RowId) SimulatorListChooseSimulationView.this
-				.getValue();
-		logger.info("Simulator with row id {} is selected", simulatorId);
+		LOG.info("Going to update simulations list");
+		RowId simulatorId = (RowId) SimulatorListChooseSimulationView.this.getValue();
+		LOG.info("Simulator with row id {} is selected", simulatorId);
 		// Make simulations list visible only if some simulator is
 		// selected
 		boolean isSimulationListVisible = (simulatorId != null);
@@ -48,33 +46,27 @@ public class SimulatorListChooseSimulationView extends Table {
 		// Make buttons visible only if simulation list is visible and
 		// some value is selected
 		view.getActionButtons().setVisible(
-				view.getSimulationList().isVisible()
-						&& (view.getSimulationList().getValue() != null));
+				view.getSimulationList().isVisible() && (view.getSimulationList().getValue() != null));
 		// Set simulations list if some simulator is selected
 		if (simulatorId != null) {
-			String simulatorIdStr = ((Integer) (((RowId) simulatorId).getId()[0]))
-					.toString();
+			String simulatorIdStr = ((Integer) (((RowId) simulatorId).getId()[0])).toString();
 			view.getSimulationList().setContainerDataSourceAndVisCol(
-					view.getDBHelp().getSimulationContainerOnSimulatorWithId(
-							simulatorIdStr));
+					view.getDBHelp().getSimulationContainerOnSimulatorWithId(simulatorIdStr));
 			updateSimulationsLabelMessage();
 		}
 	}
 
 	private void updateSimulationsLabelMessage() {
 		if (view.getSimulationList().getItemIds().size() > 0) {
-			view.getSimulationSessionsLabel().setValue(
-					ChooseSimulationView.SIMULATIONS_ON_SELECTED_SIMULATOR);
+			view.getSimulationSessionsLabel().setValue(ChooseSimulationView.SIMULATIONS_ON_SELECTED_SIMULATOR);
 		} else {
-			view.getSimulationSessionsLabel().setValue(
-					ChooseSimulationView.NO_SIMULATIONS_ON_SELECTED_SIMULATOR);
+			view.getSimulationSessionsLabel().setValue(ChooseSimulationView.NO_SIMULATIONS_ON_SELECTED_SIMULATOR);
 		}
 	}
 
 	public void updateSimulatorsList() {
 		setContainerDataSource(view.getDBHelp().getNewSimulatorContainer());
-		logger.info("Got new container datasource with {} elements",
-				getContainerDataSource().getItemIds().size());
+		LOG.info("Got new container datasource with {} elements", getContainerDataSource().getItemIds().size());
 		setSelectable(true);
 		setImmediate(true);
 		setBuffered(false);

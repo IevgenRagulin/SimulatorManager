@@ -4,9 +4,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationCols;
-import cz.vutbr.fit.simulatormanager.data.SimulationDevStateCols;
-import cz.vutbr.fit.simulatormanager.data.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationDevStateCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 
 @SuppressWarnings("serial")
 @com.vaadin.annotations.JavaScript({ "flightControls.js" })

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.simulatormanager.data;
+package cz.vutbr.fit.simulatormanager.database;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.RowId;

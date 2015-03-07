@@ -2,6 +2,7 @@ package cz.vutbr.fit.simulatormanager.types;
 
 public enum PageType {
 	HOME, //
+	MANAGE_SIMULATOR_MODELS, //
 	MANAGE_SIMULATORS, //
 	CHOOSE_SIMULATION, //
 	CONFIGURATIONS, //

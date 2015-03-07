@@ -25,7 +25,7 @@ import cz.vutbr.fit.simulatormanager.SimulatorManagerConstants;
 import cz.vutbr.fit.simulatormanager.components.ButtonConfigurationView;
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelperPureJDBC;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 

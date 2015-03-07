@@ -8,8 +8,8 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 
 import cz.vutbr.fit.simulatormanager.beans.SimulationBean;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelper;
-import cz.vutbr.fit.simulatormanager.data.DatabaseUtil;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.DatabaseUtil;
 import cz.vutbr.fit.simulatormanager.items.SimulationItem;
 
 

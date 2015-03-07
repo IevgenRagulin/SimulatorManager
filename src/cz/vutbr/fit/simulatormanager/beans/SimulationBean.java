@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.vaadin.data.Item;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 
 public class SimulationBean implements Serializable {
 	private static final long serialVersionUID = 3314547295194561766L;

@@ -2,7 +2,7 @@ package cz.vutbr.fit.simulatormanager.views;
 
 import com.vaadin.ui.VerticalLayout;
 
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 
 public class BasicView extends VerticalLayout {
 

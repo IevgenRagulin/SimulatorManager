@@ -3,7 +3,7 @@ package cz.vutbr.fit.simulatormanager.jscomponents.pfd;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
-import cz.vutbr.fit.simulatormanager.data.SimulationPfdInfoCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 
 @SuppressWarnings("serial")
 @com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js" })

@@ -13,12 +13,13 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
-import cz.vutbr.fit.simulatormanager.data.DatabaseHelperPureJDBC;
+import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.UpdatesScheduler;
 import cz.vutbr.fit.simulatormanager.views.ChooseSimulationView;
 import cz.vutbr.fit.simulatormanager.views.ConfigurationView;
 import cz.vutbr.fit.simulatormanager.views.PastSimulationsView;
 import cz.vutbr.fit.simulatormanager.views.RunningSimulationsView;
+import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
 import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 import cz.vutbr.fit.simulatormanager.views.StartView;
 
@@ -26,8 +27,7 @@ import cz.vutbr.fit.simulatormanager.views.StartView;
 public class SimulatormanagerUI extends UI {
 
 	private static final String APPLICATION_NAME = "Simulator manager";
-	final static Logger logger = LoggerFactory
-			.getLogger(SimulatormanagerUI.class);
+	final static Logger logger = LoggerFactory.getLogger(SimulatormanagerUI.class);
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = SimulatormanagerUI.class, widgetset = "cz.vutbr.fit.simulatormanager.widgetset.SimulatorManagerWidgetset")
@@ -37,6 +37,7 @@ public class SimulatormanagerUI extends UI {
 
 	private static final long serialVersionUID = -2218352764682942955L;
 	Navigator navigator;
+	public static final String MANAGESIMULATORMODELS = "ManageSimulatorModels";
 	public static final String MANAGESIMULATORS = "ManageSimulators";
 	public static final String VIEWINGSIMULATIONS = "ViewingSimulations";
 	public static final String RUNNINGSIMULATIONS = "RunningSimulations";
@@ -56,8 +57,7 @@ public class SimulatormanagerUI extends UI {
 			try {
 				Class.forName(UpdatesScheduler.class.getName());
 			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException(
-						"Could not initilize application properly", e);
+				throw new IllegalStateException("Could not initilize application properly", e);
 			}
 			DatabaseHelperPureJDBC.initDatabaseIfNeeded();
 			getPage().setTitle(APPLICATION_NAME);
@@ -73,13 +73,11 @@ public class SimulatormanagerUI extends UI {
 	 */
 	private void createRegisterViews() {
 		navigator.addView("", new StartView(this.navigator));
+		navigator.addView(MANAGESIMULATORMODELS, new SimulatorModelsView(this.navigator));
 		navigator.addView(MANAGESIMULATORS, new SimulatorsView(this.navigator));
-		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(
-				this.navigator));
-		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(
-				this.navigator));
-		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(
-				this.navigator));
+		navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(this.navigator));
+		navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(this.navigator));
+		navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
 		// navigator.addView(CONTROLSIMULATIONS, new
 		// ControlSimulationsView(this.navigator));
 		navigator.addView(CONFIGURATION, new ConfigurationView(this.navigator));

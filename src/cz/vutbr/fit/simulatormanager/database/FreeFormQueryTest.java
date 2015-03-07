@@ -1,4 +1,4 @@
-package cz.vutbr.fit.simulatormanager.data;
+package cz.vutbr.fit.simulatormanager.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
