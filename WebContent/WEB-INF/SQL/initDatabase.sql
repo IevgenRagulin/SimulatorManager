@@ -21,7 +21,7 @@ CREATE TABLE simulatormodel
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulatormodel_pkey PRIMARY KEY (simulatormodelid),
   CONSTRAINT simulatormodel_simulatormodelname_key UNIQUE (simulatormodelname)
-)
+);
 
 
 CREATE TABLE enginemodel 
@@ -86,7 +86,7 @@ CREATE TABLE enginemodel
   "timestamp" timestamp without time zone DEFAULT now(),
    CONSTRAINT enginemodel_pkey PRIMARY KEY (enginemodelid),
    CONSTRAINT enginemodel_enginemodelorder_key UNIQUE (simulatormodelid, enginemodelorder)
-)
+);
 
 CREATE TABLE simulator
 (
