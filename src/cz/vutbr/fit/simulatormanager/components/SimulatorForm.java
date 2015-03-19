@@ -2,6 +2,7 @@ package cz.vutbr.fit.simulatormanager.components;
 
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Random;
 
@@ -11,13 +12,18 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.sqlcontainer.RowId;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
+import cz.vutbr.fit.simulatormanager.util.SingleSelectConverter;
 import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 
 public class SimulatorForm extends FieldGroup {
@@ -55,11 +61,33 @@ public class SimulatorForm extends FieldGroup {
 				TextField field = createInputField(colName.getName());
 				field.setConverter(plainIntegerConverter);
 				addFieldToForm(field, colName);
+			} else if (colName.equals(SimulatorCols.simulatormodelid)) {
+				SQLContainer modelsContainer = view.getDBHelp().getSimulatorModelContainer();
+				ComboBox simulatorModelSelector = new ComboBox("Simulator model", modelsContainer);
+
+				simulatorModelSelector.setDescription(SimulatorCols.simulatormodelid.getDescription());
+
+				simulatorModelSelector.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
+				// Solves the conversion issue described here
+				// https://vaadin.com/forum#!/thread/2729098
+				simulatorModelSelector.setConverter(new SingleSelectConverter(simulatorModelSelector));
+				view.getEditorLayout().addComponent(simulatorModelSelector);
+				this.bind(simulatorModelSelector, SimulatorCols.simulatormodelid.toString());
 			} else {
 				TextField field = createInputField(colName.getName());
 				addFieldToForm(field, colName);
 			}
 		}
+	}
+
+	/**
+	 * Gets simulator model if of currently selected simulator
+	 * 
+	 * @return
+	 */
+	private RowId getSimulatorModelIdOfCurrentlySelectedSimulator() {
+		// view.getDBHelp().
+		return null;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -120,7 +148,19 @@ public class SimulatorForm extends FieldGroup {
 		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.numberoflandinggears.toString())
 				.setValue(DEFAULT_NUM_OF_LANDING_GEARS);
 		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.active.toString()).setValue(false);
+		view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatormodelid.toString())
+				.setValue(getAnySimulatorModelId());
 		commit();
+	}
+
+	/**
+	 * Gets an id of an existing simulator model
+	 * 
+	 * @return
+	 */
+	private Integer getAnySimulatorModelId() {
+		Collection<RowId> modelsIds = (Collection<RowId>) view.getDBHelp().getSimulatorModelContainer().getItemIds();
+		return (Integer) modelsIds.iterator().next().getId()[0];
 	}
 
 	public void removeSimulator() {

@@ -20,8 +20,9 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	 */
 	private FlightControlsStateBean controlYokeStateBean;
 
-	public FlightControls(float aileron, float elevator, float rudder, float aileront, float elevatort, float ruddert, float speedbrakes,
-			float flaps, boolean brakes, boolean paused, int numbOfLandingGears, int landing_gear_1, int landing_gear_2, int landing_gear_3) {
+	public FlightControls(float aileron, float elevator, float rudder, float aileront, float elevatort, float ruddert,
+			float speedbrakes, float flaps, boolean brakes, boolean paused, int numbOfLandingGears, int landing_gear_1,
+			int landing_gear_2, int landing_gear_3) {
 		getState().ail = aileron;
 		getState().el = elevator;
 		getState().rd = rudder;
@@ -34,32 +35,32 @@ public class FlightControls extends AbstractJavaScriptComponent {
 		getState().landg_1 = landing_gear_1;
 		getState().landg_2 = landing_gear_2;
 		getState().landg_3 = landing_gear_3;
-		controlYokeStateBean = new FlightControlsStateBean(aileron, elevator, rudder, aileront, elevatort, ruddert, speedbrakes, flaps,
-				brakes, paused, numbOfLandingGears, landing_gear_1, landing_gear_2, landing_gear_3);
+		controlYokeStateBean = new FlightControlsStateBean(aileron, elevator, rudder, aileront, elevatort, ruddert,
+				speedbrakes, flaps, brakes, paused, numbOfLandingGears, landing_gear_1, landing_gear_2, landing_gear_3);
 		setPrimaryStyleName(CSS_CLASS);
 	}
 
 	public void updateIndividualFlightControlValues(Item flightControlItem, Item simulatorItem) {
 		float newAileron = doubleToFloat((Double) ((Property<?>) flightControlItem
 				.getItemProperty(SimulationDevStateCols.eleron.toString())).getValue());
-		float newElevator = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.elevator
-				.toString())).getValue());
-		float newRudder = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.rudder.toString()))
-				.getValue());
-		float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.speedbrakes
-				.toString())).getValue());
-		float newFlaps = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.flaps.toString()))
-				.getValue());
-		float newAileronTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.ailerontrim
-				.toString())).getValue());
-		float newElevatorTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.elevatortrim
-				.toString())).getValue());
-		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.ruddertrim
-				.toString())).getValue());
-		boolean newBrakes = (Boolean) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.brakes.toString()))
-				.getValue();
-		boolean newPaused = (Boolean) ((Property<?>) flightControlItem.getItemProperty(SimulationCols.issimulationpaused.toString()))
-				.getValue();
+		float newElevator = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.elevator.toString())).getValue());
+		float newRudder = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.rudder.toString())).getValue());
+		float newSpeedBrakes = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.speedbrakes.toString())).getValue());
+		float newFlaps = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.flaps.toString())).getValue());
+		float newAileronTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.ailerontrim.toString())).getValue());
+		float newElevatorTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.elevatortrim.toString())).getValue());
+		float newRudderTrim = doubleToFloat((Double) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationDevStateCols.ruddertrim.toString())).getValue());
+		boolean newBrakes = (Boolean) ((Property<?>) flightControlItem.getItemProperty(SimulationDevStateCols.brakes
+				.toString())).getValue();
+		boolean newPaused = (Boolean) ((Property<?>) flightControlItem
+				.getItemProperty(SimulationCols.issimulationpaused.toString())).getValue();
 		int landingGear_1 = getLandingGearValue(SimulationDevStateCols.landinggear_1.toString(), flightControlItem);
 		int landingGear_2 = getLandingGearValue(SimulationDevStateCols.landinggear_2.toString(), flightControlItem);
 		int landingGear_3 = getLandingGearValue(SimulationDevStateCols.landinggear_3.toString(), flightControlItem);
@@ -138,13 +139,14 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	}
 
 	private void setPlaneConfiguration(Item simulatorItem) {
-		int maxSpeedOnFlaps = (Integer) ((Property<?>) simulatorItem.getItemProperty(SimulatorCols.maxspeedonflaps.toString())).getValue();
+		int maxSpeedOnFlaps = (Integer) ((Property<?>) simulatorItem.getItemProperty(SimulatorCols.maxspeedonflaps
+				.toString())).getValue();
 		if (getStateBean().getMaxonflaps() != maxSpeedOnFlaps) {
 			getState().maxonflaps = maxSpeedOnFlaps;
 			getStateBean().setMaxonflaps(maxSpeedOnFlaps);
 		}
-		int numberOfLandingGears = (Integer) ((Property<?>) simulatorItem.getItemProperty(SimulatorCols.numberoflandinggears.toString()))
-				.getValue();
+		int numberOfLandingGears = (Integer) ((Property<?>) simulatorItem
+				.getItemProperty(SimulatorCols.numberoflandinggears.toString())).getValue();
 		if (getStateBean().getNumOfLandG() != numberOfLandingGears) {
 			getState().numoflandg = numberOfLandingGears;
 			getStateBean().setNumOfLandG(numberOfLandingGears);

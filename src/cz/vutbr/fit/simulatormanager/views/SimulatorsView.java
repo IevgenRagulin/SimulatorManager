@@ -36,6 +36,7 @@ import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 @SuppressWarnings("serial")
 public class SimulatorsView extends VerticalLayout implements View {
 	final static Logger LOG = LoggerFactory.getLogger(SimulatorsView.class);
+	private DatabaseHelper dbHelp = new DatabaseHelper();
 
 	final static String PING_SUCCESS_MESSAGE = "Success. The selected simulator is up and running";
 	final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding";
@@ -43,11 +44,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
 	private VerticalLayout leftLayout = new VerticalLayout();
 	private VerticalLayout rightLayout = new VerticalLayout();
-	private SimulatorListSimulatorsView simulatorList;
-	private DatabaseHelper dbHelp = new DatabaseHelper();
-
 	private FormLayout editorLayout = new FormLayout();
-	private SimulatorForm simulatorForm;
 	private Button removeSimulatorButton = new Button("Remove simulator");
 	private Button addSimulatorButton = new Button("Add simulator");
 	private Navigator navigator;
@@ -55,6 +52,9 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private Image ev97Img;
 	private MainMenuBar mainMenu;
 	private Button pingSimulatorButton = new Button("Ping simulator");
+
+	private SimulatorListSimulatorsView simulatorList;
+	private SimulatorForm simulatorForm;
 
 	public Label getSelectedSimulatorName() {
 		return selectedSimulatorName;
@@ -126,6 +126,21 @@ public class SimulatorsView extends VerticalLayout implements View {
 	private void initAddSimulatorButton() {
 		addSimulatorButton.setStyleName("simulatorsAddSimulator");
 		addSimulatorButton.setIcon(ResourceUtil.getPlusImgResource());
+		int numberOfSimModels = getNumberOfSimulatorModels();
+		// add simulator button is enabled only if there are some simulator
+		// models configured in the database
+		addSimulatorButton.setEnabled(numberOfSimModels > 0 ? true : false);
+		addSimulatorButton
+				.setDescription("You can only add simulators if there is at lease one simulator model configured");
+	}
+
+	/**
+	 * Retrieves a number of simulator models configured.
+	 * 
+	 * @return
+	 */
+	private int getNumberOfSimulatorModels() {
+		return getDBHelp().getSimulatorModelContainer().getItemIds().size();
 	}
 
 	private void initRemoveSimulatorButton() {
@@ -202,6 +217,15 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		// make add simulator button enabled if there are simulator models in
+		// db. otherwise, make it disabled
+		initAddSimulatorButton();
+		if (getNumberOfSimulatorModels() == 0) {
+			Notification
+					.show("You should first configure a simulator model. It's not possible to add a simulator without having a simulator model",
+							"Please, go to 'Manage simulator models' page and configure a simulator model there",
+							Notification.TYPE_HUMANIZED_MESSAGE);
+		}
 	}
 
 	public Image getRightPanelImage() {

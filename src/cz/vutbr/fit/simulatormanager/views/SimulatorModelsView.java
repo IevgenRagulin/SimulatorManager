@@ -40,7 +40,6 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	private VerticalLayout rightLayout = new VerticalLayout();
 	private Button removeSimulatorModelButton = new Button("Remove simulator model");
 	private Button addSimulatorModelButton = new Button("Add a simulator model");
-	private Button removeEngineButton = new Button("Remove this engine");
 	private Button addEngineButton = new Button("Add a new engine");
 	private FormLayout formLayout = new FormLayout();
 	private DatabaseHelper dbHelper = new DatabaseHelper();
@@ -146,7 +145,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 		initRemoveSimulatorModelButton();
 		addEnginesToRightPanel();
 
-		formLayout.addComponent(removeSimulatorModelButton);
+		rightLayout.addComponent(removeSimulatorModelButton);
 
 	}
 
@@ -165,6 +164,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	}
 
 	private void initRemoveSimulatorModelButton() {
+		removeSimulatorModelButton.setVisible(false);
 		removeSimulatorModelButton.setIcon(ResourceUtil.getMinusImgResource());
 	}
 
@@ -213,6 +213,10 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 
 	public Button getAddEngineButton() {
 		return addEngineButton;
+	}
+
+	public Button getRemoveSimulatorModelButton() {
+		return removeSimulatorModelButton;
 	}
 
 	public EnginesAccordion getEnginesAccordeon() {

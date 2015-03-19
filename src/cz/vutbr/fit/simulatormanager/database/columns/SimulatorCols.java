@@ -5,32 +5,15 @@ import org.slf4j.LoggerFactory;
 
 public enum SimulatorCols {
 
-	active("Is simulator active", "If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
+	active("Is simulator active",
+			"If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
 	simulatorid("Simulator id"), // simulator.simulatorid
+	simulatormodelid("Simulator model"), //
 	simulatorname("Simulator name"), // simulator.simulatorname
 	hostname("Hostname"), // simulator.hostname
 	port("Port"), // simulator.port
 	aircraftmodel("Aircraft model"), //
-	minspeed("Min speed"), //
-	maxspeed("Max speed"), //
-	highspeed("High speed"), //
 	maxspeedonflaps("Max speed on flaps"), //
-	minspeedonflaps("Min speed on flaps"), //
-	hasgears("Has gears"), //
-	mintempcht1("Min temperature CHT1"), //
-	mintempcht2("Min temperature CHT2"), //
-	mintempegt1("Min temperature EGT1"), //
-	mintempegt2("Min temperature EGT2"), //
-	maxtempcht1("Max temperature CHT1"), //
-	maxtempcht2("Max temperature CHT2"), //
-	maxtempegt1("Max temperature EGT1"), //
-	maxtempegt2("Max temperature EGT2"), //
-	manifoldpressure("Manifold pressure"), //
-	power("Power"), //
-	maxamountoffuel("Max amount of fuel"), //
-	minamountoffuel("Min amount of fuel"), //
-	maxrpm("Max RPM"), //
-	numberofengines("Number of engines"), //
 	numberoflandinggears("Number of landing gears"), //
 	timestamp("Timestamp");
 
@@ -72,7 +55,8 @@ public enum SimulatorCols {
 	}
 
 	public static String[] getSimulatorMainCols() {
-		return new String[] { active.toString(), simulatorid.toString(), simulatorname.toString(), aircraftmodel.toString() };
+		return new String[] { active.toString(), simulatorid.toString(), simulatorname.toString(),
+				aircraftmodel.toString() };
 	}
 
 	public static String[] getSimulatorMainColsNames() {
