@@ -23,15 +23,11 @@ import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
  */
 public class DatabaseHelperPureJDBC {
 
-    final static Logger LOG = LoggerFactory
-	    .getLogger(DatabaseHelperPureJDBC.class);
+    final static Logger LOG = LoggerFactory.getLogger(DatabaseHelperPureJDBC.class);
 
-    private static final String BASEPATH = VaadinService.getCurrent()
-	    .getBaseDirectory().getAbsolutePath();
-    private static final String CLEAN_QUERY_PATH = BASEPATH
-	    + "/WEB-INF/SQL/cleanDatabase.sql";
-    private static final String INIT_QUERY_PATH = BASEPATH
-	    + "/WEB-INF/SQL/initDatabase.sql";
+    private static final String BASEPATH = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+    private static final String CLEAN_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/cleanDatabase.sql";
+    private static final String INIT_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/initDatabase.sql";
 
     /**
      * Gets connections. Uses username, password, db url form @link
@@ -42,8 +38,7 @@ public class DatabaseHelperPureJDBC {
      */
     private static Connection getConnection() throws SQLException {
 	return DriverManager.getConnection(ApplicationConfiguration.getDbUrl(),
-		ApplicationConfiguration.getDbUserName(),
-		ApplicationConfiguration.getDbUserPassword());
+		ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword());
     }
 
     /**
@@ -102,15 +97,14 @@ public class DatabaseHelperPureJDBC {
 	try {
 	    connection = getConnection();
 	    stmt = connection.createStatement();
-	    String[] queries = DatabaseHelperPureJDBC
-		    .getDtbQueriesFromFile(INIT_QUERY_PATH);
+	    String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(INIT_QUERY_PATH);
 	    executeArrayOfQueries(queries, connection, stmt);
 	} catch (SQLException e) {
+	    LOG.error("SQLException occured while initializing DB", e);
 	    initedSuccessfully = "SQL exception occured while initializing database";
-	    e.printStackTrace();
 	} catch (IOException e) {
+	    LOG.error("IOException occured while initializing DB", e);
 	    initedSuccessfully = "IOException occured (file with queries not found?) while initializing database";
-	    e.printStackTrace();
 	} finally {
 	    closeConnection(connection);
 	    closeStatement(stmt);
@@ -152,8 +146,7 @@ public class DatabaseHelperPureJDBC {
 	try {
 	    connection = getConnection();
 	    stmt = connection.createStatement();
-	    String[] queries = DatabaseHelperPureJDBC
-		    .getDtbQueriesFromFile(CLEAN_QUERY_PATH);
+	    String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(CLEAN_QUERY_PATH);
 	    executeArrayOfQueries(queries, connection, stmt);
 	} catch (SQLException e) {
 	    cleanedSuccessfully = "SQL exception occured";
@@ -176,8 +169,9 @@ public class DatabaseHelperPureJDBC {
      * @param statement
      * @throws SQLException
      */
-    private static void executeArrayOfQueries(String[] queries,
-	    Connection connection, Statement statement) throws SQLException {
+    private static void executeArrayOfQueries(String[] queries, Connection connection, Statement statement)
+	    throws SQLException {
+	LOG.info("Execute array of queries: {}", queries.length);
 	for (int i = 0; i < queries.length; i++) {
 	    // don't execute empty queries
 	    if (!queries[i].trim().equals("")) {
@@ -195,8 +189,7 @@ public class DatabaseHelperPureJDBC {
      * @return
      * @throws IOException
      */
-    private static String[] getDtbQueriesFromFile(String filePath)
-	    throws IOException {
+    private static String[] getDtbQueriesFromFile(String filePath) throws IOException {
 	String s = new String();
 	StringBuffer sb = new StringBuffer();
 	FileReader fr = new FileReader(new File(filePath));

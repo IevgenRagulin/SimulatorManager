@@ -94,13 +94,15 @@ CREATE TABLE simulator
   simulatorname character varying(255) NOT NULL,
   hostname character varying(255) NOT NULL,
   port integer NOT NULL,
-  aircraftmodel character varying(255),
+  simulatormodelid integer,
   maxspeedonflaps integer NOT NULL,
   numberoflandinggears integer NOT NULL,
   active boolean DEFAULT FALSE,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulator_pkey PRIMARY KEY (simulatorid),
-  CONSTRAINT simulator_simulatorname_key UNIQUE (simulatorname)
+  CONSTRAINT simulator_simulatorname_key UNIQUE (simulatorname),
+  CONSTRAINT simulatormodel_simulatormodelid_key FOREIGN KEY (simulatormodelid) REFERENCES simulatormodel (simulatormodelid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
