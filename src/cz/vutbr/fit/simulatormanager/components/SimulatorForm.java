@@ -7,25 +7,42 @@ import java.util.Locale;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
+import com.vaadin.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeEvent;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
-import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
+import cz.vutbr.fit.simulatormanager.util.SingleSelectConverter;
 import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 
-public class SimulatorForm extends FieldGroup {
+/**
+ * We implement RowId change listener for setting the simulator's model to an
+ * appropriate simulator model in a combobox:
+ * https://vaadin.com/tutorial/sql/-/section/update-ui.map-city-to-contacts.html
+ * 
+ * @author zhenia
+ *
+ */
+public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChangeListener {
+
+    final static Logger LOG = LoggerFactory.getLogger(SimulatorForm.class);
+
     private static final long serialVersionUID = 1L;
     private static final int DEFAULT_NUM_OF_LANDING_GEARS = 3;
     private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
@@ -35,9 +52,39 @@ public class SimulatorForm extends FieldGroup {
     private final int MINRANDOM = 1000;
     private final int MAXRANDOM = 10000;
 
+    private ComboBox simulatorModel = new ComboBox();
+
     public SimulatorForm(SimulatorsView view) {
 	this.view = view;
 	init();
+    }
+
+    /**
+     * Sets item's datasource. Convert value for combobox from Integer to RowId
+     */
+    @Override
+    public void setItemDataSource(Item newDataSource) {
+	// TODO: commit is not working because of different containers?
+	// TODO: display name, not id
+	// TODO: try to do it right, not through a hack
+	super.setItemDataSource(newDataSource);
+	// we have integer in database, but combobox requires RowId
+	if (newDataSource.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue() != null) {
+	    LOG.info("GOING TO SELECT SIMULATOR MODEL");
+	    // //simulatorModel.select(new RowId(new Object[] {
+	    // newDataSource.getItemProperty(
+	    // SimulatorCols.simulatormodelid.toString()).getValue() });
+	    Integer id = (Integer) newDataSource.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue();
+	    RowId rowId = new RowId(id);
+	    LOG.info("Going to set roWId: {}", rowId);
+	    simulatorModel.setBuffered(true);
+	    simulatorModel.select(rowId);
+	    LOG.info("After setting: {}", simulatorModel.getValue());
+	} else {
+	    simulatorModel.select(simulatorModel.getItemIds().iterator().next());
+	}
+	simulatorModel.setConverter(new SingleSelectConverter(simulatorModel));
+	addValueChangeListener(simulatorModel);
     }
 
     private void init() {
@@ -61,25 +108,26 @@ public class SimulatorForm extends FieldGroup {
 		field.setConverter(plainIntegerConverter);
 		addFieldToForm(field, colName);
 	    } else if (colName.equals(SimulatorCols.simulatormodelid)) {
-		SQLContainer modelsContainer = view.getDBHelp()
-			.getSimulatorModelContainer();
-		ComboBox simulatorModelSelector = new ComboBox(
-			"Simulator model", modelsContainer);
+		SQLContainer modelsContainer = view.getDBHelp().getSimulatorModelContainer();
+		this.bind(simulatorModel, SimulatorCols.simulatormodelid.toString());
+		simulatorModel.setContainerDataSource(modelsContainer);
+		view.getEditorLayout().addComponent(simulatorModel);
+		simulatorModel.setNullSelectionAllowed(false);
 
-		simulatorModelSelector
-			.setDescription(SimulatorCols.simulatormodelid
-				.getDescription());
+		simulatorModel.setDescription(SimulatorCols.simulatormodelid.getDescription());
 
-		simulatorModelSelector
-			.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname
-				.toString());
+		// simulatorModel.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
+
+		// simulatorModel.setImmediate(true);
+
+		// .toString());
 		// Solves the conversion issue described here
 		// https://vaadin.com/forum#!/thread/2729098
 		// simulatorModelSelector.setConverter(new
 		// SingleSelectConverter(simulatorModelSelector));
-		view.getEditorLayout().addComponent(simulatorModelSelector);
-		this.bind(simulatorModelSelector,
-			SimulatorCols.simulatormodelid.toString());
+		// view.getEditorLayout().addComponent(simulatorModelSelector);
+		// this.bind(simulatorModelSelector,
+		// SimulatorCols.simulatormodelid.toString());
 	    } else {
 		TextField field = createInputField(colName.getName());
 		addFieldToForm(field, colName);
@@ -137,6 +185,7 @@ public class SimulatorForm extends FieldGroup {
 
 	    @Override
 	    public void valueChange(ValueChangeEvent event) {
+		LOG.info("Going to commit simulator form.. ");
 		SimulatorForm.this.commit();
 	    }
 	});
@@ -145,33 +194,17 @@ public class SimulatorForm extends FieldGroup {
     @SuppressWarnings("unchecked")
     public void addSimulator() {
 	Object simulatorId = view.getDBHelp().getSimulatorContainer().addItem();
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.simulatorname.toString())
-		.setValue(
-			"New" + random.nextInt(MAXRANDOM - MINRANDOM)
-				+ MINRANDOM);
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.port.toString()).setValue(12322);
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.hostname.toString())
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatorname.toString())
+		.setValue("New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.port.toString()).setValue(12322);
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.hostname.toString())
 		.setValue(FAKE_HOSTNAME);
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.maxspeedonflaps.toString())
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.maxspeedonflaps.toString())
 		.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.numberoflandinggears.toString())
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.numberoflandinggears.toString())
 		.setValue(DEFAULT_NUM_OF_LANDING_GEARS);
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.active.toString()).setValue(false);
-	view.getSimulatorList()
-		.getContainerProperty(simulatorId,
-			SimulatorCols.simulatormodelid.toString())
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.active.toString()).setValue(false);
+	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatormodelid.toString())
 		.setValue(getAnySimulatorModelId());
 	commit();
     }
@@ -182,8 +215,7 @@ public class SimulatorForm extends FieldGroup {
      * @return
      */
     private Integer getAnySimulatorModelId() {
-	Collection<RowId> modelsIds = (Collection<RowId>) view.getDBHelp()
-		.getSimulatorModelContainer().getItemIds();
+	Collection<RowId> modelsIds = (Collection<RowId>) view.getDBHelp().getSimulatorModelContainer().getItemIds();
 	return (Integer) modelsIds.iterator().next().getId()[0];
     }
 
@@ -195,15 +227,15 @@ public class SimulatorForm extends FieldGroup {
 
     @Override
     public void commit() {
+	LOG.info("Going to commit data from simulator form");
 	try {
 	    /* Commit the data entered in the form to the actual item. */
 	    super.commit();
 	    /* Commit changes to the database. */
 	    view.getDBHelp().getSimulatorContainer().commit();
 	} catch (UnsupportedOperationException | SQLException | CommitException e) {
-	    throw new RuntimeException(
-		    "Could not commit changes to simulator container. Database problem?",
-		    e);
+	    Notification.show("Error when commiting changes to simulator container. Database problem?", "",
+		    Notification.Type.ERROR_MESSAGE);
 	}
     }
 
@@ -214,11 +246,15 @@ public class SimulatorForm extends FieldGroup {
 	    /* On discard, roll back the changes. */
 	    view.getDBHelp().getSimulatorContainer().rollback();
 	} catch (UnsupportedOperationException | SQLException e) {
-	    throw new RuntimeException(
-		    "Could not commit changes to simulator container. Database problem?",
-		    e);
+	    Notification.show("Error when discarding changes from container. Database problem?", "",
+		    Notification.Type.ERROR_MESSAGE);
 	}
 	/* Clear the form */
 	setItemDataSource(null);
+    }
+
+    @Override
+    public void rowIdChange(RowIdChangeEvent event) {
+	LOG.info("Row id change event");
     }
 }

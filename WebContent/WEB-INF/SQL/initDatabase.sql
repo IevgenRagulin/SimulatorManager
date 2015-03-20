@@ -94,7 +94,7 @@ CREATE TABLE simulator
   simulatorname character varying(255) NOT NULL,
   hostname character varying(255) NOT NULL,
   port integer NOT NULL,
-  simulatormodelid integer,
+  simulatormodelid integer NOT NULL,
   maxspeedonflaps integer NOT NULL,
   numberoflandinggears integer NOT NULL,
   active boolean DEFAULT FALSE,
