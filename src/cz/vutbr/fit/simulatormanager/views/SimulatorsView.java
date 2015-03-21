@@ -5,13 +5,8 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.util.sqlcontainer.RowId;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -20,7 +15,6 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Image;
@@ -33,11 +27,9 @@ import cz.vutbr.fit.simulatormanager.components.SimulatorForm;
 import cz.vutbr.fit.simulatormanager.components.SimulatorListSimulatorsView;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
-import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.SimulationStatusProviderSimpleImpl;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
-import cz.vutbr.fit.simulatormanager.util.SingleSelectConverter;
 
 /**
  * Page on which the user can add/remove/modify simulators information
@@ -180,41 +172,6 @@ public class SimulatorsView extends VerticalLayout implements View {
 	editorLayoutTest = new FormLayout();
 	fieldGroupTest = new FieldGroup();
 	rightLayout.addComponent(editorLayoutTest);
-	SQLContainer modelsContainer = dbHelp.getSimulatorModelContainer();
-
-	ComboBox combo = new ComboBox();
-	fieldGroupTest.bind(combo, SimulatorCols.simulatormodelid.toString());
-	combo.setContainerDataSource(modelsContainer);
-	editorLayoutTest.addComponent(combo);
-
-	combo.setNullSelectionAllowed(false);
-	combo.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
-	Item item = null;
-	// item = dbHelp.getSimulatorItemBySimulatorId("1");
-	item = dbHelp.getSimulatorContainer().getItem(new RowId(1));
-	fieldGroupTest.setItemDataSource(item);
-	LOG.info("item: " + item);
-	Integer id = (Integer) item.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue();
-	LOG.info("ID: " + id);
-	combo.select(new RowId(id));
-
-	combo.setConverter(new SingleSelectConverter(combo));
-
-	combo.addValueChangeListener(new ValueChangeListener() {
-	    private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public void valueChange(ValueChangeEvent event) {
-		LOG.info("Going to commit simulator form new!.. ");
-		try {
-		    SimulatorsView.this.commit();
-		} catch (CommitException | UnsupportedOperationException | SQLException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
-	    }
-	});
-	// fieldGroup.setItemDataSource(itemDataSource);
     }
 
     public void commit() throws CommitException, UnsupportedOperationException, SQLException {
@@ -246,9 +203,9 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 		boolean isRespoding = SimulationStatusProviderSimpleImpl.isSimulatorResponding(host, port);
 		if (isRespoding) {
-		    Notification.show(PING_SUCCESS_MESSAGE, "", Notification.TYPE_HUMANIZED_MESSAGE);
+		    Notification.show(PING_SUCCESS_MESSAGE, "", Notification.Type.HUMANIZED_MESSAGE);
 		} else {
-		    Notification.show(PING_FAIL_MESSAGE, "", Notification.TYPE_WARNING_MESSAGE);
+		    Notification.show(PING_FAIL_MESSAGE, "", Notification.Type.WARNING_MESSAGE);
 		}
 
 	    }

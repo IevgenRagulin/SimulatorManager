@@ -14,6 +14,13 @@ import com.vaadin.ui.AbstractSelect;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 
+/**
+ * This class is used for a combobox, because it uses RowId on the UI
+ * (presentation), but on the DB level (model) we use Integer
+ * 
+ * @author zhenia
+ *
+ */
 public class SingleSelectConverter implements Converter {
 
     private static final long serialVersionUID = 1L;
@@ -31,7 +38,7 @@ public class SingleSelectConverter implements Converter {
 
     @Override
     public Object convertToModel(Object value, Class targetType, Locale locale) throws ConversionException {
-	LOG.info("Convert presentation to model. Presentation value: {}", select.getValue());
+	LOG.debug("Convert presentation to model. Presentation value: {}", select.getValue());
 	if (value == null) {
 	    return null;
 	}
@@ -39,7 +46,6 @@ public class SingleSelectConverter implements Converter {
 	    return ((RowId) value).getId()[0];
 	}
 	Integer modelValue = getIdBySimulatorModelName((String) select.getValue());
-	LOG.info("After converting to model. Model value: {}", modelValue);
 	return modelValue;
     }
 
@@ -49,28 +55,22 @@ public class SingleSelectConverter implements Converter {
 	for (RowId rowId : rowIds) {
 	    Item item = container.getItem(rowId);
 	    if (item.getItemProperty(SimulatorModelCols.simulatormodelname.toString()).getValue().equals(simulatorName)) {
-		LOG.info("item found, and its id is"
-			+ item.getItemProperty(SimulatorModelCols.simulatormodelid.toString()).getValue());
 		return (Integer) item.getItemProperty(SimulatorModelCols.simulatormodelid.toString()).getValue();
 	    }
 	}
-	LOG.info("Item was not found for simulator name" + simulatorName);
 	return null;
     }
 
     @Override
     public Object convertToPresentation(Object value, Class targetType, Locale locale) throws ConversionException {
-	if (value != null) {
-	    LOG.info("Convert model to presentation. Model value: {}. Model class: {}", value, value.getClass());
-	}
+	LOG.debug("Convert model to presentation. Model value: {}", value);
 	if (value == null) {
 	    return null;
 	}
 	RowId itemId = new RowId(value);
 	Object simulatorModelName = getContainerDatasource().getItem(itemId)
 		.getItemProperty(SimulatorModelCols.simulatormodelname.toString()).getValue();
-	LOG.info("Presentation: Simulator model name: {}", simulatorModelName);
-	return simulatorModelName;
+	return itemId;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SingleSelectConverter implements Converter {
 
     @Override
     public Class getPresentationType() {
-	return String.class;
+	return RowId.class;
     }
 
 }

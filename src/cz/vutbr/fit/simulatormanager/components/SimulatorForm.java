@@ -17,8 +17,6 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
-import com.vaadin.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeEvent;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.CheckBox;
@@ -28,6 +26,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 import cz.vutbr.fit.simulatormanager.util.SingleSelectConverter;
 import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 
@@ -39,7 +38,7 @@ import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
  * @author zhenia
  *
  */
-public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChangeListener {
+public class SimulatorForm extends FieldGroup {
 
     final static Logger LOG = LoggerFactory.getLogger(SimulatorForm.class);
 
@@ -54,6 +53,8 @@ public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChan
 
     private ComboBox simulatorModel = new ComboBox();
 
+    private static StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();;
+
     public SimulatorForm(SimulatorsView view) {
 	this.view = view;
 	init();
@@ -64,85 +65,60 @@ public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChan
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
-	// TODO: commit is not working because of different containers?
-	// TODO: display name, not id
-	// TODO: try to do it right, not through a hack
 	super.setItemDataSource(newDataSource);
 	// we have integer in database, but combobox requires RowId
 	if (newDataSource.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue() != null) {
-	    LOG.info("GOING TO SELECT SIMULATOR MODEL");
-	    // //simulatorModel.select(new RowId(new Object[] {
-	    // newDataSource.getItemProperty(
-	    // SimulatorCols.simulatormodelid.toString()).getValue() });
 	    Integer id = (Integer) newDataSource.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue();
-	    RowId rowId = new RowId(id);
-	    LOG.info("Going to set roWId: {}", rowId);
-	    simulatorModel.setBuffered(true);
-	    simulatorModel.select(rowId);
-	    LOG.info("After setting: {}", simulatorModel.getValue());
-	} else {
-	    simulatorModel.select(simulatorModel.getItemIds().iterator().next());
+	    simulatorModel.select(new RowId(id));
 	}
-	simulatorModel.setConverter(new SingleSelectConverter(simulatorModel));
-	addValueChangeListener(simulatorModel);
     }
 
+    @SuppressWarnings("rawtypes")
     private void init() {
 	setBuffered(false);
-	StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();
 	for (SimulatorCols colName : SimulatorCols.values()) {
-	    // check if this is an active field which is a boolean
-	    if (colName.equals(SimulatorCols.active)) {
-		CheckBox checkbox = new CheckBox(colName.getName());
-		addValueChangeListener(checkbox);
-		addFieldToForm(checkbox, colName);
-	    }
-	    // check if this is a timestamp field
-	    else if (colName.equals(SimulatorCols.timestamp)) {
-		DateField dateField = new DateField(colName.getName());
-		dateField.setResolution(Resolution.SECOND);
-		addFieldToForm(dateField, colName);
-		// check if this is a port which is a numeric
-	    } else if (colName.equals(SimulatorCols.port)) {
-		TextField field = createInputField(colName.getName());
-		field.setConverter(plainIntegerConverter);
-		addFieldToForm(field, colName);
-	    } else if (colName.equals(SimulatorCols.simulatormodelid)) {
-		SQLContainer modelsContainer = view.getDBHelp().getSimulatorModelContainer();
-		this.bind(simulatorModel, SimulatorCols.simulatormodelid.toString());
-		simulatorModel.setContainerDataSource(modelsContainer);
-		view.getEditorLayout().addComponent(simulatorModel);
-		simulatorModel.setNullSelectionAllowed(false);
-
-		simulatorModel.setDescription(SimulatorCols.simulatormodelid.getDescription());
-
-		// simulatorModel.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
-
-		// simulatorModel.setImmediate(true);
-
-		// .toString());
-		// Solves the conversion issue described here
-		// https://vaadin.com/forum#!/thread/2729098
-		// simulatorModelSelector.setConverter(new
-		// SingleSelectConverter(simulatorModelSelector));
-		// view.getEditorLayout().addComponent(simulatorModelSelector);
-		// this.bind(simulatorModelSelector,
-		// SimulatorCols.simulatormodelid.toString());
-	    } else {
-		TextField field = createInputField(colName.getName());
-		addFieldToForm(field, colName);
-	    }
+	    AbstractField field = createField(colName);
+	    addValueChangeListener(field);
+	    addFieldToForm(field, colName);
 	}
     }
 
     /**
-     * Gets simulator model if of currently selected simulator
+     * Create the field of the correct type based on column name
      * 
      * @return
      */
-    private RowId getSimulatorModelIdOfCurrentlySelectedSimulator() {
-	// view.getDBHelp().
-	return null;
+    @SuppressWarnings("rawtypes")
+    private AbstractField createField(SimulatorCols colName) {
+	// check if this is an active field which is a boolean
+	if (colName.equals(SimulatorCols.active)) {
+	    return new CheckBox(colName.getName());
+	}
+	// check if this is a timestamp field
+	else if (colName.equals(SimulatorCols.timestamp)) {
+	    DateField dateField = new DateField(colName.getName());
+	    dateField.setResolution(Resolution.SECOND);
+	    return dateField;
+	    // check if this is a port which is a numeric
+	} else if (colName.equals(SimulatorCols.port)) {
+	    TextField field = createInputField(colName.getName());
+	    field.setConverter(plainIntegerConverter);
+	    return field;
+	    // check if this is a simulator model selection for which we use
+	    // a combobox
+	} else if (colName.equals(SimulatorCols.simulatormodelid)) {
+	    SQLContainer modelsContainer = view.getDBHelp().getSimulatorModelContainer();
+	    simulatorModel.setContainerDataSource(modelsContainer);
+	    simulatorModel.setNullSelectionAllowed(false);
+	    // we display simulator model name (if we don't set this,
+	    // simulatormodelid will be displayed instead
+	    simulatorModel.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
+	    // Solves the conversion issue described here
+	    // https://vaadin.com/forum#!/thread/2729098
+	    simulatorModel.setConverter(new SingleSelectConverter(simulatorModel));
+	    return simulatorModel;
+	}
+	return createInputField(colName.getName());
     }
 
     @SuppressWarnings("rawtypes")
@@ -156,7 +132,7 @@ public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChan
 	this.bind(field, colName.toString());
     }
 
-    private StringToIntegerConverter getStringToIntegerConverter() {
+    private static StringToIntegerConverter getStringToIntegerConverter() {
 	StringToIntegerConverter plainIntegerConverter = new StringToIntegerConverter() {
 	    private static final long serialVersionUID = -7227277283837048291L;
 
@@ -185,7 +161,7 @@ public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChan
 
 	    @Override
 	    public void valueChange(ValueChangeEvent event) {
-		LOG.info("Going to commit simulator form.. ");
+		LOG.debug("Going to commit simulator form.. ");
 		SimulatorForm.this.commit();
 	    }
 	});
@@ -227,7 +203,7 @@ public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChan
 
     @Override
     public void commit() {
-	LOG.info("Going to commit data from simulator form");
+	LOG.debug("Going to commit data from simulator form");
 	try {
 	    /* Commit the data entered in the form to the actual item. */
 	    super.commit();
@@ -253,8 +229,4 @@ public class SimulatorForm extends FieldGroup implements QueryDelegate.RowIdChan
 	setItemDataSource(null);
     }
 
-    @Override
-    public void rowIdChange(RowIdChangeEvent event) {
-	LOG.info("Row id change event");
-    }
 }
