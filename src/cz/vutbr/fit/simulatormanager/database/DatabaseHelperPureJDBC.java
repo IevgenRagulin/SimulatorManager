@@ -46,9 +46,20 @@ public class DatabaseHelperPureJDBC {
      */
     public static void initDatabaseIfNeeded() {
 	LOG.info("Going to init database");
-	if (!tableExists("simulator")) {
+	if (!isDatabaseInitialized()) {
 	    initDatabase();
 	}
+    }
+
+    /**
+     * Check if all neccessary tables exist
+     * 
+     * @return
+     */
+    public static boolean isDatabaseInitialized() {
+	return tableExists("simulationenginesstate") && tableExists("simulationdevicesstate")
+		&& tableExists("simulationinfo") && tableExists("simulationpfdinfo") && tableExists("simulation")
+		&& tableExists("simulator") && tableExists("enginemodel") && tableExists("simulatormodel");
     }
 
     /**

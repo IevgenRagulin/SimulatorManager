@@ -28,198 +28,198 @@ import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 
 public class SimulatorModelsView extends VerticalLayout implements View {
-	private static final long serialVersionUID = 1L;
-	final static Logger LOG = LoggerFactory.getLogger(SimulatorModelsView.class);
+    private static final long serialVersionUID = 1L;
+    final static Logger LOG = LoggerFactory.getLogger(SimulatorModelsView.class);
 
-	private Navigator navigator;
-	private MainMenuBar mainMenu;
-	private Image ev97Img;
-	private HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
-	private Label selectedSimulatorModelName = new Label("", ContentMode.HTML);
-	private VerticalLayout leftLayout = new VerticalLayout();
-	private VerticalLayout rightLayout = new VerticalLayout();
-	private Button removeSimulatorModelButton = new Button("Remove simulator model");
-	private Button addSimulatorModelButton = new Button("Add a simulator model");
-	private Button addEngineButton = new Button("Add a new engine");
-	private FormLayout formLayout = new FormLayout();
-	private DatabaseHelper dbHelper = new DatabaseHelper();
+    private Navigator navigator;
+    private MainMenuBar mainMenu;
+    private Image ev97Img;
+    private HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
+    private Label selectedSimulatorModelName = new Label("", ContentMode.HTML);
+    private VerticalLayout leftLayout = new VerticalLayout();
+    private VerticalLayout rightLayout = new VerticalLayout();
+    private Button removeSimulatorModelButton = new Button("Remove simulator model");
+    private Button addSimulatorModelButton = new Button("Add a simulator model");
+    private Button addEngineButton = new Button("Add a new engine");
+    private FormLayout formLayout = new FormLayout();
+    private DatabaseHelper dbHelper = new DatabaseHelper();
 
-	private SimulatorModelsList simulatorModelsList;
-	private SimulatorModelForm simulatorModelForm;
+    private SimulatorModelsList simulatorModelsList;
+    private SimulatorModelForm simulatorModelForm;
 
-	private EnginesAccordion enginesAccordion;
-	private Panel enginesPanel;
+    private EnginesAccordion enginesAccordion;
+    private Panel enginesPanel;
 
-	@Override
-	public void enter(ViewChangeEvent event) {
+    public DatabaseHelper getDbHelper() {
+	return dbHelper;
+    }
 
-	}
+    @Override
+    public void enter(ViewChangeEvent event) {
 
-	public SimulatorModelsView(Navigator navigator) {
-		LOG.info("new SimulatorModelsView()");
-		this.navigator = navigator;
-		initMenu();
-		initSimulatorModelsList();
-		initLayout();
-		addClickListeners();
-	}
+    }
 
-	private void addClickListeners() {
-		newModelClickListener();
-		removeModelClickListener();
-		newEngineClickListener();
-	}
+    public SimulatorModelsView(Navigator navigator) {
+	LOG.info("new SimulatorModelsView()");
+	this.navigator = navigator;
+	initMenu();
+	initSimulatorModelsList();
+	initLayout();
+	addClickListeners();
+    }
 
-	private void newEngineClickListener() {
-		addEngineButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = 1L;
+    private void addClickListeners() {
+	newModelClickListener();
+	removeModelClickListener();
+	newEngineClickListener();
+    }
 
-			@Override
-			public void buttonClick(ClickEvent event) {
-				enginesAccordion.addNewEngine(((RowId) simulatorModelsList.getValue()).toString());
-			}
-		});
-	}
+    private void newEngineClickListener() {
+	addEngineButton.addClickListener(new ClickListener() {
+	    private static final long serialVersionUID = 1L;
 
-	private void removeModelClickListener() {
-		removeSimulatorModelButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = 1L;
+	    @Override
+	    public void buttonClick(ClickEvent event) {
+		enginesAccordion.addNewEngine(((RowId) simulatorModelsList.getValue()).toString());
+	    }
+	});
+    }
 
-			@Override
-			public void buttonClick(ClickEvent event) {
-				selectedSimulatorModelName.setVisible(false);
-				simulatorModelForm.removeSimulator();
-			}
-		});
-	}
+    private void removeModelClickListener() {
+	removeSimulatorModelButton.addClickListener(new ClickListener() {
+	    private static final long serialVersionUID = 1L;
 
-	private void newModelClickListener() {
-		addSimulatorModelButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = 1L;
+	    @Override
+	    public void buttonClick(ClickEvent event) {
+		selectedSimulatorModelName.setVisible(false);
+		simulatorModelsList.removeSimulator();
+	    }
+	});
+    }
 
-			@Override
-			public void buttonClick(ClickEvent event) {
-				simulatorModelForm.addSimulatorModel();
-			}
-		});
-	}
+    private void newModelClickListener() {
+	addSimulatorModelButton.addClickListener(new ClickListener() {
+	    private static final long serialVersionUID = 1L;
 
-	private void initSimulatorModelsList() {
-		simulatorModelsList = new SimulatorModelsList(this);
-	}
+	    @Override
+	    public void buttonClick(ClickEvent event) {
+		simulatorModelsList.addSimulatorModel();
+	    }
+	});
+    }
 
-	public SimulatorModelsList getSimulatorModelList() {
-		return simulatorModelsList;
-	}
+    private void initSimulatorModelsList() {
+	simulatorModelsList = new SimulatorModelsList(this);
+    }
 
-	private void initLayout() {
-		setSizeFull();
-		addComponent(mainMenu);
-		addComponent(horizontalSplitPanel);
-		setExpandRatio(horizontalSplitPanel, 20);
-		initHorizontalSplitPanel();
-		initLeftLayout();
-		initRightLayout();
-	}
+    public SimulatorModelsList getSimulatorModelList() {
+	return simulatorModelsList;
+    }
 
-	private void initLeftLayout() {
-		initAddSimulatorModelButton();
-		leftLayout.setSizeFull();
-		leftLayout.setMargin(new MarginInfo(false, false, true, true));
-		leftLayout.addComponent(new Label("<b>Simulator models</b>", ContentMode.HTML));
-		leftLayout.addComponent(simulatorModelsList);
-		leftLayout.addComponent(addSimulatorModelButton);
-		leftLayout.setExpandRatio(simulatorModelsList, 20);
-	}
+    private void initLayout() {
+	setSizeFull();
+	addComponent(mainMenu);
+	addComponent(horizontalSplitPanel);
+	setExpandRatio(horizontalSplitPanel, 20);
+	initHorizontalSplitPanel();
+	initLeftLayout();
+	initRightLayout();
+    }
 
-	private void initRightLayout() {
-		rightLayout.setMargin(new MarginInfo(true, true, true, true));
-		rightLayout.addComponent(selectedSimulatorModelName);
-		ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here",
-				ResourceUtil.getEv97Img());
-		ev97Img.setSizeFull();
-		rightLayout.addComponent(ev97Img);
-		formLayout.setVisible(false);
-		rightLayout.addComponent(formLayout);
-		initSimulatorModelForm();
-		initRemoveSimulatorModelButton();
-		addEnginesToRightPanel();
+    private void initLeftLayout() {
+	initAddSimulatorModelButton();
+	leftLayout.setSizeFull();
+	leftLayout.setMargin(new MarginInfo(false, false, true, true));
+	leftLayout.addComponent(new Label("<b>Simulator models</b>", ContentMode.HTML));
+	leftLayout.addComponent(simulatorModelsList);
+	leftLayout.addComponent(addSimulatorModelButton);
+	leftLayout.setExpandRatio(simulatorModelsList, 20);
+    }
 
-		rightLayout.addComponent(removeSimulatorModelButton);
+    private void initRightLayout() {
+	rightLayout.setMargin(new MarginInfo(true, true, true, true));
+	rightLayout.addComponent(selectedSimulatorModelName);
+	ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here",
+		ResourceUtil.getEv97Img());
+	ev97Img.setSizeFull();
+	rightLayout.addComponent(ev97Img);
+	formLayout.setVisible(false);
+	rightLayout.addComponent(formLayout);
+	initSimulatorModelForm();
+	initRemoveSimulatorModelButton();
+	addEnginesToRightPanel();
 
-	}
+	rightLayout.addComponent(removeSimulatorModelButton);
 
-	private void addEnginesToRightPanel() {
-		enginesAccordion = new EnginesAccordion(this);
+    }
 
-		enginesPanel = new Panel("Engines on this simulator model", enginesAccordion);
-		enginesPanel.setWidth("100%");
-		enginesPanel.setVisible(false);
-		rightLayout.addComponent(enginesPanel);
+    private void addEnginesToRightPanel() {
+	enginesAccordion = new EnginesAccordion(this);
 
-		addEngineButton.setVisible(false);
-		addEngineButton.setIcon(ResourceUtil.getPlusImgResource());
-		rightLayout.addComponent(addEngineButton);
+	enginesPanel = new Panel("Engines on this simulator model", enginesAccordion);
+	enginesPanel.setWidth("100%");
+	enginesPanel.setVisible(false);
+	rightLayout.addComponent(enginesPanel);
 
-	}
+	addEngineButton.setVisible(false);
+	addEngineButton.setIcon(ResourceUtil.getPlusImgResource());
+	rightLayout.addComponent(addEngineButton);
 
-	private void initRemoveSimulatorModelButton() {
-		removeSimulatorModelButton.setVisible(false);
-		removeSimulatorModelButton.setIcon(ResourceUtil.getMinusImgResource());
-	}
+    }
 
-	private void initSimulatorModelForm() {
-		simulatorModelForm = new SimulatorModelForm(this);
-	}
+    private void initRemoveSimulatorModelButton() {
+	removeSimulatorModelButton.setVisible(false);
+	removeSimulatorModelButton.setIcon(ResourceUtil.getMinusImgResource());
+    }
 
-	private void initAddSimulatorModelButton() {
-		addSimulatorModelButton.setStyleName("simulatorsAddSimulator");
-		addSimulatorModelButton.setIcon(ResourceUtil.getPlusImgResource());
-	}
+    private void initSimulatorModelForm() {
+	simulatorModelForm = new SimulatorModelForm(this);
+    }
 
-	private void initHorizontalSplitPanel() {
-		horizontalSplitPanel.addComponent(leftLayout);
-		horizontalSplitPanel.addComponent(rightLayout);
-		horizontalSplitPanel.setSplitPosition(35);
-	}
+    private void initAddSimulatorModelButton() {
+	addSimulatorModelButton.setStyleName("simulatorsAddSimulator");
+	addSimulatorModelButton.setIcon(ResourceUtil.getPlusImgResource());
+    }
 
-	private void initMenu() {
-		mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATOR_MODELS);
-	}
+    private void initHorizontalSplitPanel() {
+	horizontalSplitPanel.addComponent(leftLayout);
+	horizontalSplitPanel.addComponent(rightLayout);
+	horizontalSplitPanel.setSplitPosition(35);
+    }
 
-	public FormLayout getFormLayout() {
-		return formLayout;
-	}
+    private void initMenu() {
+	mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATOR_MODELS);
+    }
 
-	public SimulatorModelForm getSimulatorModelForm() {
-		return simulatorModelForm;
-	}
+    public FormLayout getFormLayout() {
+	return formLayout;
+    }
 
-	public Label getSelectedSimulatorModelName() {
-		return selectedSimulatorModelName;
-	}
+    public SimulatorModelForm getSimulatorModelForm() {
+	return simulatorModelForm;
+    }
 
-	public Image getRightPanelImage() {
-		return ev97Img;
-	}
+    public Label getSelectedSimulatorModelName() {
+	return selectedSimulatorModelName;
+    }
 
-	public DatabaseHelper getDbHelper() {
-		return dbHelper;
-	}
+    public Image getRightPanelImage() {
+	return ev97Img;
+    }
 
-	public Panel getEnginesPanel() {
-		return enginesPanel;
-	}
+    public Panel getEnginesPanel() {
+	return enginesPanel;
+    }
 
-	public Button getAddEngineButton() {
-		return addEngineButton;
-	}
+    public Button getAddEngineButton() {
+	return addEngineButton;
+    }
 
-	public Button getRemoveSimulatorModelButton() {
-		return removeSimulatorModelButton;
-	}
+    public Button getRemoveSimulatorModelButton() {
+	return removeSimulatorModelButton;
+    }
 
-	public EnginesAccordion getEnginesAccordeon() {
-		return enginesAccordion;
-	}
+    public EnginesAccordion getEnginesAccordeon() {
+	return enginesAccordion;
+    }
 }

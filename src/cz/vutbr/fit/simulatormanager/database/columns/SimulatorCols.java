@@ -12,8 +12,6 @@ public enum SimulatorCols {
     simulatorname("Simulator name"), // simulator.simulatorname
     hostname("Hostname"), // simulator.hostname
     port("Port"), // simulator.port
-    maxspeedonflaps("Max speed on flaps"), //
-    numberoflandinggears("Number of landing gears"), //
     timestamp("Timestamp");
 
     final static Logger logger = LoggerFactory.getLogger(SimulatorCols.class);

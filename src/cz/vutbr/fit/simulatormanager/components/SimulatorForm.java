@@ -2,9 +2,7 @@ package cz.vutbr.fit.simulatormanager.components;
 
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.util.Collection;
 import java.util.Locale;
-import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -41,18 +39,9 @@ import cz.vutbr.fit.simulatormanager.views.SimulatorsView;
 public class SimulatorForm extends FieldGroup {
 
     final static Logger LOG = LoggerFactory.getLogger(SimulatorForm.class);
-
     private static final long serialVersionUID = 1L;
-    private static final int DEFAULT_NUM_OF_LANDING_GEARS = 3;
-    private static final Object FAKE_HOSTNAME = "hostname.fit.vutbr.cz";
-    private static final Object DEFAULT_MAX_SPEED_ON_FLAPS = 200;
     private SimulatorsView view;
-    private Random random = new Random();
-    private final int MINRANDOM = 1000;
-    private final int MAXRANDOM = 10000;
-
     private ComboBox simulatorModel = new ComboBox();
-
     private static StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();;
 
     public SimulatorForm(SimulatorsView view) {
@@ -61,11 +50,26 @@ public class SimulatorForm extends FieldGroup {
     }
 
     /**
-     * Sets item's datasource. Convert value for combobox from Integer to RowId
+     * Sets item's datasource (simulator). Convert value for combobox from
+     * Integer to RowId
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
 	super.setItemDataSource(newDataSource);
+	setSimulatorModelValue(newDataSource);
+    }
+
+    /**
+     * Refreshes the list of possible values, sets the current value to
+     * simulator model combo box
+     * 
+     * @param newDataSource
+     */
+    public void setSimulatorModelValue(Item newDataSource) {
+	// refresh simulator models in case some simulator models were changed
+	if (simulatorModel.getContainerDataSource() != null) {
+	    ((SQLContainer) simulatorModel.getContainerDataSource()).refresh();
+	}
 	// we have integer in database, but combobox requires RowId
 	if (newDataSource.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue() != null) {
 	    Integer id = (Integer) newDataSource.getItemProperty(SimulatorCols.simulatormodelid.toString()).getValue();
@@ -107,20 +111,39 @@ public class SimulatorForm extends FieldGroup {
 	    // check if this is a simulator model selection for which we use
 	    // a combobox
 	} else if (colName.equals(SimulatorCols.simulatormodelid)) {
-	    SQLContainer modelsContainer = view.getDBHelp().getSimulatorModelContainer();
-	    simulatorModel.setContainerDataSource(modelsContainer);
-	    simulatorModel.setNullSelectionAllowed(false);
-	    // we display simulator model name (if we don't set this,
-	    // simulatormodelid will be displayed instead
-	    simulatorModel.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
-	    // Solves the conversion issue described here
-	    // https://vaadin.com/forum#!/thread/2729098
-	    simulatorModel.setConverter(new SingleSelectConverter(simulatorModel));
-	    return simulatorModel;
+	    return initSimulatorModelsCombo();
 	}
 	return createInputField(colName.getName());
     }
 
+    /**
+     * Initialized the combobox with simulator models, returns it
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public ComboBox initSimulatorModelsCombo() {
+	LOG.info("initSimulatorModelsCombo() - initialize the combobox with simulator models");
+	SQLContainer modelsContainer = view.getDBHelp().getNewSimulatorModelContainer();
+	simulatorModel.setTextInputAllowed(false);
+	simulatorModel.setContainerDataSource(modelsContainer);
+	simulatorModel.setNullSelectionAllowed(false);
+	// we display simulator model name (if we don't set this,
+	// simulatormodelid will be displayed instead
+	simulatorModel.setItemCaptionPropertyId(SimulatorModelCols.simulatormodelname.toString());
+	// Solves the conversion issue described here
+	// https://vaadin.com/forum#!/thread/2729098
+	simulatorModel.setConverter(new SingleSelectConverter(simulatorModel));
+	return simulatorModel;
+    }
+
+    /**
+     * Adds the field to a SimulatorForm, binds the field with the propertyId of
+     * the item from the SQLContainer
+     * 
+     * @param field
+     * @param colName
+     */
     @SuppressWarnings("rawtypes")
     private void addFieldToForm(AbstractField field, SimulatorCols colName) {
 	view.getEditorLayout().addComponent(field);
@@ -154,6 +177,11 @@ public class SimulatorForm extends FieldGroup {
 	return field;
     }
 
+    /**
+     * When a value is changed by user, commit data to database
+     * 
+     * @param field
+     */
     @SuppressWarnings("rawtypes")
     private void addValueChangeListener(AbstractField field) {
 	field.addValueChangeListener(new ValueChangeListener() {
@@ -167,40 +195,6 @@ public class SimulatorForm extends FieldGroup {
 	});
     }
 
-    @SuppressWarnings("unchecked")
-    public void addSimulator() {
-	Object simulatorId = view.getDBHelp().getSimulatorContainer().addItem();
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatorname.toString())
-		.setValue("New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.port.toString()).setValue(12322);
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.hostname.toString())
-		.setValue(FAKE_HOSTNAME);
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.maxspeedonflaps.toString())
-		.setValue(DEFAULT_MAX_SPEED_ON_FLAPS);
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.numberoflandinggears.toString())
-		.setValue(DEFAULT_NUM_OF_LANDING_GEARS);
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.active.toString()).setValue(false);
-	view.getSimulatorList().getContainerProperty(simulatorId, SimulatorCols.simulatormodelid.toString())
-		.setValue(getAnySimulatorModelId());
-	commit();
-    }
-
-    /**
-     * Gets an id of an existing simulator model
-     * 
-     * @return
-     */
-    private Integer getAnySimulatorModelId() {
-	Collection<RowId> modelsIds = (Collection<RowId>) view.getDBHelp().getSimulatorModelContainer().getItemIds();
-	return (Integer) modelsIds.iterator().next().getId()[0];
-    }
-
-    public void removeSimulator() {
-	Object simulatorId = view.getSimulatorList().getValue();
-	view.getSimulatorList().removeItem(simulatorId);
-	commit();
-    }
-
     @Override
     public void commit() {
 	LOG.debug("Going to commit data from simulator form");
@@ -208,7 +202,8 @@ public class SimulatorForm extends FieldGroup {
 	    /* Commit the data entered in the form to the actual item. */
 	    super.commit();
 	    /* Commit changes to the database. */
-	    view.getDBHelp().getSimulatorContainer().commit();
+	    view.getDBHelp().getCachedSimulatorContainer().commit();
+	    // view.getDBHelp().updateCachedSimulatorContainer();
 	} catch (UnsupportedOperationException | SQLException | CommitException e) {
 	    Notification.show("Error when commiting changes to simulator container. Database problem?", "",
 		    Notification.Type.ERROR_MESSAGE);
@@ -220,7 +215,7 @@ public class SimulatorForm extends FieldGroup {
 	try {
 	    super.discard();
 	    /* On discard, roll back the changes. */
-	    view.getDBHelp().getSimulatorContainer().rollback();
+	    view.getDBHelp().getCachedSimulatorContainer().rollback();
 	} catch (UnsupportedOperationException | SQLException e) {
 	    Notification.show("Error when discarding changes from container. Database problem?", "",
 		    Notification.Type.ERROR_MESSAGE);

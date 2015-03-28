@@ -83,6 +83,7 @@ public enum EngineModelCols {
 	this.description = desc;
     }
 
+    @SuppressWarnings("rawtypes")
     private EngineModelCols(String humanReadableName, Class type) {
 	this.name = humanReadableName;
 	this.type = type;
@@ -92,6 +93,7 @@ public enum EngineModelCols {
 	return description;
     }
 
+    @SuppressWarnings("rawtypes")
     public Class getType() {
 	return this.type;
     }

@@ -21,6 +21,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
  * @author zhenia
  *
  */
+@SuppressWarnings("rawtypes")
 public class SingleSelectConverter implements Converter {
 
     private static final long serialVersionUID = 1L;
@@ -49,6 +50,7 @@ public class SingleSelectConverter implements Converter {
 	return modelValue;
     }
 
+    @SuppressWarnings("unchecked")
     private Integer getIdBySimulatorModelName(String simulatorName) {
 	SQLContainer container = getContainerDatasource();
 	Collection<RowId> rowIds = (Collection<RowId>) container.getItemIds();
@@ -68,8 +70,6 @@ public class SingleSelectConverter implements Converter {
 	    return null;
 	}
 	RowId itemId = new RowId(value);
-	Object simulatorModelName = getContainerDatasource().getItem(itemId)
-		.getItemProperty(SimulatorModelCols.simulatormodelname.toString()).getValue();
 	return itemId;
     }
 

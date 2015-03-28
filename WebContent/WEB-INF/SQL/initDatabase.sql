@@ -3,9 +3,11 @@ DROP TABLE IF EXISTS simulationdevicesstate;
 DROP TABLE IF EXISTS simulationinfo;
 DROP TABLE IF EXISTS simulationpfdinfo;
 DROP TABLE IF EXISTS simulation;
+DROP TABLE IF EXISTS simulator;
 DROP TABLE IF EXISTS enginemodel;
 DROP TABLE IF EXISTS simulatormodel;
-DROP TABLE IF EXISTS simulator;
+
+
 
 CREATE TABLE simulatormodel
 (
@@ -17,7 +19,7 @@ CREATE TABLE simulatormodel
   maxspeedonflaps integer NOT NULL,
   minspeedonflaps integer,
   hasgears boolean,
-  numberoflandinggears integer,
+  numberoflandinggears integer NOT NULL,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulatormodel_pkey PRIMARY KEY (simulatormodelid),
   CONSTRAINT simulatormodel_simulatormodelname_key UNIQUE (simulatormodelname)
@@ -95,8 +97,6 @@ CREATE TABLE simulator
   hostname character varying(255) NOT NULL,
   port integer NOT NULL,
   simulatormodelid integer NOT NULL,
-  maxspeedonflaps integer NOT NULL,
-  numberoflandinggears integer NOT NULL,
   active boolean DEFAULT FALSE,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulator_pkey PRIMARY KEY (simulatorid),

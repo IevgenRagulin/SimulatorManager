@@ -36,6 +36,7 @@ public class EnginesAccordion extends Accordion {
 	LOG.debug("Setting engines for simulator with id: {}", simulatorModelId);
 	removeAllComponents();
 	enginesContainer = view.getDbHelper().getEnginesModelsOnSimulatorModel(simulatorModelId.toString());
+	@SuppressWarnings("unchecked")
 	Collection<RowId> itemIds = (Collection<RowId>) enginesContainer.getItemIds();
 	for (RowId itemId : itemIds) {
 	    Item engineItem = enginesContainer.getItem(itemId);
@@ -58,9 +59,10 @@ public class EnginesAccordion extends Accordion {
 	Integer engineModelId = (Integer) engineItem.getItemProperty(EngineModelCols.enginemodelid.toString())
 		.getValue();
 	RowId engineModelRowId = new RowId(engineModelId);
-	Item engineItemFromDb = enginesContainer.getItem(engineModelRowId);
 	removeEngineButton.setIcon(ResourceUtil.getMinusImgResource());
 	removeEngineButton.addClickListener(new ClickListener() {
+	    private static final long serialVersionUID = 1L;
+
 	    @Override
 	    public void buttonClick(ClickEvent event) {
 		Tab tabWithForm = getTab(form);

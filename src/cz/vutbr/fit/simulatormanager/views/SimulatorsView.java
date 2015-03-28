@@ -177,7 +177,7 @@ public class SimulatorsView extends VerticalLayout implements View {
     public void commit() throws CommitException, UnsupportedOperationException, SQLException {
 	LOG.info("Going to commit simulator form new!.. ");
 	this.fieldGroupTest.commit();
-	dbHelp.getSimulatorContainer().commit();
+	dbHelp.getCachedSimulatorContainer().commit();
     }
 
     private void initSimulatorForm() {
@@ -216,7 +216,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 	addSimulatorButton.addClickListener(new ClickListener() {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		simulatorForm.addSimulator();
+		simulatorList.addSimulator();
 	    }
 	});
     }
@@ -226,21 +226,24 @@ public class SimulatorsView extends VerticalLayout implements View {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
 		selectedSimulatorName.setVisible(false);
-		simulatorForm.removeSimulator();
+		simulatorList.removeSimulator();
 	    }
 	});
     }
 
     @Override
     public void enter(ViewChangeEvent event) {
+	LOG.info("enter() - entering SimulatorsView");
 	// make add simulator button enabled if there are simulator models in
 	// db. otherwise, make it disabled
 	initAddSimulatorButton();
+	// deselect the previously selected simulator
+	this.simulatorList.select(simulatorList.getNullSelectionItemId());
 	if (getNumberOfSimulatorModels() == 0) {
 	    Notification
 		    .show("You should first configure a simulator model. It's not possible to add a simulator without having a simulator model",
 			    "Please, go to 'Manage simulator models' page and configure a simulator model there",
-			    Notification.TYPE_HUMANIZED_MESSAGE);
+			    Notification.Type.HUMANIZED_MESSAGE);
 	}
     }
 
