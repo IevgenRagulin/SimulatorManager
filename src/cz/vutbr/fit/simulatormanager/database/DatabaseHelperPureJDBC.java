@@ -30,6 +30,28 @@ public class DatabaseHelperPureJDBC {
     private static final String INIT_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/initDatabase.sql";
 
     /**
+     * Returns true if database is running, false otherwise
+     * 
+     * @return
+     */
+    public static boolean isDatabaseRunning() {
+	Connection connection = null;
+	try {
+	    try {
+		connection = getConnection();
+	    } catch (SQLException e) {
+		LOG.error("SQL Exception occured when getting connection to database", e);
+		return false;
+	    }
+	} finally {
+	    if (connection != null) {
+		closeConnection(connection);
+	    }
+	}
+	return true;
+    }
+
+    /**
      * Gets connections. Uses username, password, db url form @link
      * {@link ApplicationConfiguration}
      * 

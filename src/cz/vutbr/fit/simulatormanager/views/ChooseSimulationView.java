@@ -37,7 +37,7 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 
     private static final String CSS_SM_CHOOSE_SIM_BUTTON = "sm-choose-sim-button";
 
-    final static Logger logger = LoggerFactory.getLogger(ChooseSimulationView.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ChooseSimulationView.class);
 
     private VerticalLayout mainLayout = new VerticalLayout();
     public static final String SIMULATIONS_ON_SELECTED_SIMULATOR = "<p style='text-align: center;'><b>Simulation sessions on the selected simulator</b></p>";
@@ -58,7 +58,7 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-	logger.info("Entering ChooseSimulationView");
+	LOG.info("Entering ChooseSimulationView");
 	setSizeFull();
 	initMenu();
 	// in case we added/removed simulators on simulator management page, the
@@ -72,7 +72,7 @@ public class ChooseSimulationView extends VerticalLayout implements View {
 
     public ChooseSimulationView(Navigator navigator) {
 	super();
-	logger.info("new ChooseSimulationView()");
+	LOG.info("new ChooseSimulationView()");
 	this.navigator = navigator;
 	mainLayout.setMargin(new MarginInfo(false, true, true, true));
 	initMenu();
@@ -186,12 +186,12 @@ public class ChooseSimulationView extends VerticalLayout implements View {
     }
 
     private void initSimulationList() {
-	logger.info("Going to init simulation list");
+	LOG.info("Going to init simulation list");
 	simulationList = new SimulationList(this);
     }
 
     private void initSimulatorList() {
-	logger.info("Going to init simulator list");
+	LOG.info("Going to init simulator list");
 	simulatorList = new SimulatorListChooseSimulationView(this);
     }
 

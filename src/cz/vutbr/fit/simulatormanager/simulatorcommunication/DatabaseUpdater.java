@@ -148,32 +148,32 @@ public class DatabaseUpdater {
     @SuppressWarnings("unchecked")
     private static void addEnginesInfoToDatabase(Integer simulationIdInt, String simulatorId)
 	    throws UnsupportedOperationException, SQLException {
-	SimulationEnginesStateItem simEnginesInfoItem = SimulatorsStatus
+	SimulationEnginesStateItem simulationEnginesItem = SimulatorsStatus
 		.getSimulationEngineItemBySimulatorId(simulatorId);
-	if (simEnginesInfoItem != null) {
-	    SQLContainer simEnginesStCont = dbHelp.getSimulationEnginesStateContainer();
-	    Collection<?> itemPropIdsCont = simEnginesStCont.getContainerPropertyIds();
-	    System.out.println("item prop ids cont" + itemPropIdsCont);
+	if (simulationEnginesItem != null) {
+	    SQLContainer simulationEnginesContainer = dbHelp.getSimulationEnginesStateContainer();
+	    Collection<?> itemPropIdsCont = simulationEnginesContainer.getContainerPropertyIds();
+	    // TODO: remove this loop
 	    for (Object prop : itemPropIdsCont) {
-		String propertyName = ((String) prop);
-		System.out.println("cont prop name" + propertyName);
+		LOG.info("cont prop name: {} ", (String) prop);
 	    }
 
-	    RowId newSimEngStId = (RowId) simEnginesStCont.addItem();
+	    RowId newSimEngStId = (RowId) simulationEnginesContainer.addItem();
 	    // set reference key to simulation id
-	    simEnginesStCont.getContainerProperty(newSimEngStId, SimulationInfoCols.simulation_simulationid.toString())
-		    .setValue(simulationIdInt);
-	    Collection<?> itemPropIds = simEnginesInfoItem.getItemPropertyIds();
+	    simulationEnginesContainer.getContainerProperty(newSimEngStId,
+		    SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationIdInt);
+	    Collection<?> itemPropIds = simulationEnginesItem.getItemPropertyIds();
 	    // set values E1RPM, E1PWR, E1PWP...
 	    for (Object prop : itemPropIds) {
 		String propertyName = ((String) prop);
-		System.out.println(propertyName + simEnginesInfoItem.getItemProperty(propertyName).getValue());
+		System.out.println(propertyName + simulationEnginesItem.getItemProperty(propertyName).getValue());
 
-		System.out.println("Property" + simEnginesStCont.getContainerProperty(newSimEngStId, propertyName));
-		simEnginesStCont.getContainerProperty(newSimEngStId, propertyName).setValue(
-			simEnginesInfoItem.getItemProperty(propertyName).getValue());
+		System.out.println("Property"
+			+ simulationEnginesContainer.getContainerProperty(newSimEngStId, propertyName));
+		simulationEnginesContainer.getContainerProperty(newSimEngStId, propertyName).setValue(
+			simulationEnginesItem.getItemProperty(propertyName).getValue());
 	    }
-	    commitChangeInSQLContainer(simEnginesStCont);
+	    commitChangeInSQLContainer(simulationEnginesContainer);
 	}
     }
 

@@ -54,6 +54,7 @@ public class StartView extends VerticalLayout implements View {
 	bottomHorizontalLayout.addComponent(bottomVerticalLayout1);
 	bottomHorizontalLayout.addComponent(bottomVerticalLayout2);
 	bottomHorizontalLayout.addComponent(bottomVerticalLayout3);
+	bottomHorizontalLayout.addComponent(bottomVerticalLayout4);
 
 	imgToModelManager = new Image("", ResourceUtil.getSimulatorManagerImg());
 	imgToModelManager.setPrimaryStyleName("circular");
@@ -106,7 +107,7 @@ public class StartView extends VerticalLayout implements View {
 
     private void addButtonToViewingSimulationsListener() {
 	buttonToViewingSimulations.addClickListener(new ClickListener() {
-	    private static final long serialVersionUID = -4243499910765394003L;
+	    private static final long serialVersionUID = 1L;
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
@@ -165,7 +166,7 @@ public class StartView extends VerticalLayout implements View {
 
     private void addButtonToConfigurationsListner() {
 	buttonToConfigurations.addClickListener(new ClickListener() {
-	    private static final long serialVersionUID = -4243499910765394003L;
+	    private static final long serialVersionUID = 1L;
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
@@ -185,13 +186,14 @@ public class StartView extends VerticalLayout implements View {
     private void setAllignments() {
 	bottomHorizontalLayout.setComponentAlignment(bottomVerticalLayout1, Alignment.MIDDLE_LEFT);
 	bottomHorizontalLayout.setComponentAlignment(bottomVerticalLayout2, Alignment.MIDDLE_CENTER);
-	bottomHorizontalLayout.setComponentAlignment(bottomVerticalLayout3, Alignment.MIDDLE_RIGHT);
+	bottomHorizontalLayout.setComponentAlignment(bottomVerticalLayout3, Alignment.MIDDLE_CENTER);
+	bottomHorizontalLayout.setComponentAlignment(bottomVerticalLayout4, Alignment.MIDDLE_RIGHT);
 
 	bottomVerticalLayout1.setComponentAlignment(imgToModelManager, Alignment.MIDDLE_LEFT);
 	bottomVerticalLayout1.setComponentAlignment(buttonToModelManager, Alignment.MIDDLE_LEFT);
 
-	bottomVerticalLayout2.setComponentAlignment(imgToSimManager, Alignment.MIDDLE_CENTER);
-	bottomVerticalLayout2.setComponentAlignment(buttonToManager, Alignment.MIDDLE_CENTER);
+	bottomVerticalLayout2.setComponentAlignment(imgToSimManager, Alignment.MIDDLE_LEFT);
+	bottomVerticalLayout2.setComponentAlignment(buttonToManager, Alignment.MIDDLE_LEFT);
 
 	bottomVerticalLayout3.setComponentAlignment(imgToViewSimulations, Alignment.MIDDLE_CENTER);
 	bottomVerticalLayout3.setComponentAlignment(buttonToViewingSimulations, Alignment.MIDDLE_CENTER);

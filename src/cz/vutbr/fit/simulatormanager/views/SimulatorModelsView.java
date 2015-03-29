@@ -112,10 +112,6 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	simulatorModelsList = new SimulatorModelsList(this);
     }
 
-    public SimulatorModelsList getSimulatorModelList() {
-	return simulatorModelsList;
-    }
-
     private void initLayout() {
 	setSizeFull();
 	addComponent(mainMenu);

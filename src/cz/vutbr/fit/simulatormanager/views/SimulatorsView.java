@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -22,12 +23,12 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
+import cz.vutbr.fit.simulatormanager.components.ConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulatorForm;
 import cz.vutbr.fit.simulatormanager.components.SimulatorListSimulatorsView;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
-import cz.vutbr.fit.simulatormanager.simulatorcommunication.SimulationStatusProviderSimpleImpl;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 
@@ -42,9 +43,6 @@ public class SimulatorsView extends VerticalLayout implements View {
     final static Logger LOG = LoggerFactory.getLogger(SimulatorsView.class);
     private DatabaseHelper dbHelp = new DatabaseHelper();
 
-    final static String PING_SUCCESS_MESSAGE = "Success. The selected simulator is up and running";
-    final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding";
-
     private HorizontalSplitPanel horizontalSplitPanel = new HorizontalSplitPanel();
     private VerticalLayout leftLayout = new VerticalLayout();
     private VerticalLayout rightLayout = new VerticalLayout();
@@ -55,7 +53,7 @@ public class SimulatorsView extends VerticalLayout implements View {
     private Label selectedSimulatorName = new Label("", ContentMode.HTML);
     private Image ev97Img;
     private MainMenuBar mainMenu;
-    private Button pingSimulatorButton = new Button("Ping simulator");
+    private Button pingSimulatorButton = new Button("Verify configuration");
 
     private SimulatorListSimulatorsView simulatorList;
     private SimulatorForm simulatorForm;
@@ -78,16 +76,12 @@ public class SimulatorsView extends VerticalLayout implements View {
 	return simulatorForm;
     }
 
-    public SimulatorListSimulatorsView getSimulatorList() {
-	return simulatorList;
-    }
-
     public DatabaseHelper getDBHelp() {
 	return dbHelp;
     }
 
     public SimulatorsView(Navigator navigator) {
-	LOG.info("new SimulatorsView()");
+	LOG.debug("new SimulatorsView()");
 	this.navigator = navigator;
 	initSimulatorList();
 	initLayout();
@@ -195,19 +189,13 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		Object simulatorId = simulatorList.getValue();
+		RowId simulatorId = (RowId) simulatorList.getValue();
 		String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString())
 			.getValue().toString();
 		int port = Integer.valueOf(simulatorList.getItem(simulatorId)
 			.getItemProperty(SimulatorCols.port.toString()).getValue().toString());
-
-		boolean isRespoding = SimulationStatusProviderSimpleImpl.isSimulatorResponding(host, port);
-		if (isRespoding) {
-		    Notification.show(PING_SUCCESS_MESSAGE, "", Notification.Type.HUMANIZED_MESSAGE);
-		} else {
-		    Notification.show(PING_FAIL_MESSAGE, "", Notification.Type.WARNING_MESSAGE);
-		}
-
+		new ConfigurationChecker(host, port, simulatorId.toString())
+			.verifyConfiguration(ConfigurationChecker.SHOW_SUCCESS_MESSAGE);
 	    }
 	});
     }
@@ -233,7 +221,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-	LOG.info("enter() - entering SimulatorsView");
+	LOG.debug("enter() - entering SimulatorsView");
 	// make add simulator button enabled if there are simulator models in
 	// db. otherwise, make it disabled
 	initAddSimulatorButton();

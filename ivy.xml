@@ -51,6 +51,8 @@
 		
 		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.7"/>
 		
+		<dependency org="org.apache.commons" name="commons-lang3" rev="3.0"/>
+		
 			
 	</dependencies>
 </ivy-module>

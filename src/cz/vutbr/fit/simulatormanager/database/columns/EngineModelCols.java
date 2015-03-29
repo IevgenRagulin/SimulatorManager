@@ -1,5 +1,8 @@
 package cz.vutbr.fit.simulatormanager.database.columns;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +22,7 @@ public enum EngineModelCols {
     pwp("PWP - power %", Boolean.class), //
     minpwp("Min PWP"), //
     maxpwp("Max PWP"), //
-    mp("MP - Manifold pressure", Boolean.class), //
+    mp_("MP - Manifold pressure", Boolean.class), //
     minmp("Min MP"), //
     maxmp("Max MP"), //
     egt1("EGT1", Boolean.class), //
@@ -37,22 +40,22 @@ public enum EngineModelCols {
     est("EST", Boolean.class), //
     minest("Min EST"), //
     maxest("Max EST"), //
-    ff("FF - fuel flow", Boolean.class), //
+    ff_("FF - fuel flow", Boolean.class), //
     minff("Min FF"), //
     maxff("Max FF"), //
-    fp("FP - fuel pressure", Boolean.class), //
+    fp_("FP - fuel pressure", Boolean.class), //
     minfp("Min FP"), // ,
     maxfp("Max FP"), //
-    op("OP - oil pressure", Boolean.class), //
-    minop("Min op"), //
-    maxop("Max op"), //
-    ot("OT - oil temperature", Boolean.class), //
-    minot("Min oil temperature"), //
-    maxot("Max oil temperature"), //
-    n1("N1", Boolean.class), //
+    op_("OP - oil pressure", Boolean.class), //
+    minop("Min OP"), //
+    maxop("Max OP"), //
+    ot_("OT - oil temperature", Boolean.class), //
+    minot("Min OT"), //
+    maxot("Max OT"), //
+    n1_("N1", Boolean.class), //
     minn1("Min N1"), //
     maxn1("Max N1"), //
-    n2("N2", Boolean.class), //
+    n2_("N2", Boolean.class), //
     minn2("Min N2"), //
     maxn2("Max N2"), //
     vib("VIB - vibration", Boolean.class), //
@@ -98,7 +101,7 @@ public enum EngineModelCols {
 	return this.type;
     }
 
-    public static String[] getSimulatorModelCols() {
+    public static String[] getEngineModelCols() {
 	EngineModelCols[] cols = values();
 	String[] strCols = new String[cols.length];
 	for (int i = 0; i < cols.length; i++) {
@@ -107,14 +110,31 @@ public enum EngineModelCols {
 	return strCols;
     }
 
-    public static String[] getSimulatorModelColsNames() {
+    public static String[] getEngineModelColsNames() {
 	EngineModelCols[] cols = values();
 	String[] strColsNames = new String[cols.length];
 	for (int i = 0; i < cols.length; i++) {
-	    LOG.debug("Getting simulator cols names" + cols[i].getName());
+	    LOG.debug("Getting engine model col names" + cols[i].getName());
 	    strColsNames[i] = cols[i].getName();
 	}
 	return strColsNames;
+    }
+
+    /**
+     * Gets the names of the columns which describe if specific feature on this
+     * engine is enabled or disabled. In other words, returns only boolean
+     * columns
+     * 
+     * @return
+     */
+    public static List<EngineModelCols> getEngineModelConfigurationCols() {
+	List<EngineModelCols> engineModelCols = new ArrayList<EngineModelCols>();
+	for (EngineModelCols column : values()) {
+	    if (column.getType() != null && column.getType() == Boolean.class) {
+		engineModelCols.add(column);
+	    }
+	}
+	return engineModelCols;
     }
 
     public String getName() {

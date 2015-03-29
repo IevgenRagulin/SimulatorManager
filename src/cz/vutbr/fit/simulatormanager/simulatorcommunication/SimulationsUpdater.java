@@ -26,7 +26,7 @@ import cz.vutbr.fit.simulatormanager.items.SimulationItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 
 public class SimulationsUpdater implements Runnable {
-    final static Logger logger = LoggerFactory.getLogger(SimulationsUpdater.class);
+    final static Logger LOG = LoggerFactory.getLogger(SimulationsUpdater.class);
 
     protected static DatabaseHelper dbHelp = new DatabaseHelper();
     protected static SimulatorsStatus simStatus = null;
@@ -47,7 +47,7 @@ public class SimulationsUpdater implements Runnable {
 	    SimulationItem simulationItem = getLatestSimulationDataFromDb(simulatorId);
 	    SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
 	} catch (Exception e) {
-	    logger.error("Exception occured while trying to update simulation state data", e);
+	    LOG.error("Exception occured while trying to update simulation state data", e);
 	}
     }
 
@@ -102,6 +102,8 @@ public class SimulationsUpdater implements Runnable {
 	    // simulator is running
 	    updateSimulationStateInDatabaseSimulatorOn(lastSimCont, lastSimDb, isLastSimInDBOn, isLastSimInDBPaused);
 	}
+	LOG.info("The last simulation in DB on this simulator: {}. Simulator id: {}. dataFromSimulator: {}",
+		lastSimCont, simulatorId, dataFromSimulator);
     }
 
     /**

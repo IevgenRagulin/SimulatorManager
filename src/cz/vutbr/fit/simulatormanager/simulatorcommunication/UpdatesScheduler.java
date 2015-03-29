@@ -22,7 +22,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 
 public class UpdatesScheduler {
 
-    final static Logger logger = LoggerFactory.getLogger(UpdatesScheduler.class);
+    final static Logger LOG = LoggerFactory.getLogger(UpdatesScheduler.class);
 
     protected static DatabaseHelper dbHelp = new DatabaseHelper();
     protected static final int UPDATE_RATE_MS = ApplicationConfiguration.getSimulatorGetDataFrequency();
@@ -40,11 +40,12 @@ public class UpdatesScheduler {
 	    try {
 		updateRunningSimsStatus();
 	    } catch (Exception e) {
-		logger.error("Unexpected exception during updating running sims status", e);
+		LOG.error("Unexpected exception during updating running sims status", e);
 	    }
 	}
     };
     static {
+	LOG.info("Scheduling updates at fixed rate. UPDATE_RATE_MS: {}", UPDATE_RATE_MS);
 	scheduler.scheduleAtFixedRate(beeper, 0, UPDATE_RATE_MS, TimeUnit.MILLISECONDS);
 
     }
@@ -55,7 +56,7 @@ public class UpdatesScheduler {
     public static void updateRunningSimsStatus() {
 	SQLContainer simulatorContainer = dbHelp.getNewSimulatorContainer();
 	if (numberOfThreads != simulatorContainer.size()) {
-	    logger.info(
+	    LOG.info(
 		    "Number of simulators has changed. Previously we had: {} threads, now: {}. Creating new thread pool. ",
 		    numberOfThreads, simulatorContainer.size());
 	    numberOfThreads = simulatorContainer.size();
@@ -85,7 +86,7 @@ public class UpdatesScheduler {
 		    Future submittedTask = schedulerSimulationUpdater.submit(simUpdater);
 		    isTaskFinished.put(simulatorId, submittedTask);
 		} else {
-		    logger.debug("No, prev task on this simulator is not finished. Simulator id: {} ", simulatorId);
+		    LOG.debug("No, prev task on this simulator is not finished. Simulator id: {} ", simulatorId);
 		}
 	    }
 	}

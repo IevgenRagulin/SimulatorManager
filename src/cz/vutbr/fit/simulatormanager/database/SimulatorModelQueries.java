@@ -22,6 +22,21 @@ public class SimulatorModelQueries {
     private static DatabaseHelper dbHelper = new DatabaseHelper();
 
     /**
+     * Gets simulator model by simulator id
+     */
+    public static Item getSimulatorModelBySimulatorId(String simulatorId) {
+	@SuppressWarnings("deprecation")
+	FreeformQuery query = new FreeformQuery(
+		"SELECT * FROM SimulatorModel INNER JOIN Simulator ON simulatormodel.simulatormodelid=simulator.simulatormodelid where simulatorid="
+			+ simulatorId, Arrays.asList("simulatormodelid"), dbHelper.getPool());
+	try {
+	    return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
+	} catch (SQLException e) {
+	    throw new RuntimeException("Couldn't get getSimulationDevicesStateBySimulatorId", e);
+	}
+    }
+
+    /**
      * Gets simulator model by simulator model id
      */
     public static Item getSimulatorModelBySimulatorModelId(String simulatorModelId) {

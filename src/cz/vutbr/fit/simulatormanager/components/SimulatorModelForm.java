@@ -33,8 +33,8 @@ public class SimulatorModelForm extends FieldGroup {
 	setBuffered(false);
 	for (SimulatorModelCols colName : SimulatorModelCols.values()) {
 	    AbstractField<?> field = null;
-	    // check if this is an active field which is a boolean
-	    if (colName.equals(SimulatorModelCols.hasgears)) {
+	    // check if this is a boolean, use checkbox then
+	    if (Boolean.class.equals(colName.getType())) {
 		field = new CheckBox(colName.getName());
 		addFieldToForm(field, colName);
 	    }

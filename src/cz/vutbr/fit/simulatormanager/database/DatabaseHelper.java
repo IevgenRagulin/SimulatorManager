@@ -20,11 +20,10 @@ import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
-import cz.vutbr.fit.simulatormanager.simulatorcommunication.UpdatesScheduler;
 
 public class DatabaseHelper implements Serializable {
     private static final long serialVersionUID = -5027557673512708776L;
-    final static Logger LOG = LoggerFactory.getLogger(UpdatesScheduler.class);
+    final static Logger LOG = LoggerFactory.getLogger(DatabaseHelper.class);
     private static JDBCConnectionPool pool = null;
     private SQLContainer simulatorContainer = null;
     private SQLContainer simulatorModelContainer = null;
@@ -36,22 +35,20 @@ public class DatabaseHelper implements Serializable {
      * 
      * @return
      */
-    public JDBCConnectionPool getPool() {
+    public static JDBCConnectionPool getPool() {
 	if (pool == null) {
 	    initConnectionPool();
 	}
 	return pool;
     }
 
-    private void initConnectionPool() {
-	if (pool == null) {
-	    try {
-		pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", ApplicationConfiguration.getDbUrl(),
-			ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword(), 2, 10);
-	    } catch (SQLException e) {
-		LOG.error("Couldn't initConnectionPool", e);
-		throw new RuntimeException("Couldn't init connection pool", e);
-	    }
+    private static void initConnectionPool() {
+	try {
+	    pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", ApplicationConfiguration.getDbUrl(),
+		    ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword(), 2, 10);
+	} catch (SQLException e) {
+	    LOG.error("Couldn't initConnectionPool", e);
+	    throw new RuntimeException("Couldn't init connection pool", e);
 	}
     }
 
@@ -420,7 +417,7 @@ public class DatabaseHelper implements Serializable {
 	    SQLContainer sqlContainer = null;
 	    sqlContainer = new SQLContainer(tq);
 	    return sqlContainer;
-	} catch (IllegalArgumentException e) {
+	} catch (RuntimeException e) {
 	    LOG.error("Database is not initialized. Please go to Configuration and click Init configuration there", e);
 	    return null;
 	} catch (SQLException e) {

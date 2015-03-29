@@ -93,7 +93,7 @@ public class SimulatorListSimulatorsView extends Table {
      */
     public void removeSimulator() {
 	Object simulatorId = this.getValue();
-	view.getSimulatorList().removeItem(simulatorId);
+	this.removeItem(simulatorId);
 	commit();
     }
 
