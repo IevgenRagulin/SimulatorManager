@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,6 +29,15 @@ public class DatabaseHelperPureJDBC {
     private static final String BASEPATH = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
     private static final String CLEAN_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/cleanDatabase.sql";
     private static final String INIT_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/initDatabase.sql";
+
+    public static Array createSqlArray(Float[] values) {
+	try {
+	    return getConnection().createArrayOf("float 4", values);
+	} catch (SQLException e) {
+	    LOG.error("SQL Exception was thrown", e);
+	    return null;
+	}
+    }
 
     /**
      * Returns true if database is running, false otherwise

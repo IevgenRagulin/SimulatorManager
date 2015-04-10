@@ -68,12 +68,14 @@ var yOffsetR = (window.rudderBackHeight - window.rudderHeight) / 2;
 var numberOfLandingGears = 0;
 function cz_vutbr_fit_simulatormanager_jscomponents_flightcontrols_FlightControls() {
 //function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
-
+	console.log("KUKU");
 	var e = this.getElement();
 	initYokeHtml(e);
 	initYoke();
 	setBrakes();
 	setSimulationPaused();
+	
+	console.log("KUKU"+this.getState().test);
 	this.onStateChange = function() {
 		window.wantHaveRudder = this.getState().rd;
 		window.wantHaveAileron = this.getState().ail;
@@ -89,6 +91,8 @@ function cz_vutbr_fit_simulatormanager_jscomponents_flightcontrols_FlightControl
 		window.wantHaveLandG_1 = this.getState().landg_1;
 		window.wantHaveLandG_2 = this.getState().landg_2;
 		window.wantHaveLandG_3 = this.getState().landg_3;
+
+		console.log("KUKU"+this.getState().test);
 		window.numberOfLandingGears = this.numoflandg;
 		updateFlightControls();
 	};

@@ -80,6 +80,9 @@ public class SimulatorModelsList extends Table {
 		DEFAULT_MAX_SPEED_ON_FLAPS);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(
 		DEFAULT_NUM_OF_LANDING_GEARS);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lfu.toString()).setValue(true);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.rfu.toString()).setValue(true);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.cfu.toString()).setValue(false);
 	commit();
     }
 

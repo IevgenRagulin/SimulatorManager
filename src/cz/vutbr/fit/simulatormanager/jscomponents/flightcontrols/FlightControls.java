@@ -36,6 +36,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	getState().landg_1 = landing_gear_1;
 	getState().landg_2 = landing_gear_2;
 	getState().landg_3 = landing_gear_3;
+	getState().test = new int[] { 1, 2, 3 };
 	controlYokeStateBean = new FlightControlsStateBean(aileron, elevator, rudder, aileront, elevatort, ruddert,
 		speedbrakes, flaps, brakes, paused, numbOfLandingGears, landing_gear_1, landing_gear_2, landing_gear_3);
 	setPrimaryStyleName(CSS_CLASS);

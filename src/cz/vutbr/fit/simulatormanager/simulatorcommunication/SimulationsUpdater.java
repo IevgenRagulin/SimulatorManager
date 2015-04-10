@@ -20,7 +20,6 @@ import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.DatabaseUtil;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
-import cz.vutbr.fit.simulatormanager.items.SimulationEnginesStateItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
@@ -44,7 +43,7 @@ public class SimulationsUpdater implements Runnable {
     public void run() {
 	try {
 	    updateSimulationStateData();
-	    SimulationItem simulationItem = getLatestSimulationDataFromDb(simulatorId);
+	    SimulationItem simulationItem = getLatestSimulationFromDb(simulatorId);
 	    SimulatorsStatus.setSimulationItem(simulatorId, simulationItem);
 	} catch (Exception e) {
 	    LOG.error("Exception occured while trying to update simulation state data", e);
@@ -55,13 +54,13 @@ public class SimulationsUpdater implements Runnable {
 	AllSimulationInfo allSimInfo = AWComClient.getSimulationData(simulatorHostname, simulatorPort);
 	AllEngineInfo allEngineInfo = AWComClient.getEngineData(simulatorHostname, simulatorPort);
 	if (allSimInfo != null) {
-	    updateSimulDevStateData(allSimInfo);
-	    updateSimulInfoData(allSimInfo);
-	    updateSimulPFDData(allSimInfo);
+	    updateSimulDevState(allSimInfo);
+	    updateSimulInfo(allSimInfo);
+	    updateSimulPFD(allSimInfo);
 	}
 
 	if (allEngineInfo != null) {
-	    updateSimulEnginesStateData(allEngineInfo);
+	    updateSimulEnginesState(allEngineInfo);
 	}
 
 	updateSimulationStateInDatabase(allSimInfo, allEngineInfo);
@@ -164,30 +163,29 @@ public class SimulationsUpdater implements Runnable {
 	DatabaseUpdater.addSimulationInfoToDb(lastSimCont, simulatorId, simulationId);
     }
 
-    private synchronized void updateSimulPFDData(AllSimulationInfo allSimInfo) {
+    private synchronized void updateSimulPFD(AllSimulationInfo allSimInfo) {
 	SimulationPFDBean simPFDBean = new SimulationPFDBean(allSimInfo);
 	SimulationPFDItem simPFDItem = new SimulationPFDItem(simPFDBean);
 	SimulatorsStatus.setSimulationPFDItem(simulatorId, simPFDItem);
     }
 
-    private synchronized void updateSimulInfoData(AllSimulationInfo allSimInfo) {
+    private synchronized void updateSimulInfo(AllSimulationInfo allSimInfo) {
 	SimulationInfoBean simInfoBean = new SimulationInfoBean(allSimInfo);
 	SimulationInfoItem simInfoItem = new SimulationInfoItem(simInfoBean);
 	SimulatorsStatus.setSimulationInfoItem(simulatorId, simInfoItem);
     }
 
-    private synchronized void updateSimulDevStateData(AllSimulationInfo allSimInfo) {
+    private synchronized void updateSimulDevState(AllSimulationInfo allSimInfo) {
 	SimulationDevStateBean bean = new SimulationDevStateBean(allSimInfo);
 	SimulationDevStateItem item = new SimulationDevStateItem(bean);
 	SimulatorsStatus.setSimulationDevStateItem(simulatorId, item);
     }
 
-    private synchronized void updateSimulEnginesStateData(AllEngineInfo allSimInfoBean) {
-	SimulationEnginesStateItem item = new SimulationEnginesStateItem(allSimInfoBean);
-	SimulatorsStatus.setSimulationEnginesStateItem(simulatorId, item);
+    private synchronized void updateSimulEnginesState(AllEngineInfo allSimInfoBean) {
+	SimulatorsStatus.setSimulationEnginesStateItem(simulatorId, allSimInfoBean);
     }
 
-    public synchronized SimulationItem getLatestSimulationDataFromDb(String simulatorId) {
+    public synchronized SimulationItem getLatestSimulationFromDb(String simulatorId) {
 	SimulationDao simulationDao = new SimulationDao();
 	Item latestRunningSimulation = simulationDao.getLatestRunningSimulationOnSimulatorWithId(simulatorId);
 	SimulationBean simBean = new SimulationBean(latestRunningSimulation);

@@ -18,11 +18,11 @@ CREATE TABLE simulatormodel
   highspeed integer,
   maxspeedonflaps integer NOT NULL,
   minspeedonflaps integer,
-  hasgears boolean,
+  hasgears boolean, 
   numberoflandinggears integer NOT NULL,
-  lfu boolean DEFAULT true,
-  rfu boolean DEFAULT true,
-  cfu boolean DEFAULT false,
+  lfu boolean NOT NULL DEFAULT true,
+  rfu boolean NOT NULL DEFAULT true,
+  cfu boolean NOT NULL DEFAULT false,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulatormodel_pkey PRIMARY KEY (simulatormodelid),
   CONSTRAINT simulatormodel_simulatormodelname_key UNIQUE (simulatormodelname)
@@ -200,6 +200,7 @@ CREATE TABLE simulationenginesstate
 (
   enginesstateid serial NOT NULL,
   simulation_simulationid integer NOT NULL,
+  ENGINES_NUM int,
   RPM real [],
   PWR real [], 
   PWP real [], 

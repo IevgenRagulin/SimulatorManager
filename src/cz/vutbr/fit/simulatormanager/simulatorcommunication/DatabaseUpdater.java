@@ -10,13 +10,14 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
+import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.SimulationInfoBean;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.database.columns.EngineCols;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationInfoCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
-import cz.vutbr.fit.simulatormanager.items.SimulationEnginesStateItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 import cz.vutbr.fit.simulatormanager.util.DistanceUtil;
@@ -148,9 +149,8 @@ public class DatabaseUpdater {
     @SuppressWarnings("unchecked")
     private static void addEnginesInfoToDatabase(Integer simulationIdInt, String simulatorId)
 	    throws UnsupportedOperationException, SQLException {
-	SimulationEnginesStateItem simulationEnginesItem = SimulatorsStatus
-		.getSimulationEngineItemBySimulatorId(simulatorId);
-	if (simulationEnginesItem != null) {
+	AllEngineInfo allEngineInfo = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
+	if (allEngineInfo != null) {
 	    SQLContainer simulationEnginesContainer = dbHelp.getSimulationEnginesStateContainer();
 	    Collection<?> itemPropIdsCont = simulationEnginesContainer.getContainerPropertyIds();
 	    // TODO: remove this loop
@@ -162,18 +162,32 @@ public class DatabaseUpdater {
 	    // set reference key to simulation id
 	    simulationEnginesContainer.getContainerProperty(newSimEngStId,
 		    SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationIdInt);
-	    Collection<?> itemPropIds = simulationEnginesItem.getItemPropertyIds();
-	    // set values E1RPM, E1PWR, E1PWP...
-	    for (Object prop : itemPropIds) {
-		String propertyName = ((String) prop);
-		System.out.println(propertyName + simulationEnginesItem.getItemProperty(propertyName).getValue());
 
-		System.out.println("Property"
-			+ simulationEnginesContainer.getContainerProperty(newSimEngStId, propertyName));
-		simulationEnginesContainer.getContainerProperty(newSimEngStId, propertyName).setValue(
-			simulationEnginesItem.getItemProperty(propertyName).getValue());
-	    }
+	    RowId newItemId = (RowId) simulationEnginesContainer.addItem();
+	    LOG.info("new item id: {}", newItemId);
+
+	    Item item = simulationEnginesContainer.getItem(newItemId);
+	    item.getItemProperty(EngineCols.engines_num.toString()).setValue(allEngineInfo.getNumberOfEngines());
+	    // item.getItemProperty(EngineCols.rpm.toString()).setValue(
+	    // DatabaseHelperPureJDBC.createSqlArray(allEngineInfo.getRpm()));
 	    commitChangeInSQLContainer(simulationEnginesContainer);
+	    // Collection<?> itemPropIds =
+	    // simulationEnginesItem.getItemPropertyIds();
+	    // set values E1RPM, E1PWR, E1PWP...
+	    // for (Object prop : itemPropIds) {
+	    // String propertyName = ((String) prop);
+	    // System.out.println(propertyName +
+	    // simulationEnginesItem.getItemProperty(propertyName).getValue());
+
+	    // System.out.println("Property"
+	    // +
+	    // simulationEnginesContainer.getContainerProperty(newSimEngStId,
+	    // propertyName));
+	    // simulationEnginesContainer.getContainerProperty(newSimEngStId,
+	    // propertyName).setValue(
+	    // simulationEnginesItem.getItemProperty(propertyName).getValue());
+	    // }
+	    // commitChangeInSQLContainer(simulationEnginesContainer);
 	}
     }
 

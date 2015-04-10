@@ -141,7 +141,7 @@ public class ConfigurationValidator {
      * @return
      */
     private static boolean isFeatureEnabledInDb(Item item, String featureName) {
-	LOG.info("Checking if feature enabled in db. feature name: {}. item: {}" + featureName, item);
+	LOG.info("Checking if feature enabled in db. feature name: {}. item: {}", featureName, item);
 	return (boolean) item.getItemProperty(featureName.toString()).getValue();
     }
 }

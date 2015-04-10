@@ -43,12 +43,14 @@ public class DatabaseHelper implements Serializable {
     }
 
     private static void initConnectionPool() {
-	try {
-	    pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", ApplicationConfiguration.getDbUrl(),
-		    ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword(), 2, 10);
-	} catch (SQLException e) {
-	    LOG.error("Couldn't initConnectionPool", e);
-	    throw new RuntimeException("Couldn't init connection pool", e);
+	if (pool == null) {
+	    try {
+		pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", ApplicationConfiguration.getDbUrl(),
+			ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword(), 2, 10);
+	    } catch (SQLException e) {
+		LOG.error("Couldn't initConnectionPool", e);
+		throw new RuntimeException("Couldn't init connection pool", e);
+	    }
 	}
     }
 

@@ -80,11 +80,31 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    /**
+     * Get RPM on engineNumber
+     * 
+     * @param engNum
+     * @return
+     */
     public Float getRpm(int engNum) {
 	if (validateEngNum(engNum)) {
 	    rpm.get(engNum);
 	}
 	return null;
+    }
+
+    /**
+     * Get RPMs for all active engines. If there are 2 engines, get RPM for 0th
+     * and 1st engine
+     * 
+     * @return
+     */
+    public Float[] getRpm() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = rpm.get(getRpm(i));
+	}
+	return values;
     }
 
     public void setPwr(int engNum, Float value) {
