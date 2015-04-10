@@ -154,7 +154,7 @@ public class EnginesAccordion extends Accordion {
 	enginesContainer.size();
 	@SuppressWarnings("unchecked")
 	Collection<RowId> itemIds = (Collection<RowId>) enginesContainer.getItemIds();
-	int maxOrder = 0;
+	int maxOrder = -1;// -1 means there are no engines yet
 	for (RowId id : itemIds) {
 	    Integer order = (Integer) enginesContainer.getItem(id)
 		    .getItemProperty(EngineModelCols.enginemodelorder.toString()).getValue();

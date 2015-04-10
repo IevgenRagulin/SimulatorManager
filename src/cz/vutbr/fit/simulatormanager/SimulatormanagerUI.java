@@ -1,5 +1,6 @@
 package cz.vutbr.fit.simulatormanager;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import com.vaadin.ui.UI;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
-import cz.vutbr.fit.simulatormanager.simulatorcommunication.UpdatesScheduler;
 import cz.vutbr.fit.simulatormanager.views.ChooseSimulationView;
 import cz.vutbr.fit.simulatormanager.views.ConfigurationView;
 import cz.vutbr.fit.simulatormanager.views.PastSimulationsView;
@@ -35,6 +35,10 @@ public class SimulatormanagerUI extends UI {
     @VaadinServletConfiguration(productionMode = false, ui = SimulatormanagerUI.class, widgetset = "cz.vutbr.fit.simulatormanager.widgetset.SimulatorManagerWidgetset")
     public static class Servlet extends VaadinServlet {
 	private static final long serialVersionUID = -5802992110157497963L;
+
+	public void init() throws ServletException {
+	    LOG.info("simulator manager ui");
+	}
     }
 
     private static final long serialVersionUID = -2218352764682942955L;
@@ -54,7 +58,6 @@ public class SimulatormanagerUI extends UI {
     protected void init(VaadinRequest request) {
 	LOG.info("Going to initialize application");
 	if (!uiInitialized) {
-	    initApplicationConfiguration();
 	    // init connection pool
 	    DatabaseHelper.getPool();
 	    if (!DatabaseHelperPureJDBC.isDatabaseRunning()) {
@@ -62,17 +65,8 @@ public class SimulatormanagerUI extends UI {
 			"Current configuration. DB URL: " + ApplicationConfiguration.getDbUrl() + " DB Username: "
 				+ ApplicationConfiguration.getDbUserName(), Notification.Type.ERROR_MESSAGE);
 	    } else {
-		// we do it to initialize static stuff in SimulationUpdater
-		// class
-		try {
-		    Class.forName(UpdatesScheduler.class.getName());
-		} catch (ClassNotFoundException e) {
-		    throw new IllegalStateException("Could not initilize application properly", e);
-		}
-		DatabaseHelperPureJDBC.initDatabaseIfNeeded();
 		getPage().setTitle(APPLICATION_NAME);
 		navigator = new Navigator(this, this);
-
 		createRegisterViews();
 		uiInitialized = true;
 	    }
@@ -92,15 +86,6 @@ public class SimulatormanagerUI extends UI {
 	// navigator.addView(CONTROLSIMULATIONS, new
 	// ControlSimulationsView(this.navigator));
 	navigator.addView(CONFIGURATION, new ConfigurationView(this.navigator));
-    }
-
-    /**
-     * Reads the application configuration data from the file: dtb username,
-     * password, google maps apikey etc., and sets it to static fields of
-     * ApplicationConfiguration class
-     */
-    private void initApplicationConfiguration() {
-	ApplicationConfiguration.initApplicationConfigFromConfFile();
     }
 
     public Navigator getNavigator() {

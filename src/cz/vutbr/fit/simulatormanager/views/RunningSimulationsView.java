@@ -11,6 +11,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 
+import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.components.ConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
@@ -94,8 +95,17 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	setFlightControlsInfo(selectedDevicesState, selectedSimulator);
 	// Set PFD info
 	SimulationPFDItem selectedPFD = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
+	setPrimaryFlightDisplayInfo(selectedPFD);
+	addNewPointToCharts(simulatorId, selectedPFD);
+	// Set engines and fuel info
+	AllEngineInfo enginesInfo = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
+	LOG.info("going to call st engines info");
+	setEnginesInfo(simulatorId, enginesInfo);
+    }
+
+    private void addNewPointToCharts(String simulatorId, SimulationPFDItem selectedPFD) {
 	if (selectedPFD != null) {
-	    setPrimaryFlightDisplayInfo(selectedPFD);
+	    // Add new point to charts
 	    altitudeChart.addNewPoint(simulatorId, selectedPFD);
 	    speedChart.addNewPoint(simulatorId, selectedPFD);
 	}

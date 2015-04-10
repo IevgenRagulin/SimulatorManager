@@ -1,5 +1,8 @@
 package cz.vutbr.fit.simulatormanager.views;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Alignment;
@@ -7,8 +10,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
+import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
+import cz.vutbr.fit.simulatormanager.jscomponents.enginespanel.EnginesPanel;
 import cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols.FlightControls;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartAltitude;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartSpeed;
@@ -23,6 +28,8 @@ import cz.vutbr.fit.simulatormanager.types.PageType;
  *
  */
 public abstract class SimulationsView extends BasicView {
+
+    final static Logger LOG = LoggerFactory.getLogger(SimulationsView.class);
 
     private static final long serialVersionUID = 6450588437869904764L;
     protected static final String ALTITUDE_CHART_ID = "altitudeChartId";
@@ -42,11 +49,13 @@ public abstract class SimulationsView extends BasicView {
 
     protected HorizontalLayout avionycsLayout = new HorizontalLayout();
     protected HorizontalLayout graphsLayout = new HorizontalLayout();
+    protected HorizontalLayout enginesLayout = new HorizontalLayout();
     protected HorizontalLayout topSimulationLayout = new HorizontalLayout();
     protected VerticalLayout mainSimulationLayout = new VerticalLayout();
     protected JsHighChartAltitude altitudeChart;
     protected JsHighChartSpeed speedChart;
     protected MainMenuBar mainMenu;
+    protected EnginesPanel enginesPanel = new EnginesPanel();
 
     public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 	return primaryFlightDisplay;
@@ -75,10 +84,12 @@ public abstract class SimulationsView extends BasicView {
 	topSimulationLayout.setComponentAlignment(errorLabel, Alignment.TOP_LEFT);
 	mainSimulationLayout.addComponent(avionycsLayout);
 	mainSimulationLayout.addComponent(graphsLayout);
+	mainSimulationLayout.addComponent(enginesLayout);
 	topSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 	mainSimulationLayout.setPrimaryStyleName(MAIN_LAYOUT_CLASS);
 	graphsLayout.addComponent(altitudeChart);
 	graphsLayout.addComponent(speedChart);
+	enginesLayout.addComponent(enginesPanel);
     }
 
     protected void initGraphs() {
@@ -109,6 +120,14 @@ public abstract class SimulationsView extends BasicView {
     protected void setFlightControlsInfo(Item selectedDevicesState, Item selectedSimulator) {
 	if (selectedDevicesState != null) {
 	    flightControls.updateIndividualFlightControlValues(selectedDevicesState, selectedSimulator);
+	}
+    }
+
+    protected void setEnginesInfo(String simulatorId, AllEngineInfo enginesInfo) {
+	LOG.info("sorry, engines info is null");
+	if (enginesInfo != null) {
+	    LOG.info("Engines info is not null, going to pass it to engines panel");
+	    enginesPanel.updateIndividualEngineValues(simulatorId, enginesInfo);
 	}
     }
 

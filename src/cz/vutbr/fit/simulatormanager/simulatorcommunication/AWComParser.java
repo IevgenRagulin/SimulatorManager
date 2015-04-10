@@ -340,9 +340,8 @@ public class AWComParser {
 	LOG.debug("Going to parse engine response: {}", response);
 	if (response != null) {
 	    engineData = new AllEngineInfo();
-
-	    // TODO get number of engines here
-	    int numOfEngines = engineData.getNumberOfEngines();
+	    int numOfEngines = Integer.valueOf(getValueOf(":E0CNT:", response));
+	    engineData.setNumberOfEngines(numOfEngines);
 	    for (int i = 0; i < numOfEngines; i++) {
 		// RPM
 		value = getValueForEngineKey(i, "RPM", response);

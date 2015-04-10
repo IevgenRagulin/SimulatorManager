@@ -101,7 +101,7 @@ public class SimulationsUpdater implements Runnable {
 	    // simulator is running
 	    updateSimulationStateInDatabaseSimulatorOn(lastSimCont, lastSimDb, isLastSimInDBOn, isLastSimInDBPaused);
 	}
-	LOG.info("Update sim state in db. Simulator id: {}. dataFromSimulator: {}", simulatorId, dataFromSimulator);
+	LOG.debug("Update sim state in db. Simulator id: {}. dataFromSimulator: {}", simulatorId, dataFromSimulator);
     }
 
     /**

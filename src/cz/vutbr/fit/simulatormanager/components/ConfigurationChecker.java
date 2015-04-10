@@ -55,10 +55,13 @@ public class ConfigurationChecker {
 	    if (errorsInConfiguration.isEmpty() && showSuccessMessage) {
 		Notification.show(PING_SUCCESS_MESSAGE, "", Notification.Type.HUMANIZED_MESSAGE);
 		return true;
-	    } else {
+	    } else if (!errorsInConfiguration.isEmpty()) {
 		new Notification(PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE, errorsInConfiguration.toString(),
 			Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 		return false;
+	    } else {
+		// return true but don't display any message
+		return true;
 	    }
 	} else {
 	    Notification.show(PING_FAIL_MESSAGE, "", Notification.Type.ERROR_MESSAGE);

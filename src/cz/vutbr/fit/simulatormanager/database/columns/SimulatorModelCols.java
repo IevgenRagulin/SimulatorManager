@@ -12,7 +12,6 @@ public enum SimulatorModelCols {
     simulatormodelname("Simulator model name"), //
     minspeed("Min speed"), //
     maxspeed("Max speed"), //
-    highspeed("High speed"), //
     maxspeedonflaps("Max speed on flaps"), //
     minspeedonflaps("Min speed on flaps"), //
     hasgears("Has gears", Boolean.class), //

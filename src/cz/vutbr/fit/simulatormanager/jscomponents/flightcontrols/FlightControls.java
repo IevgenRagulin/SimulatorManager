@@ -21,6 +21,9 @@ public class FlightControls extends AbstractJavaScriptComponent {
      */
     private FlightControlsStateBean controlYokeStateBean;
 
+    /**
+     * Parameters are initial values of the individual flight controls
+     */
     public FlightControls(float aileron, float elevator, float rudder, float aileront, float elevatort, float ruddert,
 	    float speedbrakes, float flaps, boolean brakes, boolean paused, int numbOfLandingGears, int landing_gear_1,
 	    int landing_gear_2, int landing_gear_3) {
@@ -91,6 +94,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setLandingGear(int landingGear_1, int landingGear_2, int landingGear_3) {
+	// update state if changed to improve performance
 	if (getStateBean().getLandg_1() != landingGear_1) {
 	    getState().landg_1 = landingGear_1;
 	    getStateBean().setLandg_1(landingGear_1);
@@ -106,6 +110,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setPaused(boolean newPaused) {
+	// update state if changed to improve performance
 	if (getStateBean().isPaused() != newPaused) {
 	    getState().p = newPaused;
 	    getStateBean().setPaused(newPaused);
@@ -113,6 +118,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setBrakes(boolean newBrakes) {
+	// update state if changed to improve performance
 	if (getStateBean().getBrakes() != newBrakes) {
 	    getState().b = newBrakes;
 	    getStateBean().setBrakes(newBrakes);
@@ -120,6 +126,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setRudderTrim(float newRudderTrim) {
+	// update state if changed to improve performance
 	if (getStateBean().getRudderTrim() != newRudderTrim) {
 	    getState().rdt = newRudderTrim;
 	    getStateBean().setRudderTrim(newRudderTrim);
@@ -127,6 +134,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setElevatorTrim(float newElevatorTrim) {
+	// update state if changed to improve performance
 	if (getStateBean().getElevatorTrim() != newElevatorTrim) {
 	    getState().elt = newElevatorTrim;
 	    getStateBean().setElevatorTrim(newElevatorTrim);
@@ -134,6 +142,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setAileronTrim(float newAileronTrim) {
+	// update state if changed to improve performance
 	if (getStateBean().getAileronTrim() != newAileronTrim) {
 	    getState().ailt = newAileronTrim;
 	    getStateBean().setAileronTrim(newAileronTrim);
@@ -144,12 +153,14 @@ public class FlightControls extends AbstractJavaScriptComponent {
 	Integer simulatorModelId = (Integer) ((Property<?>) simulatorItem
 		.getItemProperty(SimulatorCols.simulatormodelid.toString())).getValue();
 	int maxSpeedOnFlaps = SimulatorModelQueries.getMaxSpeedOnFlapsForSimulatorModel(simulatorModelId.toString());
+	// update state if changed to improve performance
 	if (getStateBean().getMaxonflaps() != maxSpeedOnFlaps) {
 	    getState().maxonflaps = maxSpeedOnFlaps;
 	    getStateBean().setMaxonflaps(maxSpeedOnFlaps);
 	}
 	int numberOfLandingGears = SimulatorModelQueries
 		.getNumOfLandGearsForSimulatorModel(simulatorModelId.toString());
+	// update state if changed to improve performance
 	if (getStateBean().getNumOfLandG() != numberOfLandingGears) {
 	    getState().numoflandg = numberOfLandingGears;
 	    getStateBean().setNumOfLandG(numberOfLandingGears);
@@ -158,6 +169,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setSpeedBrakes(float newSpeedBrakes) {
+	// update state if changed to improve performance
 	if (getStateBean().getSpeedBrakes() != newSpeedBrakes) {
 	    getState().sb = newSpeedBrakes;
 	    getStateBean().setSpeedBrakes(newSpeedBrakes);
@@ -172,6 +184,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setFlaps(float newFlaps) {
+	// update state if changed to improve performance
 	if (getStateBean().getFlaps() != newFlaps) {
 	    getState().fl = newFlaps;
 	    getStateBean().setFlaps(newFlaps);
@@ -179,6 +192,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setAileron(float newAileron) {
+	// update state if changed to improve performance
 	if (getStateBean().getAileron() != newAileron) {
 	    getState().ail = newAileron;
 	    getStateBean().setAileron(newAileron);
@@ -186,6 +200,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setElevator(float newElevator) {
+	// update state if changed to improve performance
 	if (getStateBean().getElevator() != newElevator) {
 	    getState().el = newElevator;
 	    getStateBean().setElevator(newElevator);
@@ -193,6 +208,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setRudder(float newRudder) {
+	// update state if changed to improve performance
 	if (getStateBean().getRudder() != newRudder) {
 	    getState().rd = newRudder;
 	    getStateBean().setRudder(newRudder);

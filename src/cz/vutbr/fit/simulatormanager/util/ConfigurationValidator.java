@@ -74,7 +74,7 @@ public class ConfigurationValidator {
     private static List<String> validateEnginesConfiguration(SQLContainer enginesModels, String responseFromAwCom) {
 	List<String> errorsInConfiguration = new ArrayList<String>();
 	Collection<RowId> itemIds = (Collection<RowId>) enginesModels.getItemIds();
-	LOG.info("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
+	LOG.debug("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
 	for (RowId itemId : itemIds) {
 	    Item engineItem = enginesModels.getItem(itemId);
 	    int engineNumber = (int) engineItem.getItemProperty(EngineModelCols.enginemodelorder.toString()).getValue();

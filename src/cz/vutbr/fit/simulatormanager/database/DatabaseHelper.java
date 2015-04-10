@@ -42,6 +42,13 @@ public class DatabaseHelper implements Serializable {
 	return pool;
     }
 
+    /**
+     * This is run on stopping the application to close the idle connections
+     */
+    public static void destroyConnectionPool() {
+	pool.destroy();
+    }
+
     private static void initConnectionPool() {
 	if (pool == null) {
 	    try {
