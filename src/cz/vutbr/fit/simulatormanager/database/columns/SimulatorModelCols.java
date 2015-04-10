@@ -18,8 +18,14 @@ public enum SimulatorModelCols {
     hasgears("Has gears", Boolean.class), //
     numberoflandinggears("Number of landing gears"), //
     lfu("Left fuel tank", Boolean.class), //
+    minlfu("Minimum amount of fuel in left tank"), //
+    maxlfu("Maximum amount of fuel in left tank"), //
     rfu("Right fuel tank", Boolean.class), //
+    minrfu("Minimum amount of fuel in right tank"), //
+    maxrfu("Maximum amount of fuel in right tank"), //
     cfu("Central fuel tank", Boolean.class), //
+    mincfu("Minimum amount of fuel in central tank"), //
+    maxcfu("Maximum amount of fuel in central tank"), //
     timestamp("Timestamp");//
 
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelCols.class);

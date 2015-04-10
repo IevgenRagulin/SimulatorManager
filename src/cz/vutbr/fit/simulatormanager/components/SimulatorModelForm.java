@@ -44,7 +44,6 @@ public class SimulatorModelForm extends FieldGroup {
 		dateField.setResolution(Resolution.SECOND);
 		addFieldToForm(dateField, colName);
 		field = dateField;
-		// check if this is a port which is a numeric
 	    } else {
 		field = createInputField(colName.getName());
 		addFieldToForm(field, colName);
