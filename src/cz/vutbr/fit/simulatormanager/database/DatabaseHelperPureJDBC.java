@@ -45,18 +45,10 @@ public class DatabaseHelperPureJDBC {
      * @return
      */
     public static boolean isDatabaseRunning() {
-	Connection connection = null;
-	try {
-	    try {
-		connection = getConnection();
-	    } catch (SQLException e) {
-		LOG.error("SQL Exception occured when getting connection to database", e);
-		return false;
-	    }
-	} finally {
-	    if (connection != null) {
-		closeConnection(connection);
-	    }
+	try (Connection connection = getConnection()) {
+	} catch (SQLException e) {
+	    LOG.error("SQL Exception occured when getting connection to database", e);
+	    return false;
 	}
 	return true;
     }
@@ -102,26 +94,22 @@ public class DatabaseHelperPureJDBC {
      */
     public static boolean tableExists(String tableName) {
 	LOG.info("Going to check if table: {} exists", tableName);
-	Connection connection = null;
-	PreparedStatement stmt = null;
+
 	boolean tableExists = false;
-	try {
-	    connection = getConnection();
-	    stmt = connection
-		    .prepareStatement("select count(*) as NUM from information_schema.tables where table_name=?");
+	try (Connection connection = getConnection();
+		PreparedStatement stmt = connection
+			.prepareStatement("select count(*) as NUM from information_schema.tables where table_name=?")) {
 	    stmt.setString(1, tableName);
-	    ResultSet resultSet = stmt.executeQuery();
-	    while (resultSet.next()) {
-		int num = resultSet.getInt("NUM");
-		if (num > 0) {
-		    tableExists = true;
+	    try (ResultSet resultSet = stmt.executeQuery()) {
+		while (resultSet.next()) {
+		    int num = resultSet.getInt("NUM");
+		    if (num > 0) {
+			tableExists = true;
+		    }
 		}
 	    }
 	} catch (SQLException e) {
-	    e.printStackTrace();
-	} finally {
-	    closeConnection(connection);
-	    closeStatement(stmt);
+	    LOG.error("SQL exception occured when checking if table exists", e);
 	}
 	return tableExists;
     }
@@ -134,12 +122,8 @@ public class DatabaseHelperPureJDBC {
      */
     public static String initDatabase() {
 	LOG.info("Going to init database");
-	Connection connection = null;
-	Statement stmt = null;
 	String initedSuccessfully = "Initialized database successfully";
-	try {
-	    connection = getConnection();
-	    stmt = connection.createStatement();
+	try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
 	    String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(INIT_QUERY_PATH);
 	    executeArrayOfQueries(queries, connection, stmt);
 	} catch (SQLException e) {
@@ -148,9 +132,6 @@ public class DatabaseHelperPureJDBC {
 	} catch (IOException e) {
 	    LOG.error("IOException occured while initializing DB", e);
 	    initedSuccessfully = "IOException occured (file with queries not found?) while initializing database";
-	} finally {
-	    closeConnection(connection);
-	    closeStatement(stmt);
 	}
 	return initedSuccessfully;
     }
@@ -161,16 +142,12 @@ public class DatabaseHelperPureJDBC {
      * @return
      */
     public static boolean testDatabaseConnection() {
-	Connection connection = null;
-	try {
-	    connection = getConnection();
+	try (Connection connection = getConnection()) {
 	    if (connection != null) {
 		return true;
 	    }
 	} catch (SQLException e) {
-	    e.printStackTrace();
-	} finally {
-	    closeConnection(connection);
+	    LOG.error("SQL exception occured when testing database connection", e);
 	}
 	return false;
     }
@@ -183,23 +160,16 @@ public class DatabaseHelperPureJDBC {
      */
     public static String cleanDatabase() {
 	LOG.info("Going to clean database");
-	Connection connection = null;
-	Statement stmt = null;
 	String cleanedSuccessfully = "Cleaned database successfully";
-	try {
-	    connection = getConnection();
-	    stmt = connection.createStatement();
+	try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
 	    String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(CLEAN_QUERY_PATH);
 	    executeArrayOfQueries(queries, connection, stmt);
 	} catch (SQLException e) {
 	    cleanedSuccessfully = "SQL exception occured";
-	    e.printStackTrace();
+	    LOG.error("SQL exception occured when cleaning database", e);
 	} catch (IOException e) {
 	    cleanedSuccessfully = "IOException occured (file with queries not found?)";
-	    e.printStackTrace();
-	} finally {
-	    closeConnection(connection);
-	    closeStatement(stmt);
+	    LOG.error("IOException exception occured when cleaning database", e);
 	}
 	return cleanedSuccessfully;
     }
@@ -246,29 +216,4 @@ public class DatabaseHelperPureJDBC {
 	return inst;
     }
 
-    /*
-     * Closes statement if open
-     */
-    private static void closeStatement(Statement statement) {
-	try {
-	    if ((statement != null) && (!statement.isClosed())) {
-		statement.close();
-	    }
-	} catch (SQLException e) {
-	    throw new RuntimeException("Couldn't close statement", e);
-	}
-    }
-
-    /*
-     * Closes connection if open
-     */
-    private static void closeConnection(Connection connection) {
-	try {
-	    if ((connection != null) && (!connection.isClosed())) {
-		connection.close();
-	    }
-	} catch (SQLException e) {
-	    throw new RuntimeException("Couldn't close database connection", e);
-	}
-    }
 }

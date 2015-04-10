@@ -153,7 +153,7 @@ public class DatabaseUpdater {
 	if (allEngineInfo != null) {
 	    SQLContainer simulationEnginesContainer = dbHelp.getSimulationEnginesStateContainer();
 	    Collection<?> itemPropIdsCont = simulationEnginesContainer.getContainerPropertyIds();
-	    // TODO: remove this loop
+
 	    for (Object prop : itemPropIdsCont) {
 		LOG.info("cont prop name: {} ", (String) prop);
 	    }
