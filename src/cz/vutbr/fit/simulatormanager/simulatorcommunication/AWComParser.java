@@ -337,6 +337,7 @@ public class AWComParser {
     public static AllEngineInfo parseEngineResponse(String response) {
 	AllEngineInfo engineData = null;
 	Float value = null;
+	LOG.debug("Going to parse engine response: {}", response);
 	if (response != null) {
 	    engineData = new AllEngineInfo();
 

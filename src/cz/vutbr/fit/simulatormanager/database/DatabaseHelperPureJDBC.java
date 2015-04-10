@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.server.VaadinService;
 
+import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 
 /*
@@ -29,15 +30,6 @@ public class DatabaseHelperPureJDBC {
     private static final String BASEPATH = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
     private static final String CLEAN_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/cleanDatabase.sql";
     private static final String INIT_QUERY_PATH = BASEPATH + "/WEB-INF/SQL/initDatabase.sql";
-
-    public static Array createSqlArray(Float[] values) {
-	try {
-	    return getConnection().createArrayOf("float 4", values);
-	} catch (SQLException e) {
-	    LOG.error("SQL Exception was thrown", e);
-	    return null;
-	}
-    }
 
     /**
      * Returns true if database is running, false otherwise
@@ -216,4 +208,65 @@ public class DatabaseHelperPureJDBC {
 	return inst;
     }
 
+    /**
+     * Inserts engines info to the database. We use pure JDBC instead of
+     * SQLContainer, because SQLContainer doesn't support inserting arrays of
+     * data
+     * 
+     * @param allEnginesInfo
+     */
+    public static void insertEnginesInfo(AllEngineInfo allEnginesInfo, Integer simulationId) {
+	try (Connection connection = getConnection();
+		PreparedStatement stmt = buildInsertEnginesStatement(connection, allEnginesInfo, simulationId)) {
+	    stmt.executeUpdate();
+	} catch (SQLException e) {
+	    LOG.error("SQLException occured when trying to insert engines info", e);
+	}
+    }
+
+    /**
+     * Build insert PreparedStatement based on AllEngineInfo.
+     * 
+     * @param conn
+     * @param engInfo
+     * @return
+     * @throws SQLException
+     */
+    private static PreparedStatement buildInsertEnginesStatement(Connection conn, AllEngineInfo engInfo,
+	    Integer simulationId) throws SQLException {
+	PreparedStatement stmt = null;
+	stmt = conn
+		.prepareStatement("INSERT INTO simulationenginesstate (simulation_simulationid, engines_num, rpm, pwr, pwp, mp_, et1, et2, ct1, ct2, est, ff_, fp_, op_, ot_, n1_, n2_, vib, vlt, amp) VALUES "
+			+ "							(?,                       ?,           ?,    ?,   ?,  ?,   ?,    ?,   ?,   ?,   ?,   ?,   ?,  ?,   ?,   ?,  ?,    ?,   ?,   ?)");
+	stmt.setInt(1, simulationId);
+	stmt.setInt(2, engInfo.getNumberOfEngines());
+	stmt.setArray(3, creatArrayOfFloat(conn, engInfo.getRpm()));
+	stmt.setArray(4, creatArrayOfFloat(conn, engInfo.getPwr()));
+	stmt.setArray(5, creatArrayOfFloat(conn, engInfo.getPwp()));
+	stmt.setArray(6, creatArrayOfFloat(conn, engInfo.getMp_()));
+	stmt.setArray(7, creatArrayOfFloat(conn, engInfo.getEt1()));
+	stmt.setArray(8, creatArrayOfFloat(conn, engInfo.getEt2()));
+	stmt.setArray(9, creatArrayOfFloat(conn, engInfo.getCt1()));
+	stmt.setArray(10, creatArrayOfFloat(conn, engInfo.getCt2()));
+	stmt.setArray(11, creatArrayOfFloat(conn, engInfo.getEst()));
+	stmt.setArray(12, creatArrayOfFloat(conn, engInfo.getFf_()));
+	stmt.setArray(13, creatArrayOfFloat(conn, engInfo.getFp_()));
+	stmt.setArray(14, creatArrayOfFloat(conn, engInfo.getOp_()));
+	stmt.setArray(15, creatArrayOfFloat(conn, engInfo.getOt_()));
+	stmt.setArray(16, creatArrayOfFloat(conn, engInfo.getN1_()));
+	stmt.setArray(17, creatArrayOfFloat(conn, engInfo.getN2_()));
+	stmt.setArray(18, creatArrayOfFloat(conn, engInfo.getVib()));
+	stmt.setArray(19, creatArrayOfFloat(conn, engInfo.getVlt()));
+	stmt.setArray(20, creatArrayOfFloat(conn, engInfo.getAmp()));
+	return stmt;
+    }
+
+    private static Array creatArrayOfFloat(Connection connection, Float[] values) {
+	try {
+	    return connection.createArrayOf("float4", values);
+	} catch (SQLException e) {
+	    LOG.error("SQL exception occured when creating array of floars", e);
+	    return null;
+	}
+    }
 }

@@ -70,7 +70,7 @@ public class DistanceUtil {
 	    hasPlaneMoved = true;
 	}
 	if (hasPlaneMoved) {
-	    logger.info(
+	    logger.debug(
 		    "Plane has moved or there is no info about simulations for simulator. Has moved over: {} meters. The threshold is: {}",
 		    distanceActual, distInMetersThreshold);
 	}

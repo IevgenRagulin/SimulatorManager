@@ -87,10 +87,7 @@ public class AllEngineInfo implements Serializable {
      * @return
      */
     public Float getRpm(int engNum) {
-	if (validateEngNum(engNum)) {
-	    rpm.get(engNum);
-	}
-	return null;
+	return rpm.get(engNum);
     }
 
     /**
@@ -102,7 +99,7 @@ public class AllEngineInfo implements Serializable {
     public Float[] getRpm() {
 	Float[] values = new Float[numberOfEngines];
 	for (int i = 0; i < numberOfEngines; i++) {
-	    values[i] = rpm.get(getRpm(i));
+	    values[i] = getRpm(i);
 	}
 	return values;
     }
@@ -114,10 +111,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getPwr(int engNum) {
-	if (validateEngNum(engNum)) {
-	    pwr.get(engNum);
+	return pwr.get(engNum);
+    }
+
+    public Float[] getPwr() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getPwr(i);
 	}
-	return null;
+	return values;
     }
 
     public void setPwp(int engNum, Float value) {
@@ -127,10 +129,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getPwp(int engNum) {
-	if (validateEngNum(engNum)) {
-	    pwp.get(engNum);
+	return pwp.get(engNum);
+    }
+
+    public Float[] getPwp() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getPwp(i);
 	}
-	return null;
+	return values;
     }
 
     public void setMp_(int engNum, Float value) {
@@ -140,10 +147,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getMp_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    mp_.get(engNum);
+	return mp_.get(engNum);
+    }
+
+    public Float[] getMp_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getMp_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setEt1(int engNum, Float value) {
@@ -153,10 +165,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getEt1(int engNum) {
-	if (validateEngNum(engNum)) {
-	    et1.get(engNum);
+	return et1.get(engNum);
+    }
+
+    public Float[] getEt1() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getEt1(i);
 	}
-	return null;
+	return values;
     }
 
     public void setEt2(int engNum, Float value) {
@@ -166,10 +183,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getEt2(int engNum) {
-	if (validateEngNum(engNum)) {
-	    et2.get(engNum);
+	return et2.get(engNum);
+    }
+
+    public Float[] getEt2() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getEt2(i);
 	}
-	return null;
+	return values;
     }
 
     public void setCt1(int engNum, Float value) {
@@ -179,10 +201,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getCt1(int engNum) {
-	if (validateEngNum(engNum)) {
-	    ct1.get(engNum);
+	return ct1.get(engNum);
+    }
+
+    public Float[] getCt1() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getCt1(i);
 	}
-	return null;
+	return values;
     }
 
     public void setCt2(int engNum, Float value) {
@@ -192,10 +219,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getCt2(int engNum) {
-	if (validateEngNum(engNum)) {
-	    ct2.get(engNum);
+	return ct2.get(engNum);
+    }
+
+    public Float[] getCt2() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getCt2(i);
 	}
-	return null;
+	return values;
     }
 
     public void setEst(int engNum, Float value) {
@@ -205,10 +237,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getEst(int engNum) {
-	if (validateEngNum(engNum)) {
-	    est.get(engNum);
+	return est.get(engNum);
+    }
+
+    public Float[] getEst() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getEst(i);
 	}
-	return null;
+	return values;
     }
 
     public void setFf_(int engNum, Float value) {
@@ -218,10 +255,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getFf_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    ff_.get(engNum);
+	return ff_.get(engNum);
+    }
+
+    public Float[] getFf_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getFf_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setFp_(int engNum, Float value) {
@@ -231,10 +273,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getFp_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    fp_.get(engNum);
+	return fp_.get(engNum);
+    }
+
+    public Float[] getFp_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getFp_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setOp_(int engNum, Float value) {
@@ -244,10 +291,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getOp_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    op_.get(engNum);
+	return op_.get(engNum);
+    }
+
+    public Float[] getOp_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getOp_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setOt_(int engNum, Float value) {
@@ -257,10 +309,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getOt_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    ot_.get(engNum);
+	return ot_.get(engNum);
+    }
+
+    public Float[] getOt_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getOt_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setN1_(int engNum, Float value) {
@@ -270,10 +327,16 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getN1_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    n1_.get(engNum);
+	return n1_.get(engNum);
+
+    }
+
+    public Float[] getN1_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getN1_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setN2_(int engNum, Float value) {
@@ -283,10 +346,16 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getN2_(int engNum) {
-	if (validateEngNum(engNum)) {
-	    n2_.get(engNum);
+	return n2_.get(engNum);
+
+    }
+
+    public Float[] getN2_() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getN2_(i);
 	}
-	return null;
+	return values;
     }
 
     public void setVib(int engNum, Float value) {
@@ -296,10 +365,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getVib(int engNum) {
-	if (validateEngNum(engNum)) {
-	    vib.get(engNum);
+	return vib.get(engNum);
+    }
+
+    public Float[] getVib() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getVib(i);
 	}
-	return null;
+	return values;
     }
 
     public void setVlt(int engNum, Float value) {
@@ -309,10 +383,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getVlt(int engNum) {
-	if (validateEngNum(engNum)) {
-	    vlt.get(engNum);
+	return vlt.get(engNum);
+    }
+
+    public Float[] getVlt() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getVlt(i);
 	}
-	return null;
+	return values;
     }
 
     public void setAmp(int engNum, Float value) {
@@ -322,10 +401,15 @@ public class AllEngineInfo implements Serializable {
     }
 
     public Float getAmp(int engNum) {
-	if (validateEngNum(engNum)) {
-	    amp.get(engNum);
+	return amp.get(engNum);
+    }
+
+    public Float[] getAmp() {
+	Float[] values = new Float[numberOfEngines];
+	for (int i = 0; i < numberOfEngines; i++) {
+	    values[i] = getAmp(i);
 	}
-	return null;
+	return values;
     }
 
 }

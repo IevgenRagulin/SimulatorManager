@@ -16,6 +16,7 @@ import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
+import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.SimulatorsStatus;
@@ -31,7 +32,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
     // once in 30 UI updates we verify if simulator configuration is valid. If
     // it's not valid, display error message
     protected boolean isSimulatorConfigurationValid = true;
-    private static final int VERIFY_CONFIGURATION_FREQUENCY = 30;
+    private static final int VERIFY_CONFIGURATION_FREQUENCY = 100;
     private int uiUpdatesLeftTillNextConfigurationVerification = 0;
 
     public RunningSimulationsView(Navigator navigator) {
@@ -84,14 +85,12 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	mainSimulationLayout.setVisible(true);
 	String simulatorId = selectedSimulator.getItemProperty(SimulatorCols.simulatorid.toString()).getValue()
 		.toString();
-	// Set simulation data
-	// Item selectedSimulation =
-	// SimulatorsStatus.getSimulationItemBySimulatorId(simulatorId);
-	// Set simulation info data
+	// Set simulation info
 	SimulationInfoItem selectedSimulationInfo = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
 	setSimulationInfoData(selectedSimulationInfo, simulatorId);
 	// Set simulation devices state
-	Item selectedDevicesState = SimulatorsStatus.getSimulationDevStateItemBySimulatorId(simulatorId);
+	SimulationDevStateItem selectedDevicesState = SimulatorsStatus
+		.getSimulationDevStateItemBySimulatorId(simulatorId);
 	setFlightControlsInfo(selectedDevicesState, selectedSimulator);
 	// Set PFD info
 	SimulationPFDItem selectedPFD = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
