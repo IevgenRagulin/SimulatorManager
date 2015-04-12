@@ -140,8 +140,12 @@ public class RunningSimulationsView extends SimulationsView implements View {
 		if (!dbHelp.isLastSimInDbRunning(selectedSimulatorId)) {
 		    this.setNoSimulationsRunningState();
 		} else {
-		    validateConfiguration(selectedSimulator, selectedSimulatorId);
-		    if (isSimulatorConfigurationValid) {
+		    // TODO: Add this back!
+		    // validateConfiguration(selectedSimulator,
+		    // selectedSimulatorId);
+		    if (true) {
+			// TODO: Add this back!
+			// if (isSimulatorConfigurationValid) {
 			this.setAllSimulationSimulatorData(selectedSimulator);
 		    }
 		}

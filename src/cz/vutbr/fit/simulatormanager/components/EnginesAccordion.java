@@ -25,6 +25,7 @@ public class EnginesAccordion extends Accordion {
 
     private SimulatorModelsView view;
     private SQLContainer enginesContainer;
+    private EngineModelForm enginesForm;
 
     public EnginesAccordion(SimulatorModelsView view) {
 	setSizeFull();
@@ -32,6 +33,12 @@ public class EnginesAccordion extends Accordion {
 	setImmediate(true);
     }
 
+    /**
+     * Based on simulator id, get data about engines models from database, set
+     * this data to this EnginesAccordion object
+     * 
+     * @param simulatorModelId
+     */
     public void setEnginesForSimulator(String simulatorModelId) {
 	LOG.debug("Setting engines for simulator with id: {}", simulatorModelId);
 	removeAllComponents();
@@ -46,8 +53,8 @@ public class EnginesAccordion extends Accordion {
 
     private void addEngineInfoFromDatabase(Item engineItem) {
 	FormLayout engineFormLayout = new FormLayout();
-	EngineModelForm form = new EngineModelForm(this, engineFormLayout, enginesContainer);
-	form.setItemDataSource(engineItem);
+	enginesForm = new EngineModelForm(this, engineFormLayout, enginesContainer);
+	enginesForm.setItemDataSource(engineItem);
 	Integer itemOrder = (Integer) engineItem.getItemProperty(EngineModelCols.enginemodelorder.toString())
 		.getValue();
 	addRemoveButtonToForm(engineFormLayout, engineItem);
@@ -106,6 +113,15 @@ public class EnginesAccordion extends Accordion {
      */
     public SQLContainer getEnginesContainer() {
 	return enginesContainer;
+    }
+
+    /**
+     * Get the engine model form containing data corresponding to this accordion
+     * 
+     * @return
+     */
+    public EngineModelForm getEnginesForm() {
+	return enginesForm;
     }
 
     /**

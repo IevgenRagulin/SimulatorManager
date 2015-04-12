@@ -6,8 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
@@ -48,7 +46,6 @@ public class SimulatorModelForm extends FieldGroup {
 		field = createInputField(colName.getName());
 		addFieldToForm(field, colName);
 	    }
-	    addValueChangeListener(field);
 	}
     }
 
@@ -76,23 +73,6 @@ public class SimulatorModelForm extends FieldGroup {
 	    field.setDescription(colName.getName());
 	}
 	this.bind(field, colName.toString());
-    }
-
-    /**
-     * When value changes, commit the value to database
-     * 
-     * @param field
-     */
-    @SuppressWarnings("rawtypes")
-    private void addValueChangeListener(AbstractField field) {
-	field.addValueChangeListener(new ValueChangeListener() {
-	    private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public void valueChange(ValueChangeEvent event) {
-		SimulatorModelForm.this.commit();
-	    }
-	});
     }
 
     /**

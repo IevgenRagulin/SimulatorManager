@@ -36,7 +36,6 @@ public class EngineModelForm extends FieldGroup {
 	    // check if this is a boolean field
 	    if (Boolean.class.equals(engineModelCol.getType())) {
 		CheckBox checkbox = new CheckBox(engineModelCol.getName());
-		addValueChangeListener(checkbox);
 		addFieldToForm(checkbox, engineModelCol);
 		// if simulator model id, don't add it to the form
 	    } else if (engineModelCol.equals(EngineModelCols.simulatormodelid)) {
@@ -54,7 +53,6 @@ public class EngineModelForm extends FieldGroup {
 		addFieldToForm(dateField, engineModelCol);
 	    } else {
 		TextField field = createInputField(engineModelCol.getName());
-		addValueChangeListener(field);
 		addFieldToForm(field, engineModelCol);
 	    }
 	}
@@ -90,24 +88,6 @@ public class EngineModelForm extends FieldGroup {
 	    field.setDescription(colName.getName());
 	}
 	this.bind(field, colName.toString());
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addValueChangeListener(AbstractField field) {
-	field.addValueChangeListener(new ValueChangeListener() {
-	    private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public void valueChange(ValueChangeEvent event) {
-		try {
-		    EngineModelForm.this.commit();
-		} catch (IllegalEngineIdException e) {
-		    Notification.show(e.getMessage(),
-			    "Please, choose engine id which is not used by other engines on this simulator model yet",
-			    Notification.Type.ERROR_MESSAGE);
-		}
-	    }
-	});
     }
 
     /**

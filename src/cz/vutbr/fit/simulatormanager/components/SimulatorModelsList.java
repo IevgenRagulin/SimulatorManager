@@ -51,6 +51,7 @@ public class SimulatorModelsList extends Table {
 		view.getEnginesPanel().setVisible(shouldEditorBeVisible);
 		view.getAddEngineButton().setVisible(shouldEditorBeVisible);
 		view.getRemoveSimulatorModelButton().setVisible(shouldEditorBeVisible);
+		view.getSaveButton().setVisible(shouldEditorBeVisible);
 	    }
 
 	});

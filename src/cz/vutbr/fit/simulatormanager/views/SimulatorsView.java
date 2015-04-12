@@ -54,10 +54,9 @@ public class SimulatorsView extends VerticalLayout implements View {
     private Image ev97Img;
     private MainMenuBar mainMenu;
     private Button pingSimulatorButton = new Button("Verify configuration");
-
+    private Button saveButton = new Button("Save changes to simulator configuration");
     private SimulatorListSimulatorsView simulatorList;
     private SimulatorForm simulatorForm;
-    private FormLayout editorLayoutTest;
     private FieldGroup fieldGroupTest;
 
     public Label getSelectedSimulatorName() {
@@ -66,6 +65,10 @@ public class SimulatorsView extends VerticalLayout implements View {
 
     public Button getPingSimulatorButton() {
 	return pingSimulatorButton;
+    }
+
+    public Button getSaveButton() {
+	return saveButton;
     }
 
     public FormLayout getEditorLayout() {
@@ -100,6 +103,7 @@ public class SimulatorsView extends VerticalLayout implements View {
     private void initLayout() {
 	setSizeFull();
 	initMenu();
+	initButtons();
 	addComponent(mainMenu);
 	addComponent(horizontalSplitPanel);
 	setExpandRatio(horizontalSplitPanel, 20);
@@ -108,22 +112,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 	initRightLayout();
     }
 
-    private void initMenu() {
-	mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATORS);
-    }
-
-    private void initLeftLayout() {
-	initAddSimulatorButton();
-	leftLayout.setSizeFull();
-	leftLayout.setMargin(new MarginInfo(false, false, true, true));
-	leftLayout.addComponent(new Label("<b>Managed simulators</b>", ContentMode.HTML));
-	leftLayout.addComponent(simulatorList);
-	leftLayout.addComponent(addSimulatorButton);
-	leftLayout.setExpandRatio(simulatorList, 20);
-
-    }
-
-    private void initAddSimulatorButton() {
+    private void initButtons() {
 	addSimulatorButton.setStyleName("simulatorsAddSimulator");
 	addSimulatorButton.setIcon(ResourceUtil.getPlusImgResource());
 	int numberOfSimModels = getNumberOfSimulatorModels();
@@ -132,6 +121,25 @@ public class SimulatorsView extends VerticalLayout implements View {
 	addSimulatorButton.setEnabled(numberOfSimModels > 0 ? true : false);
 	addSimulatorButton
 		.setDescription("You can only add simulators if there is at lease one simulator model configured");
+	removeSimulatorButton.setIcon(ResourceUtil.getMinusImgResource());
+	pingSimulatorButton.setDescription("Check if selected simulator is up and running");
+	pingSimulatorButton.setVisible(false);
+	saveButton.setIcon(ResourceUtil.getSaveImgResource());
+	saveButton.setVisible(false);
+    }
+
+    private void initMenu() {
+	mainMenu = MainMenuBar.getInstance(navigator, PageType.MANAGE_SIMULATORS);
+    }
+
+    private void initLeftLayout() {
+	leftLayout.setSizeFull();
+	leftLayout.setMargin(new MarginInfo(false, false, true, true));
+	leftLayout.addComponent(new Label("<b>Managed simulators</b>", ContentMode.HTML));
+	leftLayout.addComponent(simulatorList);
+	leftLayout.addComponent(addSimulatorButton);
+	leftLayout.setExpandRatio(simulatorList, 20);
+
     }
 
     /**
@@ -143,15 +151,10 @@ public class SimulatorsView extends VerticalLayout implements View {
 	return getDBHelp().getSimulatorModelContainer().getItemIds().size();
     }
 
-    private void initRemoveSimulatorButton() {
-	removeSimulatorButton.setIcon(ResourceUtil.getMinusImgResource());
-    }
-
     private void initRightLayout() {
 	rightLayout.setMargin(new MarginInfo(true, true, true, true));
 	rightLayout.addComponent(selectedSimulatorName);
-	pingSimulatorButton.setDescription("Check if selected simulator is up and running");
-	pingSimulatorButton.setVisible(false);
+
 	rightLayout.addComponent(pingSimulatorButton);
 	ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here",
 		ResourceUtil.getEv97Img());
@@ -160,12 +163,9 @@ public class SimulatorsView extends VerticalLayout implements View {
 	editorLayout.setVisible(false);
 	rightLayout.addComponent(editorLayout);
 	initSimulatorForm();
-	initRemoveSimulatorButton();
 	editorLayout.addComponent(removeSimulatorButton);
+	rightLayout.addComponent(saveButton);
 
-	editorLayoutTest = new FormLayout();
-	fieldGroupTest = new FieldGroup();
-	rightLayout.addComponent(editorLayoutTest);
     }
 
     public void commit() throws CommitException, UnsupportedOperationException, SQLException {
@@ -182,6 +182,19 @@ public class SimulatorsView extends VerticalLayout implements View {
 	addAddClickListener();
 	addRemoveClickListener();
 	addPingClickListener();
+	addSaveClickListener();
+    }
+
+    private void addSaveClickListener() {
+	saveButton.addClickListener(new ClickListener() {
+	    private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public void buttonClick(ClickEvent event) {
+		simulatorForm.commit();
+		verifyConfiguration();
+	    }
+	});
     }
 
     private void addPingClickListener() {
@@ -189,15 +202,19 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		RowId simulatorId = (RowId) simulatorList.getValue();
-		String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString())
-			.getValue().toString();
-		int port = Integer.valueOf(simulatorList.getItem(simulatorId)
-			.getItemProperty(SimulatorCols.port.toString()).getValue().toString());
-		new ConfigurationChecker(host, port, simulatorId.toString())
-			.verifyConfiguration(ConfigurationChecker.SHOW_SUCCESS_MESSAGE);
+		verifyConfiguration();
 	    }
 	});
+    }
+
+    private void verifyConfiguration() {
+	RowId simulatorId = (RowId) simulatorList.getValue();
+	String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString()).getValue()
+		.toString();
+	int port = Integer.valueOf(simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.port.toString())
+		.getValue().toString());
+	new ConfigurationChecker(host, port, simulatorId.toString())
+		.verifyConfiguration(ConfigurationChecker.SHOW_SUCCESS_MESSAGE);
     }
 
     private void addAddClickListener() {
@@ -222,9 +239,6 @@ public class SimulatorsView extends VerticalLayout implements View {
     @Override
     public void enter(ViewChangeEvent event) {
 	LOG.debug("enter() - entering SimulatorsView");
-	// make add simulator button enabled if there are simulator models in
-	// db. otherwise, make it disabled
-	initAddSimulatorButton();
 	// deselect the previously selected simulator
 	this.simulatorList.select(simulatorList.getNullSelectionItemId());
 	if (getNumberOfSimulatorModels() == 0) {

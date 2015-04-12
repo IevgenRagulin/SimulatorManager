@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.sqlcontainer.RowId;
@@ -82,7 +80,6 @@ public class SimulatorForm extends FieldGroup {
 	setBuffered(false);
 	for (SimulatorCols colName : SimulatorCols.values()) {
 	    AbstractField field = createField(colName);
-	    addValueChangeListener(field);
 	    addFieldToForm(field, colName);
 	}
     }
@@ -170,29 +167,10 @@ public class SimulatorForm extends FieldGroup {
 
     private TextField createInputField(String fieldName) {
 	TextField field = new TextField(fieldName);
-	addValueChangeListener(field);
 	field.setImmediate(true);
 	field.setWidth("90%");
 	field.setNullRepresentation("");
 	return field;
-    }
-
-    /**
-     * When a value is changed by user, commit data to database
-     * 
-     * @param field
-     */
-    @SuppressWarnings("rawtypes")
-    private void addValueChangeListener(AbstractField field) {
-	field.addValueChangeListener(new ValueChangeListener() {
-	    private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public void valueChange(ValueChangeEvent event) {
-		LOG.debug("Going to commit simulator form.. ");
-		SimulatorForm.this.commit();
-	    }
-	});
     }
 
     @Override

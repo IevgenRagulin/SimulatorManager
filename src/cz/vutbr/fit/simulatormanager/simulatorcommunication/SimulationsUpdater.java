@@ -78,8 +78,8 @@ public class SimulationsUpdater implements Runnable {
 	boolean isLastSimInDBOn = false;
 	Boolean isLastSimInDBPaused = null;
 	// is simulator on or paused based on simulators response
-	Boolean isCurrentSimulationPaused = null;
-	Boolean isCurrentSimulationRunning = SimulationStatusProviderSimpleImpl.isSimulatorRunning(dataFromSimulator,
+	Boolean isCurrentSimPaused = null;
+	Boolean isCurrentSimRunning = SimulationStatusProviderSimpleImpl.isSimulatorRunning(dataFromSimulator,
 		simulatorId);
 	if (lastSimDb != null) {
 	    isLastSimInDBOn = (Boolean) lastSimDb.getItemProperty(SimulationCols.issimulationon.toString()).getValue();
@@ -88,20 +88,24 @@ public class SimulationsUpdater implements Runnable {
 	}
 
 	if (dataFromSimulator != null) {
-	    isCurrentSimulationPaused = dataFromSimulator.getSimulationPaused();
+	    isCurrentSimPaused = dataFromSimulator.getSimulationPaused();
 	}
 
-	if (!isCurrentSimulationRunning) {
+	LOG.trace("isLastSimInDBOn: {}, isLastSimInDBPaused: {}", isLastSimInDBOn, isLastSimInDBPaused);
+	LOG.trace("isCurrentSimulationPaused: {}, isCurrentSimulationRunning: {}", isCurrentSimPaused,
+		isCurrentSimRunning);
+
+	if (!isCurrentSimRunning) {
 	    // simulator is not running
 	    updateSimulationStateInDatabaseSimulatorOff(lastSimCont, lastSimDb, isLastSimInDBOn, isLastSimInDBPaused);
-	} else if ((dataFromSimulator != null) && (isCurrentSimulationPaused)) {
+	} else if ((dataFromSimulator != null) && (isCurrentSimPaused)) {
 	    // simulator is paused
 	    updateSimulationStateInDatabaseSimulatorPaused(lastSimCont, lastSimDb, isLastSimInDBOn, isLastSimInDBPaused);
 	} else if (dataFromSimulator != null) {
 	    // simulator is running
 	    updateSimulationStateInDatabaseSimulatorOn(lastSimCont, lastSimDb, isLastSimInDBOn, isLastSimInDBPaused);
 	}
-	LOG.debug("Update sim state in db. Simulator id: {}. dataFromSimulator: {}", simulatorId, dataFromSimulator);
+	LOG.trace("Update sim state in db. Simulator id: {}. dataFromSimulator: {}", simulatorId, dataFromSimulator);
     }
 
     /**

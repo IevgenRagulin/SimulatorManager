@@ -52,8 +52,9 @@ public class SimulatorListSimulatorsView extends Table {
 		boolean shouldEditorBeVisible = simulatorId != null;
 		view.getRightPanelImage().setVisible(!shouldEditorBeVisible);
 		view.getEditorLayout().setVisible(shouldEditorBeVisible);
-		view.getSelectedSimulatorName().setVisible(simulatorId != null);
-		view.getPingSimulatorButton().setVisible(simulatorId != null);
+		view.getSelectedSimulatorName().setVisible(shouldEditorBeVisible);
+		view.getPingSimulatorButton().setVisible(shouldEditorBeVisible);
+		view.getSaveButton().setVisible(shouldEditorBeVisible);
 	    }
 
 	});

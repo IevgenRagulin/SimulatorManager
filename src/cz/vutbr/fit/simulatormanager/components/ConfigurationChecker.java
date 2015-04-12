@@ -23,8 +23,8 @@ public class ConfigurationChecker {
     public static final boolean SHOW_SUCCESS_MESSAGE = false;
     public static final boolean DO_NOT_SHOW_SUCCESS_MESSAGE = false;
     final static String PING_SUCCESS_MESSAGE = "Success. The selected simulator is up and running, and configured correctly";
-    final static String PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE = "The simulator is running, however you need to check your configuration  ";
-    final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding";
+    final static String PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE = "The simulator is running and sending data throug AWCom, however you need to check your configuration  ";
+    final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding. Please, check that hostname (IP address), port are set correctly. Make sure that AWCom plugin in installed in XPlane";
 
     /**
      * 

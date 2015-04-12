@@ -16,6 +16,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
@@ -24,6 +25,7 @@ import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelForm;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelsList;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
+import cz.vutbr.fit.simulatormanager.exception.IllegalEngineIdException;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 
@@ -41,6 +43,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
     private Button removeSimulatorModelButton = new Button("Remove simulator model");
     private Button addSimulatorModelButton = new Button("Add a simulator model");
     private Button addEngineButton = new Button("Add a new engine");
+    private Button saveButton = new Button("Save changes to simulator model");
     private FormLayout formLayout = new FormLayout();
     private DatabaseHelper dbHelper = new DatabaseHelper();
 
@@ -72,6 +75,32 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	newModelClickListener();
 	removeModelClickListener();
 	newEngineClickListener();
+	saveButtonClickListener();
+    }
+
+    /**
+     * Save button click listener. On clicking save button validate the entered
+     * data. If validation is successful, save updates to database. If not,
+     * display an error message
+     */
+    private void saveButtonClickListener() {
+	saveButton.addClickListener(new ClickListener() {
+	    private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public void buttonClick(ClickEvent event) {
+		try {
+		    simulatorModelForm.commit();
+		    enginesAccordion.getEnginesForm().commit();
+		    Notification.show("The simulator model has successfully been updated",
+			    Notification.Type.HUMANIZED_MESSAGE);
+		} catch (IllegalEngineIdException e) {
+		    Notification.show(
+			    "Error occured when trying to commit engines form. Error message: " + e.getMessage(), "",
+			    Notification.Type.ERROR_MESSAGE);
+		}
+	    }
+	});
     }
 
     private void newEngineClickListener() {
@@ -114,6 +143,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 
     private void initLayout() {
 	setSizeFull();
+	initButtons();
 	addComponent(mainMenu);
 	addComponent(horizontalSplitPanel);
 	setExpandRatio(horizontalSplitPanel, 20);
@@ -123,7 +153,6 @@ public class SimulatorModelsView extends VerticalLayout implements View {
     }
 
     private void initLeftLayout() {
-	initAddSimulatorModelButton();
 	leftLayout.setSizeFull();
 	leftLayout.setMargin(new MarginInfo(false, false, true, true));
 	leftLayout.addComponent(new Label("<b>Simulator models</b>", ContentMode.HTML));
@@ -142,10 +171,10 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	formLayout.setVisible(false);
 	rightLayout.addComponent(formLayout);
 	initSimulatorModelForm();
-	initRemoveSimulatorModelButton();
 	addEnginesToRightPanel();
 
 	rightLayout.addComponent(removeSimulatorModelButton);
+	rightLayout.addComponent(saveButton);
 
     }
 
@@ -156,25 +185,24 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	enginesPanel.setWidth("100%");
 	enginesPanel.setVisible(false);
 	rightLayout.addComponent(enginesPanel);
-
-	addEngineButton.setVisible(false);
-	addEngineButton.setIcon(ResourceUtil.getPlusImgResource());
 	rightLayout.addComponent(addEngineButton);
 
     }
 
-    private void initRemoveSimulatorModelButton() {
+    private void initButtons() {
 	removeSimulatorModelButton.setVisible(false);
 	removeSimulatorModelButton.setIcon(ResourceUtil.getMinusImgResource());
+	addSimulatorModelButton.setStyleName("simulatorsAddSimulator");
+	addSimulatorModelButton.setIcon(ResourceUtil.getPlusImgResource());
+	addEngineButton.setIcon(ResourceUtil.getPlusImgResource());
+	addEngineButton.setVisible(false);
+	saveButton.setIcon(ResourceUtil.getSaveImgResource());
+	saveButton.setVisible(false);
+
     }
 
     private void initSimulatorModelForm() {
 	simulatorModelForm = new SimulatorModelForm(this);
-    }
-
-    private void initAddSimulatorModelButton() {
-	addSimulatorModelButton.setStyleName("simulatorsAddSimulator");
-	addSimulatorModelButton.setIcon(ResourceUtil.getPlusImgResource());
     }
 
     private void initHorizontalSplitPanel() {
@@ -217,5 +245,9 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 
     public EnginesAccordion getEnginesAccordeon() {
 	return enginesAccordion;
+    }
+
+    public Button getSaveButton() {
+	return saveButton;
     }
 }
