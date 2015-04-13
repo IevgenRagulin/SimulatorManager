@@ -75,6 +75,10 @@ public class SimulatorsView extends VerticalLayout implements View {
 	return editorLayout;
     }
 
+    public Button getRemoveSimulatorButton() {
+	return removeSimulatorButton;
+    }
+
     public SimulatorForm getSimulatorForm() {
 	return simulatorForm;
     }
@@ -122,10 +126,11 @@ public class SimulatorsView extends VerticalLayout implements View {
 	addSimulatorButton
 		.setDescription("You can only add simulators if there is at lease one simulator model configured");
 	removeSimulatorButton.setIcon(ResourceUtil.getMinusImgResource());
+	removeSimulatorButton.setEnabled(false);
 	pingSimulatorButton.setDescription("Check if selected simulator is up and running");
 	pingSimulatorButton.setVisible(false);
 	saveButton.setIcon(ResourceUtil.getSaveImgResource());
-	saveButton.setVisible(false);
+	saveButton.setEnabled(false);
     }
 
     private void initMenu() {
@@ -137,7 +142,9 @@ public class SimulatorsView extends VerticalLayout implements View {
 	leftLayout.setMargin(new MarginInfo(false, false, true, true));
 	leftLayout.addComponent(new Label("<b>Managed simulators</b>", ContentMode.HTML));
 	leftLayout.addComponent(simulatorList);
+	leftLayout.addComponent(saveButton);
 	leftLayout.addComponent(addSimulatorButton);
+	leftLayout.addComponent(removeSimulatorButton);
 	leftLayout.setExpandRatio(simulatorList, 20);
 
     }
@@ -154,7 +161,6 @@ public class SimulatorsView extends VerticalLayout implements View {
     private void initRightLayout() {
 	rightLayout.setMargin(new MarginInfo(true, true, true, true));
 	rightLayout.addComponent(selectedSimulatorName);
-
 	rightLayout.addComponent(pingSimulatorButton);
 	ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here",
 		ResourceUtil.getEv97Img());
@@ -163,9 +169,6 @@ public class SimulatorsView extends VerticalLayout implements View {
 	editorLayout.setVisible(false);
 	rightLayout.addComponent(editorLayout);
 	initSimulatorForm();
-	editorLayout.addComponent(removeSimulatorButton);
-	rightLayout.addComponent(saveButton);
-
     }
 
     public void commit() throws CommitException, UnsupportedOperationException, SQLException {

@@ -52,7 +52,8 @@ public class SimulatorListSimulatorsView extends Table {
 		view.getEditorLayout().setVisible(shouldEditorBeVisible);
 		view.getSelectedSimulatorName().setVisible(shouldEditorBeVisible);
 		view.getPingSimulatorButton().setVisible(shouldEditorBeVisible);
-		view.getSaveButton().setVisible(shouldEditorBeVisible);
+		view.getSaveButton().setEnabled(shouldEditorBeVisible);
+		view.getRemoveSimulatorButton().setEnabled(shouldEditorBeVisible);
 	    }
 	});
     }

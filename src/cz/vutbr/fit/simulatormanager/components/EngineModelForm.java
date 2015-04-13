@@ -12,12 +12,13 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.data.validator.NullValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.Constants;
@@ -27,12 +28,12 @@ import cz.vutbr.fit.simulatormanager.exception.IllegalEngineIdException;
 public class EngineModelForm extends FieldGroup {
     private static final long serialVersionUID = 1L;
     final static Logger LOG = LoggerFactory.getLogger(EngineModelForm.class);
-    private EnginesAccordion enginesAccordion;
-    private FormLayout thisEnginesFormLayout;
+    private EnginesTabSheet enginesAccordion;
+    private GridLayout engGrid;
 
-    public EngineModelForm(EnginesAccordion enginesAccordion, FormLayout formLayout, SQLContainer enginesContainer) {
+    public EngineModelForm(EnginesTabSheet enginesAccordion, GridLayout formLayout, SQLContainer enginesContainer) {
 	this.enginesAccordion = enginesAccordion;
-	this.thisEnginesFormLayout = formLayout;
+	this.engGrid = formLayout;
 	setBuffered(false);
 	for (EngineModelCols engineModelCol : EngineModelCols.values()) {
 	    // check if this is a boolean field
@@ -46,6 +47,7 @@ public class EngineModelForm extends FieldGroup {
 		TextField field = createModelOrderInputField(engineModelCol.getName());
 		field.addValidator(new IntegerRangeValidator("Engine model order must be between 0 and 7", 0,
 			Constants.MAX_ENGINES_NUM - 1));
+		field.addValidator(new NullValidator("Engine model order must not be null", false));
 		addFieldToForm(field, engineModelCol);
 	    }
 	    // check if this is a timestamp field
@@ -85,7 +87,21 @@ public class EngineModelForm extends FieldGroup {
 
     @SuppressWarnings("rawtypes")
     private void addFieldToForm(AbstractField field, EngineModelCols colName) {
-	thisEnginesFormLayout.addComponent(field);
+	// if this is enginemodel order, we want it to take 2 cells in the 0th
+	// row
+	if (colName.equals(EngineModelCols.enginemodelorder)) {
+	    engGrid.addComponent(field, 1, 0, 2, 0);
+	    // if this is a boolean, allign it appropriately
+	} else if (Boolean.class.equals(colName.getType())) {
+	    engGrid.addComponent(field);
+	    engGrid.setComponentAlignment(field, Alignment.MIDDLE_LEFT);
+	    // if timestamp, make it take 3 cols
+	} else if (colName.equals(EngineModelCols.timestamp)) {
+	    engGrid.addComponent(field, 0, 19, 2, 19);
+	} else {
+	    engGrid.addComponent(field);
+	}
+
 	if (!StringUtils.isEmpty(colName.getDescription())) {
 	    field.setDescription(colName.getDescription());
 	} else {
@@ -95,8 +111,8 @@ public class EngineModelForm extends FieldGroup {
     }
 
     /**
-     * The listener for engine model order field. It's different from other
-     * change listeners, because it also updates the tab names in the accordion
+     * The listener for engine model order field. Updates the tab names in the
+     * accordion
      * 
      * @param field
      */
@@ -107,15 +123,8 @@ public class EngineModelForm extends FieldGroup {
 
 	    @Override
 	    public void valueChange(ValueChangeEvent event) {
-		try {
-		    EngineModelForm.this.commit();
-		    enginesAccordion.updateTabNames(thisEnginesFormLayout, getItemDataSource());
-		    enginesAccordion.markAsDirtyRecursive();
-		} catch (IllegalEngineIdException e) {
-		    Notification.show(e.getMessage(),
-			    "Please, choose engine id which is not used by other engines on this simulator model yet",
-			    Notification.Type.ERROR_MESSAGE);
-		}
+		enginesAccordion.updateTabNames(engGrid, getItemDataSource());
+		enginesAccordion.markAsDirtyRecursive();
 	    }
 	});
     }

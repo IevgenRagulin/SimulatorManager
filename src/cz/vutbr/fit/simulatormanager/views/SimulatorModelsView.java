@@ -22,7 +22,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-import cz.vutbr.fit.simulatormanager.components.EnginesAccordion;
+import cz.vutbr.fit.simulatormanager.components.EnginesTabSheet;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelForm;
@@ -54,7 +54,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
     private SimulatorModelsList simulatorModelsList;
     private SimulatorModelForm simulatorModelForm;
 
-    private EnginesAccordion enginesAccordion;
+    private EnginesTabSheet enginesTabsheet;
     private Panel enginesPanel;
 
     public DatabaseHelper getDbHelper() {
@@ -96,13 +96,12 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
 		try {
-		    String simulatorModelId = ((RowId) simulatorModelsList.getValue()).toString();
 		    SimulatorModelConfigurationChecker validator = new SimulatorModelConfigurationChecker(
-			    enginesAccordion, simulatorModelForm);
+			    enginesTabsheet, simulatorModelForm);
 		    boolean isConfigurationValid = validator.verifyConfiguration(INVALID_CONFIG, VALID_CONFIG);
 		    if (isConfigurationValid) {
 			simulatorModelForm.commit();
-			enginesAccordion.getEnginesContainer().commit();
+			enginesTabsheet.getEnginesContainer().commit();
 		    }
 		} catch (UnsupportedOperationException | SQLException e) {
 		    Notification.show(
@@ -119,7 +118,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		enginesAccordion.addNewEngine(((RowId) simulatorModelsList.getValue()).toString());
+		enginesTabsheet.addNewEngine(((RowId) simulatorModelsList.getValue()).toString());
 	    }
 	});
     }
@@ -169,6 +168,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	leftLayout.addComponent(simulatorModelsList);
 	leftLayout.addComponent(addSimulatorModelButton);
 	leftLayout.addComponent(removeSimulatorModelButton);
+	leftLayout.addComponent(saveButton);
 	leftLayout.setExpandRatio(simulatorModelsList, 20);
     }
 
@@ -184,19 +184,15 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	initSimulatorModelForm();
 	addEnginesToRightPanel();
 
-	rightLayout.addComponent(saveButton);
-
     }
 
     private void addEnginesToRightPanel() {
-	enginesAccordion = new EnginesAccordion(this);
-
-	enginesPanel = new Panel("Engines on this simulator model", enginesAccordion);
+	enginesTabsheet = new EnginesTabSheet(this);
+	enginesPanel = new Panel("Engines on this simulator model", enginesTabsheet);
 	enginesPanel.setWidth("100%");
 	enginesPanel.setVisible(false);
-	rightLayout.addComponent(enginesPanel);
 	rightLayout.addComponent(addEngineButton);
-
+	rightLayout.addComponent(enginesPanel);
     }
 
     private void initButtons() {
@@ -207,7 +203,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	addEngineButton.setIcon(ResourceUtil.getPlusImgResource());
 	addEngineButton.setVisible(false);
 	saveButton.setIcon(ResourceUtil.getSaveImgResource());
-	saveButton.setVisible(false);
+	saveButton.setEnabled(false);
 
     }
 
@@ -253,8 +249,8 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	return removeSimulatorModelButton;
     }
 
-    public EnginesAccordion getEnginesAccordeon() {
-	return enginesAccordion;
+    public EnginesTabSheet getEnginesAccordeon() {
+	return enginesTabsheet;
     }
 
     public Button getSaveButton() {

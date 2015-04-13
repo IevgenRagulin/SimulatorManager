@@ -19,12 +19,12 @@ import cz.vutbr.fit.simulatormanager.util.SimulatorModelValidator;
  */
 public class SimulatorModelConfigurationChecker {
 
-    private EnginesAccordion enginesModels;
+    private EnginesTabSheet enginesModels;
     private SimulatorModelForm simulatorModelForm;
 
     public static final boolean SHOW_SUCCESS_MESSAGE = false;
 
-    public SimulatorModelConfigurationChecker(EnginesAccordion enginesAccordion, SimulatorModelForm simulatorModelForm) {
+    public SimulatorModelConfigurationChecker(EnginesTabSheet enginesAccordion, SimulatorModelForm simulatorModelForm) {
 	this.enginesModels = enginesAccordion;
 	this.simulatorModelForm = simulatorModelForm;
     }

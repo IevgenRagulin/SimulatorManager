@@ -6,7 +6,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 
 public class EngineModelBean {
 
-    private int enginemodelorder;
+    private Integer enginemodelorder;
 
     private boolean rpm;
     // we use Float instead of float to allow null values
@@ -593,11 +593,11 @@ public class EngineModelBean {
 	this.maxamp = maxamp;
     }
 
-    public int getEnginemodelorder() {
+    public Integer getEnginemodelorder() {
 	return enginemodelorder;
     }
 
-    public void setEnginemodelorder(int enginemodelorder) {
+    public void setEnginemodelorder(Integer enginemodelorder) {
 	this.enginemodelorder = enginemodelorder;
     }
 

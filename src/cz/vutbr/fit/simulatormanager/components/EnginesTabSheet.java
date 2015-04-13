@@ -9,27 +9,27 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TabSheet;
 
 import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
 
-public class EnginesAccordion extends Accordion {
+public class EnginesTabSheet extends TabSheet {
     private static final long serialVersionUID = 1L;
-    final static Logger LOG = LoggerFactory.getLogger(EnginesAccordion.class);
+    final static Logger LOG = LoggerFactory.getLogger(EnginesTabSheet.class);
 
     private SimulatorModelsView view;
     private SQLContainer enginesContainer;
     private EngineModelForm enginesForm;
 
-    public EnginesAccordion(SimulatorModelsView view) {
+    public EnginesTabSheet(SimulatorModelsView view) {
 	setSizeFull();
 	this.view = view;
 	setImmediate(true);
@@ -54,13 +54,15 @@ public class EnginesAccordion extends Accordion {
     }
 
     private void addEngineInfoFromDatabase(Item engineItem) {
-	FormLayout engineFormLayout = new FormLayout();
-	enginesForm = new EngineModelForm(this, engineFormLayout, enginesContainer);
+	GridLayout engineGridLayout = new GridLayout(3, 20);
+	engineGridLayout.setWidth("60%");
+	engineGridLayout.setMargin(true);
+	enginesForm = new EngineModelForm(this, engineGridLayout, enginesContainer);
 	enginesForm.setItemDataSource(engineItem);
 	Integer itemOrder = (Integer) engineItem.getItemProperty(EngineModelCols.enginemodelorder.toString())
 		.getValue();
-	addRemoveButtonToForm(engineFormLayout, engineItem);
-	addTab(engineFormLayout, "Engine " + itemOrder);
+	addRemoveButtonToGrid(engineGridLayout, engineItem);
+	addTab(engineGridLayout, "Engine " + itemOrder);
     }
 
     /**
@@ -68,10 +70,10 @@ public class EnginesAccordion extends Accordion {
      * changes are not commited immediately. The commit happens only after
      * clicking "Save" button
      * 
-     * @param form
+     * @param grid
      * @param engineItem
      */
-    private void addRemoveButtonToForm(FormLayout form, Item engineItem) {
+    private void addRemoveButtonToGrid(GridLayout grid, Item engineItem) {
 	Button removeEngineButton = new Button("Remove this engine");
 	Integer engineModelId = (Integer) engineItem.getItemProperty(EngineModelCols.enginemodelid.toString())
 		.getValue();
@@ -82,7 +84,7 @@ public class EnginesAccordion extends Accordion {
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		Tab tabWithForm = getTab(form);
+		Tab tabWithForm = getTab(grid);
 		removeTab(tabWithForm);
 		try {
 		    enginesContainer.removeItem(engineModelRowId);
@@ -92,7 +94,7 @@ public class EnginesAccordion extends Accordion {
 		}
 	    }
 	});
-	form.addComponent(removeEngineButton);
+	grid.addComponent(removeEngineButton);
     }
 
     /**
@@ -103,7 +105,7 @@ public class EnginesAccordion extends Accordion {
      * @param formLayout
      * @param item
      */
-    public void updateTabNames(FormLayout formLayout, Item item) {
+    public void updateTabNames(GridLayout formLayout, Item item) {
 	Tab tab = getTab(formLayout);
 	if (tab != null) {
 	    LOG.debug("Updating tab name in engines accordion");

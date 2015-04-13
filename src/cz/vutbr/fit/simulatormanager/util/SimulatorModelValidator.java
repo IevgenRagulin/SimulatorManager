@@ -1,8 +1,10 @@
 package cz.vutbr.fit.simulatormanager.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -10,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.beans.EngineModelBean;
-import cz.vutbr.fit.simulatormanager.components.EnginesAccordion;
+import cz.vutbr.fit.simulatormanager.components.EnginesTabSheet;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelForm;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 
@@ -28,7 +30,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
  * for AWCom to be sending values for engine 1, and not sending values for
  * engine 0, or sending values for engine 2, and not sending for engine 1, etc.
  * 
- * This class is different from SimulatorValidator, because this checks if a
+ * This class is different from SimulatorValidator, because this one checks if a
  * simulator model is valid, while SimulatorValidator checks if a SimulatorModel
  * corresponds to Simulator configuration
  * 
@@ -38,7 +40,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 public class SimulatorModelValidator {
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelValidator.class);
 
-    public static String isSimulatorModelConfiguredCorrectly(EnginesAccordion enginesModels,
+    public static String isSimulatorModelConfiguredCorrectly(EnginesTabSheet enginesModels,
 	    SimulatorModelForm simulatorModelForm) {
 	List<String> errorsAll = new ArrayList<String>();
 	List<String> enginesErrors = validateEnginesConfiguration(enginesModels);
@@ -50,59 +52,83 @@ public class SimulatorModelValidator {
     }
 
     @SuppressWarnings("rawtypes")
-    private static List<String> validateEnginesConfiguration(EnginesAccordion enginesModels) {
+    private static List<String> validateEnginesConfiguration(EnginesTabSheet enginesModels) {
 	List<String> errors = new ArrayList<String>();
 	if (enginesModels.getComponentCount() == 0) {
 	    errors.add("Simulator model must have at least one engine model configured");
 	} else {
 	    Iterator<Component> engineModelForms = enginesModels.iterator();
+	    Set<Integer> engineModelOrders = new HashSet<Integer>();
 	    while (engineModelForms.hasNext()) {
-		FormLayout engineForm = (FormLayout) engineModelForms.next();
+		GridLayout engineForm = (GridLayout) engineModelForms.next();
 		EngineModelBean eng = buildEngineModelItem(engineForm);
-		int engOrd = eng.getEnginemodelorder();
-		if (engOrd >= Constants.MAX_ENGINES_NUM || eng.getEnginemodelorder() < 0) {
-		    errors.add("Engine model order on engine model#" + engOrd
-			    + " should be lying in the range from 0 to  " + (Constants.MAX_ENGINES_NUM - 1));
-		}
-
-		addError(errors,
-			validateVal(EngineModelCols.rpm, eng.isRpm(), eng.getMinrpm(), eng.getMaxrpm(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.pwr, eng.isPwr(), eng.getMinpwr(), eng.getMaxpwr(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.pwp, eng.isPwp(), eng.getMinpwp(), eng.getMaxpwp(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.mp_, eng.isMp_(), eng.getMinmp_(), eng.getMaxmp_(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.egt1, eng.isEgt1(), eng.getMinegt1(), eng.getMaxegt1(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.egt2, eng.isEgt2(), eng.getMinegt2(), eng.getMaxegt2(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.cht1, eng.isCht1(), eng.getMincht1(), eng.getMaxcht1(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.cht2, eng.isCht2(), eng.getMincht2(), eng.getMaxcht2(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.est, eng.isEst(), eng.getMinest(), eng.getMaxest(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.ff_, eng.isFf_(), eng.getMinff_(), eng.getMaxff_(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.fp_, eng.isFp_(), eng.getMinfp_(), eng.getMaxfp_(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.op_, eng.isOp_(), eng.getMinop_(), eng.getMaxop_(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.n1_, eng.isN1_(), eng.getMinn1_(), eng.getMaxn1_(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.n2_, eng.isN2_(), eng.getMinn2_(), eng.getMaxn2_(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.vib, eng.isVib(), eng.getMinvib(), eng.getMaxvib(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.vlt, eng.isVlt(), eng.getMinvlt(), eng.getMaxvlt(), engOrd));
-		addError(errors,
-			validateVal(EngineModelCols.amp, eng.isAmp(), eng.getMinamp(), eng.getMaxamp(), engOrd));
+		Integer engOrd = eng.getEnginemodelorder();
+		engineModelOrders.add(engOrd);
+		validateEngineModelOrder(errors, engOrd);
+		validateEnginesFeaturesConfiguration(errors, eng, engOrd);
 	    }
+	    validateEngineModelOrders(errors, engineModelOrders, enginesModels.getComponentCount());
 
 	}
 	return errors;
+    }
+
+    /**
+     * Verify that engine model orders go like this 0,1,2,3... If there are 3
+     * engines than engine model orders should be 0,1,2
+     * 
+     * @param errors
+     *            errors are added here
+     * @param engineModelOrders
+     *            a set of engine model orders on this simulator model
+     * @param numberOfEngines
+     *            - number of engines on this simulator model
+     */
+    private static void validateEngineModelOrders(List<String> errors, Set<Integer> engineModelOrders,
+	    int numberOfEngines) {
+	for (int i = 0; i < numberOfEngines; i++) {
+	    if (!engineModelOrders.contains(i)) {
+		errors.add("Engine model order configuration is wrong. The number of engines is " + numberOfEngines
+			+ " So there should be AWCom engine id with value: " + i);
+		return;
+	    }
+	}
+    }
+
+    private static void validateEngineModelOrder(List<String> errors, Integer engOrd) {
+	if ((engOrd == null) || (engOrd >= Constants.MAX_ENGINES_NUM || engOrd < 0)) {
+	    errors.add("Engine model order on engine model#" + engOrd + " should be lying in the range from 0 to  "
+		    + (Constants.MAX_ENGINES_NUM - 1));
+	}
+    }
+
+    /**
+     * Check that for all features that are enabled on this engine, the min and
+     * max values are available
+     * 
+     * @param errors
+     *            errors are added to this list
+     * @param eng
+     * @param engOrd
+     */
+    private static void validateEnginesFeaturesConfiguration(List<String> errors, EngineModelBean eng, Integer engOrd) {
+	addError(errors, validateVal(EngineModelCols.rpm, eng.isRpm(), eng.getMinrpm(), eng.getMaxrpm(), engOrd));
+	addError(errors, validateVal(EngineModelCols.pwr, eng.isPwr(), eng.getMinpwr(), eng.getMaxpwr(), engOrd));
+	addError(errors, validateVal(EngineModelCols.pwp, eng.isPwp(), eng.getMinpwp(), eng.getMaxpwp(), engOrd));
+	addError(errors, validateVal(EngineModelCols.mp_, eng.isMp_(), eng.getMinmp_(), eng.getMaxmp_(), engOrd));
+	addError(errors, validateVal(EngineModelCols.egt1, eng.isEgt1(), eng.getMinegt1(), eng.getMaxegt1(), engOrd));
+	addError(errors, validateVal(EngineModelCols.egt2, eng.isEgt2(), eng.getMinegt2(), eng.getMaxegt2(), engOrd));
+	addError(errors, validateVal(EngineModelCols.cht1, eng.isCht1(), eng.getMincht1(), eng.getMaxcht1(), engOrd));
+	addError(errors, validateVal(EngineModelCols.cht2, eng.isCht2(), eng.getMincht2(), eng.getMaxcht2(), engOrd));
+	addError(errors, validateVal(EngineModelCols.est, eng.isEst(), eng.getMinest(), eng.getMaxest(), engOrd));
+	addError(errors, validateVal(EngineModelCols.ff_, eng.isFf_(), eng.getMinff_(), eng.getMaxff_(), engOrd));
+	addError(errors, validateVal(EngineModelCols.fp_, eng.isFp_(), eng.getMinfp_(), eng.getMaxfp_(), engOrd));
+	addError(errors, validateVal(EngineModelCols.op_, eng.isOp_(), eng.getMinop_(), eng.getMaxop_(), engOrd));
+	addError(errors, validateVal(EngineModelCols.n1_, eng.isN1_(), eng.getMinn1_(), eng.getMaxn1_(), engOrd));
+	addError(errors, validateVal(EngineModelCols.n2_, eng.isN2_(), eng.getMinn2_(), eng.getMaxn2_(), engOrd));
+	addError(errors, validateVal(EngineModelCols.vib, eng.isVib(), eng.getMinvib(), eng.getMaxvib(), engOrd));
+	addError(errors, validateVal(EngineModelCols.vlt, eng.isVlt(), eng.getMinvlt(), eng.getMaxvlt(), engOrd));
+	addError(errors, validateVal(EngineModelCols.amp, eng.isAmp(), eng.getMinamp(), eng.getMaxamp(), engOrd));
     }
 
     private static void addError(List<String> listOfErrors, String newError) {
@@ -123,7 +149,7 @@ public class SimulatorModelValidator {
      * @return
      */
     private static String validateVal(EngineModelCols featureName, Boolean isEnabled, Float minValue, Float maxValue,
-	    int engineOrder) {
+	    Integer engineOrder) {
 	if ((isEnabled != null && isEnabled)
 		&& ((minValue == null || maxValue == null) || (minValue != null && maxValue != null && minValue > maxValue))) {
 	    return new StringBuilder().append(featureName.toString().toUpperCase())
@@ -139,9 +165,9 @@ public class SimulatorModelValidator {
      * 
      * @return
      */
-    private static EngineModelBean buildEngineModelItem(FormLayout engineForm) {
+    private static EngineModelBean buildEngineModelItem(GridLayout engineGrid) {
 	EngineModelBean engineModelBean = new EngineModelBean();
-	Iterator<Component> engineFormFields = engineForm.iterator();
+	Iterator<Component> engineFormFields = engineGrid.iterator();
 	while (engineFormFields.hasNext()) {
 	    Component engineFormField = engineFormFields.next();
 	    if (engineFormField.getCaption().equals(EngineModelCols.enginemodelorder.getName())) {
@@ -348,5 +374,4 @@ public class SimulatorModelValidator {
 	}
 	return engineModelBean;
     }
-
 }
