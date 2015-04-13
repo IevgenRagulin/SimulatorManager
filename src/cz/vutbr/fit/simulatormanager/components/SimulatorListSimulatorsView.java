@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 
@@ -27,12 +28,10 @@ public class SimulatorListSimulatorsView extends Table {
     public SimulatorListSimulatorsView(final SimulatorsView view) {
 	this.view = view;
 	setSizeFull();
-	setContainerDataSource(view.getDBHelp().getCachedSimulatorContainer());
 	setSelectable(true);
 	setImmediate(true);
 	setBuffered(false);
-	setVisibleColumns((Object[]) SimulatorCols.getSimulatorMainCols());
-	setColumnHeaders(SimulatorCols.getSimulatorMainColsNames());
+	updateContainerDatasource();
 	addValueChangeListener(new Property.ValueChangeListener() {
 	    private static final long serialVersionUID = -4721755745740872033L;
 
@@ -40,8 +39,7 @@ public class SimulatorListSimulatorsView extends Table {
 	    public void valueChange(Property.ValueChangeEvent event) {
 		Object simulatorId = SimulatorListSimulatorsView.this.getValue();
 		if (simulatorId != null) {
-		    view.getSimulatorForm().setItemDataSource(
-			    view.getDBHelp().getCachedSimulatorContainer().getItem(simulatorId));
+		    view.getSimulatorForm().setItemDataSource(getContainerDataSource().getItem(simulatorId));
 		    view.getSelectedSimulatorName().setValue(
 			    "<b>Selected simulator: "
 				    + SimulatorListSimulatorsView.this.getItem(simulatorId)
@@ -56,8 +54,13 @@ public class SimulatorListSimulatorsView extends Table {
 		view.getPingSimulatorButton().setVisible(shouldEditorBeVisible);
 		view.getSaveButton().setVisible(shouldEditorBeVisible);
 	    }
-
 	});
+    }
+
+    public void updateContainerDatasource() {
+	setContainerDataSource(view.getDBHelp().getNewSimulatorContainer());
+	setVisibleColumns((Object[]) SimulatorCols.getSimulatorMainCols());
+	setColumnHeaders(SimulatorCols.getSimulatorMainColsNames());
     }
 
     /**
@@ -66,7 +69,7 @@ public class SimulatorListSimulatorsView extends Table {
      */
     @SuppressWarnings("unchecked")
     public void addSimulator() {
-	Object simulatorId = view.getDBHelp().getCachedSimulatorContainer().addItem();
+	Object simulatorId = getContainerDataSource().addItem();
 	this.getContainerProperty(simulatorId, SimulatorCols.simulatorname.toString()).setValue(
 		"New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
 	this.getContainerProperty(simulatorId, SimulatorCols.port.toString()).setValue(12322);
@@ -90,7 +93,7 @@ public class SimulatorListSimulatorsView extends Table {
 
     /**
      * This method is called when a user clicks a button "remove simulator".
-     * Removes the currently selected simulator from a database
+     * Removes the currently selected simulator from a database, all simulations
      */
     public void removeSimulator() {
 	Object simulatorId = this.getValue();
@@ -105,7 +108,8 @@ public class SimulatorListSimulatorsView extends Table {
 	    /* Commit the data entered in the form to the actual item. */
 	    super.commit();
 	    /* Commit changes to the database. */
-	    view.getDBHelp().getCachedSimulatorContainer().commit();
+	    SQLContainer container = (SQLContainer) getContainerDataSource();
+	    container.commit();
 	} catch (UnsupportedOperationException | SQLException e) {
 	    Notification.show("Error when commiting changes to simulator container. Database problem?", "",
 		    Notification.Type.ERROR_MESSAGE);

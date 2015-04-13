@@ -14,7 +14,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
 
+import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
@@ -61,6 +63,14 @@ public class EnginesAccordion extends Accordion {
 	addTab(engineFormLayout, "Engine " + itemOrder);
     }
 
+    /**
+     * When clicking remove button, the selected engine is removed. However,
+     * changes are not commited immediately. The commit happens only after
+     * clicking "Save" button
+     * 
+     * @param form
+     * @param engineItem
+     */
     private void addRemoveButtonToForm(FormLayout form, Item engineItem) {
 	Button removeEngineButton = new Button("Remove this engine");
 	Integer engineModelId = (Integer) engineItem.getItemProperty(EngineModelCols.enginemodelid.toString())
@@ -78,7 +88,7 @@ public class EnginesAccordion extends Accordion {
 		    enginesContainer.removeItem(engineModelRowId);
 		    enginesContainer.commit();
 		} catch (UnsupportedOperationException | SQLException e) {
-		    throw new RuntimeException("There was an error removing engine from database ", e);
+		    Notification.show("Couldn't remove this engine. Error: " + e.getMessage());
 		}
 	    }
 	});
@@ -125,28 +135,34 @@ public class EnginesAccordion extends Accordion {
     }
 
     /**
-     * Add new engine to database and to accordion
+     * Add new engine to accordion. Changes are not commited to database. Commit
+     * happens on clicking Save button
      * 
      * @param string
      */
     @SuppressWarnings("unchecked")
     public void addNewEngine(String simulatorModelId) {
-	Object engineModelId = enginesContainer.addItem();
-	LOG.info("Adding new engine. engineModelId: {}", (RowId) engineModelId);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.simulatormodelid.toString()).setValue(
-		Integer.valueOf(simulatorModelId));
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.enginemodelorder.toString()).setValue(
-		getNextAvailableEngineModelOrder(simulatorModelId));
-	try {
-	    enginesContainer.commit();
-	} catch (UnsupportedOperationException | SQLException e) {
-	    throw new RuntimeException("Error occured while adding new engine to simulator ", e);
+	int nextEngineOrder = getNextAvailableEngineModelOrder(simulatorModelId);
+	int numberOfEngines = enginesContainer.size();
+	if (numberOfEngines < Constants.MAX_ENGINES_NUM) {
+	    Object engineModelId = enginesContainer.addItem();
+	    LOG.info("Adding new engine. engineModelId: {}", (RowId) engineModelId);
+	    enginesContainer.getContainerProperty(engineModelId, EngineModelCols.simulatormodelid.toString()).setValue(
+		    Integer.valueOf(simulatorModelId));
+	    enginesContainer.getContainerProperty(engineModelId, EngineModelCols.enginemodelorder.toString()).setValue(
+		    nextEngineOrder);
+	    try {
+		enginesContainer.commit();
+	    } catch (SQLException e) {
+		Notification.show("Couldn't add a new engine. Error: " + e.getMessage());
+	    }
+	    // get and set all engines data from the database
+	    setEnginesForSimulator(simulatorModelId);
+	} else {
+	    Notification
+		    .show("A new engine model can't be added to this simulator model, because the maximum number of engines is reached",
+			    Notification.Type.ERROR_MESSAGE);
 	}
-	// get and set all engines data from the database
-	setEnginesForSimulator(simulatorModelId);
-    }
-
-    public void removeEngine(String simulatorModelId) {
 
     }
 

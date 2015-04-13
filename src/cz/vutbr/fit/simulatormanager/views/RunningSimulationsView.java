@@ -12,7 +12,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
-import cz.vutbr.fit.simulatormanager.components.ConfigurationChecker;
+import cz.vutbr.fit.simulatormanager.components.SimulatorConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
@@ -170,8 +170,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	    uiUpdatesLeftTillNextConfigurationVerification = VERIFY_CONFIGURATION_FREQUENCY;
 	    String hostname = (String) selectedSimulator.getItemProperty(SimulatorCols.hostname.toString()).getValue();
 	    int port = (int) selectedSimulator.getItemProperty(SimulatorCols.port.toString()).getValue();
-	    isSimulatorConfigurationValid = (new ConfigurationChecker(hostname, port, simulatorId))
-		    .verifyConfiguration(ConfigurationChecker.DO_NOT_SHOW_SUCCESS_MESSAGE);
+	    isSimulatorConfigurationValid = (new SimulatorConfigurationChecker(hostname, port, simulatorId))
+		    .verifyConfiguration(SimulatorConfigurationChecker.DO_NOT_SHOW_SUCCESS_MESSAGE);
 	}
 	uiUpdatesLeftTillNextConfigurationVerification--;
     }

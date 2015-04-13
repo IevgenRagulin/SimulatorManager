@@ -4,7 +4,7 @@ import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.SimulationStatusProviderSimpleImpl;
-import cz.vutbr.fit.simulatormanager.util.ConfigurationValidator;
+import cz.vutbr.fit.simulatormanager.util.SimulatorValidator;
 
 /**
  * This is a class for checking availability/configuration on selected
@@ -14,7 +14,7 @@ import cz.vutbr.fit.simulatormanager.util.ConfigurationValidator;
  * @author zhenia
  *
  */
-public class ConfigurationChecker {
+public class SimulatorConfigurationChecker {
 
     private String hostname;
     private int port;
@@ -33,7 +33,7 @@ public class ConfigurationChecker {
      * @param simulatorId
      *            in the database (simulator.simulatorid)
      */
-    public ConfigurationChecker(String hostname, int port, String simulatorId) {
+    public SimulatorConfigurationChecker(String hostname, int port, String simulatorId) {
 	this.hostname = hostname;
 	this.port = port;
 	this.simulatorId = simulatorId;
@@ -50,7 +50,7 @@ public class ConfigurationChecker {
     public boolean verifyConfiguration(boolean showSuccessMessage) {
 	boolean isRespoding = SimulationStatusProviderSimpleImpl.isSimulatorResponding(hostname, port);
 	if (isRespoding) {
-	    String errorsInConfiguration = ConfigurationValidator.isSimulatorModelConfiguredCorrectly(
+	    String errorsInConfiguration = SimulatorValidator.isSimulatorModelConfiguredCorrectly(
 		    simulatorId.toString(), hostname, port);
 	    if (errorsInConfiguration.isEmpty() && showSuccessMessage) {
 		Notification.show(PING_SUCCESS_MESSAGE, "", Notification.Type.HUMANIZED_MESSAGE);

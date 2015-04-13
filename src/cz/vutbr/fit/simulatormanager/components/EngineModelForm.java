@@ -11,6 +11,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.CheckBox;
@@ -19,6 +20,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
+import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 import cz.vutbr.fit.simulatormanager.exception.IllegalEngineIdException;
 
@@ -42,6 +44,8 @@ public class EngineModelForm extends FieldGroup {
 
 	    } else if (engineModelCol.equals(EngineModelCols.enginemodelorder)) {
 		TextField field = createModelOrderInputField(engineModelCol.getName());
+		field.addValidator(new IntegerRangeValidator("Engine model order must be between 0 and 7", 0,
+			Constants.MAX_ENGINES_NUM - 1));
 		addFieldToForm(field, engineModelCol);
 	    }
 	    // check if this is a timestamp field

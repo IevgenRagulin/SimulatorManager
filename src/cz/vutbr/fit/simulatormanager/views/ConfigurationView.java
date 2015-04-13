@@ -21,7 +21,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-import cz.vutbr.fit.simulatormanager.SimulatorManagerConstants;
+import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.components.ButtonConfigurationView;
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
@@ -187,7 +187,7 @@ public class ConfigurationView extends BasicView implements View {
 		// Find the application directory
 		String path = VaadinService.getCurrent().getBaseDirectory()
 				.getAbsolutePath()
-				+ SimulatorManagerConstants.CONFIGS_PATH;
+				+ Constants.CONFIGS_PATH;
 		List<String> lines = Files.readAllLines(Paths.get(path));
 		String allLines = "";
 		for (String line : lines) {

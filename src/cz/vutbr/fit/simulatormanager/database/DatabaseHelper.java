@@ -25,9 +25,9 @@ public class DatabaseHelper implements Serializable {
     private static final long serialVersionUID = -5027557673512708776L;
     final static Logger LOG = LoggerFactory.getLogger(DatabaseHelper.class);
     private static JDBCConnectionPool pool = null;
-    private SQLContainer simulatorContainer = null;
-    private SQLContainer simulatorModelContainer = null;
-    private SQLContainer simulatorEngineContainer;
+    private static SQLContainer simulatorContainer = null;
+    private static SQLContainer simulatorModelContainer = null;
+    private static SQLContainer simulatorEngineContainer = null;
 
     /**
      * Returns JDBCConnection pool. DatabaseHelper should be the only place

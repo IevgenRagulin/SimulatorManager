@@ -30,8 +30,8 @@ import cz.vutbr.fit.simulatormanager.simulatorcommunication.AWComParser;
  * @author zhenia
  *
  */
-public class ConfigurationValidator {
-    final static Logger LOG = LoggerFactory.getLogger(ConfigurationValidator.class);
+public class SimulatorValidator {
+    final static Logger LOG = LoggerFactory.getLogger(SimulatorValidator.class);
 
     /**
      * Returns a String describing errors in configuration. If there are no
@@ -56,7 +56,7 @@ public class ConfigurationValidator {
 	return StringUtils.join(errorsAll.toArray(), "<br/>");
     }
 
-    public static List<String> validateModelConfiguration(Item simulatorModel, String responseFromAwCom) {
+    private static List<String> validateModelConfiguration(Item simulatorModel, String responseFromAwCom) {
 	List<String> errors = new ArrayList<>();
 	for (SimulatorModelCols simulatorModelCol : SimulatorModelCols.getConfigurableColumnNames()) {
 	    boolean isFeatureEnabledInDb = isFeatureEnabledInDb(simulatorModel, simulatorModelCol.toString());

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Table;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
@@ -21,13 +22,12 @@ public class SimulatorModelsList extends Table {
 
     public SimulatorModelsList(final SimulatorModelsView view) {
 	this.view = view;
+	updateContainerDataSource();
 	setSizeFull();
-	setContainerDataSource(view.getDbHelper().getSimulatorModelContainer());
 	setSelectable(true);
 	setImmediate(true);
 	setBuffered(false);
-	setVisibleColumns((Object[]) SimulatorModelCols.getSimulatorModelMainCols());
-	setColumnHeaders(SimulatorModelCols.getSimulatorModelMainColsNames());
+
 	addValueChangeListener(new Property.ValueChangeListener() {
 	    private static final long serialVersionUID = -4721755745740872033L;
 
@@ -50,11 +50,16 @@ public class SimulatorModelsList extends Table {
 		view.getSelectedSimulatorModelName().setVisible(shouldEditorBeVisible);
 		view.getEnginesPanel().setVisible(shouldEditorBeVisible);
 		view.getAddEngineButton().setVisible(shouldEditorBeVisible);
-		view.getRemoveSimulatorModelButton().setVisible(shouldEditorBeVisible);
+		view.getRemoveSimulatorModelButton().setEnabled(shouldEditorBeVisible);
 		view.getSaveButton().setVisible(shouldEditorBeVisible);
 	    }
-
 	});
+    }
+
+    public void updateContainerDataSource() {
+	setContainerDataSource(view.getDbHelper().getNewSimulatorModelContainer());
+	setVisibleColumns((Object[]) SimulatorModelCols.getSimulatorModelMainCols());
+	setColumnHeaders(SimulatorModelCols.getSimulatorModelMainColsNames());
     }
 
     /**
@@ -74,7 +79,7 @@ public class SimulatorModelsList extends Table {
      */
     @SuppressWarnings("unchecked")
     public void addSimulatorModel() {
-	Object simulatorModelId = view.getDbHelper().getSimulatorModelContainer().addItem();
+	Object simulatorModelId = getContainerDataSource().addItem();
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.simulatormodelname.toString()).setValue(
 		"New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxspeedonflaps.toString()).setValue(
@@ -96,7 +101,7 @@ public class SimulatorModelsList extends Table {
 	    /* Commit the data entered in the form to the actual item. */
 	    super.commit();
 	    /* Commit changes to the database. */
-	    view.getDbHelper().getSimulatorModelContainer().commit();
+	    ((SQLContainer) getContainerDataSource()).commit();
 	} catch (UnsupportedOperationException | SQLException e) {
 	    throw new RuntimeException("Could not commit changes to simulator container. Database problem?", e);
 	}
@@ -107,7 +112,7 @@ public class SimulatorModelsList extends Table {
 	try {
 	    super.discard();
 	    /* On discard, roll back the changes. */
-	    view.getDbHelper().getSimulatorModelContainer().rollback();
+	    ((SQLContainer) getContainerDataSource()).rollback();
 	} catch (UnsupportedOperationException | SQLException e) {
 	    throw new RuntimeException("Could not commit changes to simulator container. Database problem?", e);
 	}

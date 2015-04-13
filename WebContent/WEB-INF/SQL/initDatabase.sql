@@ -30,7 +30,7 @@ CREATE TABLE simulatormodel
   maxcfu real,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulatormodel_pkey PRIMARY KEY (simulatormodelid),
-  CONSTRAINT simulatormodel_simulatormodelname_key UNIQUE (simulatormodelname)
+  CONSTRAINT simulatormodel_simulatormodelname_key UNIQUE (simulatormodelname) 
 );
 
 
@@ -49,7 +49,7 @@ CREATE TABLE enginemodel
   minpwp real,
   maxpwp real,
   mp_ boolean DEFAULT true,
-  minmp_ real,
+  minmp real,
   maxmp real,
   egt1 boolean DEFAULT true,
   minegt1 real,
@@ -95,7 +95,9 @@ CREATE TABLE enginemodel
   maxamp real,
   "timestamp" timestamp without time zone DEFAULT now(),
    CONSTRAINT enginemodel_pkey PRIMARY KEY (enginemodelid),
-   CONSTRAINT enginemodel_enginemodelorder_key UNIQUE (simulatormodelid, enginemodelorder)
+   CONSTRAINT enginemodel_enginemodelorder_key UNIQUE (simulatormodelid, enginemodelorder),
+   CONSTRAINT enginemodel_simulatormodelid_key FOREIGN KEY (simulatormodelid) REFERENCES simulatormodel (simulatormodelid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE 
 );
 
 CREATE TABLE simulator
@@ -110,7 +112,7 @@ CREATE TABLE simulator
   CONSTRAINT simulator_pkey PRIMARY KEY (simulatorid),
   CONSTRAINT simulator_simulatorname_key UNIQUE (simulatorname),
   CONSTRAINT simulatormodel_simulatormodelid_key FOREIGN KEY (simulatormodelid) REFERENCES simulatormodel (simulatormodelid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE CASCADE 
 )
 WITH (
   OIDS=FALSE
@@ -142,7 +144,7 @@ WITH (
   CONSTRAINT simulationinfo_pkey PRIMARY KEY (simulationinfoid),
   CONSTRAINT simulationinfo_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
@@ -173,7 +175,7 @@ CREATE TABLE simulationdevicesstate
   CONSTRAINT simulationdevicesstate_pkey PRIMARY KEY (devstateid),
   CONSTRAINT simulationdevicesstate_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
@@ -195,7 +197,7 @@ CREATE TABLE simulationpfdinfo
   CONSTRAINT simulationpfdinfo_pkey PRIMARY KEY (pfdinfoid),
   CONSTRAINT simulationpfdinfo_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
@@ -228,7 +230,7 @@ CREATE TABLE simulationenginesstate
   CONSTRAINT simulationenginesstate_pkey PRIMARY KEY (enginesstateid),
   CONSTRAINT simulationenginesstate_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE

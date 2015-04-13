@@ -21,10 +21,10 @@
 	<listener>
 	<!-- This class is run on application startup, shutdown -->
     	<listener-class>
-        	cz.vutbr.fit.simulatormanager.ApplicationInitializer
+        	cz.vutbr.fit.simulatormanager.ConnectionPoolDestroyer
     	</listener-class>
    </listener>
-   <!-- This class is run on application startup -->
+   <!-- This class is run on application startup to init application (later than ConnectionPoolDestroyer, vaadin staff is available here) -->
    <servlet>
    		<servlet-name>InitializerServlet</servlet-name>
    		<servlet-class>cz.vutbr.fit.simulatormanager.InitializerServlet</servlet-class>

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.AllSimulationInfo;
+import cz.vutbr.fit.simulatormanager.util.ConvertUtil;
 
 public class AWComParser {
 
@@ -18,79 +19,79 @@ public class AWComParser {
 	    simData = new AllSimulationInfo();
 	    // Longtitude
 	    value = getValueOf(":LON:", response);
-	    simData.setLongitude(stringToDouble(value));
+	    simData.setLongitude(ConvertUtil.stringToDouble(value));
 
 	    // Latitude
 	    value = getValueOf(":LAT:", response);
-	    simData.setLatitude(stringToDouble(value));
+	    simData.setLatitude(ConvertUtil.stringToDouble(value));
 
 	    // Pitch
 	    value = getValueOf(":PIT:", response);
-	    simData.setPitch(stringToDouble(value));
+	    simData.setPitch(ConvertUtil.stringToDouble(value));
 
 	    // Bank
 	    value = getValueOf(":BAN:", response);
-	    simData.setBank(stringToDouble(value));
+	    simData.setBank(ConvertUtil.stringToDouble(value));
 
 	    // Heading
 	    value = getValueOf(":HEA:", response);
-	    simData.setHeading(stringToDouble(value));
+	    simData.setHeading(ConvertUtil.stringToDouble(value));
 
 	    // Alpha
 	    value = getValueOf(":ALP:", response);
-	    simData.setAlpha(stringToDouble(value));
+	    simData.setAlpha(ConvertUtil.stringToDouble(value));
 
 	    // Beta
 	    value = getValueOf(":BET:", response);
-	    simData.setBeta(stringToDouble(value));
+	    simData.setBeta(ConvertUtil.stringToDouble(value));
 
 	    // Altitude corrected
 	    value = getValueOf(":ALT:", response);
-	    simData.setAltitude_corrected(metersToFeet(stringToDouble(value)));
+	    simData.setAltitude_corrected(metersToFeet(ConvertUtil.stringToDouble(value)));
 
 	    // Altitude standard
 	    value = getValueOf(":ALTS:", response);
-	    simData.setAltitude_standard(metersToFeet(stringToDouble(value)));
+	    simData.setAltitude_standard(metersToFeet(ConvertUtil.stringToDouble(value)));
 
 	    // Ground altitude
 	    value = getValueOf(":GAL:", response);
-	    simData.setGroundAltitude(metersToFeet(stringToDouble(value)));
+	    simData.setGroundAltitude(metersToFeet(ConvertUtil.stringToDouble(value)));
 
 	    // IAS
 	    value = getValueOf(":IAS:", response);
-	    simData.setIAS(metersPerSecondToKts(stringToDouble(value)));
+	    simData.setIAS(metersPerSecondToKts(ConvertUtil.stringToDouble(value)));
 
 	    // TAS
 	    value = getValueOf(":TAS:", response);
-	    simData.setTAS(metersPerSecondToKts(stringToDouble(value)));
+	    simData.setTAS(metersPerSecondToKts(ConvertUtil.stringToDouble(value)));
 
 	    // PWR
 	    value = getValueOf(":PWR:", response);
-	    simData.setEngine_pwr(stringToDouble(value));
+	    simData.setEngine_pwr(ConvertUtil.stringToDouble(value));
 
 	    // RPM
 	    value = getValueOf(":RPM:", response);
-	    simData.setEngine_rpm(stringToDouble(value));
+	    simData.setEngine_rpm(ConvertUtil.stringToDouble(value));
 
 	    // MP
 	    value = getValueOf(":MP_:", response);
-	    simData.setEngine_manifold_pressure(stringToDouble(value));
+	    simData.setEngine_manifold_pressure(ConvertUtil.stringToDouble(value));
 
 	    // VS
 	    value = getValueOf(":VS_:", response);
-	    simData.setVS(metersPerSecondToFeetPerMin(stringToDouble(value)));
+	    simData.setVS(metersPerSecondToFeetPerMin(ConvertUtil.stringToDouble(value)));
 
 	    // fflow
 	    value = getValueOf(":FFL:", response);
-	    simData.setEngine_fuel_flow(stringToDouble(value));
+	    simData.setEngine_fuel_flow(ConvertUtil.stringToDouble(value));
 
 	    // GS
 	    value = getValueOf(":GS_:", response);
-	    simData.setGS(stringToDouble(value));
+	    simData.setGS(ConvertUtil.stringToDouble(value));
 
 	    // temperature
 	    value = getValueOf(":TMP:", response);
-	    simData.setTemperature(stringToDouble(value));
+	    simData.setTemperature(ConvertUtil.stringToDouble(value));
 
 	    // barometricPressure. Not sure if this is correct and if we need
 	    // this
@@ -98,39 +99,39 @@ public class AWComParser {
 	    // simData.setStatic_pressure(stringToDouble(value));
 	    // QNH
 	    value = getValueOf(":QNH:", response);
-	    simData.setQNH(stringToDouble(value));
+	    simData.setQNH(ConvertUtil.stringToDouble(value));
 
 	    // angleOfSideSlip
 	    value = getValueOf(":AOS:", response);
-	    simData.setAngleOfSideSlip(stringToDouble(value));
+	    simData.setAngleOfSideSlip(ConvertUtil.stringToDouble(value));
 
 	    // Left fuel
 	    value = getValueOf(":LFU:", response);
-	    simData.setLfuel(stringToDouble(value));
+	    simData.setLfuel(ConvertUtil.stringToDouble(value));
 
 	    // Right fuel
 	    value = getValueOf(":RFU:", response);
-	    simData.setRfuel(stringToDouble(value));
+	    simData.setRfuel(ConvertUtil.stringToDouble(value));
 
 	    // Central fuel
 	    value = getValueOf(":CFU:", response);
-	    simData.setCfuel(stringToDouble(value));
+	    simData.setCfuel(ConvertUtil.stringToDouble(value));
 
 	    // Oil Pressure
 	    value = getValueOf(":OPR:", response);
-	    simData.setEngine_oil_pressure(stringToDouble(value));
+	    simData.setEngine_oil_pressure(ConvertUtil.stringToDouble(value));
 
 	    // Oil Temperature
 	    value = getValueOf(":OTM:", response);
-	    simData.setEngine_oil_pressure(stringToDouble(value));
+	    simData.setEngine_oil_pressure(ConvertUtil.stringToDouble(value));
 
 	    // Time
 	    value = getValueOf(":TIM:", response);
-	    simData.setTime(stringToDouble(value));
+	    simData.setTime(ConvertUtil.stringToDouble(value));
 
 	    // P
 	    value = getValueOf(":BRR:", response);
-	    simData.setP(stringToDouble(value));
+	    simData.setP(ConvertUtil.stringToDouble(value));
 
 	    // Q
 	    value = getValueOf(":BPR:", response);
@@ -138,59 +139,59 @@ public class AWComParser {
 
 	    // R
 	    value = getValueOf(":BYR:", response);
-	    simData.setR(stringToDouble(value));
+	    simData.setR(ConvertUtil.stringToDouble(value));
 
 	    // Local AX
 	    value = getValueOf(":BAX:", response);
-	    simData.setLocal_ax(stringToDouble(value));
+	    simData.setLocal_ax(ConvertUtil.stringToDouble(value));
 
 	    // Local AY
 	    value = getValueOf(":BAY:", response);
-	    simData.setLocal_ay(stringToDouble(value));
+	    simData.setLocal_ay(ConvertUtil.stringToDouble(value));
 
 	    // Local AZ
 	    value = getValueOf(":BAZ:", response);
-	    simData.setLocal_az(stringToDouble(value));
+	    simData.setLocal_az(ConvertUtil.stringToDouble(value));
 
 	    // True Track
 	    value = getValueOf(":TT_:", response);
-	    simData.setTT(stringToDouble(value));
+	    simData.setTT(ConvertUtil.stringToDouble(value));
 
 	    // ////////////
 	    // DEVICES STATE
 	    // ////////////
 	    // aileron
 	    value = getValueOf(":CA_:", response);
-	    simData.setAileron(stringToDouble(value));
+	    simData.setAileron(ConvertUtil.stringToDouble(value));
 	    // elevator
 	    value = getValueOf(":CE_:", response);
-	    simData.setElevator(stringToDouble(value));
+	    simData.setElevator(ConvertUtil.stringToDouble(value));
 	    // rudder
 	    value = getValueOf(":CR_:", response);
-	    simData.setRudder(stringToDouble(value));
+	    simData.setRudder(ConvertUtil.stringToDouble(value));
 
 	    // elevator trim
 	    value = getValueOf(":DTE:", response);
-	    simData.setTrimElevatorPosition(stringToDouble(value));
+	    simData.setTrimElevatorPosition(ConvertUtil.stringToDouble(value));
 
 	    // aileron trim
 	    value = getValueOf(":DTA:", response);
-	    simData.setTrimAileronPosition(stringToDouble(value));
+	    simData.setTrimAileronPosition(ConvertUtil.stringToDouble(value));
 
 	    // rudder trim
 	    value = getValueOf(":DTR:", response);
-	    simData.setTrimRudderPosition(stringToDouble(value));
+	    simData.setTrimRudderPosition(ConvertUtil.stringToDouble(value));
 
 	    // ///////////////////////////////////////////////////////
 	    // SWITCHES POSITIONS
 	    // ///////////////////////////////////////////////////////
 	    // FLP Flaps
 	    value = getValueOf(":FLP:", response);
-	    simData.setFlaps_status(stringToDouble(value));
+	    simData.setFlaps_status(ConvertUtil.stringToDouble(value));
 
 	    // Speed brakes
 	    value = getValueOf(":SBRK:", response);
-	    simData.setSpeed_brakes(stringToDouble(value));
+	    simData.setSpeed_brakes(ConvertUtil.stringToDouble(value));
 
 	    // Brakes
 	    value = getValueOf(":BRK:", response);
@@ -198,19 +199,19 @@ public class AWComParser {
 
 	    // Switch Master switch
 	    value = getValueOf(":SWMA:", response);
-	    simData.setSw_status_master_switch(stringToBoolean(value));
+	    simData.setSw_status_master_switch(ConvertUtil.stringToBoolean(value));
 
 	    // Switch Accumulator switch
 	    value = getValueOf(":SWAC:", response);
-	    simData.setSw_status_accu(stringToBoolean(value));
+	    simData.setSw_status_accu(ConvertUtil.stringToBoolean(value));
 
 	    // Switch Generator switch
 	    value = getValueOf(":SWGE:", response);
-	    simData.setSw_status_gen(stringToBoolean(value));
+	    simData.setSw_status_gen(ConvertUtil.stringToBoolean(value));
 
 	    // Switch Avionic switch
 	    value = getValueOf(":SWAV:", response);
-	    simData.setSw_status_avionic_switch(stringToBoolean(value));
+	    simData.setSw_status_avionic_switch(ConvertUtil.stringToBoolean(value));
 
 	    // Switch Efis switch. Not used
 	    // value = getValueOf(":SWEF:", response);
@@ -222,11 +223,11 @@ public class AWComParser {
 
 	    // Landing gears 1, 2, 3
 	    value = getValueOf(":LG_1:", response);
-	    simData.setLanding_gear_1_status(doubleToInt(stringToDouble(value)));
+	    simData.setLanding_gear_1_status(doubleToInt(ConvertUtil.stringToDouble(value)));
 	    value = getValueOf(":LG_2:", response);
-	    simData.setLanding_gear_2_status(doubleToInt(stringToDouble(value)));
+	    simData.setLanding_gear_2_status(doubleToInt(ConvertUtil.stringToDouble(value)));
 	    value = getValueOf(":LG_3:", response);
-	    simData.setLanding_gear_3_status(doubleToInt(stringToDouble(value)));
+	    simData.setLanding_gear_3_status(doubleToInt(ConvertUtil.stringToDouble(value)));
 	    // ///////////////////////////////////////////////////////
 	    // AUTOPILOT TARGET VALUES
 	    // ///////////////////////////////////////////////////////
@@ -253,7 +254,7 @@ public class AWComParser {
 
 	    // Autopilot Mode
 	    value = getValueOf(":APMOD:", response);
-	    simData.setAp_mode(stringToDouble(value).intValue());
+	    simData.setAp_mode(ConvertUtil.stringToDouble(value).intValue());
 
 	    // ///////////////////////////////////////////////////////
 	    // ENGINE
@@ -265,19 +266,19 @@ public class AWComParser {
 
 	    // EGT1
 	    value = getValueOf(":EGT1:", response);
-	    simData.setEngine_exh_gas_temp1(stringToDouble(value));
+	    simData.setEngine_exh_gas_temp1(ConvertUtil.stringToDouble(value));
 
 	    // EGT2
 	    value = getValueOf(":EGT2:", response);
-	    simData.setEngine_exh_gas_temp2(stringToDouble(value));
+	    simData.setEngine_exh_gas_temp2(ConvertUtil.stringToDouble(value));
 
 	    // CHT1
 	    value = getValueOf(":CHT1:", response);
-	    simData.setEngine_exh_gas_temp2(stringToDouble(value));
+	    simData.setEngine_exh_gas_temp2(ConvertUtil.stringToDouble(value));
 
 	    // CHT2
 	    value = getValueOf(":CHT2:", response);
-	    simData.setEngine_exh_gas_temp2(stringToDouble(value));
+	    simData.setEngine_exh_gas_temp2(ConvertUtil.stringToDouble(value));
 
 	    // BATV. Not used
 	    // value = getValueOf(":BATV:", response);
@@ -309,7 +310,7 @@ public class AWComParser {
 
 	    // Simulation paused
 	    value = getValueOf(":SSPD:", response);
-	    Boolean isSimPaused = isSimulationPaused(doubleToInt(stringToDouble(value)));
+	    Boolean isSimPaused = isSimulationPaused(doubleToInt(ConvertUtil.stringToDouble(value)));
 	    simData.setSimulationPaused(isSimPaused);
 	}
 	return simData;
@@ -441,12 +442,12 @@ public class AWComParser {
      */
     public static Float getValueForEngineKey(int engineNum, String keyName, String response) {
 	String value = getValueOf(buildEngineKey(engineNum, keyName), response);
-	return stringToFloat(value);
+	return ConvertUtil.stringToFloat(value);
     }
 
     public static Float getValueForSimulationKey(String keyName, String responseFromAwCom) {
 	String value = getValueOf(buildSimulationKey(keyName), responseFromAwCom);
-	return stringToFloat(value);
+	return ConvertUtil.stringToFloat(value);
     }
 
     public static String getValueOf(String keyName, String response) {
@@ -462,25 +463,6 @@ public class AWComParser {
 	    LOG.error("KEY NOT FOUND: {}", keyName);
 	}
 	return value;
-    }
-
-    private static Double stringToDouble(String strVal) {
-	if (strVal != null) {
-	    return Double.parseDouble(strVal);
-	}
-	return null;
-    }
-
-    public static Float stringToFloat(String strVal) {
-	if (strVal != null) {
-	    return Float.parseFloat(strVal);
-	}
-	return null;
-    }
-
-    public static boolean stringToBoolean(String value) {
-	char firstChar = value.charAt(0);
-	return (firstChar == '1');
     }
 
     public static boolean brakesDoubleToBoolean(String value) {

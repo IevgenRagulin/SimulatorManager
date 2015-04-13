@@ -15,7 +15,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
-import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
 import cz.vutbr.fit.simulatormanager.views.ChooseSimulationView;
 import cz.vutbr.fit.simulatormanager.views.ConfigurationView;
@@ -58,8 +57,6 @@ public class SimulatormanagerUI extends UI {
     protected void init(VaadinRequest request) {
 	LOG.info("Going to initialize application");
 	if (!uiInitialized) {
-	    // init connection pool
-	    DatabaseHelper.getPool();
 	    if (!DatabaseHelperPureJDBC.isDatabaseRunning()) {
 		Notification.show("Please, check if database is running and configured properly",
 			"Current configuration. DB URL: " + ApplicationConfiguration.getDbUrl() + " DB Username: "
@@ -84,8 +81,6 @@ public class SimulatormanagerUI extends UI {
 	navigator.addView(VIEWINGSIMULATIONS, new ChooseSimulationView(this.navigator));
 	navigator.addView(RUNNINGSIMULATIONS, new RunningSimulationsView(this.navigator));
 	navigator.addView(PASTSIMULATIONS, new PastSimulationsView(this.navigator));
-	// navigator.addView(CONTROLSIMULATIONS, new
-	// ControlSimulationsView(this.navigator));
 	navigator.addView(CONFIGURATION, new ConfigurationView(this.navigator));
     }
 

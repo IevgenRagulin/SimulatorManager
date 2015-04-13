@@ -1,5 +1,7 @@
 package cz.vutbr.fit.simulatormanager.views;
 
+import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,16 +24,18 @@ import com.vaadin.ui.VerticalLayout;
 
 import cz.vutbr.fit.simulatormanager.components.EnginesAccordion;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
+import cz.vutbr.fit.simulatormanager.components.SimulatorModelConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelForm;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelsList;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
-import cz.vutbr.fit.simulatormanager.exception.IllegalEngineIdException;
 import cz.vutbr.fit.simulatormanager.types.PageType;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 
 public class SimulatorModelsView extends VerticalLayout implements View {
     private static final long serialVersionUID = 1L;
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelsView.class);
+    private final static String INVALID_CONFIG = "Couldn't save the configuration, because it's invalid";
+    private final static String VALID_CONFIG = "Successfully updated the configuration";
 
     private Navigator navigator;
     private MainMenuBar mainMenu;
@@ -59,7 +63,9 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-
+	simulatorModelsList.updateContainerDataSource();
+	// deselect the previously selected simulator model
+	this.simulatorModelsList.select(simulatorModelsList.getNullSelectionItemId());
     }
 
     public SimulatorModelsView(Navigator navigator) {
@@ -90,11 +96,15 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
 		try {
-		    simulatorModelForm.commit();
-		    enginesAccordion.getEnginesForm().commit();
-		    Notification.show("The simulator model has successfully been updated",
-			    Notification.Type.HUMANIZED_MESSAGE);
-		} catch (IllegalEngineIdException e) {
+		    String simulatorModelId = ((RowId) simulatorModelsList.getValue()).toString();
+		    SimulatorModelConfigurationChecker validator = new SimulatorModelConfigurationChecker(
+			    enginesAccordion, simulatorModelForm);
+		    boolean isConfigurationValid = validator.verifyConfiguration(INVALID_CONFIG, VALID_CONFIG);
+		    if (isConfigurationValid) {
+			simulatorModelForm.commit();
+			enginesAccordion.getEnginesContainer().commit();
+		    }
+		} catch (UnsupportedOperationException | SQLException e) {
 		    Notification.show(
 			    "Error occured when trying to commit engines form. Error message: " + e.getMessage(), "",
 			    Notification.Type.ERROR_MESSAGE);
@@ -158,6 +168,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	leftLayout.addComponent(new Label("<b>Simulator models</b>", ContentMode.HTML));
 	leftLayout.addComponent(simulatorModelsList);
 	leftLayout.addComponent(addSimulatorModelButton);
+	leftLayout.addComponent(removeSimulatorModelButton);
 	leftLayout.setExpandRatio(simulatorModelsList, 20);
     }
 
@@ -173,7 +184,6 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	initSimulatorModelForm();
 	addEnginesToRightPanel();
 
-	rightLayout.addComponent(removeSimulatorModelButton);
 	rightLayout.addComponent(saveButton);
 
     }
@@ -190,7 +200,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
     }
 
     private void initButtons() {
-	removeSimulatorModelButton.setVisible(false);
+	removeSimulatorModelButton.setEnabled(false);
 	removeSimulatorModelButton.setIcon(ResourceUtil.getMinusImgResource());
 	addSimulatorModelButton.setStyleName("simulatorsAddSimulator");
 	addSimulatorModelButton.setIcon(ResourceUtil.getPlusImgResource());

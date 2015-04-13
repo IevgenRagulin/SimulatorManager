@@ -23,8 +23,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
-import cz.vutbr.fit.simulatormanager.components.ConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
+import cz.vutbr.fit.simulatormanager.components.SimulatorConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.SimulatorForm;
 import cz.vutbr.fit.simulatormanager.components.SimulatorListSimulatorsView;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
@@ -97,7 +97,7 @@ public class SimulatorsView extends VerticalLayout implements View {
     }
 
     private void initSimulatorList() {
-	simulatorList = new SimulatorListSimulatorsView(this);
+	this.simulatorList = new SimulatorListSimulatorsView(this);
     }
 
     private void initLayout() {
@@ -148,7 +148,7 @@ public class SimulatorsView extends VerticalLayout implements View {
      * @return
      */
     private int getNumberOfSimulatorModels() {
-	return getDBHelp().getSimulatorModelContainer().getItemIds().size();
+	return getDBHelp().getNewSimulatorModelContainer().getItemIds().size();
     }
 
     private void initRightLayout() {
@@ -191,8 +191,8 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		simulatorForm.commit();
 		verifyConfiguration();
+		simulatorForm.commit();
 	    }
 	});
     }
@@ -209,12 +209,13 @@ public class SimulatorsView extends VerticalLayout implements View {
 
     private void verifyConfiguration() {
 	RowId simulatorId = (RowId) simulatorList.getValue();
+	LOG.info("SimulatorList" + simulatorList.getValue());
 	String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString()).getValue()
 		.toString();
 	int port = Integer.valueOf(simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.port.toString())
 		.getValue().toString());
-	new ConfigurationChecker(host, port, simulatorId.toString())
-		.verifyConfiguration(ConfigurationChecker.SHOW_SUCCESS_MESSAGE);
+	new SimulatorConfigurationChecker(host, port, simulatorId.toString())
+		.verifyConfiguration(SimulatorConfigurationChecker.SHOW_SUCCESS_MESSAGE);
     }
 
     private void addAddClickListener() {
@@ -239,14 +240,19 @@ public class SimulatorsView extends VerticalLayout implements View {
     @Override
     public void enter(ViewChangeEvent event) {
 	LOG.debug("enter() - entering SimulatorsView");
+	// update datasource. Don't call initSimulatorList, it causes an ugly
+	// defect with 2 instances of SimulatorListSimulatorsView
+	this.simulatorList.updateContainerDatasource();
 	// deselect the previously selected simulator
 	this.simulatorList.select(simulatorList.getNullSelectionItemId());
+	int simulatorModelsNum = getNumberOfSimulatorModels();
 	if (getNumberOfSimulatorModels() == 0) {
 	    Notification
 		    .show("You should first configure a simulator model. It's not possible to add a simulator without having a simulator model",
 			    "Please, go to 'Manage simulator models' page and configure a simulator model there",
 			    Notification.Type.HUMANIZED_MESSAGE);
 	}
+	addSimulatorButton.setEnabled(simulatorModelsNum != 0);
     }
 
     public Image getRightPanelImage() {

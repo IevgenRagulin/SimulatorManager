@@ -158,6 +158,9 @@ public class EngineModelBean {
 	setMaxamp((Float) engineModelItem.getItemProperty(EngineModelCols.maxamp.toString()).getValue());
     }
 
+    public EngineModelBean() {
+    }
+
     public boolean isRpm() {
 	return rpm;
     }

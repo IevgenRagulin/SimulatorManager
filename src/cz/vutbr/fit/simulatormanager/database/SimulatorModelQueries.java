@@ -32,7 +32,7 @@ public class SimulatorModelQueries {
 	try {
 	    return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
 	} catch (SQLException e) {
-	    throw new RuntimeException("Couldn't get getSimulationDevicesStateBySimulatorId", e);
+	    throw new RuntimeException("Couldn't get getSimulatorModelBySimulatorId", e);
 	}
     }
 
