@@ -112,11 +112,23 @@ function arraysIdentical(a, b) {
 
 function initEngineHtmlAndGauges(e, state) {
 	console.log("going to init engine html and gauge");
-	e.innerHTML = "";
+	engine0Html = "<div id='engine0'><h3><a href='#'>Engine 0</a></h3><div>";
 	for (var i=0; i<engineFeatures.length; i++) {
 		var newFeatureState = state[engineFeatures[i]];
 		engineFeaturesState[engineFeatures[i]]=newFeatureState;//update features state
-		getHtmlAndInitGaugeForFeature(e, state, engineFeatures[i]);
+		engine0Html=engine0Html+getHtmlForFeature(state, engineFeatures[i]);
+	}
+	engine0Html = engine0Html+"</div></div>";
+	e.innerHTML = engine0Html;
+	//make the div collapsable so that a user can hide it if desired
+	(function($) {
+        $(function() {
+        	console.log("accordion it!");
+            $("#engine0").accordion({ header: "h3", collapsible: true });
+        })
+    })(jQuery);
+	for (var i=0; i<engineFeatures.length; i++) {
+		drawGauge(state, engineFeatures[i]);
 	}
 	window.isHtmlInitialized = true;
 }
@@ -161,11 +173,11 @@ function drawGauge(state, featureName) {
 	}
 }
 
-function getHtmlAndInitGaugeForFeature(e, state, featureName) {
-	console.log("feature "+featureName+" is enabled"+state[featureName][0]);
+function getHtmlForFeature(state, featureName) {
+	console.log("feature. current inner html");
 	if (state[featureName][0]) {
-		e.innerHTML = e.innerHTML + "<div id='engine-gauge-" + featureName
+		return "<div id='engine-gauge-" + featureName
 				+ "' style='width: 120px; height: 120px; float: left'></div>";
-		drawGauge(state, featureName);
 	}
+	return "";
 }

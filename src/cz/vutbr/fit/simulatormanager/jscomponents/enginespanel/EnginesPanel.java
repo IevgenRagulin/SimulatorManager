@@ -16,7 +16,9 @@ import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.EngineModelBean;
 import cz.vutbr.fit.simulatormanager.database.EngineModelQueries;
 
-@com.vaadin.annotations.JavaScript({ "enginesPanel.js" })
+@com.vaadin.annotations.JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",
+	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "enginesPanel.js" })
+@com.vaadin.annotations.StyleSheet({ "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" })
 public class EnginesPanel extends AbstractJavaScriptComponent {
 
     final static Logger LOG = LoggerFactory.getLogger(EnginesPanel.class);
