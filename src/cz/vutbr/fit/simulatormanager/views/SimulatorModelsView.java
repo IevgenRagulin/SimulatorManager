@@ -101,6 +101,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 		    boolean isConfigurationValid = validator.verifyConfiguration(INVALID_CONFIG, VALID_CONFIG);
 		    if (isConfigurationValid) {
 			simulatorModelForm.commit();
+			simulatorModelsList.commit();
 			enginesTabsheet.getEnginesContainer().commit();
 		    }
 		} catch (UnsupportedOperationException | SQLException e) {

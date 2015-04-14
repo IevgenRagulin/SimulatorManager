@@ -94,7 +94,7 @@ public class FlightControls extends AbstractJavaScriptComponent {
     }
 
     private void setLandingGear(int landingGear_1, int landingGear_2, int landingGear_3) {
-	// update state if changed to improve performance
+	// update state only if changed to improve performance
 	if (getStateBean().getLandg_1() != landingGear_1) {
 	    getState().landg_1 = landingGear_1;
 	    getStateBean().setLandg_1(landingGear_1);

@@ -46,7 +46,7 @@ public class DatabaseUpdater {
 	SimulationInfoItem currentSimItem = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
 	SimulationInfoItem prevSimItem = SimulatorsStatus.getPrevSimulationInfoItemBySimulatorId(simulatorId);
 	if (DistanceUtil.hasPlaneMovedMoreThan(currentSimItem, prevSimItem, HALF_METER) && (shouldWeSaveDataToDb())) {
-	    LOG.info("addSimulationInfoToDb, simulator with id: {} has moved more than {}", simulatorId, HALF_METER);
+	    LOG.debug("addSimulationInfoToDb, simulator with id: {} has moved more than {}", simulatorId, HALF_METER);
 	    addDevicesStateInfoToDatabase(simulationIdInt, simulatorId);
 	    addPfdInfoToDatabase(simulationIdInt, simulatorId);
 	    // logger.info
@@ -54,7 +54,7 @@ public class DatabaseUpdater {
 	    // simulatorId);
 	    addEnginesInfoToDatabase(simulationIdInt, simulatorId);
 	    if (shouldWeSaveSimulationInfoToDatabase()) {
-		LOG.info("addSimulationInfoToDb, going to save sim info to db, simulator id: {}", simulatorId);
+		LOG.debug("addSimulationInfoToDb, going to save sim info to db, simulator id: {}", simulatorId);
 		addSimulationInfoInfoToDatabase(simulationIdInt, simulatorId);
 	    }
 	}
@@ -65,7 +65,7 @@ public class DatabaseUpdater {
      * time)
      */
     private static boolean shouldWeSaveDataToDb() {
-	LOG.info("shouldWeSaveDataToDb {}", addedCount == 0);
+	LOG.debug("shouldWeSaveDataToDb {}", addedCount == 0);
 	return addedCount == 0;
     }
 
@@ -131,7 +131,7 @@ public class DatabaseUpdater {
 	SQLContainer simInfoCont = dbHelp.getSimulationInfoContainer();
 	SimulationInfoBean simInfoBean = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId).getBean();
 	RowId newInfoId = (RowId) simInfoCont.addItem();
-	LOG.info("addSimulationInfoInfoToDatabase() - simulationIdInt:{}, simulatorId:{}, data: {}", simulationId,
+	LOG.debug("addSimulationInfoInfoToDatabase() - simulationIdInt:{}, simulatorId:{}, data: {}", simulationId,
 		simulatorId, simInfoBean);
 	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.simulation_simulationid.toString()).setValue(
 		simulationId);
@@ -173,7 +173,7 @@ public class DatabaseUpdater {
     @SuppressWarnings("unchecked")
     public static RowId createNewRunningNotPausedSimulation(SQLContainer lastSimCont, String simulatorId)
 	    throws UnsupportedOperationException, SQLException {
-	LOG.info("Create new RUNNING, NOT PAUSED simulation");
+	LOG.debug("Create new RUNNING, NOT PAUSED simulation");
 	RowId id = (RowId) lastSimCont.addItem();
 	lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(
 		Integer.valueOf(simulatorId));

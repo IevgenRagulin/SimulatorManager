@@ -12,8 +12,8 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
-import cz.vutbr.fit.simulatormanager.components.SimulatorConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
+import cz.vutbr.fit.simulatormanager.components.SimulatorConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
@@ -99,7 +99,6 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	addNewPointToCharts(simulatorId, selectedPFD);
 	// Set engines and fuel info
 	AllEngineInfo enginesInfo = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
-	LOG.info("going to call st engines info");
 	setEnginesInfo(simulatorId, enginesInfo);
     }
 

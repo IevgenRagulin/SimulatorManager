@@ -53,7 +53,6 @@ public class SimulatorsView extends VerticalLayout implements View {
     private Label selectedSimulatorName = new Label("", ContentMode.HTML);
     private Image ev97Img;
     private MainMenuBar mainMenu;
-    private Button pingSimulatorButton = new Button("Verify configuration");
     private Button saveButton = new Button("Save changes to simulator configuration");
     private SimulatorListSimulatorsView simulatorList;
     private SimulatorForm simulatorForm;
@@ -61,10 +60,6 @@ public class SimulatorsView extends VerticalLayout implements View {
 
     public Label getSelectedSimulatorName() {
 	return selectedSimulatorName;
-    }
-
-    public Button getPingSimulatorButton() {
-	return pingSimulatorButton;
     }
 
     public Button getSaveButton() {
@@ -127,8 +122,6 @@ public class SimulatorsView extends VerticalLayout implements View {
 		.setDescription("You can only add simulators if there is at lease one simulator model configured");
 	removeSimulatorButton.setIcon(ResourceUtil.getMinusImgResource());
 	removeSimulatorButton.setEnabled(false);
-	pingSimulatorButton.setDescription("Check if selected simulator is up and running");
-	pingSimulatorButton.setVisible(false);
 	saveButton.setIcon(ResourceUtil.getSaveImgResource());
 	saveButton.setEnabled(false);
     }
@@ -161,7 +154,6 @@ public class SimulatorsView extends VerticalLayout implements View {
     private void initRightLayout() {
 	rightLayout.setMargin(new MarginInfo(true, true, true, true));
 	rightLayout.addComponent(selectedSimulatorName);
-	rightLayout.addComponent(pingSimulatorButton);
 	ev97Img = new Image("After selecting simulator on the left, you will be able to configure it here",
 		ResourceUtil.getEv97Img());
 	ev97Img.setSizeFull();
@@ -184,7 +176,6 @@ public class SimulatorsView extends VerticalLayout implements View {
     private void addClickListeners() {
 	addAddClickListener();
 	addRemoveClickListener();
-	addPingClickListener();
 	addSaveClickListener();
     }
 
@@ -194,17 +185,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		verifyConfiguration();
-		simulatorForm.commit();
-	    }
-	});
-    }
-
-    private void addPingClickListener() {
-	pingSimulatorButton.addClickListener(new ClickListener() {
-
-	    @Override
-	    public void buttonClick(ClickEvent event) {
+		simulatorList.commit();
 		verifyConfiguration();
 	    }
 	});

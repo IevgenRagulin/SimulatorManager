@@ -124,9 +124,7 @@ public abstract class SimulationsView extends BasicView {
     }
 
     protected void setEnginesInfo(String simulatorId, AllEngineInfo enginesInfo) {
-	LOG.info("sorry, engines info is null");
 	if (enginesInfo != null) {
-	    LOG.info("Engines info is not null, going to pass it to engines panel");
 	    enginesPanel.updateIndividualEngineValues(simulatorId, enginesInfo);
 	}
     }

@@ -14,7 +14,7 @@ import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.EngineModelBean;
 import cz.vutbr.fit.simulatormanager.database.EngineModelQueries;
 
-@com.vaadin.annotations.JavaScript({ "enginesPanel.js" })
+@com.vaadin.annotations.JavaScript({ "enginesPanel.js", "gauge.min.js" })
 public class EnginesPanel extends AbstractJavaScriptComponent {
 
     final static Logger LOG = LoggerFactory.getLogger(EnginesPanel.class);
@@ -22,9 +22,95 @@ public class EnginesPanel extends AbstractJavaScriptComponent {
     private static final long serialVersionUID = 1L;
     private static final String CSS_CLASS = "ENGINES_PANEL";
     private boolean isEngineModelInitialized = false;
+    // we use this variable to call getState() less often as it generates update
+    // event and sends it to ui
+    private AllEngineInfo prevEngineInfo = new AllEngineInfo();
 
     public void updateIndividualEngineValues(String simulatorId, AllEngineInfo enginesInfo) {
 	initEngineModelsIfNeeded(simulatorId);
+	updateEngineValuesIfNeeded(enginesInfo);
+    }
+
+    private void updateEngineValuesIfNeeded(AllEngineInfo enginesInfo) {
+	if (!areArraysEqual(prevEngineInfo.getRpm(), enginesInfo.getRpm())) {
+	    getState().rpmvals = enginesInfo.getRpm();
+	}
+	if (!areArraysEqual(prevEngineInfo.getPwr(), enginesInfo.getPwr())) {
+	    getState().pwrvals = enginesInfo.getPwr();
+	}
+	if (!areArraysEqual(prevEngineInfo.getPwp(), enginesInfo.getPwp())) {
+	    getState().pwpvals = enginesInfo.getPwp();
+	}
+	if (!areArraysEqual(prevEngineInfo.getMp_(), enginesInfo.getMp_())) {
+	    getState().mp_vals = enginesInfo.getMp_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getEt1(), enginesInfo.getEt1())) {
+	    getState().egt1vals = enginesInfo.getEt1();
+	}
+	if (!areArraysEqual(prevEngineInfo.getEt2(), enginesInfo.getEt2())) {
+	    getState().egt2vals = enginesInfo.getEt2();
+	}
+	if (!areArraysEqual(prevEngineInfo.getCt1(), enginesInfo.getCt2())) {
+	    getState().cht1vals = enginesInfo.getCt1();
+	}
+	if (!areArraysEqual(prevEngineInfo.getCt2(), enginesInfo.getCt2())) {
+	    getState().cht2vals = enginesInfo.getCt2();
+	}
+	if (!areArraysEqual(prevEngineInfo.getEst(), enginesInfo.getEst())) {
+	    getState().estvals = enginesInfo.getEst();
+	}
+	if (!areArraysEqual(prevEngineInfo.getFf_(), enginesInfo.getFf_())) {
+	    getState().ff_vals = enginesInfo.getFf_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getFp_(), enginesInfo.getFp_())) {
+	    getState().fp_vals = enginesInfo.getFp_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getOp_(), enginesInfo.getOp_())) {
+	    getState().op_vals = enginesInfo.getOp_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getOt_(), enginesInfo.getOt_())) {
+	    getState().ot_vals = enginesInfo.getOt_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getN1_(), enginesInfo.getN1_())) {
+	    getState().n1_vals = enginesInfo.getN1_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getN2_(), enginesInfo.getN2_())) {
+	    getState().n2_vals = enginesInfo.getN2_();
+	}
+	if (!areArraysEqual(prevEngineInfo.getVib(), enginesInfo.getVib())) {
+	    getState().vibvals = enginesInfo.getVib();
+	}
+	if (!areArraysEqual(prevEngineInfo.getVlt(), enginesInfo.getVlt())) {
+	    getState().vltvals = enginesInfo.getVlt();
+	}
+	if (!areArraysEqual(prevEngineInfo.getAmp(), enginesInfo.getAmp())) {
+	    getState().ampvals = enginesInfo.getAmp();
+	}
+	prevEngineInfo = enginesInfo;
+    }
+
+    /**
+     * Return true if corresponding elements in array are equal (with epsilon
+     * 0.01 to improve performance)
+     * 
+     * @param array1
+     * @param array2
+     * @return
+     */
+    private boolean areArraysEqual(Float[] array1, Float[] array2) {
+	if (array1 == null && array2 == null) {
+	    return true;
+	}
+	if ((array1 == null && array2 != null) || (array2 == null && array1 != null)
+		|| (array1.length != array2.length)) {
+	    return false;
+	}
+	for (int i = 0; i < array1.length; i++) {
+	    if (Math.abs(array1[i] - array2[i]) > 0.01) {
+		return false;
+	    }
+	}
+	return true;
     }
 
     /**
