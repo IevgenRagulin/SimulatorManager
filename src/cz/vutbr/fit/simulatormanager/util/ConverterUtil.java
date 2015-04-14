@@ -3,9 +3,9 @@ package cz.vutbr.fit.simulatormanager.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConvertUtil {
+public class ConverterUtil {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConvertUtil.class);
+    final static Logger LOG = LoggerFactory.getLogger(ConverterUtil.class);
 
     public static Float stringToFloat(String strVal) {
 	if (strVal != null) {

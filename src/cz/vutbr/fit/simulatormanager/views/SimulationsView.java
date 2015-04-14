@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -27,7 +29,7 @@ import cz.vutbr.fit.simulatormanager.types.PageType;
  * @author ievgen
  *
  */
-public abstract class SimulationsView extends BasicView {
+public abstract class SimulationsView extends BasicView implements View {
 
     final static Logger LOG = LoggerFactory.getLogger(SimulationsView.class);
 
@@ -71,6 +73,11 @@ public abstract class SimulationsView extends BasicView {
 	initControlYoke();
 	initGraphs();
 	initLayout();
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+	enginesPanel = new EnginesPanel();
     }
 
     protected void initLayout() {

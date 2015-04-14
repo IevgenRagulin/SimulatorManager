@@ -172,17 +172,17 @@ public class SimulatorModelValidator {
 	    Component engineFormField = engineFormFields.next();
 	    if (engineFormField.getCaption().equals(EngineModelCols.enginemodelorder.getName())) {
 		TextField engineModelOrder = (TextField) engineFormField;
-		engineModelBean.setEnginemodelorder(ConvertUtil.stringToInt(engineModelOrder.getValue()));
+		engineModelBean.setEnginemodelorder(ConverterUtil.stringToInt(engineModelOrder.getValue()));
 
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.rpm.getName())) {
 		CheckBox rpm = (CheckBox) engineFormField;
 		engineModelBean.setRpm(Boolean.valueOf(rpm.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minrpm.getName())) {
 		TextField minrpm = (TextField) engineFormField;
-		engineModelBean.setMinrpm(ConvertUtil.stringToFloat(minrpm.getValue()));
+		engineModelBean.setMinrpm(ConverterUtil.stringToFloat(minrpm.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxrpm.getName())) {
 		TextField maxrpm = (TextField) engineFormField;
-		engineModelBean.setMaxrpm(ConvertUtil.stringToFloat(maxrpm.getValue()));
+		engineModelBean.setMaxrpm(ConverterUtil.stringToFloat(maxrpm.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.pwr.getName())) {
@@ -190,10 +190,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setPwr(Boolean.valueOf(pwr.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minpwr.getName())) {
 		TextField minpwr = (TextField) engineFormField;
-		engineModelBean.setMinpwr(ConvertUtil.stringToFloat(minpwr.getValue()));
+		engineModelBean.setMinpwr(ConverterUtil.stringToFloat(minpwr.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxpwr.getName())) {
 		TextField maxpwr = (TextField) engineFormField;
-		engineModelBean.setMaxpwr(ConvertUtil.stringToFloat(maxpwr.getValue()));
+		engineModelBean.setMaxpwr(ConverterUtil.stringToFloat(maxpwr.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.pwp.getName())) {
@@ -201,10 +201,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setPwp(Boolean.valueOf(pwp.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minpwp.getName())) {
 		TextField minpwp = (TextField) engineFormField;
-		engineModelBean.setMinpwp(ConvertUtil.stringToFloat(minpwp.getValue()));
+		engineModelBean.setMinpwp(ConverterUtil.stringToFloat(minpwp.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxpwp.getName())) {
 		TextField maxpwp = (TextField) engineFormField;
-		engineModelBean.setMaxpwp(ConvertUtil.stringToFloat(maxpwp.getValue()));
+		engineModelBean.setMaxpwp(ConverterUtil.stringToFloat(maxpwp.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.mp_.getName())) {
@@ -212,10 +212,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setMp_(Boolean.valueOf(mp_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minmp.getName())) {
 		TextField minmp = (TextField) engineFormField;
-		engineModelBean.setMinmp_(ConvertUtil.stringToFloat(minmp.getValue()));
+		engineModelBean.setMinmp_(ConverterUtil.stringToFloat(minmp.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxmp.getName())) {
 		TextField maxmp = (TextField) engineFormField;
-		engineModelBean.setMaxmp_(ConvertUtil.stringToFloat(maxmp.getValue()));
+		engineModelBean.setMaxmp_(ConverterUtil.stringToFloat(maxmp.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.egt1.getName())) {
@@ -223,10 +223,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setEgt1(Boolean.valueOf(egt1.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minegt1.getName())) {
 		TextField minegt1 = (TextField) engineFormField;
-		engineModelBean.setMinegt1(ConvertUtil.stringToFloat(minegt1.getValue()));
+		engineModelBean.setMinegt1(ConverterUtil.stringToFloat(minegt1.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxegt1.getName())) {
 		TextField maxegt1 = (TextField) engineFormField;
-		engineModelBean.setMaxegt1(ConvertUtil.stringToFloat(maxegt1.getValue()));
+		engineModelBean.setMaxegt1(ConverterUtil.stringToFloat(maxegt1.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.egt2.getName())) {
@@ -234,10 +234,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setEgt2(Boolean.valueOf(egt2.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minegt2.getName())) {
 		TextField minegt2 = (TextField) engineFormField;
-		engineModelBean.setMinegt2(ConvertUtil.stringToFloat(minegt2.getValue()));
+		engineModelBean.setMinegt2(ConverterUtil.stringToFloat(minegt2.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxegt2.getName())) {
 		TextField maxegt2 = (TextField) engineFormField;
-		engineModelBean.setMaxegt2(ConvertUtil.stringToFloat(maxegt2.getValue()));
+		engineModelBean.setMaxegt2(ConverterUtil.stringToFloat(maxegt2.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.cht1.getName())) {
@@ -245,10 +245,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setCht1(Boolean.valueOf(cht1.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.mincht1.getName())) {
 		TextField mincht1 = (TextField) engineFormField;
-		engineModelBean.setMincht1(ConvertUtil.stringToFloat(mincht1.getValue()));
+		engineModelBean.setMincht1(ConverterUtil.stringToFloat(mincht1.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxcht1.getName())) {
 		TextField maxcht1 = (TextField) engineFormField;
-		engineModelBean.setMaxcht1(ConvertUtil.stringToFloat(maxcht1.getValue()));
+		engineModelBean.setMaxcht1(ConverterUtil.stringToFloat(maxcht1.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.cht2.getName())) {
@@ -256,10 +256,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setCht2(Boolean.valueOf(cht1.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.mincht2.getName())) {
 		TextField mincht2 = (TextField) engineFormField;
-		engineModelBean.setMincht2(ConvertUtil.stringToFloat(mincht2.getValue()));
+		engineModelBean.setMincht2(ConverterUtil.stringToFloat(mincht2.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxcht2.getName())) {
 		TextField maxcht2 = (TextField) engineFormField;
-		engineModelBean.setMaxcht2(ConvertUtil.stringToFloat(maxcht2.getValue()));
+		engineModelBean.setMaxcht2(ConverterUtil.stringToFloat(maxcht2.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.est.getName())) {
@@ -267,10 +267,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setEst(Boolean.valueOf(est.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minest.getName())) {
 		TextField minest = (TextField) engineFormField;
-		engineModelBean.setMinest(ConvertUtil.stringToFloat(minest.getValue()));
+		engineModelBean.setMinest(ConverterUtil.stringToFloat(minest.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxest.getName())) {
 		TextField maxest = (TextField) engineFormField;
-		engineModelBean.setMaxest(ConvertUtil.stringToFloat(maxest.getValue()));
+		engineModelBean.setMaxest(ConverterUtil.stringToFloat(maxest.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.ff_.getName())) {
@@ -278,10 +278,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setFf_(Boolean.valueOf(ff_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minff.getName())) {
 		TextField minff = (TextField) engineFormField;
-		engineModelBean.setMinff_(ConvertUtil.stringToFloat(minff.getValue()));
+		engineModelBean.setMinff_(ConverterUtil.stringToFloat(minff.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxff.getName())) {
 		TextField maxff = (TextField) engineFormField;
-		engineModelBean.setMaxff_(ConvertUtil.stringToFloat(maxff.getValue()));
+		engineModelBean.setMaxff_(ConverterUtil.stringToFloat(maxff.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.fp_.getName())) {
@@ -289,10 +289,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setFp_(Boolean.valueOf(fp_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minfp.getName())) {
 		TextField minfp = (TextField) engineFormField;
-		engineModelBean.setMinfp_(ConvertUtil.stringToFloat(minfp.getValue()));
+		engineModelBean.setMinfp_(ConverterUtil.stringToFloat(minfp.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxfp.getName())) {
 		TextField maxfp = (TextField) engineFormField;
-		engineModelBean.setMaxfp_(ConvertUtil.stringToFloat(maxfp.getValue()));
+		engineModelBean.setMaxfp_(ConverterUtil.stringToFloat(maxfp.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.op_.getName())) {
@@ -300,10 +300,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setOp_(Boolean.valueOf(op_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minop.getName())) {
 		TextField minop = (TextField) engineFormField;
-		engineModelBean.setMinop_(ConvertUtil.stringToFloat(minop.getValue()));
+		engineModelBean.setMinop_(ConverterUtil.stringToFloat(minop.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxop.getName())) {
 		TextField maxop = (TextField) engineFormField;
-		engineModelBean.setMaxop_(ConvertUtil.stringToFloat(maxop.getValue()));
+		engineModelBean.setMaxop_(ConverterUtil.stringToFloat(maxop.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.ot_.getName())) {
@@ -311,10 +311,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setOt_(Boolean.valueOf(ot_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minot.getName())) {
 		TextField minot = (TextField) engineFormField;
-		engineModelBean.setMinot_(ConvertUtil.stringToFloat(minot.getValue()));
+		engineModelBean.setMinot_(ConverterUtil.stringToFloat(minot.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxot.getName())) {
 		TextField maxot = (TextField) engineFormField;
-		engineModelBean.setMaxot_(ConvertUtil.stringToFloat(maxot.getValue()));
+		engineModelBean.setMaxot_(ConverterUtil.stringToFloat(maxot.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.n1_.getName())) {
@@ -322,10 +322,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setN1_(Boolean.valueOf(n1_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minn1.getName())) {
 		TextField minn1 = (TextField) engineFormField;
-		engineModelBean.setMinn1_(ConvertUtil.stringToFloat(minn1.getValue()));
+		engineModelBean.setMinn1_(ConverterUtil.stringToFloat(minn1.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxn1.getName())) {
 		TextField maxn1 = (TextField) engineFormField;
-		engineModelBean.setMaxn1_(ConvertUtil.stringToFloat(maxn1.getValue()));
+		engineModelBean.setMaxn1_(ConverterUtil.stringToFloat(maxn1.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.n2_.getName())) {
@@ -333,10 +333,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setN2_(Boolean.valueOf(n2_.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minn2.getName())) {
 		TextField minn2 = (TextField) engineFormField;
-		engineModelBean.setMinn2_(ConvertUtil.stringToFloat(minn2.getValue()));
+		engineModelBean.setMinn2_(ConverterUtil.stringToFloat(minn2.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxn2.getName())) {
 		TextField maxn2 = (TextField) engineFormField;
-		engineModelBean.setMaxn2_(ConvertUtil.stringToFloat(maxn2.getValue()));
+		engineModelBean.setMaxn2_(ConverterUtil.stringToFloat(maxn2.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.vib.getName())) {
@@ -344,10 +344,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setVib(Boolean.valueOf(vib.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minvib.getName())) {
 		TextField minvib = (TextField) engineFormField;
-		engineModelBean.setMinvib(ConvertUtil.stringToFloat(minvib.getValue()));
+		engineModelBean.setMinvib(ConverterUtil.stringToFloat(minvib.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxvib.getName())) {
 		TextField maxvib = (TextField) engineFormField;
-		engineModelBean.setMaxvib(ConvertUtil.stringToFloat(maxvib.getValue()));
+		engineModelBean.setMaxvib(ConverterUtil.stringToFloat(maxvib.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.vlt.getName())) {
@@ -355,10 +355,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setVlt(Boolean.valueOf(vlt.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minvlt.getName())) {
 		TextField minvlt = (TextField) engineFormField;
-		engineModelBean.setMinvlt(ConvertUtil.stringToFloat(minvlt.getValue()));
+		engineModelBean.setMinvlt(ConverterUtil.stringToFloat(minvlt.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxvlt.getName())) {
 		TextField maxvlt = (TextField) engineFormField;
-		engineModelBean.setMaxvlt(ConvertUtil.stringToFloat(maxvlt.getValue()));
+		engineModelBean.setMaxvlt(ConverterUtil.stringToFloat(maxvlt.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.amp.getName())) {
@@ -366,10 +366,10 @@ public class SimulatorModelValidator {
 		engineModelBean.setAmp(Boolean.valueOf(amp.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.minamp.getName())) {
 		TextField minamp = (TextField) engineFormField;
-		engineModelBean.setMinamp(ConvertUtil.stringToFloat(minamp.getValue()));
+		engineModelBean.setMinamp(ConverterUtil.stringToFloat(minamp.getValue()));
 	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxamp.getName())) {
 		TextField maxamp = (TextField) engineFormField;
-		engineModelBean.setMaxamp(ConvertUtil.stringToFloat(maxamp.getValue()));
+		engineModelBean.setMaxamp(ConverterUtil.stringToFloat(maxamp.getValue()));
 	    }
 	}
 	return engineModelBean;

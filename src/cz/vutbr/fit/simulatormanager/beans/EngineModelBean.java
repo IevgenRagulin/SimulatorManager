@@ -1,10 +1,13 @@
 package cz.vutbr.fit.simulatormanager.beans;
 
+import java.io.Serializable;
+
 import com.vaadin.data.Item;
 
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 
-public class EngineModelBean {
+public class EngineModelBean implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Integer enginemodelorder;
 
@@ -599,6 +602,301 @@ public class EngineModelBean {
 
     public void setEnginemodelorder(Integer enginemodelorder) {
 	this.enginemodelorder = enginemodelorder;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (amp ? 1231 : 1237);
+	result = prime * result + (cht1 ? 1231 : 1237);
+	result = prime * result + (cht2 ? 1231 : 1237);
+	result = prime * result + (egt1 ? 1231 : 1237);
+	result = prime * result + (egt2 ? 1231 : 1237);
+	result = prime * result + ((enginemodelorder == null) ? 0 : enginemodelorder.hashCode());
+	result = prime * result + (est ? 1231 : 1237);
+	result = prime * result + (ff_ ? 1231 : 1237);
+	result = prime * result + (fp_ ? 1231 : 1237);
+	result = prime * result + ((maxamp == null) ? 0 : maxamp.hashCode());
+	result = prime * result + ((maxcht1 == null) ? 0 : maxcht1.hashCode());
+	result = prime * result + ((maxcht2 == null) ? 0 : maxcht2.hashCode());
+	result = prime * result + ((maxegt1 == null) ? 0 : maxegt1.hashCode());
+	result = prime * result + ((maxegt2 == null) ? 0 : maxegt2.hashCode());
+	result = prime * result + ((maxest == null) ? 0 : maxest.hashCode());
+	result = prime * result + ((maxff_ == null) ? 0 : maxff_.hashCode());
+	result = prime * result + ((maxfp_ == null) ? 0 : maxfp_.hashCode());
+	result = prime * result + ((maxmp_ == null) ? 0 : maxmp_.hashCode());
+	result = prime * result + ((maxn1_ == null) ? 0 : maxn1_.hashCode());
+	result = prime * result + ((maxn2_ == null) ? 0 : maxn2_.hashCode());
+	result = prime * result + ((maxop_ == null) ? 0 : maxop_.hashCode());
+	result = prime * result + ((maxot_ == null) ? 0 : maxot_.hashCode());
+	result = prime * result + ((maxpwp == null) ? 0 : maxpwp.hashCode());
+	result = prime * result + ((maxpwr == null) ? 0 : maxpwr.hashCode());
+	result = prime * result + ((maxrpm == null) ? 0 : maxrpm.hashCode());
+	result = prime * result + ((maxvib == null) ? 0 : maxvib.hashCode());
+	result = prime * result + ((maxvlt == null) ? 0 : maxvlt.hashCode());
+	result = prime * result + ((minamp == null) ? 0 : minamp.hashCode());
+	result = prime * result + ((mincht1 == null) ? 0 : mincht1.hashCode());
+	result = prime * result + ((mincht2 == null) ? 0 : mincht2.hashCode());
+	result = prime * result + ((minegt1 == null) ? 0 : minegt1.hashCode());
+	result = prime * result + ((minegt2 == null) ? 0 : minegt2.hashCode());
+	result = prime * result + ((minest == null) ? 0 : minest.hashCode());
+	result = prime * result + ((minff_ == null) ? 0 : minff_.hashCode());
+	result = prime * result + ((minfp_ == null) ? 0 : minfp_.hashCode());
+	result = prime * result + ((minmp_ == null) ? 0 : minmp_.hashCode());
+	result = prime * result + ((minn1_ == null) ? 0 : minn1_.hashCode());
+	result = prime * result + ((minn2_ == null) ? 0 : minn2_.hashCode());
+	result = prime * result + ((minop_ == null) ? 0 : minop_.hashCode());
+	result = prime * result + ((minot_ == null) ? 0 : minot_.hashCode());
+	result = prime * result + ((minpwp == null) ? 0 : minpwp.hashCode());
+	result = prime * result + ((minpwr == null) ? 0 : minpwr.hashCode());
+	result = prime * result + ((minrpm == null) ? 0 : minrpm.hashCode());
+	result = prime * result + ((minvib == null) ? 0 : minvib.hashCode());
+	result = prime * result + ((minvlt == null) ? 0 : minvlt.hashCode());
+	result = prime * result + (mp_ ? 1231 : 1237);
+	result = prime * result + (n1_ ? 1231 : 1237);
+	result = prime * result + (n2_ ? 1231 : 1237);
+	result = prime * result + (op_ ? 1231 : 1237);
+	result = prime * result + (ot_ ? 1231 : 1237);
+	result = prime * result + (pwp ? 1231 : 1237);
+	result = prime * result + (pwr ? 1231 : 1237);
+	result = prime * result + (rpm ? 1231 : 1237);
+	result = prime * result + (vib ? 1231 : 1237);
+	result = prime * result + (vlt ? 1231 : 1237);
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	EngineModelBean other = (EngineModelBean) obj;
+	if (amp != other.amp)
+	    return false;
+	if (cht1 != other.cht1)
+	    return false;
+	if (cht2 != other.cht2)
+	    return false;
+	if (egt1 != other.egt1)
+	    return false;
+	if (egt2 != other.egt2)
+	    return false;
+	if (enginemodelorder == null) {
+	    if (other.enginemodelorder != null)
+		return false;
+	} else if (!enginemodelorder.equals(other.enginemodelorder))
+	    return false;
+	if (est != other.est)
+	    return false;
+	if (ff_ != other.ff_)
+	    return false;
+	if (fp_ != other.fp_)
+	    return false;
+	if (maxamp == null) {
+	    if (other.maxamp != null)
+		return false;
+	} else if (!maxamp.equals(other.maxamp))
+	    return false;
+	if (maxcht1 == null) {
+	    if (other.maxcht1 != null)
+		return false;
+	} else if (!maxcht1.equals(other.maxcht1))
+	    return false;
+	if (maxcht2 == null) {
+	    if (other.maxcht2 != null)
+		return false;
+	} else if (!maxcht2.equals(other.maxcht2))
+	    return false;
+	if (maxegt1 == null) {
+	    if (other.maxegt1 != null)
+		return false;
+	} else if (!maxegt1.equals(other.maxegt1))
+	    return false;
+	if (maxegt2 == null) {
+	    if (other.maxegt2 != null)
+		return false;
+	} else if (!maxegt2.equals(other.maxegt2))
+	    return false;
+	if (maxest == null) {
+	    if (other.maxest != null)
+		return false;
+	} else if (!maxest.equals(other.maxest))
+	    return false;
+	if (maxff_ == null) {
+	    if (other.maxff_ != null)
+		return false;
+	} else if (!maxff_.equals(other.maxff_))
+	    return false;
+	if (maxfp_ == null) {
+	    if (other.maxfp_ != null)
+		return false;
+	} else if (!maxfp_.equals(other.maxfp_))
+	    return false;
+	if (maxmp_ == null) {
+	    if (other.maxmp_ != null)
+		return false;
+	} else if (!maxmp_.equals(other.maxmp_))
+	    return false;
+	if (maxn1_ == null) {
+	    if (other.maxn1_ != null)
+		return false;
+	} else if (!maxn1_.equals(other.maxn1_))
+	    return false;
+	if (maxn2_ == null) {
+	    if (other.maxn2_ != null)
+		return false;
+	} else if (!maxn2_.equals(other.maxn2_))
+	    return false;
+	if (maxop_ == null) {
+	    if (other.maxop_ != null)
+		return false;
+	} else if (!maxop_.equals(other.maxop_))
+	    return false;
+	if (maxot_ == null) {
+	    if (other.maxot_ != null)
+		return false;
+	} else if (!maxot_.equals(other.maxot_))
+	    return false;
+	if (maxpwp == null) {
+	    if (other.maxpwp != null)
+		return false;
+	} else if (!maxpwp.equals(other.maxpwp))
+	    return false;
+	if (maxpwr == null) {
+	    if (other.maxpwr != null)
+		return false;
+	} else if (!maxpwr.equals(other.maxpwr))
+	    return false;
+	if (maxrpm == null) {
+	    if (other.maxrpm != null)
+		return false;
+	} else if (!maxrpm.equals(other.maxrpm))
+	    return false;
+	if (maxvib == null) {
+	    if (other.maxvib != null)
+		return false;
+	} else if (!maxvib.equals(other.maxvib))
+	    return false;
+	if (maxvlt == null) {
+	    if (other.maxvlt != null)
+		return false;
+	} else if (!maxvlt.equals(other.maxvlt))
+	    return false;
+	if (minamp == null) {
+	    if (other.minamp != null)
+		return false;
+	} else if (!minamp.equals(other.minamp))
+	    return false;
+	if (mincht1 == null) {
+	    if (other.mincht1 != null)
+		return false;
+	} else if (!mincht1.equals(other.mincht1))
+	    return false;
+	if (mincht2 == null) {
+	    if (other.mincht2 != null)
+		return false;
+	} else if (!mincht2.equals(other.mincht2))
+	    return false;
+	if (minegt1 == null) {
+	    if (other.minegt1 != null)
+		return false;
+	} else if (!minegt1.equals(other.minegt1))
+	    return false;
+	if (minegt2 == null) {
+	    if (other.minegt2 != null)
+		return false;
+	} else if (!minegt2.equals(other.minegt2))
+	    return false;
+	if (minest == null) {
+	    if (other.minest != null)
+		return false;
+	} else if (!minest.equals(other.minest))
+	    return false;
+	if (minff_ == null) {
+	    if (other.minff_ != null)
+		return false;
+	} else if (!minff_.equals(other.minff_))
+	    return false;
+	if (minfp_ == null) {
+	    if (other.minfp_ != null)
+		return false;
+	} else if (!minfp_.equals(other.minfp_))
+	    return false;
+	if (minmp_ == null) {
+	    if (other.minmp_ != null)
+		return false;
+	} else if (!minmp_.equals(other.minmp_))
+	    return false;
+	if (minn1_ == null) {
+	    if (other.minn1_ != null)
+		return false;
+	} else if (!minn1_.equals(other.minn1_))
+	    return false;
+	if (minn2_ == null) {
+	    if (other.minn2_ != null)
+		return false;
+	} else if (!minn2_.equals(other.minn2_))
+	    return false;
+	if (minop_ == null) {
+	    if (other.minop_ != null)
+		return false;
+	} else if (!minop_.equals(other.minop_))
+	    return false;
+	if (minot_ == null) {
+	    if (other.minot_ != null)
+		return false;
+	} else if (!minot_.equals(other.minot_))
+	    return false;
+	if (minpwp == null) {
+	    if (other.minpwp != null)
+		return false;
+	} else if (!minpwp.equals(other.minpwp))
+	    return false;
+	if (minpwr == null) {
+	    if (other.minpwr != null)
+		return false;
+	} else if (!minpwr.equals(other.minpwr))
+	    return false;
+	if (minrpm == null) {
+	    if (other.minrpm != null)
+		return false;
+	} else if (!minrpm.equals(other.minrpm))
+	    return false;
+	if (minvib == null) {
+	    if (other.minvib != null)
+		return false;
+	} else if (!minvib.equals(other.minvib))
+	    return false;
+	if (minvlt == null) {
+	    if (other.minvlt != null)
+		return false;
+	} else if (!minvlt.equals(other.minvlt))
+	    return false;
+	if (mp_ != other.mp_)
+	    return false;
+	if (n1_ != other.n1_)
+	    return false;
+	if (n2_ != other.n2_)
+	    return false;
+	if (op_ != other.op_)
+	    return false;
+	if (ot_ != other.ot_)
+	    return false;
+	if (pwp != other.pwp)
+	    return false;
+	if (pwr != other.pwr)
+	    return false;
+	if (rpm != other.rpm)
+	    return false;
+	if (vib != other.vib)
+	    return false;
+	if (vlt != other.vlt)
+	    return false;
+	return true;
     }
 
 }

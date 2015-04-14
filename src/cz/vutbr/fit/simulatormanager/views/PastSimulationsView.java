@@ -107,6 +107,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
+	super.enter(event);
 	if (event.getParameters() == null || event.getParameters().isEmpty()) {
 	    setSimulationNotSelectedState();
 	} else {
