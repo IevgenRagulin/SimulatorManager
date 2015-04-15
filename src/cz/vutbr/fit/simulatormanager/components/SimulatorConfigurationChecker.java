@@ -57,7 +57,7 @@ public class SimulatorConfigurationChecker {
 		return true;
 	    } else if (!errorsInConfiguration.isEmpty()) {
 		new Notification(PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE, errorsInConfiguration.toString(),
-			Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
+			Notification.Type.WARNING_MESSAGE, true).show(Page.getCurrent());
 		return false;
 	    } else {
 		// return true but don't display any message

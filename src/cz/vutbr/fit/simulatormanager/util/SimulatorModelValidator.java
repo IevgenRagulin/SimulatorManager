@@ -1,6 +1,7 @@
 package cz.vutbr.fit.simulatormanager.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -12,14 +13,17 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.beans.EngineModelBean;
+import cz.vutbr.fit.simulatormanager.beans.SimulatorModelBean;
 import cz.vutbr.fit.simulatormanager.components.EnginesTabSheet;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelForm;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 
 /**
  * Class for checking if Simulator model is configured correctly. Three
@@ -44,11 +48,20 @@ public class SimulatorModelValidator {
 	    SimulatorModelForm simulatorModelForm) {
 	List<String> errorsAll = new ArrayList<String>();
 	List<String> enginesErrors = validateEnginesConfiguration(enginesModels);
-	// List<String> simulatorModelErrors =
-	// validateModelConfiguration(simulatorModel);
 	errorsAll.addAll(enginesErrors);
-	// errorsAll.addAll(simulatorModelErrors);
+	List<String> simulatorModelErrors = validateModelConfiguration(simulatorModelForm);
+	errorsAll.addAll(simulatorModelErrors);
 	return StringUtils.join(errorsAll.toArray(), "<br/>");
+    }
+
+    private static List<String> validateModelConfiguration(SimulatorModelForm simulatorModelForm) {
+	List<String> errors = new ArrayList<String>();
+	SimulatorModelBean sim = buildSimulatorModelBean(simulatorModelForm);
+	LOG.info("IS llfu" + sim.isLfu());
+	addError(errors, validateVal(SimulatorModelCols.lfu, sim.isLfu(), sim.getMinlfu(), sim.getMaxlfu()));
+	addError(errors, validateVal(SimulatorModelCols.cfu, sim.isCfu(), sim.getMincfu(), sim.getMaxcfu()));
+	addError(errors, validateVal(SimulatorModelCols.rfu, sim.isRfu(), sim.getMinrfu(), sim.getMaxrfu()));
+	return errors;
     }
 
     @SuppressWarnings("rawtypes")
@@ -112,23 +125,27 @@ public class SimulatorModelValidator {
      * @param engOrd
      */
     private static void validateEnginesFeaturesConfiguration(List<String> errors, EngineModelBean eng, Integer engOrd) {
-	addError(errors, validateVal(EngineModelCols.rpm, eng.isRpm(), eng.getMinrpm(), eng.getMaxrpm(), engOrd));
-	addError(errors, validateVal(EngineModelCols.pwr, eng.isPwr(), eng.getMinpwr(), eng.getMaxpwr(), engOrd));
-	addError(errors, validateVal(EngineModelCols.pwp, eng.isPwp(), eng.getMinpwp(), eng.getMaxpwp(), engOrd));
-	addError(errors, validateVal(EngineModelCols.mp_, eng.isMp_(), eng.getMinmp_(), eng.getMaxmp_(), engOrd));
-	addError(errors, validateVal(EngineModelCols.egt1, eng.isEgt1(), eng.getMinegt1(), eng.getMaxegt1(), engOrd));
-	addError(errors, validateVal(EngineModelCols.egt2, eng.isEgt2(), eng.getMinegt2(), eng.getMaxegt2(), engOrd));
-	addError(errors, validateVal(EngineModelCols.cht1, eng.isCht1(), eng.getMincht1(), eng.getMaxcht1(), engOrd));
-	addError(errors, validateVal(EngineModelCols.cht2, eng.isCht2(), eng.getMincht2(), eng.getMaxcht2(), engOrd));
-	addError(errors, validateVal(EngineModelCols.est, eng.isEst(), eng.getMinest(), eng.getMaxest(), engOrd));
-	addError(errors, validateVal(EngineModelCols.ff_, eng.isFf_(), eng.getMinff_(), eng.getMaxff_(), engOrd));
-	addError(errors, validateVal(EngineModelCols.fp_, eng.isFp_(), eng.getMinfp_(), eng.getMaxfp_(), engOrd));
-	addError(errors, validateVal(EngineModelCols.op_, eng.isOp_(), eng.getMinop_(), eng.getMaxop_(), engOrd));
-	addError(errors, validateVal(EngineModelCols.n1_, eng.isN1_(), eng.getMinn1_(), eng.getMaxn1_(), engOrd));
-	addError(errors, validateVal(EngineModelCols.n2_, eng.isN2_(), eng.getMinn2_(), eng.getMaxn2_(), engOrd));
-	addError(errors, validateVal(EngineModelCols.vib, eng.isVib(), eng.getMinvib(), eng.getMaxvib(), engOrd));
-	addError(errors, validateVal(EngineModelCols.vlt, eng.isVlt(), eng.getMinvlt(), eng.getMaxvlt(), engOrd));
-	addError(errors, validateVal(EngineModelCols.amp, eng.isAmp(), eng.getMinamp(), eng.getMaxamp(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.rpm, eng.isRpm(), eng.getMinrpm(), eng.getMaxrpm(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.pwr, eng.isPwr(), eng.getMinpwr(), eng.getMaxpwr(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.pwp, eng.isPwp(), eng.getMinpwp(), eng.getMaxpwp(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.mp_, eng.isMp_(), eng.getMinmp_(), eng.getMaxmp_(), engOrd));
+	addError(errors,
+		validateEngineVal(EngineModelCols.egt1, eng.isEgt1(), eng.getMinegt1(), eng.getMaxegt1(), engOrd));
+	addError(errors,
+		validateEngineVal(EngineModelCols.egt2, eng.isEgt2(), eng.getMinegt2(), eng.getMaxegt2(), engOrd));
+	addError(errors,
+		validateEngineVal(EngineModelCols.cht1, eng.isCht1(), eng.getMincht1(), eng.getMaxcht1(), engOrd));
+	addError(errors,
+		validateEngineVal(EngineModelCols.cht2, eng.isCht2(), eng.getMincht2(), eng.getMaxcht2(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.est, eng.isEst(), eng.getMinest(), eng.getMaxest(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.ff_, eng.isFf_(), eng.getMinff_(), eng.getMaxff_(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.fp_, eng.isFp_(), eng.getMinfp_(), eng.getMaxfp_(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.op_, eng.isOp_(), eng.getMinop_(), eng.getMaxop_(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.n1_, eng.isN1_(), eng.getMinn1_(), eng.getMaxn1_(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.n2_, eng.isN2_(), eng.getMinn2_(), eng.getMaxn2_(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.vib, eng.isVib(), eng.getMinvib(), eng.getMaxvib(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.vlt, eng.isVlt(), eng.getMinvlt(), eng.getMaxvlt(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.amp, eng.isAmp(), eng.getMinamp(), eng.getMaxamp(), engOrd));
     }
 
     private static void addError(List<String> listOfErrors, String newError) {
@@ -148,8 +165,8 @@ public class SimulatorModelValidator {
      * @param maxValue
      * @return
      */
-    private static String validateVal(EngineModelCols featureName, Boolean isEnabled, Float minValue, Float maxValue,
-	    Integer engineOrder) {
+    private static String validateEngineVal(EngineModelCols featureName, Boolean isEnabled, Float minValue,
+	    Float maxValue, Integer engineOrder) {
 	if ((isEnabled != null && isEnabled)
 		&& ((minValue == null || maxValue == null) || (minValue != null && maxValue != null && minValue > maxValue))) {
 	    return new StringBuilder().append(featureName.toString().toUpperCase())
@@ -159,9 +176,79 @@ public class SimulatorModelValidator {
 	return "";
     }
 
+    private static String validateVal(SimulatorModelCols featureName, Boolean isEnabled, Float minValue, Float maxValue) {
+	if ((isEnabled != null && isEnabled)
+		&& ((minValue == null || maxValue == null) || (minValue != null && maxValue != null && minValue > maxValue))) {
+	    return new StringBuilder().append(featureName.toString().toUpperCase())
+		    .append(" is enabled, but min/max are misconfigured for this simulator model").toString();
+	}
+	return "";
+    }
+
     /**
      * Based on a form layout of a simulator model, build a simulator model
      * bean. We do this to simplify/make more readable validation later
+     * 
+     * @param simulatorForm
+     * @return
+     */
+    private static SimulatorModelBean buildSimulatorModelBean(SimulatorModelForm simulatorForm) {
+	SimulatorModelBean simulatorModelBean = new SimulatorModelBean();
+	Collection<Field<?>> fields = simulatorForm.getFields();
+	for (Field<?> field : fields) {
+	    if (field.getCaption().equals(SimulatorModelCols.minspeed.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMinspeed(ConverterUtil.stringToInt(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.maxspeed.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMaxspeed(ConverterUtil.stringToInt(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.minspeedonflaps.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMinspeedonflaps(ConverterUtil.stringToInt(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.maxspeedonflaps.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMaxspeedonflaps(ConverterUtil.stringToInt(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.hasgears.getName())) {
+		CheckBox textField = (CheckBox) field;
+		simulatorModelBean.setHasgears(Boolean.valueOf(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.numberoflandinggears.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setNumberoflandinggears(ConverterUtil.stringToInt(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.lfu.getName())) {
+		CheckBox textField = (CheckBox) field;
+		simulatorModelBean.setLfu(Boolean.valueOf(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.minlfu.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMinlfu(ConverterUtil.stringToFloat(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.maxlfu.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMaxlfu(ConverterUtil.stringToFloat(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.rfu.getName())) {
+		CheckBox textField = (CheckBox) field;
+		simulatorModelBean.setRfu(Boolean.valueOf(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.minrfu.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMinrfu(ConverterUtil.stringToFloat(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.maxrfu.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMaxrfu(ConverterUtil.stringToFloat(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.cfu.getName())) {
+		CheckBox textField = (CheckBox) field;
+		simulatorModelBean.setCfu(Boolean.valueOf(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.mincfu.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMincfu(ConverterUtil.stringToFloat(textField.getValue()));
+	    } else if (field.getCaption().equals(SimulatorModelCols.maxcfu.getName())) {
+		TextField textField = (TextField) field;
+		simulatorModelBean.setMaxcfu(ConverterUtil.stringToFloat(textField.getValue()));
+	    }
+	}
+	return simulatorModelBean;
+    }
+
+    /**
+     * Based on a grid layout of an engine model, build an engine model bean. We
+     * do this to simplify/make more readable validation later
      * 
      * @return
      */

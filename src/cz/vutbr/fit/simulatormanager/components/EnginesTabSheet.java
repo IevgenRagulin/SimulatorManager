@@ -44,7 +44,7 @@ public class EnginesTabSheet extends TabSheet {
     public void setEnginesForSimulator(String simulatorModelId) {
 	LOG.debug("Setting engines for simulator with id: {}", simulatorModelId);
 	removeAllComponents();
-	enginesContainer = view.getDbHelper().getEnginesModelsOnSimulatorModel(simulatorModelId.toString());
+	enginesContainer = getEnginesContainer(simulatorModelId);
 	@SuppressWarnings("unchecked")
 	Collection<RowId> itemIds = (Collection<RowId>) enginesContainer.getItemIds();
 	for (RowId itemId : itemIds) {
@@ -136,6 +136,10 @@ public class EnginesTabSheet extends TabSheet {
 	return enginesForm;
     }
 
+    public SQLContainer getEnginesContainer(String simulatorModelId) {
+	return view.getDbHelper().getEnginesModelsOnSimulatorModel(simulatorModelId);
+    }
+
     /**
      * Add new engine to accordion. Changes are not commited to database. Commit
      * happens on clicking Save button
@@ -144,6 +148,10 @@ public class EnginesTabSheet extends TabSheet {
      */
     @SuppressWarnings("unchecked")
     public void addNewEngine(String simulatorModelId) {
+	LOG.info("adding new engine on simulator" + simulatorModelId);
+	if (enginesContainer == null) {
+	    enginesContainer = getEnginesContainer(simulatorModelId);
+	}
 	int nextEngineOrder = getNextAvailableEngineModelOrder(simulatorModelId);
 	int numberOfEngines = enginesContainer.size();
 	if (numberOfEngines < Constants.MAX_ENGINES_NUM) {

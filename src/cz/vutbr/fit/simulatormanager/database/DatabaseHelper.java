@@ -244,7 +244,7 @@ public class DatabaseHelper implements Serializable {
     public SQLContainer getEnginesModelsOnSimulatorModel(String simulatorModelId) {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery("SELECT * FROM enginemodel " + "WHERE simulatormodelid = "
-		+ simulatorModelId + "ORDER BY \"enginemodelorder\" ASC; ", Arrays.asList("enginemodelid"), pool);
+		+ simulatorModelId + " ORDER BY \"enginemodelorder\" ASC; ", Arrays.asList("enginemodelid"), pool);
 	query.setDelegate(new FreeFormStatementDelegateEngineModels(simulatorModelId));
 	try {
 	    return new SQLContainer(query);

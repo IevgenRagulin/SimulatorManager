@@ -3,16 +3,22 @@ package cz.vutbr.fit.simulatormanager.components;
 import java.sql.SQLException;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Table;
 
+import cz.vutbr.fit.simulatormanager.database.SimulatorModelQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
 
 public class SimulatorModelsList extends Table {
     private static final long serialVersionUID = 1L;
+    final static Logger LOG = LoggerFactory.getLogger(SimulatorModelsList.class);
     private SimulatorModelsView view = null;
     private Random random = new Random();
     private final int MINRANDOM = 1000;
@@ -36,7 +42,7 @@ public class SimulatorModelsList extends Table {
 		Object simulatorId = SimulatorModelsList.this.getValue();
 		if (simulatorId != null) {
 		    view.getSimulatorModelForm().setItemDataSource(SimulatorModelsList.this.getItem(simulatorId));
-		    view.getEnginesAccordeon().setEnginesForSimulator(((RowId) simulatorId).toString());
+		    view.getEnginesTabSheet().setEnginesForSimulator(((RowId) simulatorId).toString());
 		    view.getSelectedSimulatorModelName().setValue(
 			    "<b>Selected simulator model: "
 				    + SimulatorModelsList.this.getItem(simulatorId)
@@ -80,6 +86,7 @@ public class SimulatorModelsList extends Table {
     @SuppressWarnings("unchecked")
     public void addSimulatorModel() {
 	Object simulatorModelId = getContainerDataSource().addItem();
+	Item newItem = getContainerDataSource().getItem(simulatorModelId);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.simulatormodelname.toString()).setValue(
 		"New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxspeedonflaps.toString()).setValue(
@@ -87,9 +94,16 @@ public class SimulatorModelsList extends Table {
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(
 		DEFAULT_NUM_OF_LANDING_GEARS);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lfu.toString()).setValue(true);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.rfu.toString()).setValue(true);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.minlfu.toString()).setValue(0.0f);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxlfu.toString()).setValue(1000.0f);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.rfu.toString()).setValue(false);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.cfu.toString()).setValue(false);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.hasgears.toString()).setValue(true);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(1);
 	commit();
+	String newSimulatorModelId = SimulatorModelQueries.getLatestSimulatorModelId().toString();
+	LOG.info("A new simulator model with id: {} has been added", newSimulatorModelId);
+	this.view.getEnginesTabSheet().addNewEngine(newSimulatorModelId);
     }
 
     /**

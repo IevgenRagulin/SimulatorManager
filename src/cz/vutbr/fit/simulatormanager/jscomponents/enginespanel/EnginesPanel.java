@@ -14,7 +14,11 @@ import com.vaadin.ui.AbstractJavaScriptComponent;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.EngineModelBean;
+import cz.vutbr.fit.simulatormanager.beans.SimulationDevStateBean;
+import cz.vutbr.fit.simulatormanager.beans.SimulatorModelBean;
 import cz.vutbr.fit.simulatormanager.database.EngineModelQueries;
+import cz.vutbr.fit.simulatormanager.database.SimulatorModelQueries;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 
 @com.vaadin.annotations.JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",
 	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "enginesPanel.js" })
@@ -30,6 +34,8 @@ public class EnginesPanel extends AbstractJavaScriptComponent {
     // event and sends it to ui
     private AllEngineInfo prevEngineInfo = new AllEngineInfo();
     private Map<Integer, EngineModelBean> prevEngineModel = new HashMap<>();
+    private SimulationDevStateBean prevSimulationDevState = new SimulationDevStateBean();
+    private SimulatorModelBean prevSimulatorModel = new SimulatorModelBean();
     private boolean isStateInitialized = false;
 
     public EnginesPanel() {
@@ -37,13 +43,30 @@ public class EnginesPanel extends AbstractJavaScriptComponent {
 	setWidth("1200px");
     }
 
-    public void updateIndividualEngineValues(String simulatorId, AllEngineInfo enginesInfo) {
+    public void updateIndividualEngineValues(String simulatorId, AllEngineInfo enginesInfo,
+	    SimulationDevStateBean simulationDevState) {
 	if (!isStateInitialized) {
 	    isStateInitialized = true;
 	    getState().initializeArrays(enginesInfo.getNumberOfEngines());
 	}
 	updateEngineModelsIfNeeded(simulatorId);
+	updateSimulatorModelIfNeeded(simulatorId);
 	updateEngineValuesIfNeeded(enginesInfo);
+	updateFuelTanksValuesIfNeeded(simulationDevState);
+    }
+
+    private void updateFuelTanksValuesIfNeeded(SimulationDevStateBean simulationDevState) {
+	LOG.info("setting lfuvals" + simulationDevState.getLfu());
+	if (prevSimulationDevState.getLfu() != simulationDevState.getLfu()) {
+	    getState().lfuvals = simulationDevState.getLfu();
+	}
+	if (prevSimulationDevState.getRfu() != simulationDevState.getRfu()) {
+	    getState().rfuvals = simulationDevState.getRfu();
+	}
+	if (prevSimulationDevState.getCfu() != simulationDevState.getCfu()) {
+	    getState().cfuvals = simulationDevState.getCfu();
+	}
+	prevSimulationDevState = simulationDevState;
     }
 
     private void updateEngineValuesIfNeeded(AllEngineInfo enginesInfo) {
@@ -130,17 +153,114 @@ public class EnginesPanel extends AbstractJavaScriptComponent {
     }
 
     /**
+     * Initialize arrays and prevEngineInfo. We need this to handle the case
+     * when engine models change
+     * 
+     * @param numberOfEngines
+     */
+    private void clearState(int numberOfEngines) {
+	getState().initializeArrays(numberOfEngines);
+	prevEngineInfo = new AllEngineInfo();
+    }
+
+    /**
+     * Return true if the model state which is cached is different from the one
+     * in the database. If none is cached, return true
+     * 
+     * @param engineModels
+     * @param engineIds
+     * @return
+     */
+    private boolean hasEngineModelChanged(SQLContainer engineModels, Collection<RowId> engineIds) {
+	for (RowId engineId : engineIds) {
+	    Item engineItem = engineModels.getItem(engineId);
+	    EngineModelBean engineBean = new EngineModelBean(engineItem);
+	    int engineModelOrder = engineBean.getEnginemodelorder();
+	    if (!engineBean.equals(prevEngineModel.get(engineModelOrder))) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
+    /**
+     * if simulator model hasn't been initialized, then initialize it: get
+     * simulator model for this simulator from database, and set them to state
+     * object, so that javascript has access to lfu, cfu, rfu.
+     * 
+     * @param simulatorId
+     */
+    private void updateSimulatorModelIfNeeded(String simulatorId) {
+	Item simulatorModel = SimulatorModelQueries.getSimulatorModelBySimulatorId(simulatorId);
+	SimulatorModelBean simulatorModelBean = buildSimulatorModelBean(simulatorModel);
+	LOG.info("going to comapre simulator model beans. minlfu: {}, maxlfu: {} ", simulatorModelBean.getMinlfu(),
+		simulatorModelBean.getMaxlfu());
+	if (!simulatorModelBean.equals(prevSimulatorModel)) {
+
+	    getState().lfu = simulatorModelBean.isLfu();
+	    getState().minlfu = simulatorModelBean.getMinlfu();
+	    getState().maxlfu = simulatorModelBean.getMaxlfu();
+
+	    getState().rfu = simulatorModelBean.isRfu();
+	    getState().minrfu = simulatorModelBean.getMinrfu();
+	    getState().maxrfu = simulatorModelBean.getMaxrfu();
+
+	    getState().cfu = simulatorModelBean.isCfu();
+	    getState().mincfu = simulatorModelBean.getMincfu();
+	    getState().maxcfu = simulatorModelBean.getMaxcfu();
+
+	    prevSimulatorModel = simulatorModelBean;
+	}
+
+    }
+
+    /**
+     * Builds SimulatorModelBean based on simulatorModel info from database. Get
+     * only lfu, cfu, rfu info because we don't need other info
+     * 
+     * @param simulatorModel
+     * @return
+     */
+    private SimulatorModelBean buildSimulatorModelBean(Item simulatorModel) {
+	SimulatorModelBean simulatorModelBean = new SimulatorModelBean();
+	// LFU
+	simulatorModelBean.setLfu((Boolean) simulatorModel.getItemProperty(SimulatorModelCols.lfu.toString())
+		.getValue());
+	simulatorModelBean.setMinlfu((Float) simulatorModel.getItemProperty(SimulatorModelCols.minlfu.toString())
+		.getValue());
+	simulatorModelBean.setMaxlfu((Float) simulatorModel.getItemProperty(SimulatorModelCols.maxlfu.toString())
+		.getValue());
+	// RFU
+	simulatorModelBean.setRfu((Boolean) simulatorModel.getItemProperty(SimulatorModelCols.rfu.toString())
+		.getValue());
+	simulatorModelBean.setMinrfu((Float) simulatorModel.getItemProperty(SimulatorModelCols.minrfu.toString())
+		.getValue());
+	simulatorModelBean.setMaxrfu((Float) simulatorModel.getItemProperty(SimulatorModelCols.maxrfu.toString())
+		.getValue());
+	// CFU
+	simulatorModelBean.setCfu((Boolean) simulatorModel.getItemProperty(SimulatorModelCols.cfu.toString())
+		.getValue());
+	simulatorModelBean.setMincfu((Float) simulatorModel.getItemProperty(SimulatorModelCols.mincfu.toString())
+		.getValue());
+	simulatorModelBean.setMaxcfu((Float) simulatorModel.getItemProperty(SimulatorModelCols.maxcfu.toString())
+		.getValue());
+
+	return simulatorModelBean;
+    }
+
+    /**
      * if engine model hasn't been initialized, then initialize it: get engines
      * models for this simulator from database, and set them to state, so that
-     * javascript has access to these values Note: this is done only once after
-     * this object is created, so that we don't pass this data around all the
-     * time
+     * javascript has access to these values
      * 
      * @param simulatorId
      */
     private void updateEngineModelsIfNeeded(String simulatorId) {
 	SQLContainer enginesModels = EngineModelQueries.getEngineModelsBySimulatorId(simulatorId);
 	Collection<RowId> itemIds = (Collection<RowId>) enginesModels.getItemIds();
+	if (hasEngineModelChanged(enginesModels, itemIds)) {
+	    clearState(itemIds.size());
+	}
 	LOG.info("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
 	for (RowId itemId : itemIds) {
 	    Item engineItem = enginesModels.getItem(itemId);
@@ -162,27 +282,28 @@ public class EnginesPanel extends AbstractJavaScriptComponent {
 		getState().pwp[engineModelOrder] = engineBean.isPwp();
 		getState().minpwp[engineModelOrder] = engineBean.getMinpwp();
 		getState().maxpwp[engineModelOrder] = engineBean.getMaxpwp();
-
+		// MP_
 		getState().mp_[engineModelOrder] = engineBean.isMp_();
 		getState().minmp_[engineModelOrder] = engineBean.getMinmp_();
 		getState().maxmp_[engineModelOrder] = engineBean.getMaxmp_();
-
+		// EGT1
 		getState().egt1[engineModelOrder] = engineBean.isEgt1();
 		getState().minegt1[engineModelOrder] = engineBean.getMinegt1();
 		getState().maxegt1[engineModelOrder] = engineBean.getMaxegt1();
-
+		// EGT2
 		getState().egt2[engineModelOrder] = engineBean.isEgt2();
 		getState().minegt2[engineModelOrder] = engineBean.getMinegt2();
 		getState().maxegt2[engineModelOrder] = engineBean.getMaxegt2();
-
+		// CHT1
 		getState().cht1[engineModelOrder] = engineBean.isCht1();
 		getState().mincht1[engineModelOrder] = engineBean.getMincht1();
 		getState().maxcht1[engineModelOrder] = engineBean.getMaxcht1();
-
+		// CHT2
 		getState().cht2[engineModelOrder] = engineBean.isCht2();
 		getState().mincht2[engineModelOrder] = engineBean.getMincht2();
 		getState().maxcht2[engineModelOrder] = engineBean.getMaxcht2();
-
+		// EST
+		LOG.info("Setting est for engine" + engineModelOrder + " enabled: " + engineBean.isEst());
 		getState().est[engineModelOrder] = engineBean.isEst();
 		getState().minest[engineModelOrder] = engineBean.getMinest();
 		getState().maxest[engineModelOrder] = engineBean.getMaxest();

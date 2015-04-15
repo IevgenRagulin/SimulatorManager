@@ -107,15 +107,15 @@ public class AWComParser {
 
 	    // Left fuel
 	    value = getValueOf(":LFU:", response);
-	    simData.setLfuel(ConverterUtil.stringToDouble(value));
+	    simData.setLfuel(ConverterUtil.stringToFloat(value));
 
 	    // Right fuel
 	    value = getValueOf(":RFU:", response);
-	    simData.setRfuel(ConverterUtil.stringToDouble(value));
+	    simData.setRfuel(ConverterUtil.stringToFloat(value));
 
 	    // Central fuel
 	    value = getValueOf(":CFU:", response);
-	    simData.setCfuel(ConverterUtil.stringToDouble(value));
+	    simData.setCfuel(ConverterUtil.stringToFloat(value));
 
 	    // Oil Pressure
 	    value = getValueOf(":OPR:", response);

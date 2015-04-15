@@ -129,7 +129,7 @@ public class SimulatorValidator {
      * @return
      */
     private static boolean isAwComSendingValueForFeature(Float value) {
-	return (value != null && value != 0.0 && value != -1.0);
+	return (value != null && value != -1.0);
     }
 
     /**

@@ -15,6 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
+import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
 import cz.vutbr.fit.simulatormanager.jscomponents.enginespanel.EnginesPanel;
 import cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols.FlightControls;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartAltitude;
@@ -130,9 +131,10 @@ public abstract class SimulationsView extends BasicView implements View {
 	}
     }
 
-    protected void setEnginesInfo(String simulatorId, AllEngineInfo enginesInfo) {
+    protected void setEnginesInfo(String simulatorId, AllEngineInfo enginesInfo,
+	    SimulationDevStateItem simulationDevState) {
 	if (enginesInfo != null) {
-	    enginesPanel.updateIndividualEngineValues(simulatorId, enginesInfo);
+	    enginesPanel.updateIndividualEngineValues(simulatorId, enginesInfo, simulationDevState.getBean());
 	}
     }
 

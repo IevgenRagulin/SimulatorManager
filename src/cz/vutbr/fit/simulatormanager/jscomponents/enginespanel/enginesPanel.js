@@ -2,80 +2,113 @@ var isHtmlInitialized = false;
 var engineFeatures = [ "rpm", "pwr", "pwp", "mp_", "egt1", "egt2", "cht1",
 		"cht2", "est", "ff_", "fp_", "op_", "ot_", "n1_", "n2_", "vib", "vlt",
 		"amp" ];
-//if specific engineFeatures are enabled or not. On every update we check if there changes in a list of enabled engine features. If this list has changed, we reinitialize the html
+var fuelTanks = [ "lfu", "rfu", "cfu" ]
+// if specific engineFeatures are enabled or not. On every update we check if
+// there changes in a list of enabled engine features. If this list has changed,
+// we reinitialize the html
 var engineFeaturesState = new Object();
+// same for fuel tanks
+var fuelTanksState = new Object();
 var thisObj;
-//attach the .equals method to Array's prototype to call it on any array - we need this to be able to compare arrays
-Array.prototype.equals = function (array) {
-    // if the other array is a falsy value, return
-    if (!array)
-        return false;
 
-    // compare lengths - can save a lot of time 
-    if (this.length != array.length)
-        return false;
-
-    for (var i = 0, l=this.length; i < l; i++) {
-        // Check if we have nested arrays
-        if (this[i] instanceof Array && array[i] instanceof Array) {
-            // recurse into the nested arrays
-            if (!this[i].equals(array[i]))
-                return false;       
-        }           
-        else if (this[i] != array[i]) { 
-            // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;   
-        }           
-    }       
-    return true;
-} 
-
+/**
+ * This is called once on creating EnginesPanel() java object, entering the page
+ * with enginesPanel
+ */
 function cz_vutbr_fit_simulatormanager_jscomponents_enginespanel_EnginesPanel() {
 	window.thisObj = this;
 	console.log("Creating engines panel");
-	//when document 
+	// when document
 	// we load script in such a tricky way because there is an error if we try
 	// to do it normally through @Javascript annotation in EnginesPanel.java
 	// as soon as script is loaded, loadVisualizationLibrary
 	loadScript("https://www.google.com/jsapi", loadGoogleVisualizationLibrary);
-	console.log("this.getElement 2" + this.getElement().innerHTML);
 	var e = this.getElement();
 }
 
+/**
+ * Load google visualisation library. After loading it, we init engines panel
+ */
 function loadGoogleVisualizationLibrary() {
-	//after google library is loaded, we init engines panel
 	google.load("visualization", "1", {
 		packages : [ "gauge" ],
 		"callback" : initEnginesPanel
 	});
 };
 
-
+/**
+ * This is called once, by on finishing executing
+ * loadGoogleVisualizationLibrary() method. This initialized everything, sets
+ * onStateChangeListener
+ */
 function initEnginesPanel() {
-	var e = thisObj.getElement();
-	console.log("Going to init engines panel. Rpm: "+thisObj.getState().rpm);
+	// console.log("Going to init engines panel. Rpm: "+thisObj.getState().rpm);
 	if (!(typeof thisObj.getState().rpm === 'undefined')) {
-		initEngineHtmlAndGauges(e, thisObj.getState());
+		initAllHtmlAndGauges(thisObj.getElement(), thisObj.getState());
 	}
 	thisObj.onStateChange = function() {
-		//if some of the features state has been updated, reinit html
-		//if html hasn't yet been initialized, do it
-		if ((!window.isHtmlInitialized)||(hasStateOfSomeFeatureChanged(thisObj.getState()))) {
-			console.log("Going to init engines panel. Rpm: "+thisObj.getState().rpm);
-			initEngineHtmlAndGauges(e, thisObj.getState());
+		// if some of the features state has been updated, reinit html
+		// if html hasn't yet been initialized, do it
+		if ((!window.isHtmlInitialized)
+				|| (hasStateOfSomeFeatureChanged(thisObj.getState()))) {
+			initAllHtmlAndGauges(thisObj.getElement(), thisObj.getState());
 		}
 		if (isHtmlInitialized) {
-			for (var i=0; i<engineFeatures.length; i++) {
-				//we call drawGauge through timeout in order to do this asynchronyously to improve performance, not sure if it really improves performance
-				setTimeout(function(){
-					drawGauge(thisObj.getState(), engineFeatures[i]);
-				}, 0);
+			// iterate over fuel tanks
+			for (var i = 0; i < fuelTanks.length; i++) {
+				setTimeoutToDrawFuelGauge(i);
+			}
+			// iterate over engines. the number of engines is the same as the
+			// size of array rpm
+			for (var i = 0; i < thisObj.getState().rpm.length; i++) {
+				for (var j = 0; j < engineFeatures.length; j++) {
+					// we call drawEngineGauge through timeout in order to do
+					// this
+					// asynchroniously to improve performance, not sure if it
+					// really improves performance
+					// also, we need to create a new instance of variable i
+					// because
+					// javascript is so javascript:
+					// http://stackoverflow.com/questions/5226285/settimeout-in-a-for-loop-and-pass-i-as-value
+					setTimeoutToDrawEngineGauge(i, j);
+				}
 			}
 		}
 	};
-	
 }
 
+/**
+ * Draw gauge on engineId for featureId asynchroniously
+ * 
+ * @param engineId
+ * @param featureId
+ */
+function setTimeoutToDrawEngineGauge(engineId, featureId) {
+	// console.log("kuku set timeout engineId"+engineId+"featureId"+featureId);
+	setTimeout(function() {
+		drawEngineGauge(engineId, engineFeatures[featureId]);
+	}, 0);
+}
+
+/**
+ * Draw gauge for fuel tank asynchroniously
+ * 
+ * @param engineId
+ * @param featureId
+ */
+function setTimeoutToDrawFuelGauge(tankId) {
+	setTimeout(function() {
+		drawFuelTankGauge(fuelTanks[tankId]);
+	}, 0);
+}
+
+/**
+ * Load script from url, attach it to head of html. On finishing, call the
+ * callback
+ * 
+ * @param url
+ * @param callback
+ */
 function loadScript(url, callback) {
 	// Adding the script tag to the head as suggested before
 	var head = document.getElementsByTagName('head')[0];
@@ -90,10 +123,17 @@ function loadScript(url, callback) {
 	head.appendChild(script);
 }
 
+/**
+ * Return true if the state (enabled/disabled rpm, changed min/max pwr etc.) has
+ * changed
+ */
 function hasStateOfSomeFeatureChanged(state) {
-	for (var i=0; i<engineFeatures.length; i++) {
-		if (!arraysIdentical(engineFeaturesState[engineFeatures[i]], state[engineFeatures[i]])) {
-			console.log("state of some feature has changed YES. prev: "+engineFeaturesState[engineFeatures[i]]+" new: "+state[engineFeatures[i]]);
+	for (var i = 0; i < engineFeatures.length; i++) {
+		if (!arraysIdentical(engineFeaturesState[engineFeatures[i]],
+				state[engineFeatures[i]])) {
+			// console.log("state of some feature has changed YES. prev: "
+			// + engineFeaturesState[engineFeatures[i]] + " new: "
+			// + state[engineFeatures[i]]);
 			return true;
 		}
 	}
@@ -101,82 +141,252 @@ function hasStateOfSomeFeatureChanged(state) {
 	return false;
 }
 
+/**
+ * Return true if arrays a and b are equal
+ * 
+ * @param a
+ * @param b
+ * @returns {Boolean}
+ */
 function arraysIdentical(a, b) {
-    var i = a.length;
-    if (i != b.length) return false;
-    while (i--) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
+	var i = a.length;
+	if (i != b.length)
+		return false;
+	while (i--) {
+		if (a[i] !== b[i])
+			return false;
+	}
+	return true;
 };
 
-function initEngineHtmlAndGauges(e, state) {
-	console.log("going to init engine html and gauge");
-	engine0Html = "<div id='engine0'><h3><a href='#'>Engine 0</a></h3><div>";
-	for (var i=0; i<engineFeatures.length; i++) {
-		var newFeatureState = state[engineFeatures[i]];
-		engineFeaturesState[engineFeatures[i]]=newFeatureState;//update features state
-		engine0Html=engine0Html+getHtmlForFeature(state, engineFeatures[i]);
+/**
+ * Init html for all gauges on all engines, and for fuel tanks
+ * 
+ * @param e
+ * @param state
+ */
+function initAllHtmlAndGauges(e, state) {
+	e.innerHTML = "";
+	initFuelTanksHtmlAndGauges(e, state);
+	// iterate over engines. the number of engines is the same as the length of
+	// array rpm
+	for (var i = 0; i < state.rpm.length; i++) {
+		// iterate engine html for all engines
+		initEngineHtmlAndGauges(e, state, i);
 	}
-	engine0Html = engine0Html+"</div></div>";
-	e.innerHTML = engine0Html;
-	//make the div collapsable so that a user can hide it if desired
-	(function($) {
-        $(function() {
-        	console.log("accordion it!");
-            $("#engine0").accordion({ header: "h3", collapsible: true });
-        })
-    })(jQuery);
-	for (var i=0; i<engineFeatures.length; i++) {
-		drawGauge(state, engineFeatures[i]);
-	}
+	// make the div collapsable so that a user can hide it if desired
+	$(".collapsable").accordion({
+		header : "h3",
+		collapsible : true
+	});
 	window.isHtmlInitialized = true;
 }
 
-function drawGauge(state, featureName) {
-	if ((!(typeof state[featureName] === 'undefined'))
-			&& (state[featureName][0])) {
-		var maxVal = state["max" + featureName][0];
-		var minVal = state["min" + featureName][0];
-		var range = maxVal - minVal;
-		
-		var redStart = maxVal - range*0.1;
-		var redEnd = maxVal;
-		var yellowStart = minVal;
-		var yellowEnd = minVal + range*0.1;
-		console.log("red start feature"+featureName+" "+redStart);
-		var options = {
-			width : 120,
-			height : 120,
-			redFrom : redStart,
-			redTo : redEnd,
-			yellowFrom : yellowStart,
-			yellowTo : yellowEnd,
-			minorTicks : 5,
-			max : maxVal,
-			min : minVal
-		};
-		var value = 0;
-		if (!(typeof state[featureName + "vals"] === 'undefined')) {
-			value = state[featureName + "vals"][0];
-		} else {
-			value = state["min" + featureName][0];
-		}
-		var data = google.visualization.arrayToDataTable([
-				[ 'Label', 'Value' ], [ featureName, value ] ]); // name
-		var gauge = new google.visualization.Gauge(document
-				.getElementById('engine-gauge-' + featureName));
-		gauge.options = options;
-		gauge.data = data;
-		//console.log("going to draw gauge for feature name"+featureName+" options.min"+options.min+"options.max"+options.max+" value"+value);
-		gauge.draw(data, options);
+/**
+ * Init html for all gauges on this engine
+ * 
+ * @param e
+ * @param state
+ * @param engineId
+ */
+function initEngineHtmlAndGauges(e, state, engineId) {
+	console.log("kuku going to init engine html and gauge. engid" + engineId);
+	var engineHtml = "<div class='collapsable'><h3>Engine " + engineId
+			+ "</h3><div>";
+	for (var i = 0; i < engineFeatures.length; i++) {
+		var newFeatureState = state[engineFeatures[i]];
+		// update features state
+		engineFeaturesState[engineFeatures[i]] = newFeatureState;
+		engineHtml = engineHtml
+				+ getHtmlForEngineFeature(state, engineFeatures[i], engineId);
+	}
+	engineHtml = engineHtml + "</div></div>";
+	e.innerHTML = e.innerHTML + engineHtml;
+
+	for (var i = 0; i < engineFeatures.length; i++) {
+		drawEngineGauge(engineId, engineFeatures[i]);
 	}
 }
 
-function getHtmlForFeature(state, featureName) {
-	console.log("feature. current inner html");
-	if (state[featureName][0]) {
-		return "<div id='engine-gauge-" + featureName
+function initFuelTanksHtmlAndGauges(e, state) {
+	var tanksHtml = "<div class='collapsable'><h3>Fuel tanks</h3><div>";
+	for (var i = 0; i < fuelTanks.length; i++) {
+		var newTankState = state[fuelTanks[i]];
+		// update tank state
+		fuelTanksState[fuelTanks[i]] = newTankState;
+		tanksHtml = tanksHtml + getHtmlForFuelTank(state, fuelTanks[i]);
+	}
+	tanksHtml = tanksHtml + "</div></div>";
+	e.innerHTML = e.innerHTML + tanksHtml;
+	for (var i = 0; i < fuelTanks.length; i++) {
+		drawFuelTankGauge(fuelTanks[i]);
+	}
+}
+
+function buildGaugeOptions(minVal, maxVal) {
+	var range = maxVal - minVal;
+	// last 10 percents of gauge should be red
+	var redStart = maxVal - range * 0.1;
+	var redEnd = maxVal;
+	// first 10 percents of gauge should be yellow
+	var yellowStart = minVal;
+	var yellowEnd = minVal + range * 0.1;
+	var options = {
+		width : 120,
+		height : 120,
+		redFrom : redStart,
+		redTo : redEnd,
+		yellowFrom : yellowStart,
+		yellowTo : yellowEnd,
+		minorTicks : 5,
+		max : maxVal,
+		min : minVal
+	};
+	return options;
+}
+
+function isEngineFeatureEnabled(featureName, engineId) {
+	var state = thisObj.getState();
+	return ((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName][engineId]));
+}
+
+function isFuelFeatureEnabled(featureName) {
+	var state = thisObj.getState();
+	console.log("is fuel feature enabled"+featureName+" is: "+((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName])));
+	return ((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName]));
+}
+
+function isEngineFeatureAWComValueAvailable(featureName, engineId) {
+	var state = thisObj.getState();
+	// do we have values from AWCom on the UI
+	// is AWCom sending values for engine with engineId
+	return (!(typeof state[featureName + "vals"] === 'undefined'))
+			&& (state[featureName + "vals"].length > engineId);
+}
+
+function isFuelFeatureAWComValueAvailable(featureName) {
+	var state = thisObj.getState();
+	// if we have values from AWCom on the UI
+	return (!(typeof state[featureName + "vals"] === 'undefined'));
+}
+
+function getEngineFeatureMinValue(featureName, engineId) {
+	var state = thisObj.getState();
+	return state["min" + featureName][engineId];
+}
+
+function getFuelFeatureMinValue(featureName) {
+	var state = thisObj.getState();
+	return state["min" + featureName];
+}
+
+function getEngineFeatureMaxValue(featureName, engineId) {
+	var state = thisObj.getState();
+	return state["max" + featureName][engineId];
+}
+
+function getFuelFeatureMaxValue(featureName) {
+	var state = thisObj.getState();
+	return state["max" + featureName];
+}
+
+/**
+ * Based on input, create a gauge object
+ */
+function buildGauge(featureName, value, elementId, options) {
+	var data = google.visualization.arrayToDataTable([ [ 'Label', 'Value' ],
+			[ featureName, value ] ]);
+	
+	console.log("building gauge for "+elementId);
+	var gauge = new google.visualization.Gauge(document.getElementById(elementId));
+	gauge.options = options;
+	gauge.data = data;
+	return gauge;
+}
+
+/**
+ * Draw gauge for specified featureName for specified engine. To improve: maybe,
+ * we could store google.visualization.Gauge and not recreate all the options
+ * everytime, and just set the value. However, it didn't work for me due to some
+ * reason
+ * 
+ * @param engineId
+ * @param featureName
+ */
+function drawEngineGauge(engineId, featureName) {
+	var state = thisObj.getState();
+	console.log("KUKU draw gauge called. is enabled" + state[featureName]
+			+ "	 featurename" + featureName + " engineid" + engineId);
+	if (isEngineFeatureEnabled(featureName, engineId)) {
+		var maxVal = getEngineFeatureMaxValue(featureName, engineId);
+		var minVal = getEngineFeatureMinValue(featureName, engineId);
+		var options = buildGaugeOptions(minVal, maxVal);
+		var value = 0;
+		if (isEngineFeatureAWComValueAvailable(featureName, engineId)) {
+			value = state[featureName + "vals"][engineId];
+		} else {
+			// if we don't have value from AWCom, set the value to "-2" - error
+			// code indicating that there is no value from AWCom for this engine
+			value = -2;
+		}
+		var gauge = buildGauge(featureName, value, 'engine' + engineId
+				+ '-gauge-' + featureName);
+		gauge.draw(gauge.data, options);
+	}
+}
+
+/**
+ * Draw gauge for specified featureName
+ * 
+ * @param featureName -
+ *            fuel tank name: cfu, lfu, rfu
+ */
+function drawFuelTankGauge(featureName) {
+	var state = thisObj.getState();
+	if (isFuelFeatureEnabled(featureName)) {
+		var maxVal = getFuelFeatureMaxValue(featureName);
+		var minVal = getFuelFeatureMinValue(featureName);
+		
+		var options = buildGaugeOptions(minVal, maxVal);
+		var value = 0;
+
+		if (isFuelFeatureAWComValueAvailable(featureName)) {
+			value = state[featureName + "vals"];
+		} else {
+			// if we don't have value from AWCom, set the value to "-2" - error
+			// code indicating that there is no value from AWCom for this fuel
+			// tank
+			value = -2;
+		}
+		console.log("draw fuel gauge. minval, maxval, value"+minVal+ ", "+maxVal+", "+value);
+		var gauge = buildGauge(featureName, value, 'tank-gauge-'
+				+ featureName);
+		gauge.draw(gauge.data, options);
+	}
+}
+
+/**
+ * Build div for gauge for specified feature name, for specified engineId. If
+ * feature is not enabled on this engine, return empty string
+ */
+function getHtmlForEngineFeature(state, featureName, engineId) {
+	console.log("getHtmlForEngineFeature() - " + featureName + " engineId "
+			+ engineId + " state:" + state[featureName][engineId]);
+	if (state[featureName][engineId]) {
+		return "<div id='engine" + engineId + "-gauge-" + featureName
+				+ "' style='width: 120px; height: 120px; float: left'></div>";
+	}
+	return "";
+}
+
+/**
+ * Build div for gauge for specified tanks. If tanks is not enabled, return
+ * empty string
+ */
+function getHtmlForFuelTank(state, tankName) {
+	console.log("getHtmlForFuelTank() - " + tankName + " state:" + state[tankName]);
+	if (state[tankName]) {
+		return "<div id='tank-gauge-" + tankName
 				+ "' style='width: 120px; height: 120px; float: left'></div>";
 	}
 	return "";

@@ -8,7 +8,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 
 public class EngineModelBean implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    // is this 0th, 1st, 2nd.. engine
     private Integer enginemodelorder;
 
     private boolean rpm;

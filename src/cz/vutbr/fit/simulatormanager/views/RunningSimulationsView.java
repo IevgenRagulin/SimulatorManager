@@ -30,10 +30,10 @@ public class RunningSimulationsView extends SimulationsView implements View {
     protected String selectedSimulatorId = null;
     protected FlightPathRunningSim googleMap = null;
 
-    // once in 30 UI updates we verify if simulator configuration is valid. If
+    // once in 300 UI updates we verify if simulator configuration is valid. If
     // it's not valid, display error message
     protected boolean isSimulatorConfigurationValid = true;
-    private static final int VERIFY_CONFIGURATION_FREQUENCY = 100;
+    private static final int VERIFY_CONFIGURATION_FREQUENCY = 300;
     private int uiUpdatesLeftTillNextConfigurationVerification = 0;
 
     public RunningSimulationsView(Navigator navigator) {
@@ -99,7 +99,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	addNewPointToCharts(simulatorId, selectedPFD);
 	// Set engines and fuel info
 	AllEngineInfo enginesInfo = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
-	setEnginesInfo(simulatorId, enginesInfo);
+	setEnginesInfo(simulatorId, enginesInfo, selectedDevicesState);
     }
 
     private void addNewPointToCharts(String simulatorId, SimulationPFDItem selectedPFD) {
@@ -139,9 +139,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 		if (!dbHelp.isLastSimInDbRunning(selectedSimulatorId)) {
 		    this.setNoSimulationsRunningState();
 		} else {
-		    // TODO: Add this back!
-		    // validateConfiguration(selectedSimulator,
-		    // selectedSimulatorId);
+		    validateConfiguration(selectedSimulator, selectedSimulatorId);
 		    if (true) {
 			// TODO: Add this back!
 			// if (isSimulatorConfigurationValid) {

@@ -250,11 +250,15 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	return removeSimulatorModelButton;
     }
 
-    public EnginesTabSheet getEnginesAccordeon() {
+    public EnginesTabSheet getEnginesTabSheet() {
 	return enginesTabsheet;
     }
 
     public Button getSaveButton() {
 	return saveButton;
+    }
+
+    public SimulatorModelsList getSimulatorModelList() {
+	return simulatorModelsList;
     }
 }

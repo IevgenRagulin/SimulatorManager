@@ -168,9 +168,9 @@ CREATE TABLE simulationdevicesstate
   landinggear_1 int,
   landinggear_2 int,
   landinggear_3 int,
-  fuel_left double precision,
-  fuel_right double precision,
-  fuel_center double precision,
+  lfu real,
+  rfu real,
+  cfu real,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulationdevicesstate_pkey PRIMARY KEY (devstateid),
   CONSTRAINT simulationdevicesstate_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)

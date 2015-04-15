@@ -95,9 +95,11 @@ public class AllSimulationInfo {
     // Fuel
     Double engine_fuel_pressure; // Fuel pressure
     Double engine_fuel_flow; // Fuel flow
-    Double lfuel; // Left fuel tank - fuel amount
-    Double rfuel; // Right fuel tank - fuel amount
-    Double cfuel; // Total fuel tank - fuel amount
+    Float lfuel; // Left fuel tank - fuel amount. This ones are float, becuase
+		 // this code is written later, and now I realize that Double is
+		 // an overkill
+    Float rfuel; // Right fuel tank - fuel amount
+    Float cfuel; // Total fuel tank - fuel amount
 
     // ///////////////////////////////////
     // SYSTEM BUS //
@@ -612,27 +614,27 @@ public class AllSimulationInfo {
 	this.engine_fuel_flow = engine_fuel_flow;
     }
 
-    public Double getLfuel() {
+    public Float getLfuel() {
 	return lfuel;
     }
 
-    public void setLfuel(Double lfuel) {
+    public void setLfuel(Float lfuel) {
 	this.lfuel = lfuel;
     }
 
-    public Double getRfuel() {
+    public Float getRfuel() {
 	return rfuel;
     }
 
-    public void setRfuel(Double rfuel) {
+    public void setRfuel(Float rfuel) {
 	this.rfuel = rfuel;
     }
 
-    public Double getCfuel() {
+    public Float getCfuel() {
 	return cfuel;
     }
 
-    public void setCfuel(Double tfuel) {
+    public void setCfuel(Float tfuel) {
 	this.cfuel = tfuel;
     }
 

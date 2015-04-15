@@ -5,6 +5,8 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 public class EnginesPanelState extends JavaScriptComponentState {
     private static final long serialVersionUID = 1L;
 
+    public int enginesNum;
+
     /* Configurations of engines from database */
     public boolean rpm[];// is rpm enabled on engine#1,2..
     public Float minrpm[];// min rpm on engine#1,2..
@@ -95,6 +97,24 @@ public class EnginesPanelState extends JavaScriptComponentState {
     public Float minamp[];
     public Float maxamp[];
     public Float ampvals[];
+
+    // central fuel tank
+    public boolean cfu;
+    public Float mincfu;
+    public Float maxcfu;
+    public Float cfuvals;
+
+    // left fuel tank
+    public boolean lfu;
+    public Float minlfu;
+    public Float maxlfu;
+    public Float lfuvals;
+
+    // right fuel tank
+    public boolean rfu;
+    public Float minrfu;
+    public Float maxrfu;
+    public Float rfuvals;
 
     /**
      * Initialize arrays with specified size
