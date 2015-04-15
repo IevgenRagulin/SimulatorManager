@@ -86,12 +86,7 @@ public class EnginesTabSheet extends TabSheet {
 	    public void buttonClick(ClickEvent event) {
 		Tab tabWithForm = getTab(grid);
 		removeTab(tabWithForm);
-		try {
-		    enginesContainer.removeItem(engineModelRowId);
-		    enginesContainer.commit();
-		} catch (UnsupportedOperationException | SQLException e) {
-		    Notification.show("Couldn't remove this engine. Error: " + e.getMessage());
-		}
+		enginesContainer.removeItem(engineModelRowId);
 	    }
 	});
 	grid.addComponent(removeEngineButton);

@@ -103,6 +103,14 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 			simulatorModelForm.commit();
 			simulatorModelsList.commit();
 			enginesTabsheet.getEnginesContainer().commit();
+		    } else {
+			if (enginesTabsheet.getEnginesContainer().size() == 0) {
+			    // reset engines for simulator in case the last
+			    // engine was attempted to be removed
+			    enginesTabsheet.getEnginesContainer().rollback();
+			    enginesTabsheet.setEnginesForSimulator(((RowId) simulatorModelsList.getValue()).toString());
+			}
+
 		    }
 		} catch (UnsupportedOperationException | SQLException e) {
 		    Notification.show(
