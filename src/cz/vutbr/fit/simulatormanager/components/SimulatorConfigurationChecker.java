@@ -47,24 +47,24 @@ public class SimulatorConfigurationChecker {
      *            still display error message
      * @return
      */
-    public boolean verifyConfiguration(boolean showSuccessMessage) {
+    public boolean verifyConfiguration(boolean showSuccessMessage, Notification.Type errorNotificationType) {
 	boolean isRespoding = SimulationStatusProviderSimpleImpl.isSimulatorResponding(hostname, port);
 	if (isRespoding) {
-	    String errorsInConfiguration = SimulatorValidator.isSimulatorModelConfiguredCorrectly(
-		    simulatorId.toString(), hostname, port);
+	    String errorsInConfiguration = SimulatorValidator.isSimulatorModelConfiguredCorrectly(simulatorId.toString(),
+		    hostname, port);
 	    if (errorsInConfiguration.isEmpty() && showSuccessMessage) {
 		Notification.show(PING_SUCCESS_MESSAGE, "", Notification.Type.HUMANIZED_MESSAGE);
 		return true;
 	    } else if (!errorsInConfiguration.isEmpty()) {
 		new Notification(PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE, errorsInConfiguration.toString(),
-			Notification.Type.WARNING_MESSAGE, true).show(Page.getCurrent());
+			errorNotificationType, true).show(Page.getCurrent());
 		return false;
 	    } else {
 		// return true but don't display any message
 		return true;
 	    }
 	} else {
-	    Notification.show(PING_FAIL_MESSAGE, "", Notification.Type.ERROR_MESSAGE);
+	    Notification.show(PING_FAIL_MESSAGE, "", errorNotificationType);
 	    return false;
 	}
     }

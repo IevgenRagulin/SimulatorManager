@@ -6,7 +6,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
@@ -46,8 +45,8 @@ public class SimulatorModelsList extends Table {
 		    view.getSelectedSimulatorModelName().setValue(
 			    "<b>Selected simulator model: "
 				    + SimulatorModelsList.this.getItem(simulatorId)
-					    .getItemProperty(SimulatorModelCols.simulatormodelname.toString())
-					    .getValue().toString() + "</b>");
+					    .getItemProperty(SimulatorModelCols.simulatormodelname.toString()).getValue()
+					    .toString() + "</b>");
 		}
 		// make editor visible only if simulator has been selected
 		boolean shouldEditorBeVisible = simulatorId != null;
@@ -86,7 +85,6 @@ public class SimulatorModelsList extends Table {
     @SuppressWarnings("unchecked")
     public void addSimulatorModel() {
 	Object simulatorModelId = getContainerDataSource().addItem();
-	Item newItem = getContainerDataSource().getItem(simulatorModelId);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.simulatormodelname.toString()).setValue(
 		"New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxspeedonflaps.toString()).setValue(

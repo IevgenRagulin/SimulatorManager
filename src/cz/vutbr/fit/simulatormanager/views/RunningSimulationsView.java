@@ -10,6 +10,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.tapio.googlemaps.client.LatLon;
+import com.vaadin.ui.Notification;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
@@ -84,14 +85,12 @@ public class RunningSimulationsView extends SimulationsView implements View {
     private void setAllSimulationSimulatorData(Item selectedSimulator) {
 	getErrorLabel().setValue("Chosen simulator id: " + selectedSimulatorId);
 	mainSimulationLayout.setVisible(true);
-	String simulatorId = selectedSimulator.getItemProperty(SimulatorCols.simulatorid.toString()).getValue()
-		.toString();
+	String simulatorId = selectedSimulator.getItemProperty(SimulatorCols.simulatorid.toString()).getValue().toString();
 	// Set simulation info
 	SimulationInfoItem selectedSimulationInfo = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
 	setSimulationInfoData(selectedSimulationInfo, simulatorId);
 	// Set simulation devices state
-	SimulationDevStateItem selectedDevicesState = SimulatorsStatus
-		.getSimulationDevStateItemBySimulatorId(simulatorId);
+	SimulationDevStateItem selectedDevicesState = SimulatorsStatus.getSimulationDevStateItemBySimulatorId(simulatorId);
 	setFlightControlsInfo(selectedDevicesState, selectedSimulator);
 	// Set PFD info
 	SimulationPFDItem selectedPFD = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
@@ -167,8 +166,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	    uiUpdatesLeftTillNextConfigurationVerification = VERIFY_CONFIGURATION_FREQUENCY;
 	    String hostname = (String) selectedSimulator.getItemProperty(SimulatorCols.hostname.toString()).getValue();
 	    int port = (int) selectedSimulator.getItemProperty(SimulatorCols.port.toString()).getValue();
-	    isSimulatorConfigurationValid = (new SimulatorConfigurationChecker(hostname, port, simulatorId))
-		    .verifyConfiguration(SimulatorConfigurationChecker.DO_NOT_SHOW_SUCCESS_MESSAGE);
+	    isSimulatorConfigurationValid = (new SimulatorConfigurationChecker(hostname, port, simulatorId)).verifyConfiguration(
+		    SimulatorConfigurationChecker.DO_NOT_SHOW_SUCCESS_MESSAGE, Notification.Type.TRAY_NOTIFICATION);
 	}
 	uiUpdatesLeftTillNextConfigurationVerification--;
     }

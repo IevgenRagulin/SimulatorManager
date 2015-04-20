@@ -10,62 +10,97 @@ public enum EngineModelCols {
 
     enginemodelid("Engine model id"), //
     simulatormodelid("Simulator model id"), //
-    enginemodelorder(
-	    "Engine id (AWCom)",
+    enginemodelorder("Engine id (AWCom)",
 	    "This value is very important: it is the id by which we can match this configuration and data which comes from AWCom plugin"), //
     rpm("RPM", Boolean.class), //
     minrpm("Min RPM"), //
+    lowrpm("Low RPM"), //
+    highrpm("High RPM"), //
     maxrpm("Max RPM"), //
-    pwr("PWR - power", Boolean.class), //
+    pwr("PWR", Boolean.class), //
     minpwr("Min PWR"), //
+    lowpwr("Low PWR"), //
+    highpwr("High PWR"), //
     maxpwr("Max PWR"), //
-    pwp("PWP - power %", Boolean.class), //
+    pwp("PWP", Boolean.class), //
     minpwp("Min PWP"), //
+    lowpwp("Low PWP"), //
+    highpwp("High PWP"), //
     maxpwp("Max PWP"), //
-    mp_("MP - Manifold pressure", Boolean.class), //
+    mp_("MP", Boolean.class), //
     minmp("Min MP"), //
+    lowmp("Low MP"), //
+    highmp("High MP"), //
     maxmp("Max MP"), //
-    egt1("EGT1", Boolean.class), //
-    minegt1("Min EGT1"), //
-    maxegt1("Max EGT1"), //
-    egt2("EGT2", Boolean.class), //
-    minegt2("Min EGT2"), //
-    maxegt2("Max EGT2"), //
-    cht1("CHT1", Boolean.class), //
-    mincht1("Min CHT1"), //
-    maxcht1("Max CHT1"), //
-    cht2("CHT2", Boolean.class), //
-    mincht2("Min CHT2"), //
-    maxcht2("Max CHT2"), //
+    et1("EGT1", Boolean.class), //
+    minet1("Min EGT1"), //
+    lowet1("Low EGT1"), //
+    highet1("High EGT1"), //
+    maxet1("Max EGT1"), //
+    et2("EGT2", Boolean.class), //
+    minet2("Min EGT2"), //
+    lowet2("Low EGT2"), //
+    highet2("High EGT2"), //
+    maxet2("Max EGT2"), //
+    ct1("CHT1", Boolean.class), //
+    minct1("Min CHT1"), //
+    lowct1("Low CHT1"), //
+    highct1("High CHT1"), //
+    maxct1("Max CHT1"), //
+    ct2("CHT2", Boolean.class), //
+    minct2("Min CHT2"), //
+    lowct2("Low CHT2"), //
+    highct2("High CHT2"), //
+    maxct2("Max CHT2"), //
     est("EST", Boolean.class), //
     minest("Min EST"), //
+    lowest("Low EST"), //
+    highest("High EST"), //
     maxest("Max EST"), //
-    ff_("FF - fuel flow", Boolean.class), //
+    ff_("FF", Boolean.class), //
     minff("Min FF"), //
+    lowff("Low FF"), //
+    highff("High FF"), //
     maxff("Max FF"), //
-    fp_("FP - fuel pressure", Boolean.class), //
+    fp_("FP", Boolean.class), //
     minfp("Min FP"), // ,
+    lowfp("Low FP"), //
+    highfp("High FP"), //
     maxfp("Max FP"), //
-    op_("OP - oil pressure", Boolean.class), //
+    op_("OP", Boolean.class), //
     minop("Min OP"), //
+    lowop("Low OP"), //
+    highop("High OP"), //
     maxop("Max OP"), //
-    ot_("OT - oil temperature", Boolean.class), //
+    ot_("OT", Boolean.class), //
     minot("Min OT"), //
+    lowot("Low OT"), //
+    highot("High OT"), //
     maxot("Max OT"), //
     n1_("N1", Boolean.class), //
     minn1("Min N1"), //
+    lown1("Low N1"), //
+    highn1("High N1"), //
     maxn1("Max N1"), //
     n2_("N2", Boolean.class), //
     minn2("Min N2"), //
+    lown2("Low N2"), //
+    highn2("High N2"), //
     maxn2("Max N2"), //
-    vib("VIB - vibration", Boolean.class), //
+    vib("VIB", Boolean.class), //
     minvib("Min VIB"), //
+    lowvib("Low VIB"), //
+    highvib("High VIB"), //
     maxvib("Max VIB"), //
-    vlt("VLT - voltage", Boolean.class), //
+    vlt("VLT", Boolean.class), //
     minvlt("Min VLT"), //
+    lowvlt("Low VLT"), //
+    highvlt("High VLT"), //
     maxvlt("Max VLT"), //
-    amp("AMP - ampere", Boolean.class), //
+    amp("AMP", Boolean.class), //
     minamp("Min AMP"), //
+    lowamp("Low AMP"), //
+    highamp("High AMP"), //
     maxamp("Max AMP"), //
     timestamp("Timestamp");//
 

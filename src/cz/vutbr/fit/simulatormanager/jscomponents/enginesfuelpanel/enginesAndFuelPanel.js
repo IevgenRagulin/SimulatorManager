@@ -1,8 +1,8 @@
 var isHtmlInitialized = false;
-var engineFeatures = [ "rpm", "pwr", "pwp", "mp_", "egt1", "egt2", "cht1",
-		"cht2", "est", "ff_", "fp_", "op_", "ot_", "n1_", "n2_", "vib", "vlt",
+var engineFeatures = [ "rpm", "pwr", "pwp", "mp_", "et1", "et2", "ct1",
+		"ct2", "est", "ff_", "fp_", "op_", "ot_", "n1_", "n2_", "vib", "vlt",
 		"amp" ];
-var fuelTanks = [ "lfu", "rfu", "cfu" ]
+var fuelTanks = [ "lfu", "cfu", "rfu" ]
 // if specific engineFeatures are enabled or not. On every update we check if
 // there changes in a list of enabled engine features. If this list has changed,
 // we reinitialize the html
@@ -15,7 +15,7 @@ var thisObj;
  * This is called once on creating EnginesPanel() java object, entering the page
  * with enginesPanel
  */
-function cz_vutbr_fit_simulatormanager_jscomponents_enginespanel_EnginesPanel() {
+function cz_vutbr_fit_simulatormanager_jscomponents_enginesfuelpanel_EnginesAndFuelPanel() {
 	window.thisObj = this;
 	console.log("Creating engines panel");
 	// when document
@@ -223,21 +223,24 @@ function initFuelTanksHtmlAndGauges(e, state) {
 	}
 }
 
-function buildGaugeOptions(minVal, maxVal) {
-	var range = maxVal - minVal;
-	// last 10 percents of gauge should be red
-	var redStart = maxVal - range * 0.1;
-	var redEnd = maxVal;
-	// first 10 percents of gauge should be yellow
-	var yellowStart = minVal;
-	var yellowEnd = minVal + range * 0.1;
+/**
+ * 
+ * @param greenFrom_ starting from this value the gauge is green
+ * @param greenTo_ ending with this value the gauge is green. Must be > than greenFrom_
+ * @param redFrom_ starting from this value the gauge is red
+ * @param redTo_ ending with this value the gauge is red. Must be > than redFrom_
+ * @param minVal minimum value of gauge
+ * @param maxVal maximum value of gauge
+ * @returns gauge options used for building the graph
+ */
+function buildGaugeOptions(greenFrom_, greenTo_, redFrom_, redTo_, minVal, maxVal) {
 	var options = {
 		width : 120,
 		height : 120,
-		redFrom : redStart,
-		redTo : redEnd,
-		yellowFrom : yellowStart,
-		yellowTo : yellowEnd,
+		redFrom : redFrom_,
+		redTo : redTo_,
+		greenFrom : greenFrom_,
+		greenTo : greenTo_,
 		minorTicks : 5,
 		max : maxVal,
 		min : minVal
@@ -245,17 +248,27 @@ function buildGaugeOptions(minVal, maxVal) {
 	return options;
 }
 
+
+/**
+ * Check if featureName on engineId is enabled for this engine model
+ */
 function isEngineFeatureEnabled(featureName, engineId) {
 	var state = thisObj.getState();
 	return ((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName][engineId]));
 }
 
+/**
+ * Check if fuel feature is enabled for this simulator model
+ */
 function isFuelFeatureEnabled(featureName) {
 	var state = thisObj.getState();
 	console.log("is fuel feature enabled"+featureName+" is: "+((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName])));
 	return ((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName]));
 }
 
+/**
+ * Is value for featureName and engineId is coming through AWCom
+ */
 function isEngineFeatureAWComValueAvailable(featureName, engineId) {
 	var state = thisObj.getState();
 	// do we have values from AWCom on the UI
@@ -264,27 +277,78 @@ function isEngineFeatureAWComValueAvailable(featureName, engineId) {
 			&& (state[featureName + "vals"].length > engineId);
 }
 
+/**
+ * Is fuel value for featureName coming through AWCom
+ */
 function isFuelFeatureAWComValueAvailable(featureName) {
 	var state = thisObj.getState();
 	// if we have values from AWCom on the UI
 	return (!(typeof state[featureName + "vals"] === 'undefined'));
 }
 
+/**
+ * Get minValue for featureName and engine id from engine model
+ * @returns
+ */
 function getEngineFeatureMinValue(featureName, engineId) {
 	var state = thisObj.getState();
 	return state["min" + featureName][engineId];
 }
 
-function getFuelFeatureMinValue(featureName) {
+/**
+ * Get lowValue for featureName and engine id from engine model
+ * @returns
+ */
+function getEngineFeatureLowValue(featureName, engineId) {
 	var state = thisObj.getState();
-	return state["min" + featureName];
+	return state["low" + featureName][engineId];
 }
 
+/**
+ * Get highValue for featureName and engine id from engine model
+ * @returns
+ */
+function getEngineFeatureHighValue(featureName, engineId) {
+	var state = thisObj.getState();
+	return state["high" + featureName][engineId];
+}
+
+/**
+ * Get maxValue for featureName and engine id from engine model
+ * @returns
+ */
 function getEngineFeatureMaxValue(featureName, engineId) {
 	var state = thisObj.getState();
 	return state["max" + featureName][engineId];
 }
 
+/**
+ * Get minValue for featureName from simulator model
+ */
+function getFuelFeatureMinValue(featureName) {
+	var state = thisObj.getState();
+	return state["min" + featureName];
+}
+
+/**
+ * Get lowValue for featureName from simulator model
+ */
+function getFuelFeatureLowValue(featureName) {
+	var state = thisObj.getState();
+	return state["low" + featureName];
+}
+
+/**
+ *  Get highValue for featureName from simulator model
+ */
+function getFuelFeatureHighValue(featureName) {
+	var state = thisObj.getState();
+	return state["high" + featureName];
+}
+
+/**
+ *  Get maxValue for featureName from simulator model
+ */
 function getFuelFeatureMaxValue(featureName) {
 	var state = thisObj.getState();
 	return state["max" + featureName];
@@ -296,7 +360,6 @@ function getFuelFeatureMaxValue(featureName) {
 function buildGauge(featureName, value, elementId, options) {
 	var data = google.visualization.arrayToDataTable([ [ 'Label', 'Value' ],
 			[ featureName, value ] ]);
-	
 	console.log("building gauge for "+elementId);
 	var gauge = new google.visualization.Gauge(document.getElementById(elementId));
 	gauge.options = options;
@@ -319,8 +382,10 @@ function drawEngineGauge(engineId, featureName) {
 			+ "	 featurename" + featureName + " engineid" + engineId);
 	if (isEngineFeatureEnabled(featureName, engineId)) {
 		var maxVal = getEngineFeatureMaxValue(featureName, engineId);
+		var lowVal = getEngineFeatureLowValue(featureName, engineId);
+		var highVal = getEngineFeatureHighValue(featureName, engineId);
 		var minVal = getEngineFeatureMinValue(featureName, engineId);
-		var options = buildGaugeOptions(minVal, maxVal);
+		var options = buildGaugeOptions(lowVal, highVal, highVal, maxVal, minVal, maxVal);
 		var value = 0;
 		if (isEngineFeatureAWComValueAvailable(featureName, engineId)) {
 			value = state[featureName + "vals"][engineId];
@@ -345,9 +410,11 @@ function drawFuelTankGauge(featureName) {
 	var state = thisObj.getState();
 	if (isFuelFeatureEnabled(featureName)) {
 		var maxVal = getFuelFeatureMaxValue(featureName);
+		var lowVal = getFuelFeatureLowValue(featureName);
+		var highVal = getFuelFeatureHighValue(featureName);
 		var minVal = getFuelFeatureMinValue(featureName);
 		
-		var options = buildGaugeOptions(minVal, maxVal);
+		var options = buildGaugeOptions(lowVal, highVal, minVal, lowVal, minVal, maxVal);
 		var value = 0;
 
 		if (isFuelFeatureAWComValueAvailable(featureName)) {

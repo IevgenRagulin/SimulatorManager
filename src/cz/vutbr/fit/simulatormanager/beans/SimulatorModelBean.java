@@ -14,15 +14,24 @@ public class SimulatorModelBean {
     private Integer minspeedonflaps;
     private Boolean hasgears;
     private Integer numberoflandinggears;
+
     private Boolean lfu;
     private Float minlfu;
+    private Float lowlfu;
+    private Float highlfu;
     private Float maxlfu;
-    private Boolean rfu;
-    private Float minrfu;
-    private Float maxrfu;
+
     private Boolean cfu;
     private Float mincfu;
+    private Float lowcfu;
+    private Float highcfu;
     private Float maxcfu;
+
+    private Boolean rfu;
+    private Float minrfu;
+    private Float lowrfu;
+    private Float highrfu;
+    private Float maxrfu;
 
     public SimulatorModelBean() {
 
@@ -148,13 +157,83 @@ public class SimulatorModelBean {
 	this.maxcfu = maxcfu;
     }
 
+    public Float getLowlfu() {
+	return lowlfu;
+    }
+
+    public void setLowlfu(Float lowlfu) {
+	this.lowlfu = lowlfu;
+    }
+
+    public Float getHighlfu() {
+	return highlfu;
+    }
+
+    public void setHighlfu(Float highlfu) {
+	this.highlfu = highlfu;
+    }
+
+    public Float getLowcfu() {
+	return lowcfu;
+    }
+
+    public void setLowcfu(Float lowcfu) {
+	this.lowcfu = lowcfu;
+    }
+
+    public Float getHighcfu() {
+	return highcfu;
+    }
+
+    public void setHighcfu(Float highcfu) {
+	this.highcfu = highcfu;
+    }
+
+    public Float getLowrfu() {
+	return lowrfu;
+    }
+
+    public void setLowrfu(Float lowrfu) {
+	this.lowrfu = lowrfu;
+    }
+
+    public Float getHighrfu() {
+	return highrfu;
+    }
+
+    public void setHighrfu(Float highrfu) {
+	this.highrfu = highrfu;
+    }
+
+    public Boolean getHasgears() {
+	return hasgears;
+    }
+
+    public Boolean getLfu() {
+	return lfu;
+    }
+
+    public Boolean getCfu() {
+	return cfu;
+    }
+
+    public Boolean getRfu() {
+	return rfu;
+    }
+
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((cfu == null) ? 0 : cfu.hashCode());
 	result = prime * result + ((hasgears == null) ? 0 : hasgears.hashCode());
+	result = prime * result + ((highcfu == null) ? 0 : highcfu.hashCode());
+	result = prime * result + ((highlfu == null) ? 0 : highlfu.hashCode());
+	result = prime * result + ((highrfu == null) ? 0 : highrfu.hashCode());
 	result = prime * result + ((lfu == null) ? 0 : lfu.hashCode());
+	result = prime * result + ((lowcfu == null) ? 0 : lowcfu.hashCode());
+	result = prime * result + ((lowlfu == null) ? 0 : lowlfu.hashCode());
+	result = prime * result + ((lowrfu == null) ? 0 : lowrfu.hashCode());
 	result = prime * result + ((maxcfu == null) ? 0 : maxcfu.hashCode());
 	result = prime * result + ((maxlfu == null) ? 0 : maxlfu.hashCode());
 	result = prime * result + ((maxrfu == null) ? 0 : maxrfu.hashCode());
@@ -189,10 +268,40 @@ public class SimulatorModelBean {
 		return false;
 	} else if (!hasgears.equals(other.hasgears))
 	    return false;
+	if (highcfu == null) {
+	    if (other.highcfu != null)
+		return false;
+	} else if (!highcfu.equals(other.highcfu))
+	    return false;
+	if (highlfu == null) {
+	    if (other.highlfu != null)
+		return false;
+	} else if (!highlfu.equals(other.highlfu))
+	    return false;
+	if (highrfu == null) {
+	    if (other.highrfu != null)
+		return false;
+	} else if (!highrfu.equals(other.highrfu))
+	    return false;
 	if (lfu == null) {
 	    if (other.lfu != null)
 		return false;
 	} else if (!lfu.equals(other.lfu))
+	    return false;
+	if (lowcfu == null) {
+	    if (other.lowcfu != null)
+		return false;
+	} else if (!lowcfu.equals(other.lowcfu))
+	    return false;
+	if (lowlfu == null) {
+	    if (other.lowlfu != null)
+		return false;
+	} else if (!lowlfu.equals(other.lowlfu))
+	    return false;
+	if (lowrfu == null) {
+	    if (other.lowrfu != null)
+		return false;
+	} else if (!lowrfu.equals(other.lowrfu))
 	    return false;
 	if (maxcfu == null) {
 	    if (other.maxcfu != null)

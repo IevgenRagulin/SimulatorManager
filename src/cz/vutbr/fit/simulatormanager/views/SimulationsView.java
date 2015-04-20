@@ -16,7 +16,7 @@ import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
-import cz.vutbr.fit.simulatormanager.jscomponents.enginespanel.EnginesPanel;
+import cz.vutbr.fit.simulatormanager.jscomponents.enginesfuelpanel.EnginesAndFuelPanel;
 import cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols.FlightControls;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartAltitude;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartSpeed;
@@ -58,7 +58,7 @@ public abstract class SimulationsView extends BasicView implements View {
     protected JsHighChartAltitude altitudeChart;
     protected JsHighChartSpeed speedChart;
     protected MainMenuBar mainMenu;
-    protected EnginesPanel enginesPanel = new EnginesPanel();
+    protected EnginesAndFuelPanel enginesPanel = new EnginesAndFuelPanel();
 
     public PrimaryFlightDisplay getPrimaryFlightDisplay() {
 	return primaryFlightDisplay;
@@ -78,7 +78,7 @@ public abstract class SimulationsView extends BasicView implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-	enginesPanel = new EnginesPanel();
+	enginesPanel = new EnginesAndFuelPanel();
     }
 
     protected void initLayout() {

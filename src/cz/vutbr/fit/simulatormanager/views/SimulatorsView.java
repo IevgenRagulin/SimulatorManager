@@ -118,8 +118,7 @@ public class SimulatorsView extends VerticalLayout implements View {
 	// add simulator button is enabled only if there are some simulator
 	// models configured in the database
 	addSimulatorButton.setEnabled(numberOfSimModels > 0 ? true : false);
-	addSimulatorButton
-		.setDescription("You can only add simulators if there is at lease one simulator model configured");
+	addSimulatorButton.setDescription("You can only add simulators if there is at lease one simulator model configured");
 	removeSimulatorButton.setIcon(ResourceUtil.getMinusImgResource());
 	removeSimulatorButton.setEnabled(false);
 	saveButton.setIcon(ResourceUtil.getSaveImgResource());
@@ -194,12 +193,11 @@ public class SimulatorsView extends VerticalLayout implements View {
     private void verifyConfiguration() {
 	RowId simulatorId = (RowId) simulatorList.getValue();
 	LOG.info("SimulatorList" + simulatorList.getValue());
-	String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString()).getValue()
-		.toString();
-	int port = Integer.valueOf(simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.port.toString())
-		.getValue().toString());
-	new SimulatorConfigurationChecker(host, port, simulatorId.toString())
-		.verifyConfiguration(SimulatorConfigurationChecker.SHOW_SUCCESS_MESSAGE);
+	String host = simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.hostname.toString()).getValue().toString();
+	int port = Integer.valueOf(simulatorList.getItem(simulatorId).getItemProperty(SimulatorCols.port.toString()).getValue()
+		.toString());
+	new SimulatorConfigurationChecker(host, port, simulatorId.toString()).verifyConfiguration(
+		SimulatorConfigurationChecker.SHOW_SUCCESS_MESSAGE, Notification.Type.ERROR_MESSAGE);
     }
 
     private void addAddClickListener() {

@@ -90,14 +90,18 @@ public class EngineModelForm extends FieldGroup {
 	// if this is enginemodel order, we want it to take 2 cells in the 0th
 	// row
 	if (colName.equals(EngineModelCols.enginemodelorder)) {
-	    engGrid.addComponent(field, 1, 0, 2, 0);
+	    engGrid.addComponent(field, 1, 0, 4, 0);
 	    // if this is a boolean, allign it appropriately
 	} else if (Boolean.class.equals(colName.getType())) {
 	    engGrid.addComponent(field);
 	    engGrid.setComponentAlignment(field, Alignment.MIDDLE_LEFT);
 	    // if timestamp, make it take 3 cols
 	} else if (colName.equals(EngineModelCols.timestamp)) {
-	    engGrid.addComponent(field, 0, 19, 2, 19);
+	    // field.setEnabled(false);
+	    // engGrid.addComponent(field, 0, 19, 4, 19);
+	} else if (colName.equals(EngineModelCols.enginemodelid)) {
+	    field.setWidth("50%");
+	    engGrid.addComponent(field);
 	} else {
 	    engGrid.addComponent(field);
 	}

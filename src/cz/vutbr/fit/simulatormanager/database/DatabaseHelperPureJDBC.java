@@ -97,6 +97,8 @@ public class DatabaseHelperPureJDBC {
 		    int num = resultSet.getInt("NUM");
 		    if (num > 0) {
 			tableExists = true;
+		    } else {
+			LOG.error("Tabled with name: {} doesn't exist", tableName);
 		    }
 		}
 	    }
@@ -118,6 +120,7 @@ public class DatabaseHelperPureJDBC {
 	try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
 	    String[] queries = DatabaseHelperPureJDBC.getDtbQueriesFromFile(INIT_QUERY_PATH);
 	    executeArrayOfQueries(queries, connection, stmt);
+	    LOG.info("Database has been initialized with no exceptions");
 	} catch (SQLException e) {
 	    LOG.error("SQLException occured while initializing DB", e);
 	    initedSuccessfully = "SQL exception occured while initializing database";

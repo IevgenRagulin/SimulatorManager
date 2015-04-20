@@ -44,8 +44,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 public class SimulatorModelValidator {
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelValidator.class);
 
-    public static String isSimulatorModelConfiguredCorrectly(EnginesTabSheet enginesModels,
-	    SimulatorModelForm simulatorModelForm) {
+    public static String isSimulatorModelConfiguredCorrectly(EnginesTabSheet enginesModels, SimulatorModelForm simulatorModelForm) {
 	List<String> errorsAll = new ArrayList<String>();
 	List<String> enginesErrors = validateEnginesConfiguration(enginesModels);
 	errorsAll.addAll(enginesErrors);
@@ -97,8 +96,7 @@ public class SimulatorModelValidator {
      * @param numberOfEngines
      *            - number of engines on this simulator model
      */
-    private static void validateEngineModelOrders(List<String> errors, Set<Integer> engineModelOrders,
-	    int numberOfEngines) {
+    private static void validateEngineModelOrders(List<String> errors, Set<Integer> engineModelOrders, int numberOfEngines) {
 	for (int i = 0; i < numberOfEngines; i++) {
 	    if (!engineModelOrders.contains(i)) {
 		errors.add("Engine model order configuration is wrong. The number of engines is " + numberOfEngines
@@ -129,14 +127,10 @@ public class SimulatorModelValidator {
 	addError(errors, validateEngineVal(EngineModelCols.pwr, eng.isPwr(), eng.getMinpwr(), eng.getMaxpwr(), engOrd));
 	addError(errors, validateEngineVal(EngineModelCols.pwp, eng.isPwp(), eng.getMinpwp(), eng.getMaxpwp(), engOrd));
 	addError(errors, validateEngineVal(EngineModelCols.mp_, eng.isMp_(), eng.getMinmp_(), eng.getMaxmp_(), engOrd));
-	addError(errors,
-		validateEngineVal(EngineModelCols.egt1, eng.isEgt1(), eng.getMinegt1(), eng.getMaxegt1(), engOrd));
-	addError(errors,
-		validateEngineVal(EngineModelCols.egt2, eng.isEgt2(), eng.getMinegt2(), eng.getMaxegt2(), engOrd));
-	addError(errors,
-		validateEngineVal(EngineModelCols.cht1, eng.isCht1(), eng.getMincht1(), eng.getMaxcht1(), engOrd));
-	addError(errors,
-		validateEngineVal(EngineModelCols.cht2, eng.isCht2(), eng.getMincht2(), eng.getMaxcht2(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.et1, eng.isEgt1(), eng.getMinet1(), eng.getMaxet1(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.et2, eng.isEgt2(), eng.getMinet2(), eng.getMaxet2(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.ct1, eng.isCht1(), eng.getMinct1(), eng.getMaxct1(), engOrd));
+	addError(errors, validateEngineVal(EngineModelCols.ct2, eng.isCht2(), eng.getMinct2(), eng.getMaxct2(), engOrd));
 	addError(errors, validateEngineVal(EngineModelCols.est, eng.isEst(), eng.getMinest(), eng.getMaxest(), engOrd));
 	addError(errors, validateEngineVal(EngineModelCols.ff_, eng.isFf_(), eng.getMinff_(), eng.getMaxff_(), engOrd));
 	addError(errors, validateEngineVal(EngineModelCols.fp_, eng.isFp_(), eng.getMinfp_(), eng.getMaxfp_(), engOrd));
@@ -165,13 +159,12 @@ public class SimulatorModelValidator {
      * @param maxValue
      * @return
      */
-    private static String validateEngineVal(EngineModelCols featureName, Boolean isEnabled, Float minValue,
-	    Float maxValue, Integer engineOrder) {
+    private static String validateEngineVal(EngineModelCols featureName, Boolean isEnabled, Float minValue, Float maxValue,
+	    Integer engineOrder) {
 	if ((isEnabled != null && isEnabled)
 		&& ((minValue == null || maxValue == null) || (minValue != null && maxValue != null && minValue > maxValue))) {
 	    return new StringBuilder().append(featureName.toString().toUpperCase())
-		    .append(" is enabled, but min/max are misconfigured on engine with order").append(engineOrder)
-		    .toString();
+		    .append(" is enabled, but min/max are misconfigured on engine with order").append(engineOrder).toString();
 	}
 	return "";
     }
@@ -305,48 +298,48 @@ public class SimulatorModelValidator {
 		engineModelBean.setMaxmp_(ConverterUtil.stringToFloat(maxmp.getValue()));
 	    }
 
-	    else if (engineFormField.getCaption().equals(EngineModelCols.egt1.getName())) {
-		CheckBox egt1 = (CheckBox) engineFormField;
-		engineModelBean.setEgt1(Boolean.valueOf(egt1.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.minegt1.getName())) {
-		TextField minegt1 = (TextField) engineFormField;
-		engineModelBean.setMinegt1(ConverterUtil.stringToFloat(minegt1.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxegt1.getName())) {
-		TextField maxegt1 = (TextField) engineFormField;
-		engineModelBean.setMaxegt1(ConverterUtil.stringToFloat(maxegt1.getValue()));
+	    else if (engineFormField.getCaption().equals(EngineModelCols.et1.getName())) {
+		CheckBox et1 = (CheckBox) engineFormField;
+		engineModelBean.setEgt1(Boolean.valueOf(et1.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.minet1.getName())) {
+		TextField minet1 = (TextField) engineFormField;
+		engineModelBean.setMinet1(ConverterUtil.stringToFloat(minet1.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxet1.getName())) {
+		TextField maxet1 = (TextField) engineFormField;
+		engineModelBean.setMaxet1(ConverterUtil.stringToFloat(maxet1.getValue()));
 	    }
 
-	    else if (engineFormField.getCaption().equals(EngineModelCols.egt2.getName())) {
-		CheckBox egt2 = (CheckBox) engineFormField;
-		engineModelBean.setEgt2(Boolean.valueOf(egt2.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.minegt2.getName())) {
-		TextField minegt2 = (TextField) engineFormField;
-		engineModelBean.setMinegt2(ConverterUtil.stringToFloat(minegt2.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxegt2.getName())) {
-		TextField maxegt2 = (TextField) engineFormField;
-		engineModelBean.setMaxegt2(ConverterUtil.stringToFloat(maxegt2.getValue()));
+	    else if (engineFormField.getCaption().equals(EngineModelCols.et2.getName())) {
+		CheckBox et2 = (CheckBox) engineFormField;
+		engineModelBean.setEgt2(Boolean.valueOf(et2.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.minet2.getName())) {
+		TextField minet2 = (TextField) engineFormField;
+		engineModelBean.setMinet2(ConverterUtil.stringToFloat(minet2.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxet2.getName())) {
+		TextField maxet2 = (TextField) engineFormField;
+		engineModelBean.setMaxet2(ConverterUtil.stringToFloat(maxet2.getValue()));
 	    }
 
-	    else if (engineFormField.getCaption().equals(EngineModelCols.cht1.getName())) {
-		CheckBox cht1 = (CheckBox) engineFormField;
-		engineModelBean.setCht1(Boolean.valueOf(cht1.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.mincht1.getName())) {
-		TextField mincht1 = (TextField) engineFormField;
-		engineModelBean.setMincht1(ConverterUtil.stringToFloat(mincht1.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxcht1.getName())) {
-		TextField maxcht1 = (TextField) engineFormField;
-		engineModelBean.setMaxcht1(ConverterUtil.stringToFloat(maxcht1.getValue()));
+	    else if (engineFormField.getCaption().equals(EngineModelCols.ct1.getName())) {
+		CheckBox ct1 = (CheckBox) engineFormField;
+		engineModelBean.setCht1(Boolean.valueOf(ct1.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.minct1.getName())) {
+		TextField minct1 = (TextField) engineFormField;
+		engineModelBean.setMinct1(ConverterUtil.stringToFloat(minct1.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxct1.getName())) {
+		TextField maxct1 = (TextField) engineFormField;
+		engineModelBean.setMaxct1(ConverterUtil.stringToFloat(maxct1.getValue()));
 	    }
 
-	    else if (engineFormField.getCaption().equals(EngineModelCols.cht2.getName())) {
-		CheckBox cht1 = (CheckBox) engineFormField;
-		engineModelBean.setCht2(Boolean.valueOf(cht1.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.mincht2.getName())) {
-		TextField mincht2 = (TextField) engineFormField;
-		engineModelBean.setMincht2(ConverterUtil.stringToFloat(mincht2.getValue()));
-	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxcht2.getName())) {
-		TextField maxcht2 = (TextField) engineFormField;
-		engineModelBean.setMaxcht2(ConverterUtil.stringToFloat(maxcht2.getValue()));
+	    else if (engineFormField.getCaption().equals(EngineModelCols.ct2.getName())) {
+		CheckBox ct1 = (CheckBox) engineFormField;
+		engineModelBean.setCht2(Boolean.valueOf(ct1.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.minct2.getName())) {
+		TextField minct2 = (TextField) engineFormField;
+		engineModelBean.setMinct2(ConverterUtil.stringToFloat(minct2.getValue()));
+	    } else if (engineFormField.getCaption().equals(EngineModelCols.maxct2.getName())) {
+		TextField maxct2 = (TextField) engineFormField;
+		engineModelBean.setMaxct2(ConverterUtil.stringToFloat(maxct2.getValue()));
 	    }
 
 	    else if (engineFormField.getCaption().equals(EngineModelCols.est.getName())) {
