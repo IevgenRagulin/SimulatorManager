@@ -2,8 +2,12 @@ package cz.vutbr.fit.simulatormanager.components;
 
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
@@ -11,6 +15,7 @@ import cz.vutbr.fit.simulatormanager.views.ChooseSimulationView;
 
 public class SimulationList extends Table {
     private static final long serialVersionUID = 1L;
+    private final static Logger LOG = LoggerFactory.getLogger(SimulationList.class);
     private ChooseSimulationView view = null;
 
     public SimulationList(final ChooseSimulationView view) {
@@ -44,13 +49,13 @@ public class SimulationList extends Table {
     @Override
     public void commit() {
 	try {
-	    /* Commit the data entered in the person form to the actual item. */
 	    super.commit();
 	    /* Commit changes to the database. */
 	    SQLContainer container = (SQLContainer) this.getContainerDataSource();
 	    container.commit();
 	} catch (UnsupportedOperationException | SQLException e) {
-	    throw new RuntimeException("Could not commit simulation list", e);
+	    Notification.show("Could not commit simulation list", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+	    LOG.error("Could not commit simulation list", e);
 	}
     }
 
@@ -63,10 +68,8 @@ public class SimulationList extends Table {
     @SuppressWarnings("unchecked")
     public void finishSimulation() {
 	Object simulationId = this.getValue();
-	this.getItem(simulationId).getItemProperty(SimulationCols.issimulationon.toString())
-		.setValue(new Boolean(false));
-	this.getItem(simulationId).getItemProperty(SimulationCols.issimulationpaused.toString())
-		.setValue(new Boolean(false));
+	this.getItem(simulationId).getItemProperty(SimulationCols.issimulationon.toString()).setValue(new Boolean(false));
+	this.getItem(simulationId).getItemProperty(SimulationCols.issimulationpaused.toString()).setValue(new Boolean(false));
 	commit();
 	setContainerDataSourceAndVisCol(view.getDBHelp().getSimulationContainer());
 

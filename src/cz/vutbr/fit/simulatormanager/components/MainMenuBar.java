@@ -27,7 +27,7 @@ public class MainMenuBar extends MenuBar {
     private static final String MENU_MANAGE_SIMULATOR_MODELS_TEXT = "Manage simulator models";
     private static final String MENU_MANAGE_SIMULATORS_TEXT = "Manage simulators";
     private static final String MENU_VIEW_SIMULATIONS_TEXT = "View simulations";
-    private static final String MENU_CONFIGURATION_TEXT = "Configuration";
+    private static final String MENU_CONFIGURATION_TEXT = "Configuration/Info";
     private static final String MENU_HOME_DESCRIPTION = "Go to home page";
     private static final String MENU_MANAGE_SIMULATOR_MODELS_DESCRIPTION = "Add/edit/remove simulators' models";
     private static final String MENU_MANAGE_SIMULATORS_DESCRIPTION = "Add/edit/remove simulators' info";
@@ -48,8 +48,7 @@ public class MainMenuBar extends MenuBar {
 	LOG.debug("Creating menu bar on page " + currentPage);
 	MenuBar.Command menuClickHandler = getClickHandler(navigator);
 	addMenuItem(MENU_HOME_TEXT, MENU_HOME_DESCRIPTION, menuClickHandler, currentPage);
-	addMenuItem(MENU_MANAGE_SIMULATOR_MODELS_TEXT, MENU_MANAGE_SIMULATOR_MODELS_DESCRIPTION, menuClickHandler,
-		currentPage);
+	addMenuItem(MENU_MANAGE_SIMULATOR_MODELS_TEXT, MENU_MANAGE_SIMULATOR_MODELS_DESCRIPTION, menuClickHandler, currentPage);
 	addMenuItem(MENU_MANAGE_SIMULATORS_TEXT, MENU_MANAGE_SIMULATORS_DESCRIPTION, menuClickHandler, currentPage);
 	addMenuItem(MENU_VIEW_SIMULATIONS_TEXT, MENU_VIEW_SIMULATIONS_DESCRIPTION, menuClickHandler, currentPage);
 	addMenuItem(MENU_CONFIGURATION_TEXT, MENU_CONFIGURATION_DESCRIPTION, menuClickHandler, currentPage);
@@ -111,11 +110,9 @@ public class MainMenuBar extends MenuBar {
 	    } else if (item.getText().equals(MENU_MANAGE_SIMULATOR_MODELS_TEXT)
 		    && currentPage.equals(PageType.MANAGE_SIMULATOR_MODELS)) {
 		item.setChecked(true);
-	    } else if (item.getText().equals(MENU_MANAGE_SIMULATORS_TEXT)
-		    && currentPage.equals(PageType.MANAGE_SIMULATORS)) {
+	    } else if (item.getText().equals(MENU_MANAGE_SIMULATORS_TEXT) && currentPage.equals(PageType.MANAGE_SIMULATORS)) {
 		item.setChecked(true);
-	    } else if (item.getText().equals(MENU_VIEW_SIMULATIONS_TEXT)
-		    && currentPage.equals(PageType.CHOOSE_SIMULATION)) {
+	    } else if (item.getText().equals(MENU_VIEW_SIMULATIONS_TEXT) && currentPage.equals(PageType.CHOOSE_SIMULATION)) {
 		item.setChecked(true);
 	    }
 	}

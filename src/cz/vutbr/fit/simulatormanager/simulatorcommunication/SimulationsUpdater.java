@@ -70,8 +70,8 @@ public class SimulationsUpdater implements Runnable {
      * Sets simulation status (running, paused, not running), writes latest data
      * from simulator to database TODO: abstract checking status to interface
      */
-    private synchronized void updateSimulationStateInDatabase(AllSimulationInfo dataFromSimulator,
-	    AllEngineInfo allEngineInfo) throws UnsupportedOperationException, SQLException {
+    private synchronized void updateSimulationStateInDatabase(AllSimulationInfo dataFromSimulator, AllEngineInfo allEngineInfo)
+	    throws UnsupportedOperationException, SQLException {
 	SQLContainer lastSimCont = dbHelp.getLatestSimulationContainer(simulatorId);
 	Item lastSimDb = DatabaseUtil.getLatestItemFromContainer(lastSimCont);
 	// is simulator on or paused based on data from db
@@ -79,12 +79,10 @@ public class SimulationsUpdater implements Runnable {
 	Boolean isLastSimInDBPaused = null;
 	// is simulator on or paused based on simulators response
 	Boolean isCurrentSimPaused = null;
-	Boolean isCurrentSimRunning = SimulationStatusProviderSimpleImpl.isSimulatorRunning(dataFromSimulator,
-		simulatorId);
+	Boolean isCurrentSimRunning = SimulationStatusProviderSimpleImpl.isSimulatorRunning(dataFromSimulator, simulatorId);
 	if (lastSimDb != null) {
 	    isLastSimInDBOn = (Boolean) lastSimDb.getItemProperty(SimulationCols.issimulationon.toString()).getValue();
-	    isLastSimInDBPaused = (Boolean) lastSimDb.getItemProperty(SimulationCols.issimulationpaused.toString())
-		    .getValue();
+	    isLastSimInDBPaused = (Boolean) lastSimDb.getItemProperty(SimulationCols.issimulationpaused.toString()).getValue();
 	}
 
 	if (dataFromSimulator != null) {
@@ -92,8 +90,7 @@ public class SimulationsUpdater implements Runnable {
 	}
 
 	LOG.trace("isLastSimInDBOn: {}, isLastSimInDBPaused: {}", isLastSimInDBOn, isLastSimInDBPaused);
-	LOG.trace("isCurrentSimulationPaused: {}, isCurrentSimulationRunning: {}", isCurrentSimPaused,
-		isCurrentSimRunning);
+	LOG.trace("isCurrentSimulationPaused: {}, isCurrentSimulationRunning: {}", isCurrentSimPaused, isCurrentSimRunning);
 
 	if (!isCurrentSimRunning) {
 	    // simulator is not running
@@ -119,14 +116,13 @@ public class SimulationsUpdater implements Runnable {
 		SimulatorsStatus.SIMULATION_NOT_PAUSED)) {
 	    DatabaseUpdater.setSimOffNotPausedState(lastSimCont, lastSim);
 	} else {
-	    // if nothing changed, do nothing
+	    // if nothing changed do nothing
 	}
     }
 
     private synchronized boolean hasSimulationStateChanged(Boolean isLastSimInDBOn, Boolean isLastSimInDBPaused,
 	    Boolean isSimulatorActuallyOn, Boolean isSimulatorActuallyPaused) {
-	return ((!isLastSimInDBOn.equals(isSimulatorActuallyOn)) || (!isLastSimInDBPaused
-		.equals(isSimulatorActuallyPaused)));
+	return ((!isLastSimInDBOn.equals(isSimulatorActuallyOn)) || (!isLastSimInDBPaused.equals(isSimulatorActuallyPaused)));
     }
 
     private synchronized void updateSimulationStateInDatabaseSimulatorPaused(SQLContainer lastSimCont, Item lastSim,

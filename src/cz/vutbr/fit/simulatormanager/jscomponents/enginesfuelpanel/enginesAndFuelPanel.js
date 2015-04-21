@@ -388,7 +388,8 @@ function drawEngineGauge(engineId, featureName) {
 		var options = buildGaugeOptions(lowVal, highVal, highVal, maxVal, minVal, maxVal);
 		var value = 0;
 		if (isEngineFeatureAWComValueAvailable(featureName, engineId)) {
-			value = state[featureName + "vals"][engineId];
+			//the numbers are usually quite big, so we can round them to nearest int
+			value = Math.round(state[featureName + "vals"][engineId]);
 		} else {
 			// if we don't have value from AWCom, set the value to "-2" - error
 			// code indicating that there is no value from AWCom for this engine
@@ -418,7 +419,7 @@ function drawFuelTankGauge(featureName) {
 		var value = 0;
 
 		if (isFuelFeatureAWComValueAvailable(featureName)) {
-			value = state[featureName + "vals"];
+			value = Math.round(state[featureName + "vals"]);
 		} else {
 			// if we don't have value from AWCom, set the value to "-2" - error
 			// code indicating that there is no value from AWCom for this fuel

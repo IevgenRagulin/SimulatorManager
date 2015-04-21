@@ -77,7 +77,7 @@ public class DatabaseUpdater {
 	return addedSimInfoCount == 0;
     }
 
-    /*
+    /**
      * Saves data about devices state to database
      */
     @SuppressWarnings("unchecked")
@@ -88,8 +88,8 @@ public class DatabaseUpdater {
 	RowId newSimDvStId = (RowId) simDevStCont.addItem();
 	Collection<?> itemPropIds = simDevStItem.getItemPropertyIds();
 	// set reference key to simulation id
-	simDevStCont.getContainerProperty(newSimDvStId, SimulationInfoCols.simulation_simulationid.toString())
-		.setValue(simulationIdInt);
+	simDevStCont.getContainerProperty(newSimDvStId, SimulationInfoCols.simulation_simulationid.toString()).setValue(
+		simulationIdInt);
 
 	// Set values: elevator, eleron, rudder, throttle...
 	for (Object prop : itemPropIds) {
@@ -101,25 +101,24 @@ public class DatabaseUpdater {
 	commitChangeInSQLContainer(simDevStCont);
     }
 
-    /*
+    /**
      * Adds primary flight display info to database
      */
     @SuppressWarnings("unchecked")
-    private static void addPfdInfoToDatabase(Integer simulationIdInt, String simulatorId)
-	    throws UnsupportedOperationException, SQLException {
+    private static void addPfdInfoToDatabase(Integer simulationIdInt, String simulatorId) throws UnsupportedOperationException,
+	    SQLException {
 	SQLContainer simPfdCont = dbHelp.getSimulationPFDContainer();
 	SimulationPFDItem simPfdItem = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
 	RowId newPfdId = (RowId) simPfdCont.addItem();
 	// set reference key to simulation id
-	simPfdCont.getContainerProperty(newPfdId, SimulationInfoCols.simulation_simulationid.toString()).setValue(
-		simulationIdInt);
+	simPfdCont.getContainerProperty(newPfdId, SimulationInfoCols.simulation_simulationid.toString())
+		.setValue(simulationIdInt);
 
 	Collection<?> itemPropIds = simPfdItem.getItemPropertyIds();
 	// set values roll, pitch, heading, truecourse...
 	for (Object prop : itemPropIds) {
 	    String propertyName = ((String) prop);
-	    simPfdCont.getContainerProperty(newPfdId, propertyName).setValue(
-		    simPfdItem.getItemProperty(propertyName).getValue());
+	    simPfdCont.getContainerProperty(newPfdId, propertyName).setValue(simPfdItem.getItemProperty(propertyName).getValue());
 	}
 	commitChangeInSQLContainer(simPfdCont);
 
@@ -131,14 +130,12 @@ public class DatabaseUpdater {
 	SQLContainer simInfoCont = dbHelp.getSimulationInfoContainer();
 	SimulationInfoBean simInfoBean = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId).getBean();
 	RowId newInfoId = (RowId) simInfoCont.addItem();
-	LOG.debug("addSimulationInfoInfoToDatabase() - simulationIdInt:{}, simulatorId:{}, data: {}", simulationId,
-		simulatorId, simInfoBean);
-	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.simulation_simulationid.toString()).setValue(
-		simulationId);
+	LOG.debug("addSimulationInfoInfoToDatabase() - simulationIdInt:{}, simulatorId:{}, data: {}", simulationId, simulatorId,
+		simInfoBean);
+	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationId);
 	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.longtitude.toString()).setValue(
 		simInfoBean.getLongtitude());
-	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.latitude.toString()).setValue(
-		simInfoBean.getLatitude());
+	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.latitude.toString()).setValue(simInfoBean.getLatitude());
 	commitChangeInSQLContainer(simInfoCont);
 
     }
@@ -167,7 +164,7 @@ public class DatabaseUpdater {
 	return id;
     }
 
-    /*
+    /**
      * Create new simulation session which is in RUNNING, NOT PAUSED state
      */
     @SuppressWarnings("unchecked")
@@ -183,19 +180,19 @@ public class DatabaseUpdater {
 	return id;
     }
 
-    /*
+    /**
      * Set simulation to RUNNING, PAUSED state
      */
-    public static void setSimOnPausedState(SQLContainer lastSimCont, Item simulation)
-	    throws UnsupportedOperationException, SQLException {
+    public static void setSimOnPausedState(SQLContainer lastSimCont, Item simulation) throws UnsupportedOperationException,
+	    SQLException {
 	setSimState(lastSimCont, simulation, SimulatorsStatus.SIMULATION_ON, SimulatorsStatus.SIMULATION_PAUSED);
     }
 
-    /*
+    /**
      * Set simulation to RUNNING, NOT PAUSED state
      */
-    public static void setSimOnNotPausedState(SQLContainer lastSimCont, Item simulation)
-	    throws UnsupportedOperationException, SQLException {
+    public static void setSimOnNotPausedState(SQLContainer lastSimCont, Item simulation) throws UnsupportedOperationException,
+	    SQLException {
 	setSimState(lastSimCont, simulation, SimulatorsStatus.SIMULATION_ON, SimulatorsStatus.SIMULATION_NOT_PAUSED);
     }
 
@@ -208,21 +205,19 @@ public class DatabaseUpdater {
 	commitChangeInSQLContainer(lastSimCont);
     }
 
-    /*
+    /**
      * Set simulation to OFF, NOT PAUSED state
      */
     @SuppressWarnings("unchecked")
-    public static void setSimOffNotPausedState(SQLContainer lastSimCont, Item lastSim)
-	    throws UnsupportedOperationException, SQLException {
+    public static void setSimOffNotPausedState(SQLContainer lastSimCont, Item lastSim) throws UnsupportedOperationException,
+	    SQLException {
 	LOG.debug("Set sim state. ACTIVE: {}, PAUSED: {}", false, false);
 	lastSim.getItemProperty(SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_OFF);
-	lastSim.getItemProperty(SimulationCols.issimulationpaused.toString()).setValue(
-		SimulatorsStatus.SIMULATION_NOT_PAUSED);
+	lastSim.getItemProperty(SimulationCols.issimulationpaused.toString()).setValue(SimulatorsStatus.SIMULATION_NOT_PAUSED);
 	commitChangeInSQLContainer(lastSimCont);
     }
 
-    private static void commitChangeInSQLContainer(SQLContainer sqlCont) throws UnsupportedOperationException,
-	    SQLException {
+    private static void commitChangeInSQLContainer(SQLContainer sqlCont) throws UnsupportedOperationException, SQLException {
 	sqlCont.commit();
     }
 }

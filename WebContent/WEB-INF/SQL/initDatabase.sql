@@ -167,7 +167,7 @@ CREATE TABLE simulation
   issimulationon boolean,
   issimulationpaused boolean,
   simulationstartedtime timestamp without time zone,
-  simulationendedtime timestamp without time zone,
+  latestupdatetime timestamp without time zone,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulation_pkey PRIMARY KEY (simulationid)
 )
