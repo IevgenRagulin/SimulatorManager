@@ -62,7 +62,7 @@ public class StartView extends VerticalLayout implements View {
 	imgToSimManager = new Image("", ResourceUtil.getSimulatorManagerImg());
 	imgToSimManager.setPrimaryStyleName("circular");
 
-	imgToViewSimulations = new Image("", ResourceUtil.getBoeing737Img());
+	imgToViewSimulations = new Image("", ResourceUtil.getBoeing737SquareImg());
 	imgToViewSimulations.setPrimaryStyleName("circular");
 
 	imgToConfigurations = new Image("", ResourceUtil.getConfigurationMainImg());

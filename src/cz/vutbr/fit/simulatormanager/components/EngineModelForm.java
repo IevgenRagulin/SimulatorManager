@@ -95,13 +95,15 @@ public class EngineModelForm extends FieldGroup {
 	} else if (Boolean.class.equals(colName.getType())) {
 	    engGrid.addComponent(field);
 	    engGrid.setComponentAlignment(field, Alignment.MIDDLE_LEFT);
-	    // if timestamp, make it take 3 cols
+	    // if timestamp, don't display
 	} else if (colName.equals(EngineModelCols.timestamp)) {
 	    // field.setEnabled(false);
-	    // engGrid.addComponent(field, 0, 19, 4, 19);
 	} else if (colName.equals(EngineModelCols.enginemodelid)) {
 	    field.setWidth("50%");
 	    engGrid.addComponent(field);
+	} else if (colName.toString().startsWith("max")) {
+	    engGrid.addComponent(field);
+	    engGrid.addComponent(new Hr(), 0, engGrid.getCursorY(), 4, engGrid.getCursorY());
 	} else {
 	    engGrid.addComponent(field);
 	}

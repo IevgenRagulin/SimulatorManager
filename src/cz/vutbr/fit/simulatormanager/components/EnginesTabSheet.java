@@ -54,7 +54,7 @@ public class EnginesTabSheet extends TabSheet {
     }
 
     private void addEngineInfoFromDatabase(Item engineItem) {
-	GridLayout engineGridLayout = new GridLayout(5, 20);
+	GridLayout engineGridLayout = new GridLayout(5, 20 + 18);
 	engineGridLayout.setWidth("100%");
 	engineGridLayout.setMargin(true);
 	enginesForm = new EngineModelForm(this, engineGridLayout, enginesContainer);
