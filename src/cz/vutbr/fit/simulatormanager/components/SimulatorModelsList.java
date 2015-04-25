@@ -11,6 +11,7 @@ import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Table;
 
+import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.database.SimulatorModelQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
@@ -91,11 +92,24 @@ public class SimulatorModelsList extends Table {
 		DEFAULT_MAX_SPEED_ON_FLAPS);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(
 		DEFAULT_NUM_OF_LANDING_GEARS);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lfu.toString()).setValue(true);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.minlfu.toString()).setValue(0.0f);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxlfu.toString()).setValue(1000.0f);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.rfu.toString()).setValue(false);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.cfu.toString()).setValue(false);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lfu.toString()).setValue(Constants.LFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.minlfu.toString()).setValue(Constants.MINLFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lowlfu.toString()).setValue(Constants.LOWLFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.highlfu.toString()).setValue(Constants.HIGHLFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxlfu.toString()).setValue(Constants.MAXLFU);
+
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.cfu.toString()).setValue(Constants.CFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.mincfu.toString()).setValue(Constants.MINCFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lowcfu.toString()).setValue(Constants.LOWCFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.highcfu.toString()).setValue(Constants.HIGHCFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxcfu.toString()).setValue(Constants.MAXCFU);
+
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.rfu.toString()).setValue(Constants.RFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.minrfu.toString()).setValue(Constants.MINRFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lowrfu.toString()).setValue(Constants.LOWRFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.highrfu.toString()).setValue(Constants.HIGHRFU);
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxrfu.toString()).setValue(Constants.MAXRFU);
+
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.hasgears.toString()).setValue(true);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(1);
 	commit();
