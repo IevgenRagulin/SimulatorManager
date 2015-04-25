@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 
 public class DistanceUtil {
-    final static Logger logger = LoggerFactory.getLogger(DistanceUtil.class);
+    final static Logger LOG = LoggerFactory.getLogger(DistanceUtil.class);
 
     /**
      * calculates distance between two points in meters
@@ -29,8 +29,7 @@ public class DistanceUtil {
 	dist = DistanceUtil.rad2deg(dist);
 	dist = dist * 60 * 1.1515;
 	dist = dist * 1.609344 * 1000;
-	logger.debug("Measured distance between lat1: {}, lon1: {}, lat2: {}, lon2: {}. Result: {}", lat1, lon1, lat2,
-		lon2, dist);
+	LOG.debug("Measured distance between lat1: {}, lon1: {}, lat2: {}, lon2: {}. Result: {}", lat1, lon1, lat2, lon2, dist);
 	return dist;
     }
 
@@ -50,8 +49,12 @@ public class DistanceUtil {
 
     /**
      * Returns true if the plane has moved n a distance more then @distInMeters
-     * Returns 0 if the plane has not moved too much. If there is no information
-     * about previous simulations in db, then we return true
+     * Returns false if the plane has not moved too much.
+     * 
+     * If both previous and current simulations are false, return false
+     * 
+     * If there is no information about previous simulations in db, but there is
+     * information about new simulation then we return true
      */
     public static boolean hasPlaneMovedMoreThan(SimulationInfoItem currentSimItem, SimulationInfoItem prevSimItem,
 	    double distInMetersThreshold) {
@@ -66,13 +69,15 @@ public class DistanceUtil {
 	    if (distanceActual >= distInMetersThreshold) {
 		hasPlaneMoved = true;
 	    }
-	} else {
+	} else if (prevSimItem == null && currentSimItem == null) {
+	    hasPlaneMoved = false;
+	} else if (prevSimItem == null && currentSimItem != null) {
 	    hasPlaneMoved = true;
 	}
 	if (hasPlaneMoved) {
-	    logger.debug(
-		    "Plane has moved or there is no info about simulations for simulator. Has moved over: {} meters. The threshold is: {}",
-		    distanceActual, distInMetersThreshold);
+	    LOG.info(
+		    "Plane has moved or there is no info about simulations for simulator. Has moved over: {} meters. The threshold is: {}. PrevSimItem: {}",
+		    distanceActual, distInMetersThreshold, prevSimItem);
 	}
 	return hasPlaneMoved;
     }

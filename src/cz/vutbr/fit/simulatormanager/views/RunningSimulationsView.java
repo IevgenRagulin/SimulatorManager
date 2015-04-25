@@ -98,7 +98,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	addNewPointToCharts(simulatorId, selectedPFD);
 	// Set engines and fuel info
 	AllEngineInfo enginesInfo = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
-	setEnginesInfo(simulatorId, enginesInfo, selectedDevicesState);
+	setEnginesInfo(simulatorId, enginesInfo, selectedDevicesState.getBean());
     }
 
     private void addNewPointToCharts(String simulatorId, SimulationPFDItem selectedPFD) {

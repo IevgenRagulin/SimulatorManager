@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import com.vaadin.server.VaadinService;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.database.columns.EngineCols;
 
 /*
  * Uses pure jdbc connection (instead of Vaadin containers) to make basic queries to database 
@@ -53,8 +55,8 @@ public class DatabaseHelperPureJDBC {
      * @throws SQLException
      */
     private static Connection getConnection() throws SQLException {
-	return DriverManager.getConnection(ApplicationConfiguration.getDbUrl(),
-		ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword());
+	return DriverManager.getConnection(ApplicationConfiguration.getDbUrl(), ApplicationConfiguration.getDbUserName(),
+		ApplicationConfiguration.getDbUserPassword());
     }
 
     /**
@@ -73,9 +75,9 @@ public class DatabaseHelperPureJDBC {
      * @return
      */
     public static boolean isDatabaseInitialized() {
-	return tableExists("simulationenginesstate") && tableExists("simulationdevicesstate")
-		&& tableExists("simulationinfo") && tableExists("simulationpfdinfo") && tableExists("simulation")
-		&& tableExists("simulator") && tableExists("enginemodel") && tableExists("simulatormodel");
+	return tableExists("simulationenginesstate") && tableExists("simulationdevicesstate") && tableExists("simulationinfo")
+		&& tableExists("simulationpfdinfo") && tableExists("simulation") && tableExists("simulator")
+		&& tableExists("enginemodel") && tableExists("simulatormodel");
     }
 
     /**
@@ -177,8 +179,7 @@ public class DatabaseHelperPureJDBC {
      * @param statement
      * @throws SQLException
      */
-    private static void executeArrayOfQueries(String[] queries, Connection connection, Statement statement)
-	    throws SQLException {
+    private static void executeArrayOfQueries(String[] queries, Connection connection, Statement statement) throws SQLException {
 	LOG.info("Execute array of queries: {}", queries.length);
 	for (int i = 0; i < queries.length; i++) {
 	    // don't execute empty queries
@@ -228,6 +229,99 @@ public class DatabaseHelperPureJDBC {
     }
 
     /**
+     * Gets latest engines info which corresponds to pfdidinfoid, and whose
+     * timestamp is the closest to timestamp
+     */
+    public static Optional<AllEngineInfo> getEnginesInfo(Integer pfdInfoId, long timestamp) {
+	String selectQuery = "SELECT * FROM simulationenginesstate WHERE simulation_simulationid=(SELECT simulation_simulationid FROM simulationpfdinfo WHERE pfdinfoid=?)  ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp(?/1000)::timestamp))) limit 1";
+	try (Connection connection = getConnection();
+		PreparedStatement stmt = buildSelectEnginesStatement(connection, pfdInfoId, timestamp, selectQuery)) {
+	    ResultSet rs = stmt.executeQuery();
+	    AllEngineInfo enginesInfo = buildAllEngineInfo(rs);
+	    return Optional.of(enginesInfo);
+	} catch (SQLException e) {
+	    LOG.error("SQLException occured when trying to select engines info for pfdinfoid id: {}" + pfdInfoId, e);
+	    return Optional.empty();
+	}
+    }
+
+    private static PreparedStatement buildSelectEnginesStatement(Connection connection, Integer pfdInfoId, long timestamp,
+	    String selectQuery) throws SQLException {
+	PreparedStatement stmt = connection.prepareStatement(selectQuery);
+	stmt.setInt(1, pfdInfoId);
+	stmt.setLong(2, timestamp);
+	return stmt;
+    }
+
+    private static AllEngineInfo buildAllEngineInfo(ResultSet rs) throws SQLException {
+	AllEngineInfo enginesInfo = new AllEngineInfo();
+	rs.next();
+	if (rs != null) {
+	    int enginesNum = (Integer) rs.getInt("engines_num");
+	    enginesInfo.setNumberOfEngines(enginesNum);
+
+	    Float[] rpm = getFloatArray(rs, EngineCols.rpm.toString());
+	    enginesInfo.setRpm(rpm);
+
+	    Float[] pwr = getFloatArray(rs, EngineCols.pwr.toString());
+	    enginesInfo.setPwr(pwr);
+
+	    Float[] pwp = getFloatArray(rs, EngineCols.pwp.toString());
+	    enginesInfo.setPwp(pwp);
+
+	    Float[] mp_ = getFloatArray(rs, EngineCols.mp_.toString());
+	    enginesInfo.setMp_(mp_);
+
+	    Float[] et1 = getFloatArray(rs, EngineCols.et1.toString());
+	    enginesInfo.setEt1(et1);
+
+	    Float[] et2 = getFloatArray(rs, EngineCols.et2.toString());
+	    enginesInfo.setEt2(et2);
+
+	    Float[] ct1 = getFloatArray(rs, EngineCols.ct1.toString());
+	    enginesInfo.setCt1(ct1);
+
+	    Float[] ct2 = getFloatArray(rs, EngineCols.ct2.toString());
+	    enginesInfo.setCt2(ct2);
+
+	    Float[] est = getFloatArray(rs, EngineCols.est.toString());
+	    enginesInfo.setEst(est);
+
+	    Float[] ff_ = getFloatArray(rs, EngineCols.ff_.toString());
+	    enginesInfo.setFf_(ff_);
+
+	    Float[] fp_ = getFloatArray(rs, EngineCols.fp_.toString());
+	    enginesInfo.setFp_(fp_);
+
+	    Float[] op_ = getFloatArray(rs, EngineCols.op_.toString());
+	    enginesInfo.setOp_(op_);
+
+	    Float[] ot_ = getFloatArray(rs, EngineCols.ot_.toString());
+	    enginesInfo.setOt_(ot_);
+
+	    Float[] n1_ = getFloatArray(rs, EngineCols.n1_.toString());
+	    enginesInfo.setN1_(n1_);
+
+	    Float[] n2_ = getFloatArray(rs, EngineCols.n2_.toString());
+	    enginesInfo.setN2_(n2_);
+
+	    Float[] vib = getFloatArray(rs, EngineCols.vib.toString());
+	    enginesInfo.setVib(vib);
+
+	    Float[] vlt = getFloatArray(rs, EngineCols.vlt.toString());
+	    enginesInfo.setVlt(vlt);
+
+	    Float[] amp = getFloatArray(rs, EngineCols.amp.toString());
+	    enginesInfo.setAmp(amp);
+	}
+	return enginesInfo;
+    }
+
+    private static Float[] getFloatArray(ResultSet rs, String keyName) throws SQLException {
+	return (Float[]) rs.getArray(keyName).getArray();
+    }
+
+    /**
      * Build insert PreparedStatement based on AllEngineInfo.
      * 
      * @param conn
@@ -235,8 +329,8 @@ public class DatabaseHelperPureJDBC {
      * @return
      * @throws SQLException
      */
-    private static PreparedStatement buildInsertEnginesStatement(Connection conn, AllEngineInfo engInfo,
-	    Integer simulationId) throws SQLException {
+    private static PreparedStatement buildInsertEnginesStatement(Connection conn, AllEngineInfo engInfo, Integer simulationId)
+	    throws SQLException {
 	PreparedStatement stmt = null;
 	stmt = conn
 		.prepareStatement("INSERT INTO simulationenginesstate (simulation_simulationid, engines_num, rpm, pwr, pwp, mp_, et1, et2, ct1, ct2, est, ff_, fp_, op_, ot_, n1_, n2_, vib, vlt, amp) VALUES "

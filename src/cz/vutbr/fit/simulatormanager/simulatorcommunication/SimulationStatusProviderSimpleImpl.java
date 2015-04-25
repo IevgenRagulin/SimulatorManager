@@ -78,7 +78,7 @@ public class SimulationStatusProviderSimpleImpl {
 	// This means, we should finish this simulation, and start a new one
 	if (hasPlaneMovedMoreThan(simulatorId, ONE_KM)) {
 	    LOG.info(
-		    "the plane has moved over distance which is more than {} meters. Probably, previous simulation has finished. Creating new simulation session.",
+		    "the plane has moved over distance which is more than {} meters. Probably, previous simulation has finished. Increase number of failed requests.",
 		    ONE_KM);
 	    setNumberOfFailedRequests(simulatorId, maxFailedTolearatedRequests + 1);
 	}

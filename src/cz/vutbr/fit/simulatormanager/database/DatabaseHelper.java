@@ -17,6 +17,7 @@ import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
+import cz.vutbr.fit.simulatormanager.beans.SimulationDevStateBean;
 import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
@@ -142,8 +143,8 @@ public class DatabaseHelper implements Serializable {
      * Returns SQLContainer with all simulations for simulator with id
      */
     public SQLContainer getSimulationContainerOnSimulatorWithId(String simulatorId) {
-	FreeFormQueryTest query = new FreeFormQueryTest("SELECT * FROM simulation where simulator_simulatorid="
-		+ simulatorId + " ORDER BY \"timestamp\" LIMIT ALL ", Arrays.asList("simulationid"), pool);
+	FreeFormQueryTest query = new FreeFormQueryTest("SELECT * FROM simulation where simulator_simulatorid=" + simulatorId
+		+ " ORDER BY \"timestamp\" LIMIT ALL ", Arrays.asList("simulationid"), pool);
 	query.setDelegate(new FreeFormStatementDelegateSimulationsImpl(simulatorId));
 	try {
 	    return new SQLContainer(query);
@@ -173,9 +174,8 @@ public class DatabaseHelper implements Serializable {
      */
     public SQLContainer getPFDInfoBySimulationId(String simulationId) {
 	@SuppressWarnings("deprecation")
-	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationPfdInfo "
-		+ "WHERE Simulation_SimulationId = " + simulationId + "ORDER BY timestamp ASC; ",
-		Arrays.asList("pfdinfoid"), pool);
+	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationPfdInfo " + "WHERE Simulation_SimulationId = "
+		+ simulationId + "ORDER BY timestamp ASC; ", Arrays.asList("pfdinfoid"), pool);
 	try {
 	    return new SQLContainer(query);
 	} catch (SQLException e) {
@@ -191,9 +191,9 @@ public class DatabaseHelper implements Serializable {
     public SQLContainer getLatestPFDInfoBySimulatorId(String simulatorId) {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationPfdInfo si1 "
-		+ "WHERE Simulation_SimulationId = (SELECT SimulationId " + "FROM simulation "
-		+ "WHERE Simulator_SimulatorId = " + simulatorId + " AND IsSimulationOn = true "
-		+ "ORDER BY timestamp DESC LIMIT 1) " + "ORDER BY timestamp ASC; ", Arrays.asList("pfdinfoid"), pool);
+		+ "WHERE Simulation_SimulationId = (SELECT SimulationId " + "FROM simulation " + "WHERE Simulator_SimulatorId = "
+		+ simulatorId + " AND IsSimulationOn = true " + "ORDER BY timestamp DESC LIMIT 1) " + "ORDER BY timestamp ASC; ",
+		Arrays.asList("pfdinfoid"), pool);
 	try {
 	    return new SQLContainer(query);
 	} catch (SQLException e) {
@@ -212,10 +212,9 @@ public class DatabaseHelper implements Serializable {
     public SQLContainer getAllSimulationInfoBySimulatorId(String simulatorId) {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationInfo si1 "
-		+ "WHERE Simulation_SimulationId = (SELECT SimulationId " + "FROM simulation "
-		+ "WHERE Simulator_SimulatorId = " + simulatorId + " AND IsSimulationOn = true "
-		+ "ORDER BY timestamp DESC LIMIT 1) " + "AND NOT EXISTS " + "(SELECT si2.SimulationInfoId "
-		+ "FROM SimulationInfo si2 " + "WHERE si1.Longtitude = si2.Longtitude "
+		+ "WHERE Simulation_SimulationId = (SELECT SimulationId " + "FROM simulation " + "WHERE Simulator_SimulatorId = "
+		+ simulatorId + " AND IsSimulationOn = true " + "ORDER BY timestamp DESC LIMIT 1) " + "AND NOT EXISTS "
+		+ "(SELECT si2.SimulationInfoId " + "FROM SimulationInfo si2 " + "WHERE si1.Longtitude = si2.Longtitude "
 		+ "AND si1.Latitude = si2.Latitude " + "AND si1.SimulationInfoId = (si2.SimulationInfoId - 1 )) "
 		+ "ORDER BY \"timestamp\" ASC; ", Arrays.asList("simulationinfoid"), pool);
 	try {
@@ -231,9 +230,8 @@ public class DatabaseHelper implements Serializable {
      */
     public SQLContainer getAllSimulationInfoBySimulationId(String simulationId) {
 	@SuppressWarnings("deprecation")
-	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationInfo "
-		+ "WHERE Simulation_SimulationId = " + simulationId + "ORDER BY \"timestamp\" ASC; ",
-		Arrays.asList("simulationinfoid"), pool);
+	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationInfo " + "WHERE Simulation_SimulationId = "
+		+ simulationId + "ORDER BY \"timestamp\" ASC; ", Arrays.asList("simulationinfoid"), pool);
 	try {
 	    return new SQLContainer(query);
 	} catch (SQLException e) {
@@ -243,8 +241,8 @@ public class DatabaseHelper implements Serializable {
 
     public SQLContainer getEnginesModelsOnSimulatorModel(String simulatorModelId) {
 	@SuppressWarnings("deprecation")
-	FreeformQuery query = new FreeformQuery("SELECT * FROM enginemodel " + "WHERE simulatormodelid = "
-		+ simulatorModelId + " ORDER BY \"enginemodelorder\" ASC; ", Arrays.asList("enginemodelid"), pool);
+	FreeformQuery query = new FreeformQuery("SELECT * FROM enginemodel " + "WHERE simulatormodelid = " + simulatorModelId
+		+ " ORDER BY \"enginemodelorder\" ASC; ", Arrays.asList("enginemodelid"), pool);
 	query.setDelegate(new FreeFormStatementDelegateEngineModels(simulatorModelId));
 	try {
 	    return new SQLContainer(query);
@@ -279,8 +277,7 @@ public class DatabaseHelper implements Serializable {
     public boolean isLastSimInDbRunning(String simulatorId) {
 	final SQLContainer latestSimulationCont = this.getLatestSimulationContainer(simulatorId);
 	Item lastSimDb = DatabaseUtil.getLatestItemFromContainer(latestSimulationCont);
-	Boolean isLastSimInDbOn = (Boolean) lastSimDb.getItemProperty(SimulationCols.issimulationon.toString())
-		.getValue();
+	Boolean isLastSimInDbOn = (Boolean) lastSimDb.getItemProperty(SimulationCols.issimulationon.toString()).getValue();
 	return (isLastSimInDbOn != null) && (isLastSimInDbOn);
     }
 
@@ -298,8 +295,7 @@ public class DatabaseHelper implements Serializable {
 	    }
 	}
 	if (simulatorItem == null) {
-	    throw new UnknownSimulatorException("There is no simulator with such simulator id in database: "
-		    + simulatorId);
+	    throw new UnknownSimulatorException("There is no simulator with such simulator id in database: " + simulatorId);
 	}
 	return simulatorItem;
     }
@@ -309,8 +305,8 @@ public class DatabaseHelper implements Serializable {
      */
     public Item getPFDInfoByPfdInfoId(int pfdInfoId) {
 	@SuppressWarnings("deprecation")
-	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationPfdInfo " + "WHERE pfdinfoid = "
-		+ pfdInfoId, Arrays.asList("pfdinfoid"), pool);
+	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM SimulationPfdInfo " + "WHERE pfdinfoid = " + pfdInfoId,
+		Arrays.asList("pfdinfoid"), pool);
 	try {
 	    return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
 	} catch (SQLException e) {
@@ -324,14 +320,15 @@ public class DatabaseHelper implements Serializable {
      * Gets simulation dev state item info item by pfdinfoid, closest in time to
      * timestamp
      */
-    public Item getSimulationDevStateInfoByPfdInfoId(int pfdInfoId, long timestamp) {
+    public SimulationDevStateBean getSimulationDevStateInfoByPfdInfoId(int pfdInfoId, long timestamp) {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM simulationdevicesstate "
 		+ "WHERE simulation_simulationid=(SELECT simulation_simulationid " + "FROM simulationpfdinfo "
-		+ "WHERE pfdinfoid=" + pfdInfoId + ") " + "ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp("
-		+ timestamp + "/1000)::timestamp))) limit 1", Arrays.asList("devstateid"), pool);
+		+ "WHERE pfdinfoid=" + pfdInfoId + ") " + "ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp(" + timestamp
+		+ "/1000)::timestamp))) limit 1", Arrays.asList("devstateid"), pool);
 	try {
-	    return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
+	    Item item = DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
+	    return new SimulationDevStateBean(item);
 	} catch (SQLException e) {
 	    LOG.error("Couldn't getSimulationDevStateInfoByPfdInfoId", e);
 	    return null;
@@ -345,8 +342,8 @@ public class DatabaseHelper implements Serializable {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery("SELECT * FROM simulator "
 		+ "WHERE simulatorid = (SELECT simulator_simulatorid FROM simulation "
-		+ "WHERE simulationid = (SELECT simulation_simulationid FROM " + "simulationpfdinfo WHERE "
-		+ "pfdinfoid = " + pfdInfoId + "));", Arrays.asList("simulatorid"), pool);
+		+ "WHERE simulationid = (SELECT simulation_simulationid FROM " + "simulationpfdinfo WHERE " + "pfdinfoid = "
+		+ pfdInfoId + "));", Arrays.asList("simulatorid"), pool);
 	return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
     }
 
@@ -358,8 +355,8 @@ public class DatabaseHelper implements Serializable {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery("SELECT * " + "FROM simulationinfo "
 		+ "WHERE simulation_simulationid=(SELECT simulation_simulationid " + "FROM simulationpfdinfo "
-		+ "WHERE pfdinfoid=" + pfdInfoId + ") " + "ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp("
-		+ timestamp + "/1000)::timestamp))) limit 1", Arrays.asList("simulationinfoid"), pool);
+		+ "WHERE pfdinfoid=" + pfdInfoId + ") " + "ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp(" + timestamp
+		+ "/1000)::timestamp))) limit 1", Arrays.asList("simulationinfoid"), pool);
 	SQLContainer simulationInfo = null;
 	simulationInfo = new SQLContainer(query);
 	return DatabaseUtil.getLatestItemFromContainer(simulationInfo);

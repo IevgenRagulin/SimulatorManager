@@ -28,7 +28,7 @@ public class SimulatorModelQueries {
 	@SuppressWarnings("deprecation")
 	FreeformQuery query = new FreeformQuery(
 		"SELECT * FROM SimulatorModel INNER JOIN Simulator ON simulatormodel.simulatormodelid=simulator.simulatormodelid where simulatorid="
-			+ simulatorId, Arrays.asList("simulatormodelid"), dbHelper.getPool());
+			+ simulatorId, Arrays.asList("simulatormodelid"), DatabaseHelper.getPool());
 	try {
 	    return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
 	} catch (SQLException e) {
@@ -41,8 +41,8 @@ public class SimulatorModelQueries {
      */
     public static Item getSimulatorModelBySimulatorModelId(String simulatorModelId) {
 	@SuppressWarnings("deprecation")
-	FreeformQuery query = new FreeformQuery("SELECT * FROM SimulatorModel WHERE simulatormodelid="
-		+ simulatorModelId, Arrays.asList("simulatormodelid"), dbHelper.getPool());
+	FreeformQuery query = new FreeformQuery("SELECT * FROM SimulatorModel WHERE simulatormodelid=" + simulatorModelId,
+		Arrays.asList("simulatormodelid"), DatabaseHelper.getPool());
 	try {
 	    return DatabaseUtil.getLatestItemFromContainer(new SQLContainer(query));
 	} catch (SQLException e) {
@@ -79,15 +79,14 @@ public class SimulatorModelQueries {
 
     public static int getMaxSpeedOnFlapsForSimulatorModel(String simulatorModelId) {
 	Item simulatorModelItem = getSimulatorModelBySimulatorModelId(simulatorModelId);
-	int maxSpeedOnFlaps = (int) simulatorModelItem.getItemProperty(SimulatorModelCols.maxspeedonflaps.toString())
-		.getValue();
+	int maxSpeedOnFlaps = (int) simulatorModelItem.getItemProperty(SimulatorModelCols.maxspeedonflaps.toString()).getValue();
 	return maxSpeedOnFlaps;
     }
 
     public static int getNumOfLandGearsForSimulatorModel(String simulatorModelId) {
 	Item simulatorModelItem = getSimulatorModelBySimulatorModelId(simulatorModelId);
-	int numOfLandingGears = (int) simulatorModelItem.getItemProperty(
-		SimulatorModelCols.numberoflandinggears.toString()).getValue();
+	int numOfLandingGears = (int) simulatorModelItem.getItemProperty(SimulatorModelCols.numberoflandinggears.toString())
+		.getValue();
 	return numOfLandingGears;
     }
 }

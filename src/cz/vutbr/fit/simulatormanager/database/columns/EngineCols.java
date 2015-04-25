@@ -12,10 +12,10 @@ public enum EngineCols {
     pwr("PWR - power"), //
     pwp("PWP - power %"), //
     mp_("MP - Manifold pressure"), //
-    egt1("EGT1"), //
-    egt2("EGT2"), //
-    cht1("CHT1"), //
-    cht2("CHT2"), //
+    et1("EGT1"), //
+    et2("EGT2"), //
+    ct1("CHT1"), //
+    ct2("CHT2"), //
     est("EST"), //
     ff_("FF - fuel flow"), //
     fp_("FP - fuel pressure"), //

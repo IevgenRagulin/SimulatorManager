@@ -1,7 +1,6 @@
 var isHtmlInitialized = false;
-var engineFeatures = [ "rpm", "pwr", "pwp", "mp_", "et1", "et2", "ct1",
-		"ct2", "est", "ff_", "fp_", "op_", "ot_", "n1_", "n2_", "vib", "vlt",
-		"amp" ];
+var engineFeatures = [ "rpm", "pwr", "pwp", "mp_", "et1", "et2", "ct1", "ct2",
+		"est", "ff_", "fp_", "op_", "ot_", "n1_", "n2_", "vib", "vlt", "amp" ];
 var fuelTanks = [ "lfu", "cfu", "rfu" ]
 // if specific engineFeatures are enabled or not. On every update we check if
 // there changes in a list of enabled engine features. If this list has changed,
@@ -17,7 +16,7 @@ var thisObj;
  */
 function cz_vutbr_fit_simulatormanager_jscomponents_enginesfuelpanel_EnginesAndFuelPanel() {
 	window.thisObj = this;
-	console.log("Creating engines panel");
+	// console.log("kuku Creating engines panel");
 	// when document
 	// we load script in such a tricky way because there is an error if we try
 	// to do it normally through @Javascript annotation in EnginesPanel.java
@@ -30,6 +29,7 @@ function cz_vutbr_fit_simulatormanager_jscomponents_enginesfuelpanel_EnginesAndF
  * Load google visualisation library. After loading it, we init engines panel
  */
 function loadGoogleVisualizationLibrary() {
+	// console.log("kuku load visuzliation library");
 	google.load("visualization", "1", {
 		packages : [ "gauge" ],
 		"callback" : initEnginesPanel
@@ -42,15 +42,19 @@ function loadGoogleVisualizationLibrary() {
  * onStateChangeListener
  */
 function initEnginesPanel() {
-	// console.log("Going to init engines panel. Rpm: "+thisObj.getState().rpm);
+	// console.log("Kuku Going to init engines panel. Rpm:
+	// "+thisObj.getState().rpm);
 	if (!(typeof thisObj.getState().rpm === 'undefined')) {
 		initAllHtmlAndGauges(thisObj.getElement(), thisObj.getState());
 	}
 	thisObj.onStateChange = function() {
 		// if some of the features state has been updated, reinit html
 		// if html hasn't yet been initialized, do it
+		// console.log("kuku state changed");
 		if ((!window.isHtmlInitialized)
 				|| (hasStateOfSomeFeatureChanged(thisObj.getState()))) {
+			// console.log("kuku going to init html. Has state of some feature
+			// changed"+hasStateOfSomeFeatureChanged(thisObj.getState()));
 			initAllHtmlAndGauges(thisObj.getElement(), thisObj.getState());
 		}
 		if (isHtmlInitialized) {
@@ -190,7 +194,8 @@ function initAllHtmlAndGauges(e, state) {
  * @param engineId
  */
 function initEngineHtmlAndGauges(e, state, engineId) {
-	console.log("kuku going to init engine html and gauge. engid" + engineId);
+	// console.log("kuku going to init engine html and gauge. engid" +
+	// engineId);
 	var engineHtml = "<div class='collapsable'><h3>Engine " + engineId
 			+ "</h3><div>";
 	for (var i = 0; i < engineFeatures.length; i++) {
@@ -225,15 +230,23 @@ function initFuelTanksHtmlAndGauges(e, state) {
 
 /**
  * 
- * @param greenFrom_ starting from this value the gauge is green
- * @param greenTo_ ending with this value the gauge is green. Must be > than greenFrom_
- * @param redFrom_ starting from this value the gauge is red
- * @param redTo_ ending with this value the gauge is red. Must be > than redFrom_
- * @param minVal minimum value of gauge
- * @param maxVal maximum value of gauge
+ * @param greenFrom_
+ *            starting from this value the gauge is green
+ * @param greenTo_
+ *            ending with this value the gauge is green. Must be > than
+ *            greenFrom_
+ * @param redFrom_
+ *            starting from this value the gauge is red
+ * @param redTo_
+ *            ending with this value the gauge is red. Must be > than redFrom_
+ * @param minVal
+ *            minimum value of gauge
+ * @param maxVal
+ *            maximum value of gauge
  * @returns gauge options used for building the graph
  */
-function buildGaugeOptions(greenFrom_, greenTo_, redFrom_, redTo_, minVal, maxVal) {
+function buildGaugeOptions(greenFrom_, greenTo_, redFrom_, redTo_, minVal,
+		maxVal) {
 	var options = {
 		width : 120,
 		height : 120,
@@ -248,7 +261,6 @@ function buildGaugeOptions(greenFrom_, greenTo_, redFrom_, redTo_, minVal, maxVa
 	return options;
 }
 
-
 /**
  * Check if featureName on engineId is enabled for this engine model
  */
@@ -262,7 +274,8 @@ function isEngineFeatureEnabled(featureName, engineId) {
  */
 function isFuelFeatureEnabled(featureName) {
 	var state = thisObj.getState();
-	console.log("is fuel feature enabled"+featureName+" is: "+((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName])));
+	// console.log("is fuel feature enabled"+featureName+" is: "+((!(typeof
+	// state[featureName + "vals"] === 'undefined')) && (state[featureName])));
 	return ((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName]));
 }
 
@@ -288,6 +301,7 @@ function isFuelFeatureAWComValueAvailable(featureName) {
 
 /**
  * Get minValue for featureName and engine id from engine model
+ * 
  * @returns
  */
 function getEngineFeatureMinValue(featureName, engineId) {
@@ -297,6 +311,7 @@ function getEngineFeatureMinValue(featureName, engineId) {
 
 /**
  * Get lowValue for featureName and engine id from engine model
+ * 
  * @returns
  */
 function getEngineFeatureLowValue(featureName, engineId) {
@@ -306,6 +321,7 @@ function getEngineFeatureLowValue(featureName, engineId) {
 
 /**
  * Get highValue for featureName and engine id from engine model
+ * 
  * @returns
  */
 function getEngineFeatureHighValue(featureName, engineId) {
@@ -315,6 +331,7 @@ function getEngineFeatureHighValue(featureName, engineId) {
 
 /**
  * Get maxValue for featureName and engine id from engine model
+ * 
  * @returns
  */
 function getEngineFeatureMaxValue(featureName, engineId) {
@@ -339,7 +356,7 @@ function getFuelFeatureLowValue(featureName) {
 }
 
 /**
- *  Get highValue for featureName from simulator model
+ * Get highValue for featureName from simulator model
  */
 function getFuelFeatureHighValue(featureName) {
 	var state = thisObj.getState();
@@ -347,7 +364,7 @@ function getFuelFeatureHighValue(featureName) {
 }
 
 /**
- *  Get maxValue for featureName from simulator model
+ * Get maxValue for featureName from simulator model
  */
 function getFuelFeatureMaxValue(featureName) {
 	var state = thisObj.getState();
@@ -360,8 +377,9 @@ function getFuelFeatureMaxValue(featureName) {
 function buildGauge(featureName, value, elementId, options) {
 	var data = google.visualization.arrayToDataTable([ [ 'Label', 'Value' ],
 			[ featureName, value ] ]);
-	console.log("building gauge for "+elementId);
-	var gauge = new google.visualization.Gauge(document.getElementById(elementId));
+	// console.log("building gauge for "+elementId);
+	var gauge = new google.visualization.Gauge(document
+			.getElementById(elementId));
 	gauge.options = options;
 	gauge.data = data;
 	return gauge;
@@ -378,17 +396,19 @@ function buildGauge(featureName, value, elementId, options) {
  */
 function drawEngineGauge(engineId, featureName) {
 	var state = thisObj.getState();
-	console.log("KUKU draw gauge called. is enabled" + state[featureName]
-			+ "	 featurename" + featureName + " engineid" + engineId);
+	//console.log("KUKU draw gauge called. is enabled" + state[featureName]
+	//		+ "	 featurename" + featureName + " engineid" + engineId);
 	if (isEngineFeatureEnabled(featureName, engineId)) {
 		var maxVal = getEngineFeatureMaxValue(featureName, engineId);
 		var lowVal = getEngineFeatureLowValue(featureName, engineId);
 		var highVal = getEngineFeatureHighValue(featureName, engineId);
 		var minVal = getEngineFeatureMinValue(featureName, engineId);
-		var options = buildGaugeOptions(lowVal, highVal, highVal, maxVal, minVal, maxVal);
+		var options = buildGaugeOptions(lowVal, highVal, highVal, maxVal,
+				minVal, maxVal);
 		var value = 0;
 		if (isEngineFeatureAWComValueAvailable(featureName, engineId)) {
-			//the numbers are usually quite big, so we can round them to nearest int
+			// the numbers are usually quite big, so we can round them to
+			// nearest int
 			value = Math.round(state[featureName + "vals"][engineId]);
 		} else {
 			// if we don't have value from AWCom, set the value to "-2" - error
@@ -414,8 +434,9 @@ function drawFuelTankGauge(featureName) {
 		var lowVal = getFuelFeatureLowValue(featureName);
 		var highVal = getFuelFeatureHighValue(featureName);
 		var minVal = getFuelFeatureMinValue(featureName);
-		
-		var options = buildGaugeOptions(lowVal, highVal, minVal, lowVal, minVal, maxVal);
+
+		var options = buildGaugeOptions(lowVal, highVal, minVal, lowVal,
+				minVal, maxVal);
 		var value = 0;
 
 		if (isFuelFeatureAWComValueAvailable(featureName)) {
@@ -426,9 +447,9 @@ function drawFuelTankGauge(featureName) {
 			// tank
 			value = -2;
 		}
-		console.log("draw fuel gauge. minval, maxval, value"+minVal+ ", "+maxVal+", "+value);
-		var gauge = buildGauge(featureName, value, 'tank-gauge-'
-				+ featureName);
+		//console.log("draw fuel gauge. minval, maxval, value" + minVal + ", "
+		//		+ maxVal + ", " + value);
+		var gauge = buildGauge(featureName, value, 'tank-gauge-' + featureName);
 		gauge.draw(gauge.data, options);
 	}
 }
@@ -438,8 +459,8 @@ function drawFuelTankGauge(featureName) {
  * feature is not enabled on this engine, return empty string
  */
 function getHtmlForEngineFeature(state, featureName, engineId) {
-	console.log("getHtmlForEngineFeature() - " + featureName + " engineId "
-			+ engineId + " state:" + state[featureName][engineId]);
+	//console.log("getHtmlForEngineFeature() - " + featureName + " engineId "
+	//		+ engineId + " state:" + state[featureName][engineId]);
 	if (state[featureName][engineId]) {
 		return "<div id='engine" + engineId + "-gauge-" + featureName
 				+ "' style='width: 120px; height: 120px; float: left'></div>";
@@ -452,7 +473,8 @@ function getHtmlForEngineFeature(state, featureName, engineId) {
  * empty string
  */
 function getHtmlForFuelTank(state, tankName) {
-	console.log("getHtmlForFuelTank() - " + tankName + " state:" + state[tankName]);
+	//console.log("getHtmlForFuelTank() - " + tankName + " state:"
+	//		+ state[tankName]);
 	if (state[tankName]) {
 		return "<div id='tank-gauge-" + tankName
 				+ "' style='width: 120px; height: 120px; float: left'></div>";

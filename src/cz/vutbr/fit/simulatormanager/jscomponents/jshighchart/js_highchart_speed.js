@@ -41,6 +41,7 @@ cz_vutbr_fit_simulatormanager_jscomponents_jshighchart_JsHighChartSpeed = functi
 					
 					click : function(event) {
 						//Function findIdClosestToClick is in js_highchart_altitude.js file
+						//when the user clicks on a graph, we determine the id closest to click and send it to the backend (see JsHighChart constructor)
 						var id = findIdClosestToClick(event.xAxis[0].value);
 						speedCompomentObj.onClick(id, getTimeCorrespondingToId(id));
 					}

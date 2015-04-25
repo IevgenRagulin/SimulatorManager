@@ -36,4 +36,10 @@ public class ConverterUtil {
 	return null;
     }
 
+    public static float doubleToFloat(Double value) {
+	if (value != null) {
+	    return value.floatValue();
+	}
+	return 0;
+    }
 }

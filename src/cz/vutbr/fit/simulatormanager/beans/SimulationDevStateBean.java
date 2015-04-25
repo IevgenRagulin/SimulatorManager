@@ -2,8 +2,15 @@ package cz.vutbr.fit.simulatormanager.beans;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
+import cz.vutbr.fit.simulatormanager.database.columns.SimulationDevStateCols;
+
 public class SimulationDevStateBean implements Serializable {
     private static final long serialVersionUID = -7396039034348717995L;
+
     private Double elevator;
     private Double aileron;
     private Double rudder;
@@ -35,8 +42,8 @@ public class SimulationDevStateBean implements Serializable {
     }
 
     public SimulationDevStateBean(double elevator, double aileron, double rudder, double throttle, double flaps,
-	    double speedbrakes, double trimAileron, double trimElevator, double trimRudder, boolean brakes,
-	    boolean paused, int landinggear_1, int landinggear_2, int landinggear_3, float lfu, float rfu, float cfu) {
+	    double speedbrakes, double trimAileron, double trimElevator, double trimRudder, boolean brakes, boolean paused,
+	    int landinggear_1, int landinggear_2, int landinggear_3, float lfu, float rfu, float cfu) {
 	super();
 	this.elevator = elevator;
 	this.aileron = aileron;
@@ -55,6 +62,43 @@ public class SimulationDevStateBean implements Serializable {
 	this.lfu = lfu;
 	this.rfu = rfu;
 	this.cfu = cfu;
+    }
+
+    /**
+     * The item passed should have the corresponding properties in it
+     * 
+     * @param item
+     */
+    public SimulationDevStateBean(Item item) {
+	this.elevator = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.elevator.toString())).getValue();
+	this.aileron = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.eleron.toString())).getValue();
+	this.rudder = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.rudder.toString())).getValue();
+	this.speedbrakes = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.speedbrakes.toString()))
+		.getValue();
+	this.flaps = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.flaps.toString())).getValue();
+	this.ailerontrim = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.ailerontrim.toString()))
+		.getValue();
+	this.elevatortrim = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.elevatortrim.toString()))
+		.getValue();
+	this.ruddertrim = (Double) ((Property<?>) item.getItemProperty(SimulationDevStateCols.ruddertrim.toString())).getValue();
+	this.brakes = (Boolean) ((Property<?>) item.getItemProperty(SimulationDevStateCols.brakes.toString())).getValue();
+	this.issimulationpaused = (Boolean) ((Property<?>) item.getItemProperty(SimulationCols.issimulationpaused.toString()))
+		.getValue();
+	this.landinggear_1 = getLandingGearValue(SimulationDevStateCols.landinggear_1.toString(), item);
+	this.landinggear_2 = getLandingGearValue(SimulationDevStateCols.landinggear_2.toString(), item);
+	this.landinggear_3 = getLandingGearValue(SimulationDevStateCols.landinggear_3.toString(), item);
+	this.lfu = (Float) ((Property<?>) item.getItemProperty(SimulationDevStateCols.lfu.toString())).getValue();
+	this.cfu = (Float) ((Property<?>) item.getItemProperty(SimulationDevStateCols.cfu.toString())).getValue();
+	this.rfu = (Float) ((Property<?>) item.getItemProperty(SimulationDevStateCols.rfu.toString())).getValue();
+    }
+
+    private int getLandingGearValue(String columnName, Item flightControlItem) {
+	Object propertyValue = ((Property<?>) flightControlItem.getItemProperty(columnName)).getValue();
+	if (propertyValue != null) {
+	    return (Integer) propertyValue;
+	} else {
+	    return -1;
+	}
     }
 
     public SimulationDevStateBean(AllSimulationInfo allSimInfo) {

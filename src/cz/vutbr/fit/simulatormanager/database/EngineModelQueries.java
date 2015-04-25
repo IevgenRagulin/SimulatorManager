@@ -6,9 +6,16 @@ import java.util.Arrays;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 
+/**
+ * When starting working on the project I used to place all the quries in
+ * DatabaseHelper. For a better granularity, I would like to place queries to
+ * different tables to different files. Here the queries to engine model table
+ * are placed
+ * 
+ * @author zhenia
+ *
+ */
 public class EngineModelQueries {
-    private static DatabaseHelper dbHelper = new DatabaseHelper();
-
     /**
      * Gets engine models by simulator id.
      */

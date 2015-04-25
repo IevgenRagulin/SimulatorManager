@@ -66,6 +66,13 @@ public class AllEngineInfo implements Serializable {
 	return true;
     }
 
+    private void validateLengthOfArray(Float[] values) {
+	if (values.length != numberOfEngines) {
+	    throw new IllegalArgumentException("The length of array of RPMs is differenent then the expected. Expected length "
+		    + numberOfEngines);
+	}
+    }
+
     public int getNumberOfEngines() {
 	return numberOfEngines;
     }
@@ -77,6 +84,18 @@ public class AllEngineInfo implements Serializable {
     public void setRpm(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    rpm.put(engNum, value);
+	}
+    }
+
+    /**
+     * Set RPM for all engines
+     * 
+     * @param values
+     */
+    public void setRpm(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.rpm.put(i, values[i]);
 	}
     }
 
@@ -110,6 +129,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setPwr(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.pwr.put(i, values[i]);
+	}
+    }
+
     public Float getPwr(int engNum) {
 	return pwr.get(engNum);
     }
@@ -125,6 +151,13 @@ public class AllEngineInfo implements Serializable {
     public void setPwp(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    pwp.put(engNum, value);
+	}
+    }
+
+    public void setPwp(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.pwp.put(i, values[i]);
 	}
     }
 
@@ -146,6 +179,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setMp_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.mp_.put(i, values[i]);
+	}
+    }
+
     public Float getMp_(int engNum) {
 	return mp_.get(engNum);
     }
@@ -161,6 +201,13 @@ public class AllEngineInfo implements Serializable {
     public void setEt1(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    et1.put(engNum, value);
+	}
+    }
+
+    public void setEt1(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.et1.put(i, values[i]);
 	}
     }
 
@@ -182,6 +229,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setEt2(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.et2.put(i, values[i]);
+	}
+    }
+
     public Float getEt2(int engNum) {
 	return et2.get(engNum);
     }
@@ -197,6 +251,13 @@ public class AllEngineInfo implements Serializable {
     public void setCt1(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    ct1.put(engNum, value);
+	}
+    }
+
+    public void setCt1(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.ct1.put(i, values[i]);
 	}
     }
 
@@ -218,6 +279,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setCt2(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.ct2.put(i, values[i]);
+	}
+    }
+
     public Float getCt2(int engNum) {
 	return ct2.get(engNum);
     }
@@ -233,6 +301,13 @@ public class AllEngineInfo implements Serializable {
     public void setEst(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    est.put(engNum, value);
+	}
+    }
+
+    public void setEst(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.est.put(i, values[i]);
 	}
     }
 
@@ -254,6 +329,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setFf_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.ff_.put(i, values[i]);
+	}
+    }
+
     public Float getFf_(int engNum) {
 	return ff_.get(engNum);
     }
@@ -269,6 +351,13 @@ public class AllEngineInfo implements Serializable {
     public void setFp_(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    fp_.put(engNum, value);
+	}
+    }
+
+    public void setFp_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.fp_.put(i, values[i]);
 	}
     }
 
@@ -290,6 +379,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setOp_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.op_.put(i, values[i]);
+	}
+    }
+
     public Float getOp_(int engNum) {
 	return op_.get(engNum);
     }
@@ -308,6 +404,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setOt_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.ot_.put(i, values[i]);
+	}
+    }
+
     public Float getOt_(int engNum) {
 	return ot_.get(engNum);
     }
@@ -323,6 +426,13 @@ public class AllEngineInfo implements Serializable {
     public void setN1_(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    n1_.put(engNum, value);
+	}
+    }
+
+    public void setN1_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.n1_.put(i, values[i]);
 	}
     }
 
@@ -345,9 +455,15 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setN2_(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.n2_.put(i, values[i]);
+	}
+    }
+
     public Float getN2_(int engNum) {
 	return n2_.get(engNum);
-
     }
 
     public Float[] getN2_() {
@@ -361,6 +477,13 @@ public class AllEngineInfo implements Serializable {
     public void setVib(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    vib.put(engNum, value);
+	}
+    }
+
+    public void setVib(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.vib.put(i, values[i]);
 	}
     }
 
@@ -382,6 +505,13 @@ public class AllEngineInfo implements Serializable {
 	}
     }
 
+    public void setVlt(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.vlt.put(i, values[i]);
+	}
+    }
+
     public Float getVlt(int engNum) {
 	return vlt.get(engNum);
     }
@@ -397,6 +527,13 @@ public class AllEngineInfo implements Serializable {
     public void setAmp(int engNum, Float value) {
 	if (validateEngNum(engNum)) {
 	    amp.put(engNum, value);
+	}
+    }
+
+    public void setAmp(Float[] values) {
+	validateLengthOfArray(values);
+	for (int i = 0; i < values.length; i++) {
+	    this.amp.put(i, values[i]);
 	}
     }
 

@@ -13,9 +13,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
+import cz.vutbr.fit.simulatormanager.beans.SimulationDevStateBean;
 import cz.vutbr.fit.simulatormanager.components.ErrorLabel;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
-import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
 import cz.vutbr.fit.simulatormanager.jscomponents.enginesfuelpanel.EnginesAndFuelPanel;
 import cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols.FlightControls;
 import cz.vutbr.fit.simulatormanager.jscomponents.jshighchart.JsHighChartAltitude;
@@ -32,9 +32,9 @@ import cz.vutbr.fit.simulatormanager.types.PageType;
  */
 public abstract class SimulationsView extends BasicView implements View {
 
-    final static Logger LOG = LoggerFactory.getLogger(SimulationsView.class);
-
+    private final static Logger LOG = LoggerFactory.getLogger(SimulationsView.class);
     private static final long serialVersionUID = 6450588437869904764L;
+
     protected static final String ALTITUDE_CHART_ID = "altitudeChartId";
     protected String SPEED_CHART_ID = "speedChartId";
     protected static final String NO_SIMULATOR_SELECTED = "Please, select simulator";
@@ -69,6 +69,7 @@ public abstract class SimulationsView extends BasicView implements View {
     }
 
     public SimulationsView(Navigator navigator) {
+	LOG.info("new SimulationsView()");
 	this.navigator = navigator;
 	initPrimaryFlightDisplay();
 	initControlYoke();
@@ -78,7 +79,7 @@ public abstract class SimulationsView extends BasicView implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-	enginesPanel = new EnginesAndFuelPanel();
+	// enginesPanel = new EnginesAndFuelPanel();
     }
 
     protected void initLayout() {
@@ -126,15 +127,17 @@ public abstract class SimulationsView extends BasicView implements View {
     }
 
     protected void setFlightControlsInfo(Item selectedDevicesState, Item selectedSimulator) {
+	SimulationDevStateBean bean = new SimulationDevStateBean(selectedDevicesState);
 	if (selectedDevicesState != null) {
-	    flightControls.updateIndividualFlightControlValues(selectedDevicesState, selectedSimulator);
+	    flightControls.updateIndividualFlightControlValues(bean, selectedSimulator);
 	}
     }
 
-    protected void setEnginesInfo(String simulatorId, AllEngineInfo enginesInfo,
-	    SimulationDevStateItem simulationDevState) {
+    protected void setEnginesInfo(String simulatorId, AllEngineInfo enginesInfo, SimulationDevStateBean simulationDevState) {
 	if (enginesInfo != null) {
-	    enginesPanel.updateIndividualEngineValues(simulatorId, enginesInfo, simulationDevState.getBean());
+	    enginesPanel.updateIndividualEngineValues(simulatorId, enginesInfo, simulationDevState);
+	} else {
+	    enginesPanel.initModelIfNeeded(simulatorId);
 	}
     }
 

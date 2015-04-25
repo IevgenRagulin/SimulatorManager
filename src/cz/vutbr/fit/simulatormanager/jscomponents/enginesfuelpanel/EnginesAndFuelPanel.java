@@ -28,7 +28,6 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     final static Logger LOG = LoggerFactory.getLogger(EnginesAndFuelPanel.class);
 
     private static final long serialVersionUID = 1L;
-    private static final String CSS_CLASS = "ENGINES_PANEL";
     // we use these variables to call getState() less often as it generates
     // update
     // event and sends it to ui
@@ -45,14 +44,23 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 
     public void updateIndividualEngineValues(String simulatorId, AllEngineInfo enginesInfo,
 	    SimulationDevStateBean simulationDevState) {
+	LOG.info("Update individual engine values: {}, enginesInfo: {}, simulationDevState: {}", simulatorId, enginesInfo,
+		simulationDevState);
+	initModelIfNeeded(simulatorId);
+	updateEngineValuesIfNeeded(enginesInfo);
+	updateFuelTanksValuesIfNeeded(simulationDevState);
+    }
+
+    public void initModelIfNeeded(String simulatorId) {
 	if (!isStateInitialized) {
+	    SQLContainer enginesModels = EngineModelQueries.getEngineModelsBySimulatorId(simulatorId);
 	    isStateInitialized = true;
-	    getState().initializeArrays(enginesInfo.getNumberOfEngines());
+	    // TODO. Verify that this works OK when number of engines in model
+	    // and number of engines which AWCom is sending is different
+	    getState().initializeArrays(enginesModels.size());
 	}
 	updateEngineModelsIfNeeded(simulatorId);
 	updateSimulatorModelIfNeeded(simulatorId);
-	updateEngineValuesIfNeeded(enginesInfo);
-	updateFuelTanksValuesIfNeeded(simulationDevState);
     }
 
     private void updateFuelTanksValuesIfNeeded(SimulationDevStateBean simulationDevState) {
@@ -72,10 +80,13 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     private void updateEngineValuesIfNeeded(AllEngineInfo enginesInfo) {
 	LOG.info("update engine values. rpm is en" + prevEngineModel.get(0).isRpm());
 	if (!areArraysEqual(prevEngineInfo.getRpm(), enginesInfo.getRpm())) {
+	    LOG.info("updateEngineValuesIfNeeded() - rpm value has changed, updating. New value[0]: {}", enginesInfo.getRpm()[0]);
 	    getState().rpmvals = enginesInfo.getRpm();
 	}
 	if (!areArraysEqual(prevEngineInfo.getPwr(), enginesInfo.getPwr())) {
+	    LOG.info("updateEngineValuesIfNeeded() - pwr value has changed, updating. New value[0]: {}", enginesInfo.getPwr()[0]);
 	    getState().pwrvals = enginesInfo.getPwr();
+	    LOG.info("new pwrvals[0]:{}", getState().pwrvals[0]);
 	}
 	if (!areArraysEqual(prevEngineInfo.getPwp(), enginesInfo.getPwp())) {
 	    getState().pwpvals = enginesInfo.getPwp();
@@ -192,10 +203,10 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     private void updateSimulatorModelIfNeeded(String simulatorId) {
 	Item simulatorModel = SimulatorModelQueries.getSimulatorModelBySimulatorId(simulatorId);
 	SimulatorModelBean simulatorModelBean = buildSimulatorModelBean(simulatorModel);
-	LOG.info("going to comapre simulator model beans. minlfu: {}, maxlfu: {} ", simulatorModelBean.getMinlfu(),
-		simulatorModelBean.getMaxlfu());
+	LOG.info("updateSimulatorModelIfNeeded() - going to compare simulator model beans. minlfu: {}, maxlfu: {} ",
+		simulatorModelBean.getMinlfu(), simulatorModelBean.getMaxlfu());
 	if (!simulatorModelBean.equals(prevSimulatorModel)) {
-
+	    LOG.info("updateSimulatorModelIfNeeded() - needed! updating simulator model");
 	    getState().lfu = simulatorModelBean.isLfu();
 	    getState().minlfu = simulatorModelBean.getMinlfu();
 	    getState().lowlfu = simulatorModelBean.getLowlfu();
@@ -258,6 +269,7 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
      * 
      * @param simulatorId
      */
+    @SuppressWarnings("unchecked")
     private void updateEngineModelsIfNeeded(String simulatorId) {
 	SQLContainer enginesModels = EngineModelQueries.getEngineModelsBySimulatorId(simulatorId);
 	Collection<RowId> itemIds = (Collection<RowId>) enginesModels.getItemIds();
@@ -265,13 +277,15 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 	    clearState(itemIds.size());
 	}
 	LOG.info("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
+	LOG.info("This object" + this);
 	for (RowId itemId : itemIds) {
 	    Item engineItem = enginesModels.getItem(itemId);
 	    EngineModelBean engineBean = new EngineModelBean(engineItem);
 	    int engineModelOrder = engineBean.getEnginemodelorder();
 	    // update engine model if it has changed
+	    LOG.info("going to check if engine model has changed on one of the engines. isPWR:{}", engineBean.isPwr());
 	    if (!engineBean.equals(prevEngineModel.get(engineModelOrder))) {
-		LOG.info("updateEngineModelsIfNeeded() - updating engine models");
+		LOG.info("updateEngineModelsIfNeeded() - needed! updating engine models");
 		LOG.info("setting rpm {} ", engineBean.isRpm());
 		// RPM
 		getState().rpm[engineModelOrder] = engineBean.isRpm();

@@ -144,7 +144,6 @@ public class EnginesTabSheet extends TabSheet {
      * 
      * @param string
      */
-    @SuppressWarnings("unchecked")
     public void addNewEngine(String simulatorModelId) {
 	LOG.info("adding new engine on simulator" + simulatorModelId);
 	if (enginesContainer == null) {

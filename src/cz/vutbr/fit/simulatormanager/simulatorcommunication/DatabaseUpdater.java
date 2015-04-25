@@ -22,6 +22,13 @@ import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 import cz.vutbr.fit.simulatormanager.util.DistanceUtil;
 
+/**
+ * Class which writes data about simulations to database, determines if data
+ * should or should not be written to database
+ * 
+ * @author zhenia
+ *
+ */
 public class DatabaseUpdater {
     final static Logger LOG = LoggerFactory.getLogger(DatabaseUpdater.class);
 
@@ -30,8 +37,16 @@ public class DatabaseUpdater {
     // in combination with saveToDbFrequency used to determine if we should save
     // data to db
     private static int addedCount = 0;
+    // we save sim info less often then other data as too much data make google
+    // maps slow
     private static int addedSimInfoCount = 0;
 
+    /**
+     * Adds simulation info to database. Writes data only with specified
+     * frequency. Saves data only if plane has moved over more than half meter
+     * (we don't want to write data about a plane that is staying on the same
+     * place)
+     */
     public static void addSimulationInfoToDb(SQLContainer lastSimCont, String simulatorId, RowId simulationId)
 	    throws UnsupportedOperationException, SQLException {
 	LOG.debug("addSimulationInfoToDb, simulatorId: {}", simulatorId);
@@ -41,18 +56,20 @@ public class DatabaseUpdater {
 		/ ApplicationConfiguration.getSimulatorGetDataFrequency());
 
 	Integer simulationIdInt = Integer.valueOf(simulationId.toString());
-	addedCount = (addedCount + 1) % saveToDbFrequency;
-	addedSimInfoCount = (addedSimInfoCount + 1) % saveSimInfoToDbFrequency;
 	SimulationInfoItem currentSimItem = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);
 	SimulationInfoItem prevSimItem = SimulatorsStatus.getPrevSimulationInfoItemBySimulatorId(simulatorId);
-	if (DistanceUtil.hasPlaneMovedMoreThan(currentSimItem, prevSimItem, HALF_METER) && (shouldWeSaveDataToDb())) {
-	    LOG.debug("addSimulationInfoToDb, simulator with id: {} has moved more than {}", simulatorId, HALF_METER);
-	    addDevicesStateInfoToDatabase(simulationIdInt, simulatorId);
-	    addPfdInfoToDatabase(simulationIdInt, simulatorId);
-	    // logger.info
-	    // ("going to add engines info to dtb for simulator id: ",
-	    // simulatorId);
-	    addEnginesInfoToDatabase(simulationIdInt, simulatorId);
+	// save data to db only if plane has moved or if there is no info in
+	// memory about previous simulation
+	if (DistanceUtil.hasPlaneMovedMoreThan(currentSimItem, prevSimItem, HALF_METER)) {
+	    addedCount = (addedCount + 1) % saveToDbFrequency;
+	    addedSimInfoCount = (addedSimInfoCount + 1) % saveSimInfoToDbFrequency;
+	    // save data to db only every saveToDbFrequencyStep
+	    if (shouldWeSaveDataToDb()) {
+		LOG.debug("addSimulationInfoToDb, simulator with id: {} has moved more than {}", simulatorId, HALF_METER);
+		addDevicesStateInfoToDatabase(simulationIdInt, simulatorId);
+		addPfdInfoToDatabase(simulationIdInt, simulatorId);
+		addEnginesInfoToDatabase(simulationIdInt, simulatorId);
+	    }
 	    if (shouldWeSaveSimulationInfoToDatabase()) {
 		LOG.debug("addSimulationInfoToDb, going to save sim info to db, simulator id: {}", simulatorId);
 		addSimulationInfoInfoToDatabase(simulationIdInt, simulatorId);
@@ -143,7 +160,6 @@ public class DatabaseUpdater {
     /**
      * Saves data about engines state to database
      */
-    @SuppressWarnings("unchecked")
     private static void addEnginesInfoToDatabase(Integer simulationIdInt, String simulatorId)
 	    throws UnsupportedOperationException, SQLException {
 	AllEngineInfo allEnginesInfo = SimulatorsStatus.getSimulationEngineItemBySimulatorId(simulatorId);
@@ -152,14 +168,19 @@ public class DatabaseUpdater {
 	}
     }
 
+    /**
+     * Create new simulation session which is in RUNNING, PAUSED state
+     * 
+     */
     @SuppressWarnings("unchecked")
     public static RowId createNewRunningPausedSimulation(SQLContainer lastSimCont, String simulatorId)
 	    throws UnsupportedOperationException, SQLException {
 	RowId id = (RowId) lastSimCont.addItem();
 	lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(
 		Integer.valueOf(simulatorId));
-	lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(true);
-	lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(true);
+	lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_ON);
+	lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(
+		SimulatorsStatus.SIMULATION_PAUSED);
 	commitChangeInSQLContainer(lastSimCont);
 	return id;
     }
@@ -174,14 +195,15 @@ public class DatabaseUpdater {
 	RowId id = (RowId) lastSimCont.addItem();
 	lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(
 		Integer.valueOf(simulatorId));
-	lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(true);
-	lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(false);
+	lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_ON);
+	lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(
+		SimulatorsStatus.SIMULATION_NOT_PAUSED);
 	commitChangeInSQLContainer(lastSimCont);
 	return id;
     }
 
     /**
-     * Set simulation to RUNNING, PAUSED state
+     * Set existing simulation to RUNNING, PAUSED state
      */
     public static void setSimOnPausedState(SQLContainer lastSimCont, Item simulation) throws UnsupportedOperationException,
 	    SQLException {
@@ -189,7 +211,7 @@ public class DatabaseUpdater {
     }
 
     /**
-     * Set simulation to RUNNING, NOT PAUSED state
+     * Set existing simulation to RUNNING, NOT PAUSED state
      */
     public static void setSimOnNotPausedState(SQLContainer lastSimCont, Item simulation) throws UnsupportedOperationException,
 	    SQLException {

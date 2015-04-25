@@ -72,7 +72,6 @@ public class SimulatorModelValidator {
 	return errors;
     }
 
-    @SuppressWarnings("rawtypes")
     private static List<String> validateEnginesConfiguration(EnginesTabSheet enginesModels) {
 	List<String> errors = new ArrayList<String>();
 	if (enginesModels.getComponentCount() == 0) {

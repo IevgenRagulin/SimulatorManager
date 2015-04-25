@@ -69,6 +69,7 @@ function readDataAndDrawAltitude(cssid) {
 							}
 
 						},
+						//when the user clicks on a graph, we determine the id closest to click and send it to the backend (see JsHighChart constructor)
 						click : function(event) {
 							var id = findIdClosestToClick(event.xAxis[0].value);
 							altitudeCompomentObj.onClick(id, getTimeCorrespondingToId(id));
