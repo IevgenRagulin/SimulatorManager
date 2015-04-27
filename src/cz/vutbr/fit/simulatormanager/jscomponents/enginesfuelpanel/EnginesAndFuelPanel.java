@@ -25,7 +25,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 @com.vaadin.annotations.StyleSheet({ "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" })
 public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 
-    final static Logger LOG = LoggerFactory.getLogger(EnginesAndFuelPanel.class);
+    private final static Logger LOG = LoggerFactory.getLogger(EnginesAndFuelPanel.class);
 
     private static final long serialVersionUID = 1L;
     // we use these variables to call getState() less often as it generates

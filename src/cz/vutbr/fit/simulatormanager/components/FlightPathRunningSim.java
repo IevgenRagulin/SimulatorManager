@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.SimulatorsStatus;
 import cz.vutbr.fit.simulatormanager.util.DistanceUtil;
@@ -41,8 +41,8 @@ public class FlightPathRunningSim extends FlightPathBase {
 					simulatorId);
 			clearMap();
 		}
-		int addNewPositionFrequency = Math.round(ApplicationConfiguration.getUpdateAirplanePositionFrequency()
-				/ ApplicationConfiguration.getRefreshUiFrequency());
+		int addNewPositionFrequency = Math.round(AppConfig.getUpdateAirplanePositionFrequency()
+				/ AppConfig.getRefreshUiFrequency());
 		if (!isMapInitializedWithMapHistory) {
 			initMapWithDataForSimulatorWithId(simulatorId);
 			isMapInitializedWithMapHistory = true;

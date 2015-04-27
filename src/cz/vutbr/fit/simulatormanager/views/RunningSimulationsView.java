@@ -15,7 +15,7 @@ import com.vaadin.ui.Notification;
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.components.FlightPathRunningSim;
 import cz.vutbr.fit.simulatormanager.components.SimulatorConfigurationChecker;
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
 import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
@@ -77,8 +77,8 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	final Refresher refresher = new Refresher();
 	refresher.addListener(listener);
 	// Set update interval in miliseconds
-	LOG.debug("initPageRefresher() - set refresh interval: {}", ApplicationConfiguration.getRefreshUiFrequency());
-	refresher.setRefreshInterval(ApplicationConfiguration.getRefreshUiFrequency());
+	LOG.debug("initPageRefresher() - set refresh interval: {}", AppConfig.getRefreshUiFrequency());
+	refresher.setRefreshInterval(AppConfig.getRefreshUiFrequency());
 	addExtension(refresher);
     }
 
@@ -187,7 +187,7 @@ public class RunningSimulationsView extends SimulationsView implements View {
 	} else {
 	    LOG.info("initGoogleMaps() - creating new FlightPathGoogleMapRunningSim");
 	    this.googleMap = new FlightPathRunningSim(new LatLon(60.440963, 22.25122), 4.0,
-		    ApplicationConfiguration.getGoogleMapApiKey(), this);
+		    AppConfig.getGoogleMapApiKey(), this);
 	}
     }
 

@@ -68,7 +68,6 @@ var yOffsetR = (window.rudderBackHeight - window.rudderHeight) / 2;
 var numberOfLandingGears = 0;
 function cz_vutbr_fit_simulatormanager_jscomponents_flightcontrols_FlightControls() {
 //function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
-	console.log("KUKU");
 	var e = this.getElement();
 	initYokeHtml(e);
 	initYoke();

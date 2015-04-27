@@ -16,7 +16,7 @@ import com.vaadin.tapio.googlemaps.client.LatLon;
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.SimulationDevStateBean;
 import cz.vutbr.fit.simulatormanager.components.FlightPathPastSim;
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
 import cz.vutbr.fit.simulatormanager.database.SimulationQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
@@ -150,7 +150,7 @@ public class PastSimulationsView extends SimulationsView implements View {
 	} else {
 	    LOG.info("initGoogleMaps() - creating new FlightPathGoogleMapPastSim");
 	    this.googleMap = new FlightPathPastSim(new LatLon(60.440963, 22.25122), 4.0,
-		    ApplicationConfiguration.getGoogleMapApiKey(), this);
+		    AppConfig.getGoogleMapApiKey(), this);
 	}
     }
 

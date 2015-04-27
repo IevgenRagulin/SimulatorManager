@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 
@@ -25,7 +25,7 @@ public class UpdatesScheduler {
     final static Logger LOG = LoggerFactory.getLogger(UpdatesScheduler.class);
 
     protected static DatabaseHelper dbHelp = new DatabaseHelper();
-    protected static final int UPDATE_RATE_MS = ApplicationConfiguration.getSimulatorGetDataFrequency();
+    protected static final int UPDATE_RATE_MS = AppConfig.getSimulatorGetDataFrequency();
 
     private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static int numberOfThreads = 1;

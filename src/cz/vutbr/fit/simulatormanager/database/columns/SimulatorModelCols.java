@@ -6,31 +6,33 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.vutbr.fit.simulatormanager.Constants;
+
 public enum SimulatorModelCols {
 
     simulatormodelid("Simulator model id"), //
     simulatormodelname("Simulator model name"), //
-    minspeed("Min speed"), //
-    maxspeed("Max speed"), //
-    maxspeedonflaps("Max speed on flaps"), //
-    minspeedonflaps("Min speed on flaps"), //
+    minspeed("Min speed" + Constants.KM_PER_HOUR), //
+    maxspeed("Max speed" + Constants.KM_PER_HOUR), //
+    maxspeedonflaps("Max speed on flaps" + Constants.KM_PER_HOUR), //
+    minspeedonflaps("Min speed on flaps" + Constants.KM_PER_HOUR), //
     hasgears("Has gears", Boolean.class), //
     numberoflandinggears("Number of landing gears"), //
-    lfu("Left fuel tank", Boolean.class), //
-    minlfu("Minimum amount of fuel in left tank"), //
-    lowlfu("Low LFU"), //
-    highlfu("High LFU"), //
-    maxlfu("Maximum amount of fuel in left tank"), //
-    cfu("Central fuel tank", Boolean.class), //
-    mincfu("Minimum amount of fuel in central tank"), //
-    lowcfu("Low CFU"), //
-    highcfu("High CFU"), //
-    maxcfu("Maximum amount of fuel in central tank"), //
-    rfu("Right fuel tank", Boolean.class), //
-    minrfu("Minimum amount of fuel in right tank"), //
-    lowrfu("Low RFU"), //
-    highrfu("High RFU"), //
-    maxrfu("Maximum amount of fuel in right tank"), //
+    lfu("Left fuel tank" + Constants.LITER, Boolean.class), //
+    minlfu("Minimum amount of fuel in left tank" + Constants.LITER), //
+    lowlfu("Low LFU" + Constants.LITER), //
+    highlfu("High LFU" + Constants.LITER), //
+    maxlfu("Maximum amount of fuel in left tank" + Constants.LITER), //
+    cfu("Central fuel tank" + Constants.LITER, Boolean.class), //
+    mincfu("Minimum amount of fuel in central tank" + Constants.LITER), //
+    lowcfu("Low CFU" + Constants.LITER), //
+    highcfu("High CFU" + Constants.LITER), //
+    maxcfu("Maximum amount of fuel in central tank" + Constants.LITER), //
+    rfu("Right fuel tank" + Constants.LITER, Boolean.class), //
+    minrfu("Minimum amount of fuel in right tank" + Constants.LITER), //
+    lowrfu("Low RFU" + Constants.LITER), //
+    highrfu("High RFU" + Constants.LITER), //
+    maxrfu("Maximum amount of fuel in right tank" + Constants.LITER), //
     timestamp("Timestamp");//
 
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelCols.class);

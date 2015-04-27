@@ -18,7 +18,7 @@ import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
 import cz.vutbr.fit.simulatormanager.beans.SimulationDevStateBean;
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
 
@@ -53,8 +53,8 @@ public class DatabaseHelper implements Serializable {
     private static void initConnectionPool() {
 	if (pool == null) {
 	    try {
-		pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", ApplicationConfiguration.getDbUrl(),
-			ApplicationConfiguration.getDbUserName(), ApplicationConfiguration.getDbUserPassword(), 2, 10);
+		pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", AppConfig.getDbUrl(),
+			AppConfig.getDbUserName(), AppConfig.getDbUserPassword(), 2, 10);
 	    } catch (SQLException e) {
 		LOG.error("Couldn't initConnectionPool", e);
 		throw new RuntimeException("Couldn't init connection pool", e);

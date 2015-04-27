@@ -14,7 +14,7 @@ public class AWComParser {
     public static AllSimulationInfo parseSimulatorResponse(String response) {
 	AllSimulationInfo simData = null;
 	String value = null;
-	LOG.debug("Going to parse simulator response: {}", response);
+	LOG.info("Going to parse simulator response: {}", response);
 	if (response != null) {
 	    simData = new AllSimulationInfo();
 	    // Longtitude

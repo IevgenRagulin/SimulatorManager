@@ -289,5 +289,12 @@ public class EnginesAndFuelPanelState extends JavaScriptComponentState {
 	highamp = new Float[numberOfEngines];
 	maxamp = new Float[numberOfEngines];
 	ampvals = new Float[numberOfEngines];
+
+	// we need to set these values to 0 so that fuel gauges are visible even
+	// if there are no values available, see
+	// enginesAndFuelPanel.js#isFuelFeatureEnabled()
+	lfuvals = 0.0f;
+	rfuvals = 0.0f;
+	cfuvals = 0.0f;
     }
 }

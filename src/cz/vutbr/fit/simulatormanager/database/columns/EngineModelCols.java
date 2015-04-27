@@ -6,102 +6,104 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.vutbr.fit.simulatormanager.Constants;
+
 public enum EngineModelCols {
 
     enginemodelid("Engine model id"), //
     simulatormodelid("Simulator model id"), //
     enginemodelorder("Engine id (AWCom)",
 	    "This value is very important: it is the id by which we can match this configuration and data which comes from AWCom plugin"), //
-    rpm("RPM", Boolean.class), //
-    minrpm("Min RPM"), //
-    lowrpm("Low RPM"), //
-    highrpm("High RPM"), //
-    maxrpm("Max RPM"), //
-    pwr("PWR", Boolean.class), //
-    minpwr("Min PWR"), //
-    lowpwr("Low PWR"), //
-    highpwr("High PWR"), //
-    maxpwr("Max PWR"), //
-    pwp("PWP", Boolean.class), //
-    minpwp("Min PWP"), //
-    lowpwp("Low PWP"), //
-    highpwp("High PWP"), //
-    maxpwp("Max PWP"), //
-    mp_("MP", Boolean.class), //
-    minmp("Min MP"), //
-    lowmp("Low MP"), //
-    highmp("High MP"), //
-    maxmp("Max MP"), //
-    et1("EGT1", Boolean.class), //
-    minet1("Min EGT1"), //
-    lowet1("Low EGT1"), //
-    highet1("High EGT1"), //
-    maxet1("Max EGT1"), //
-    et2("EGT2", Boolean.class), //
-    minet2("Min EGT2"), //
-    lowet2("Low EGT2"), //
-    highet2("High EGT2"), //
-    maxet2("Max EGT2"), //
-    ct1("CHT1", Boolean.class), //
-    minct1("Min CHT1"), //
-    lowct1("Low CHT1"), //
-    highct1("High CHT1"), //
-    maxct1("Max CHT1"), //
-    ct2("CHT2", Boolean.class), //
-    minct2("Min CHT2"), //
-    lowct2("Low CHT2"), //
-    highct2("High CHT2"), //
-    maxct2("Max CHT2"), //
-    est("EST", Boolean.class), //
-    minest("Min EST"), //
-    lowest("Low EST"), //
-    highest("High EST"), //
-    maxest("Max EST"), //
-    ff_("FF", Boolean.class), //
-    minff("Min FF"), //
-    lowff("Low FF"), //
-    highff("High FF"), //
-    maxff("Max FF"), //
-    fp_("FP", Boolean.class), //
-    minfp("Min FP"), // ,
-    lowfp("Low FP"), //
-    highfp("High FP"), //
-    maxfp("Max FP"), //
-    op_("OP", Boolean.class), //
-    minop("Min OP"), //
-    lowop("Low OP"), //
-    highop("High OP"), //
-    maxop("Max OP"), //
-    ot_("OT", Boolean.class), //
-    minot("Min OT"), //
-    lowot("Low OT"), //
-    highot("High OT"), //
-    maxot("Max OT"), //
-    n1_("N1", Boolean.class), //
-    minn1("Min N1"), //
-    lown1("Low N1"), //
-    highn1("High N1"), //
-    maxn1("Max N1"), //
-    n2_("N2", Boolean.class), //
-    minn2("Min N2"), //
-    lown2("Low N2"), //
-    highn2("High N2"), //
-    maxn2("Max N2"), //
+    rpm("RPM" + Constants.RPM_UNIT, Boolean.class), //
+    minrpm("Min RPM" + Constants.RPM_UNIT), //
+    lowrpm("Low RPM" + Constants.RPM_UNIT), //
+    highrpm("High RPM" + Constants.RPM_UNIT), //
+    maxrpm("Max RPM" + Constants.RPM_UNIT), //
+    pwr("PWR" + Constants.KWATT, Boolean.class), //
+    minpwr("Min PWR" + Constants.KWATT), //
+    lowpwr("Low PWR" + Constants.KWATT), //
+    highpwr("High PWR" + Constants.KWATT), //
+    maxpwr("Max PWR" + Constants.KWATT), //
+    pwp("PWP" + Constants.PERCENT_UNIT, Boolean.class), //
+    minpwp("Min PWP" + Constants.PERCENT_UNIT), //
+    lowpwp("Low PWP" + Constants.PERCENT_UNIT), //
+    highpwp("High PWP" + Constants.PERCENT_UNIT), //
+    maxpwp("Max PWP" + Constants.PERCENT_UNIT), //
+    mp_("MP" + Constants.KPASCAL, Boolean.class), //
+    minmp("Min MP" + Constants.KPASCAL), //
+    lowmp("Low MP" + Constants.KPASCAL), //
+    highmp("High MP" + Constants.KPASCAL), //
+    maxmp("Max MP" + Constants.KPASCAL), //
+    et1("EGT1" + Constants.DEGREE_CELSIUS, Boolean.class), //
+    minet1("Min EGT1" + Constants.DEGREE_CELSIUS), //
+    lowet1("Low EGT1" + Constants.DEGREE_CELSIUS), //
+    highet1("High EGT1" + Constants.DEGREE_CELSIUS), //
+    maxet1("Max EGT1" + Constants.DEGREE_CELSIUS), //
+    et2("EGT2" + Constants.DEGREE_CELSIUS, Boolean.class), //
+    minet2("Min EGT2" + Constants.DEGREE_CELSIUS), //
+    lowet2("Low EGT2" + Constants.DEGREE_CELSIUS), //
+    highet2("High EGT2" + Constants.DEGREE_CELSIUS), //
+    maxet2("Max EGT2" + Constants.DEGREE_CELSIUS), //
+    ct1("CHT1" + Constants.DEGREE_CELSIUS, Boolean.class), //
+    minct1("Min CHT1" + Constants.DEGREE_CELSIUS), //
+    lowct1("Low CHT1" + Constants.DEGREE_CELSIUS), //
+    highct1("High CHT1" + Constants.DEGREE_CELSIUS), //
+    maxct1("Max CHT1" + Constants.DEGREE_CELSIUS), //
+    ct2("CHT2" + Constants.DEGREE_CELSIUS, Boolean.class), //
+    minct2("Min CHT2" + Constants.DEGREE_CELSIUS), //
+    lowct2("Low CHT2" + Constants.DEGREE_CELSIUS), //
+    highct2("High CHT2" + Constants.DEGREE_CELSIUS), //
+    maxct2("Max CHT2" + Constants.DEGREE_CELSIUS), //
+    est("EST" + Constants.DEGREE_CELSIUS, Boolean.class), //
+    minest("Min EST" + Constants.DEGREE_CELSIUS), //
+    lowest("Low EST" + Constants.DEGREE_CELSIUS), //
+    highest("High EST" + Constants.DEGREE_CELSIUS), //
+    maxest("Max EST" + Constants.DEGREE_CELSIUS), //
+    ff_("FF" + Constants.LITER_PER_HOUR, Boolean.class), //
+    minff("Min FF" + Constants.LITER_PER_HOUR), //
+    lowff("Low FF" + Constants.LITER_PER_HOUR), //
+    highff("High FF" + Constants.LITER_PER_HOUR), //
+    maxff("Max FF" + Constants.LITER_PER_HOUR), //
+    fp_("FP" + Constants.KPASCAL, Boolean.class), //
+    minfp("Min FP" + Constants.KPASCAL), // ,
+    lowfp("Low FP" + Constants.KPASCAL), //
+    highfp("High FP" + Constants.KPASCAL), //
+    maxfp("Max FP" + Constants.KPASCAL), //
+    op_("OP" + Constants.KPASCAL, Boolean.class), //
+    minop("Min OP" + Constants.KPASCAL), //
+    lowop("Low OP" + Constants.KPASCAL), //
+    highop("High OP" + Constants.KPASCAL), //
+    maxop("Max OP" + Constants.KPASCAL), //
+    ot_("OT" + Constants.DEGREE_CELSIUS, Boolean.class), //
+    minot("Min OT" + Constants.DEGREE_CELSIUS), //
+    lowot("Low OT" + Constants.DEGREE_CELSIUS), //
+    highot("High OT" + Constants.DEGREE_CELSIUS), //
+    maxot("Max OT" + Constants.DEGREE_CELSIUS), //
+    n1_("N1" + Constants.PERCENT_UNIT, Boolean.class), //
+    minn1("Min N1" + Constants.PERCENT_UNIT), //
+    lown1("Low N1" + Constants.PERCENT_UNIT), //
+    highn1("High N1" + Constants.PERCENT_UNIT), //
+    maxn1("Max N1" + Constants.PERCENT_UNIT), //
+    n2_("N2" + Constants.PERCENT_UNIT, Boolean.class), //
+    minn2("Min N2" + Constants.PERCENT_UNIT), //
+    lown2("Low N2" + Constants.PERCENT_UNIT), //
+    highn2("High N2" + Constants.PERCENT_UNIT), //
+    maxn2("Max N2" + Constants.PERCENT_UNIT), //
     vib("VIB", Boolean.class), //
     minvib("Min VIB"), //
     lowvib("Low VIB"), //
     highvib("High VIB"), //
     maxvib("Max VIB"), //
-    vlt("VLT", Boolean.class), //
-    minvlt("Min VLT"), //
-    lowvlt("Low VLT"), //
-    highvlt("High VLT"), //
-    maxvlt("Max VLT"), //
-    amp("AMP", Boolean.class), //
-    minamp("Min AMP"), //
-    lowamp("Low AMP"), //
-    highamp("High AMP"), //
-    maxamp("Max AMP"), //
+    vlt("VLT" + Constants.VLT_UNIT, Boolean.class), //
+    minvlt("Min VLT" + Constants.VLT_UNIT), //
+    lowvlt("Low VLT" + Constants.VLT_UNIT), //
+    highvlt("High VLT" + Constants.VLT_UNIT), //
+    maxvlt("Max VLT" + Constants.VLT_UNIT), //
+    amp("AMP" + Constants.AMP_UNIT, Boolean.class), //
+    minamp("Min AMP" + Constants.AMP_UNIT), //
+    lowamp("Low AMP" + Constants.AMP_UNIT), //
+    highamp("High AMP" + Constants.AMP_UNIT), //
+    maxamp("Max AMP" + Constants.AMP_UNIT), //
     timestamp("Timestamp");//
 
     final static Logger LOG = LoggerFactory.getLogger(EngineModelCols.class);

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.server.VaadinServlet;
 
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
 import cz.vutbr.fit.simulatormanager.simulatorcommunication.UpdatesScheduler;
@@ -45,7 +45,7 @@ public class InitializerServlet extends VaadinServlet {
      * ApplicationConfiguration class
      */
     private void initApplicationConfiguration() {
-	ApplicationConfiguration.initApplicationConfigFromConfFile();
+	AppConfig.initApplicationConfigFromConfFile();
     }
 
 }

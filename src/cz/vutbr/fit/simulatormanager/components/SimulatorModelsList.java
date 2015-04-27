@@ -11,7 +11,7 @@ import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.ui.Table;
 
-import cz.vutbr.fit.simulatormanager.Constants;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.SimulatorModelQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
@@ -21,10 +21,8 @@ public class SimulatorModelsList extends Table {
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelsList.class);
     private SimulatorModelsView view = null;
     private Random random = new Random();
-    private final int MINRANDOM = 1000;
-    private final int MAXRANDOM = 10000;
-    private static final Object DEFAULT_MAX_SPEED_ON_FLAPS = 200;
-    private static final int DEFAULT_NUM_OF_LANDING_GEARS = 3;
+    private final int MINRANDOM = 0;
+    private final int MAXRANDOM = 1000;
 
     public SimulatorModelsList(final SimulatorModelsView view) {
 	this.view = view;
@@ -86,29 +84,31 @@ public class SimulatorModelsList extends Table {
     @SuppressWarnings("unchecked")
     public void addSimulatorModel() {
 	Object simulatorModelId = getContainerDataSource().addItem();
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.simulatormodelname.toString()).setValue(
-		"New" + random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxspeedonflaps.toString()).setValue(
-		DEFAULT_MAX_SPEED_ON_FLAPS);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(
-		DEFAULT_NUM_OF_LANDING_GEARS);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lfu.toString()).setValue(Constants.LFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.minlfu.toString()).setValue(Constants.MINLFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lowlfu.toString()).setValue(Constants.LOWLFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.highlfu.toString()).setValue(Constants.HIGHLFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxlfu.toString()).setValue(Constants.MAXLFU);
 
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.cfu.toString()).setValue(Constants.CFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.mincfu.toString()).setValue(Constants.MINCFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lowcfu.toString()).setValue(Constants.LOWCFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.highcfu.toString()).setValue(Constants.HIGHCFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxcfu.toString()).setValue(Constants.MAXCFU);
+	setDefaultValueForSimulatorModelName(simulatorModelId);
+	setDefaultValueForIntProperty(simulatorModelId, SimulatorModelCols.minspeed);
+	setDefaultValueForIntProperty(simulatorModelId, SimulatorModelCols.maxspeed);
+	setDefaultValueForIntProperty(simulatorModelId, SimulatorModelCols.minspeedonflaps);
+	setDefaultValueForIntProperty(simulatorModelId, SimulatorModelCols.maxspeedonflaps);
+	setDefaultValueForIntProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears);
 
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.rfu.toString()).setValue(Constants.RFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.minrfu.toString()).setValue(Constants.MINRFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.lowrfu.toString()).setValue(Constants.LOWRFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.highrfu.toString()).setValue(Constants.HIGHRFU);
-	this.getContainerProperty(simulatorModelId, SimulatorModelCols.maxrfu.toString()).setValue(Constants.MAXRFU);
+	setDefaultValueForBooleanProperty(simulatorModelId, SimulatorModelCols.lfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.minlfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.lowlfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.highlfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.maxlfu);
+
+	setDefaultValueForBooleanProperty(simulatorModelId, SimulatorModelCols.cfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.mincfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.lowcfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.highcfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.maxcfu);
+
+	setDefaultValueForBooleanProperty(simulatorModelId, SimulatorModelCols.rfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.minrfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.lowrfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.highrfu);
+	setDefaultValueForFloatProperty(simulatorModelId, SimulatorModelCols.maxrfu);
 
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.hasgears.toString()).setValue(true);
 	this.getContainerProperty(simulatorModelId, SimulatorModelCols.numberoflandinggears.toString()).setValue(1);
@@ -116,6 +116,29 @@ public class SimulatorModelsList extends Table {
 	String newSimulatorModelId = SimulatorModelQueries.getLatestSimulatorModelId().toString();
 	LOG.info("A new simulator model with id: {} has been added", newSimulatorModelId);
 	this.view.getEnginesTabSheet().addNewEngine(newSimulatorModelId);
+	this.view.getEnginesTabSheet().addNewEngine(newSimulatorModelId);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setDefaultValueForSimulatorModelName(Object simulatorModelId) {
+	this.getContainerProperty(simulatorModelId, SimulatorModelCols.simulatormodelname.toString()).setValue(
+		AppConfig.getStringByKey(SimulatorModelCols.simulatormodelname.toString()) + " "
+			+ +random.nextInt(MAXRANDOM - MINRANDOM) + MINRANDOM);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setDefaultValueForIntProperty(Object simulatorModelId, SimulatorModelCols col) {
+	this.getContainerProperty(simulatorModelId, col.toString()).setValue(AppConfig.getIntByKey(col.toString()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setDefaultValueForBooleanProperty(Object simulatorModelId, SimulatorModelCols col) {
+	this.getContainerProperty(simulatorModelId, col.toString()).setValue(AppConfig.getBoolByKey(col.toString()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setDefaultValueForFloatProperty(Object simulatorModelId, SimulatorModelCols col) {
+	this.getContainerProperty(simulatorModelId, col.toString()).setValue(AppConfig.getFloatByKey(col.toString()));
     }
 
     /**

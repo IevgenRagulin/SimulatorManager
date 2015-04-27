@@ -17,6 +17,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 
 import cz.vutbr.fit.simulatormanager.Constants;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 import cz.vutbr.fit.simulatormanager.util.ResourceUtil;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
@@ -170,120 +171,129 @@ public class EnginesTabSheet extends TabSheet {
     }
 
     @SuppressWarnings("unchecked")
+    private void setDefaultValueForBooleanProperty(Object engineModelId, SQLContainer enginesContainer, EngineModelCols col) {
+	enginesContainer.getContainerProperty(engineModelId, col.toString()).setValue(AppConfig.getBoolByKey(col.toString()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setDefaultValueForFloatProperty(Object engineModelId, SQLContainer enginesContainer, EngineModelCols col) {
+	enginesContainer.getContainerProperty(engineModelId, col.toString()).setValue(AppConfig.getFloatByKey(col.toString()));
+    }
+
+    @SuppressWarnings("unchecked")
     private SQLContainer setNewEngineDefaultValues(SQLContainer enginesContainer, String simulatorModelId, Object engineModelId) {
 	int nextEngineOrder = getNextAvailableEngineModelOrder(simulatorModelId);
 	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.simulatormodelid.toString()).setValue(
 		Integer.valueOf(simulatorModelId));
 	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.enginemodelorder.toString()).setValue(
 		nextEngineOrder);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.rpm);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minrpm);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowrpm);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highrpm);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxrpm);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.rpm.toString()).setValue(Constants.RPM);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minrpm.toString()).setValue(Constants.MINRPM);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowrpm.toString()).setValue(Constants.LOWRPM);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highrpm.toString()).setValue(Constants.HIGHRPM);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxrpm.toString()).setValue(Constants.MAXRPM);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.pwr);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minpwr);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowpwr);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highpwr);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxpwr);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.pwr.toString()).setValue(Constants.PWR);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minpwr.toString()).setValue(Constants.MINPWR);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowpwr.toString()).setValue(Constants.LOWPWR);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highpwr.toString()).setValue(Constants.HIGHPWR);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxpwr.toString()).setValue(Constants.MAXPWR);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.pwp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minpwp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowpwp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highpwp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxpwp);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.pwp.toString()).setValue(Constants.PWP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minpwp.toString()).setValue(Constants.MINPWP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowpwp.toString()).setValue(Constants.LOWPWP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highpwp.toString()).setValue(Constants.HIGHPWP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxpwp.toString()).setValue(Constants.MAXPWP);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.mp_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minmp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowmp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highmp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxmp);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.mp_.toString()).setValue(Constants.MP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minmp.toString()).setValue(Constants.MINMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowmp.toString()).setValue(Constants.LOWMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highmp.toString()).setValue(Constants.HIGHMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxmp.toString()).setValue(Constants.MAXMP);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.et1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minet1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowet1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highet1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxet1);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.et1.toString()).setValue(Constants.EGT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minet1.toString()).setValue(Constants.MINEGT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowet1.toString()).setValue(Constants.LOWEGT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highet1.toString()).setValue(Constants.HIGHEGT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxet1.toString()).setValue(Constants.MAXEGT1);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.et2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minet2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowet2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highet2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxet2);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.et2.toString()).setValue(Constants.EGT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minet2.toString()).setValue(Constants.MINEGT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowet2.toString()).setValue(Constants.LOWEGT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highet2.toString()).setValue(Constants.HIGHEGT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxet2.toString()).setValue(Constants.MAXEGT2);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.ct1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minct1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowct1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highct1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxct1);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.ct1.toString()).setValue(Constants.CHT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minct1.toString()).setValue(Constants.MINCHT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowct1.toString()).setValue(Constants.LOWCHT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highct1.toString()).setValue(Constants.HIGHCHT1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxct1.toString()).setValue(Constants.MAXCHT1);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.ct2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minct2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowct2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highct2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxct2);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.ct2.toString()).setValue(Constants.CHT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minct2.toString()).setValue(Constants.MINCHT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowct2.toString()).setValue(Constants.LOWCHT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highct2.toString()).setValue(Constants.HIGHCHT2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxct2.toString()).setValue(Constants.MAXCHT2);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.est);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minest);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowest);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highest);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxest);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.est.toString()).setValue(Constants.EST);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minest.toString()).setValue(Constants.MINEST);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowest.toString()).setValue(Constants.LOWEST);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highest.toString()).setValue(Constants.HIGHEST);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxest.toString()).setValue(Constants.MAXEST);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.ff_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minff);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowff);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highff);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxff);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.ff_.toString()).setValue(Constants.FF);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minff.toString()).setValue(Constants.MINFF);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowff.toString()).setValue(Constants.LOWFF);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highff.toString()).setValue(Constants.HIGHFF);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxff.toString()).setValue(Constants.MAXFF);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.fp_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minfp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowfp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highfp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxfp);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.fp_.toString()).setValue(Constants.FP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minfp.toString()).setValue(Constants.MINFP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowfp.toString()).setValue(Constants.LOWFP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highfp.toString()).setValue(Constants.HIGHFP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxfp.toString()).setValue(Constants.MAXFP);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.op_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minop);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowop);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highop);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxop);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.op_.toString()).setValue(Constants.OP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minop.toString()).setValue(Constants.MINOP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowop.toString()).setValue(Constants.LOWOP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highop.toString()).setValue(Constants.HIGHOP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxop.toString()).setValue(Constants.MAXOP);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.ot_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minot);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowot);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highot);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxot);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.ot_.toString()).setValue(Constants.OT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minot.toString()).setValue(Constants.MINOT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowot.toString()).setValue(Constants.LOWOT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highot.toString()).setValue(Constants.HIGHOT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxot.toString()).setValue(Constants.MAXOT);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.n1_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minn1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lown1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highn1);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxn1);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.n1_.toString()).setValue(Constants.N1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minn1.toString()).setValue(Constants.MINN1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lown1.toString()).setValue(Constants.LOWN1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highn1.toString()).setValue(Constants.HIGHN1);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxn1.toString()).setValue(Constants.MAXN1);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.n2_);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minn2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lown2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highn2);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxn2);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.n2_.toString()).setValue(Constants.N2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minn2.toString()).setValue(Constants.MINN2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lown2.toString()).setValue(Constants.LOWN2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highn2.toString()).setValue(Constants.HIGHN2);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxn2.toString()).setValue(Constants.MAXN2);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.vib);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minvib);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowvib);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highvib);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxvib);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.vib.toString()).setValue(Constants.VIB);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minvib.toString()).setValue(Constants.MINVIB);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowvib.toString()).setValue(Constants.LOWVIB);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highvib.toString()).setValue(Constants.HIGHVIB);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxvib.toString()).setValue(Constants.MAXVIB);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.vlt);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minvlt);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowvlt);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highvlt);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxvlt);
 
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.vlt.toString()).setValue(Constants.VLT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minvlt.toString()).setValue(Constants.MINVLT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowvlt.toString()).setValue(Constants.LOWVLT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highvlt.toString()).setValue(Constants.HIGHVLT);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxvlt.toString()).setValue(Constants.MAXVLT);
-
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.amp.toString()).setValue(Constants.AMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.minamp.toString()).setValue(Constants.MINAMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.lowamp.toString()).setValue(Constants.LOWAMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.highamp.toString()).setValue(Constants.HIGHAMP);
-	enginesContainer.getContainerProperty(engineModelId, EngineModelCols.maxamp.toString()).setValue(Constants.MAXAMP);
+	setDefaultValueForBooleanProperty(engineModelId, enginesContainer, EngineModelCols.amp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.minamp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.lowamp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.highamp);
+	setDefaultValueForFloatProperty(engineModelId, enginesContainer, EngineModelCols.maxamp);
 
 	return enginesContainer;
     }

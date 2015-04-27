@@ -12,7 +12,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.SimulationInfoBean;
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelperPureJDBC;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
@@ -50,10 +50,10 @@ public class DatabaseUpdater {
     public static void addSimulationInfoToDb(SQLContainer lastSimCont, String simulatorId, RowId simulationId)
 	    throws UnsupportedOperationException, SQLException {
 	LOG.debug("addSimulationInfoToDb, simulatorId: {}", simulatorId);
-	int saveToDbFrequency = Math.round(ApplicationConfiguration.getWriteToDbFrequency()
-		/ ApplicationConfiguration.getSimulatorGetDataFrequency());
-	int saveSimInfoToDbFrequency = Math.round(ApplicationConfiguration.getWritePositionToDbFrequency()
-		/ ApplicationConfiguration.getSimulatorGetDataFrequency());
+	int saveToDbFrequency = Math.round(AppConfig.getWriteToDbFrequency()
+		/ AppConfig.getSimulatorGetDataFrequency());
+	int saveSimInfoToDbFrequency = Math.round(AppConfig.getWritePositionToDbFrequency()
+		/ AppConfig.getSimulatorGetDataFrequency());
 
 	Integer simulationIdInt = Integer.valueOf(simulationId.toString());
 	SimulationInfoItem currentSimItem = SimulatorsStatus.getSimulationInfoItemBySimulatorId(simulatorId);

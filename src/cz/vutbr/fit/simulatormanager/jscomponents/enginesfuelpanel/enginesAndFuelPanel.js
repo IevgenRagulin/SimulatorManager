@@ -274,8 +274,6 @@ function isEngineFeatureEnabled(featureName, engineId) {
  */
 function isFuelFeatureEnabled(featureName) {
 	var state = thisObj.getState();
-	// console.log("is fuel feature enabled"+featureName+" is: "+((!(typeof
-	// state[featureName + "vals"] === 'undefined')) && (state[featureName])));
 	return ((!(typeof state[featureName + "vals"] === 'undefined')) && (state[featureName]));
 }
 
@@ -429,6 +427,7 @@ function drawEngineGauge(engineId, featureName) {
  */
 function drawFuelTankGauge(featureName) {
 	var state = thisObj.getState();
+	//draw gauge only if it's enabled 
 	if (isFuelFeatureEnabled(featureName)) {
 		var maxVal = getFuelFeatureMaxValue(featureName);
 		var lowVal = getFuelFeatureLowValue(featureName);

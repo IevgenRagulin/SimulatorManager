@@ -525,11 +525,14 @@ function drawVerticalSpeed() {
 function calculateVsYPosition(verticalSpeed) {
 	var verticalSpeedYPos = 0;
 	var scale = (0.28 * window.vsCanH) / 1000;
+	//if>3000, set to max
 	if (verticalSpeed > 3000) {
 		verticalSpeedYPos = window.vsCanH * 0.22;
+	//if<3000, set to min
 	} else if (verticalSpeed < -3000) {
 		verticalSpeedYPos = window.vsCanH * 0.78;
 	} else {
+		//looking a this code year after I've written it.. looks like we take the vertical speed and scale it down by 1000, without caring what units AWCom is actually sending
 		verticalSpeedYPos = window.vsCanH * 0.5 - (verticalSpeed / 3) * scale;
 	}
 	return verticalSpeedYPos;
@@ -565,6 +568,9 @@ function setVerticalSpeed() {
 	ctxVS.stroke();
 }
 
+/**
+ * Increase currentSpeed by a small value to be closer to wantHaveSpeed
+ */
 function setSpeed() {
 	var ctxSpeed = document.getElementById('speed').getContext('2d');
 	var difSpeed = window.wantHaveSpeed - window.currentSpeed;
@@ -582,7 +588,6 @@ function setSpeed() {
 	drawSpeedLinesWithNumbers(ctxSpeed);
 	drawSpeedIndicator(ctxSpeed);
 	writeSpeedOnSpeedIndicator(ctxSpeed);
-	//document.getElementById('speedV').innerHTML = window.currentSpeed;
 }
 
 function writeSpeedOnSpeedIndicator(ctxSpeed) {

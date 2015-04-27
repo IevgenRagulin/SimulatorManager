@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.server.VaadinService;
 
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
-import cz.vutbr.fit.simulatormanager.data.ApplicationConfiguration;
+import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineCols;
 
 /*
@@ -49,14 +49,14 @@ public class DatabaseHelperPureJDBC {
 
     /**
      * Gets connections. Uses username, password, db url form @link
-     * {@link ApplicationConfiguration}
+     * {@link AppConfig}
      * 
      * @return
      * @throws SQLException
      */
     private static Connection getConnection() throws SQLException {
-	return DriverManager.getConnection(ApplicationConfiguration.getDbUrl(), ApplicationConfiguration.getDbUserName(),
-		ApplicationConfiguration.getDbUserPassword());
+	return DriverManager.getConnection(AppConfig.getDbUrl(), AppConfig.getDbUserName(),
+		AppConfig.getDbUserPassword());
     }
 
     /**

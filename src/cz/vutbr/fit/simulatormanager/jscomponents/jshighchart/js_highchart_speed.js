@@ -18,7 +18,9 @@ cz_vutbr_fit_simulatormanager_jscomponents_jshighchart_JsHighChartSpeed = functi
     this.onStateChange = function() 
     {
     	var newPoint = this.getState().n;
-    	if (newPoint != -100) {//-100 means that newPoint variable was not initialized
+    	// we add points to graph only if simulation is not paused. currentPaused variable is in flightControls.js
+    	//-100 means that newPoint variable was not initialized
+    	if ((newPoint != -100) && (!window.currentPaused)) {
 			var x = (new Date()).getTime();// current time. TODO: Instead of
 											// generating time here, pass it from
 											// server
