@@ -10,7 +10,9 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Notification;
 
 /**
- * This class is used for getting values from a property file
+ * This class is used for getting values from a property file. Whenever a
+ * property file changes, this class automatically reloads its content into
+ * memory
  * 
  * @author zhenia
  *

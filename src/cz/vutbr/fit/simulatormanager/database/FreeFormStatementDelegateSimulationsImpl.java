@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,12 +88,28 @@ public class FreeFormStatementDelegateSimulationsImpl implements FreeformStateme
     @Override
     public StatementHelper getQueryStatement(int offset, int limit) throws UnsupportedOperationException {
 	StatementHelper sh = new StatementHelper();
-	StringBuffer query = new StringBuffer("SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId
-		+ " ORDER BY simulationid ");
+	StringBuffer query = new StringBuffer("SELECT * FROM simulation WHERE Simulator_SimulatorId=").append(simulatorId);
+	String stringJoiner = "";
+	// add order bys
+	if (CollectionUtils.isNotEmpty(orderBys)) {
+	    query.append(" ORDER BY ");
+	    for (OrderBy orderBy : orderBys) {
+		query.append(stringJoiner);
+		stringJoiner = ", ";
+		query.append(orderBy.getColumn()).append(" ");
+		if (orderBy.isAscending()) {
+		    query.append("ASC");
+		} else {
+		    query.append("DESC");
+		}
+	    }
+	}
+
 	if (offset != 0 || limit != 0) {
 	    query.append(" LIMIT ").append(limit);
 	    query.append(" OFFSET ").append(offset);
 	}
+	LOG.info("getQueryStatement() - generated query: {}", query.toString());
 	sh.setQueryString(query.toString());
 	return sh;
     }
@@ -100,8 +117,7 @@ public class FreeFormStatementDelegateSimulationsImpl implements FreeformStateme
     @Override
     public StatementHelper getCountStatement() throws UnsupportedOperationException {
 	StatementHelper sh = new StatementHelper();
-	StringBuffer query = new StringBuffer("SELECT COUNT(*) FROM simulation WHERE Simulator_SimulatorId="
-		+ simulatorId);
+	StringBuffer query = new StringBuffer("SELECT COUNT(*) FROM simulation WHERE Simulator_SimulatorId=" + simulatorId);
 	sh.setQueryString(query.toString());
 	return sh;
     }
@@ -126,16 +142,14 @@ public class FreeFormStatementDelegateSimulationsImpl implements FreeformStateme
     }
 
     private void removeDataFromSimulationInfo(Connection conn, Integer simulationId) throws SQLException {
-	PreparedStatement statement = conn
-		.prepareStatement("DELETE FROM simulationinfo WHERE simulation_simulationid = ?");
+	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationinfo WHERE simulation_simulationid = ?");
 	statement.setInt(1, simulationId);
 	statement.executeUpdate();
 	statement.close();
     }
 
     private void removeDataFromSimulationPfdInfo(Connection conn, Integer simulationId) throws SQLException {
-	PreparedStatement statement = conn
-		.prepareStatement("DELETE FROM simulationpfdinfo WHERE simulation_simulationid = ?");
+	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationpfdinfo WHERE simulation_simulationid = ?");
 	statement.setInt(1, simulationId);
 	statement.executeUpdate();
 	statement.close();

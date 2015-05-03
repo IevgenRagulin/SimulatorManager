@@ -36,7 +36,7 @@ public abstract class SimulationsView extends BasicView implements View {
     private static final long serialVersionUID = 6450588437869904764L;
 
     protected static final String ALTITUDE_CHART_ID = "altitudeChartId";
-    protected String SPEED_CHART_ID = "speedChartId";
+    protected static final String SPEED_CHART_ID = "speedChartId";
     protected static final String NO_SIMULATOR_SELECTED = "Please, select simulator";
     protected static final String EMPTY_STRING = "";
     protected static final String NO_RUNNING_SIMULATIONS = "There are no simulations currently running on this simulator";

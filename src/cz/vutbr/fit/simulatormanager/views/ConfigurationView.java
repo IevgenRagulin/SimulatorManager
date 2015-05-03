@@ -93,9 +93,11 @@ public class ConfigurationView extends BasicView implements View {
     private void initConfigsWindow() {
 	configsWindow = new Window("Simulator manager configurations");
 	configsWindow.setHeight(null);
-	configsWindow.setWidth("640px");
+	configsWindow.setWidth("60%");
+	configsWindow.setHeight("80%");
 	configsWindow.setClosable(true);
 	configsWindow.setResizable(true);
+	configsWindow.setClosable(true);
     }
 
     private void initButtons() {
@@ -188,7 +190,7 @@ public class ConfigurationView extends BasicView implements View {
 		+ allLines + "</p>", ContentMode.HTML));
 	verticalLayout
 		.addComponent(new Label(
-			"<p><b>If you wish to change any of these configs, please modify the configuration file and restart the application</b></p>",
+			"<p><b>If you wish to change any of these configs, please modify the configuration file. There is not need to restart the application</b></p>",
 			ContentMode.HTML));
 
 	return verticalLayout;

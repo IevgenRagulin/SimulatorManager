@@ -53,8 +53,8 @@ public class DatabaseHelper implements Serializable {
     private static void initConnectionPool() {
 	if (pool == null) {
 	    try {
-		pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", AppConfig.getDbUrl(),
-			AppConfig.getDbUserName(), AppConfig.getDbUserPassword(), 2, 10);
+		pool = new SimpleJDBCConnectionPool("org.postgresql.Driver", AppConfig.getDbUrl(), AppConfig.getDbUserName(),
+			AppConfig.getDbUserPassword(), 2, 10);
 	    } catch (SQLException e) {
 		LOG.error("Couldn't initConnectionPool", e);
 		throw new RuntimeException("Couldn't init connection pool", e);
@@ -144,7 +144,7 @@ public class DatabaseHelper implements Serializable {
      */
     public SQLContainer getSimulationContainerOnSimulatorWithId(String simulatorId) {
 	FreeFormQueryTest query = new FreeFormQueryTest("SELECT * FROM simulation where simulator_simulatorid=" + simulatorId
-		+ " ORDER BY \"timestamp\" LIMIT ALL ", Arrays.asList("simulationid"), pool);
+		+ " LIMIT ALL ", Arrays.asList("simulationid"), pool);
 	query.setDelegate(new FreeFormStatementDelegateSimulationsImpl(simulatorId));
 	try {
 	    return new SQLContainer(query);

@@ -392,6 +392,7 @@ function setBrakes() {
 	var ctxBrakes = canBrakes.getContext('2d');
 	ctxBrakes.strokeStyle = 'red';
 	ctxBrakes.fillStyle = 'red';
+	ctxBrakes.font = 'bold 12px sans-serif';
 	if (window.wantHaveBrakes) {
 		window.currentBrakes = true;
 		ctxBrakes.clearRect(0, 0, canBrakes.width, canBrakes.height);
@@ -408,6 +409,7 @@ function setSimulationPaused() {
 	var ctxPaused = canPaused.getContext('2d');
 	ctxPaused.strokeStyle = 'red';
 	ctxPaused.fillStyle = 'red';
+	ctxPaused.font = 'bold 12px sans-serif';
 	if (window.wantHavePaused) {
 		window.currentPaused = true;
 		ctxPaused.clearRect(0, 0, canPaused.width, canPaused.height);
@@ -445,6 +447,7 @@ function setLandingGearElement(landGearNum, wantHaveValue) {
 	var ctxLandGear = canLandGear.getContext('2d');
 	ctxLandGear.strokeStyle = 'red';
 	ctxLandGear.fillStyle = 'red';
+	ctxLandGear.font = 'bold 12px sans-serif';
 	if (wantHaveValue == 0) {
 		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
 		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "UP", 5, 17);

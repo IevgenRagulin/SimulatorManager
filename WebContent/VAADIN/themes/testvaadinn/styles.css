@@ -12247,3 +12247,7 @@ div.v-layout.v-horizontal.v-widget {
 .testvaadinn .sm-conf-button {
 	margin-left: 30px;
 }
+
+.testvaadinn #altitudeChartId, .testvaadinn #speedChartId {
+	margin-top: 8px;
+}

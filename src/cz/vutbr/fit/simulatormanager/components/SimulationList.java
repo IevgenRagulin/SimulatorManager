@@ -44,6 +44,10 @@ public class SimulationList extends Table {
 	setContainerDataSource(newDataSource);
 	setColumnHeaders(SimulationCols.getSimulationColsNames());
 	setVisibleColumns((Object[]) SimulationCols.getVisibleCols());
+	setSortAscending(false);
+	setSortEnabled(true);
+	setSortContainerPropertyId("simulationid");
+	sort();
     }
 
     @Override

@@ -37,13 +37,13 @@ public class AWComParser {
 	    value = getValueOf(":HEA:", response);
 	    simData.setHeading(ConverterUtil.stringToDouble(value));
 
-	    // Alpha
-	    value = getValueOf(":ALP:", response);
-	    simData.setAlpha(ConverterUtil.stringToDouble(value));
+	    // Alpha. Not used
+	    // value = getValueOf(":ALP:", response);
+	    // simData.setAlpha(ConverterUtil.stringToDouble(value));
 
-	    // Beta
-	    value = getValueOf(":BET:", response);
-	    simData.setBeta(ConverterUtil.stringToDouble(value));
+	    // Beta. Not used
+	    // value = getValueOf(":BET:", response);
+	    // simData.setBeta(ConverterUtil.stringToDouble(value));
 
 	    // Altitude corrected
 	    value = getValueOf(":ALT:", response);
@@ -65,25 +65,25 @@ public class AWComParser {
 	    value = getValueOf(":TAS:", response);
 	    simData.setTAS(metersPerSecondToKts(ConverterUtil.stringToDouble(value)));
 
-	    // PWR
-	    value = getValueOf(":PWR:", response);
-	    simData.setEngine_pwr(ConverterUtil.stringToDouble(value));
+	    // PWR. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":PWR:", response);
+	    // simData.setEngine_pwr(ConverterUtil.stringToDouble(value));
 
-	    // RPM
-	    value = getValueOf(":RPM:", response);
-	    simData.setEngine_rpm(ConverterUtil.stringToDouble(value));
+	    // RPM. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":RPM:", response);
+	    // simData.setEngine_rpm(ConverterUtil.stringToDouble(value));
 
-	    // MP
-	    value = getValueOf(":MP_:", response);
-	    simData.setEngine_manifold_pressure(ConverterUtil.stringToDouble(value));
+	    // MP. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":MP_:", response);
+	    // simData.setEngine_manifold_pressure(ConverterUtil.stringToDouble(value));
 
 	    // VS
 	    value = getValueOf(":VS_:", response);
 	    simData.setVS(metersPerSecondToFeetPerMin(ConverterUtil.stringToDouble(value)));
 
-	    // fflow
-	    value = getValueOf(":FFL:", response);
-	    simData.setEngine_fuel_flow(ConverterUtil.stringToDouble(value));
+	    // fflow. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":FFL:", response);
+	    // simData.setEngine_fuel_flow(ConverterUtil.stringToDouble(value));
 
 	    // GS
 	    value = getValueOf(":GS_:", response);
@@ -101,9 +101,9 @@ public class AWComParser {
 	    value = getValueOf(":QNH:", response);
 	    simData.setQNH(ConverterUtil.stringToDouble(value));
 
-	    // angleOfSideSlip
-	    value = getValueOf(":AOS:", response);
-	    simData.setAngleOfSideSlip(ConverterUtil.stringToDouble(value));
+	    // angleOfSideSlip. Not used
+	    // value = getValueOf(":AOS:", response);
+	    // simData.setAngleOfSideSlip(ConverterUtil.stringToDouble(value));
 
 	    // Left fuel
 	    value = getValueOf(":LFU:", response);
@@ -117,41 +117,41 @@ public class AWComParser {
 	    value = getValueOf(":CFU:", response);
 	    simData.setCfuel(ConverterUtil.stringToFloat(value));
 
-	    // Oil Pressure
-	    value = getValueOf(":OPR:", response);
-	    simData.setEngine_oil_pressure(ConverterUtil.stringToDouble(value));
+	    // Oil Pressure. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":OPR:", response);
+	    // simData.setEngine_oil_pressure(ConverterUtil.stringToDouble(value));
 
-	    // Oil Temperature
-	    value = getValueOf(":OTM:", response);
-	    simData.setEngine_oil_pressure(ConverterUtil.stringToDouble(value));
+	    // Oil Temperature. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":OTM:", response);
+	    // simData.setEngine_oil_pressure(ConverterUtil.stringToDouble(value));
 
 	    // Time
 	    value = getValueOf(":TIM:", response);
 	    simData.setTime(ConverterUtil.stringToDouble(value));
 
-	    // P
+	    // P. Not used
 	    value = getValueOf(":BRR:", response);
 	    simData.setP(ConverterUtil.stringToDouble(value));
 
-	    // Q
-	    value = getValueOf(":BPR:", response);
-	    simData.setQ(Double.parseDouble(value));
+	    // Q. Not used
+	    // value = getValueOf(":BPR:", response);
+	    // simData.setQ(Double.parseDouble(value));
 
-	    // R
-	    value = getValueOf(":BYR:", response);
-	    simData.setR(ConverterUtil.stringToDouble(value));
+	    // R. Not used
+	    // value = getValueOf(":BYR:", response);
+	    // simData.setR(ConverterUtil.stringToDouble(value));
 
-	    // Local AX
-	    value = getValueOf(":BAX:", response);
-	    simData.setLocal_ax(ConverterUtil.stringToDouble(value));
+	    // Local AX. Not used
+	    // value = getValueOf(":BAX:", response);
+	    // simData.setLocal_ax(ConverterUtil.stringToDouble(value));
 
-	    // Local AY
-	    value = getValueOf(":BAY:", response);
-	    simData.setLocal_ay(ConverterUtil.stringToDouble(value));
+	    // Local AY. Not used
+	    // value = getValueOf(":BAY:", response);
+	    // simData.setLocal_ay(ConverterUtil.stringToDouble(value));
 
-	    // Local AZ
-	    value = getValueOf(":BAZ:", response);
-	    simData.setLocal_az(ConverterUtil.stringToDouble(value));
+	    // Local AZ. Not used
+	    // value = getValueOf(":BAZ:", response);
+	    // simData.setLocal_az(ConverterUtil.stringToDouble(value));
 
 	    // True Track
 	    value = getValueOf(":TT_:", response);
@@ -197,21 +197,21 @@ public class AWComParser {
 	    value = getValueOf(":BRK:", response);
 	    simData.setBrakes_status(brakesDoubleToBoolean(value));
 
-	    // Switch Master switch
-	    value = getValueOf(":SWMA:", response);
-	    simData.setSw_status_master_switch(ConverterUtil.stringToBoolean(value));
+	    // Switch Master switch. Not used
+	    // value = getValueOf(":SWMA:", response);
+	    // simData.setSw_status_master_switch(ConverterUtil.stringToBoolean(value));
 
-	    // Switch Accumulator switch
-	    value = getValueOf(":SWAC:", response);
-	    simData.setSw_status_accu(ConverterUtil.stringToBoolean(value));
+	    // Switch Accumulator switch. Not used
+	    // value = getValueOf(":SWAC:", response);
+	    // simData.setSw_status_accu(ConverterUtil.stringToBoolean(value));
 
-	    // Switch Generator switch
-	    value = getValueOf(":SWGE:", response);
-	    simData.setSw_status_gen(ConverterUtil.stringToBoolean(value));
+	    // Switch Generator switch. Not used
+	    // value = getValueOf(":SWGE:", response);
+	    // simData.setSw_status_gen(ConverterUtil.stringToBoolean(value));
 
-	    // Switch Avionic switch
-	    value = getValueOf(":SWAV:", response);
-	    simData.setSw_status_avionic_switch(ConverterUtil.stringToBoolean(value));
+	    // Switch Avionic switch. Not used
+	    // value = getValueOf(":SWAV:", response);
+	    // simData.setSw_status_avionic_switch(ConverterUtil.stringToBoolean(value));
 
 	    // Switch Efis switch. Not used
 	    // value = getValueOf(":SWEF:", response);
@@ -252,9 +252,9 @@ public class AWComParser {
 	    // value = getValueOf(":APVS_:", response);
 	    // simData.setAp_vs(stringToDouble(value));
 
-	    // Autopilot Mode
-	    value = getValueOf(":APMOD:", response);
-	    simData.setAp_mode(ConverterUtil.stringToDouble(value).intValue());
+	    // Autopilot Mode. Not used
+	    // value = getValueOf(":APMOD:", response);
+	    // simData.setAp_mode(ConverterUtil.stringToDouble(value).intValue());
 
 	    // ///////////////////////////////////////////////////////
 	    // ENGINE
@@ -264,21 +264,21 @@ public class AWComParser {
 	    // value = getValueOf(":THR:", response);
 	    // simData.setThrottle(stringToDouble(value));
 
-	    // EGT1
+	    // EGT1. Not used any more, see parseEngineResponse
 	    value = getValueOf(":EGT1:", response);
 	    simData.setEngine_exh_gas_temp1(ConverterUtil.stringToDouble(value));
 
-	    // EGT2
-	    value = getValueOf(":EGT2:", response);
-	    simData.setEngine_exh_gas_temp2(ConverterUtil.stringToDouble(value));
+	    // EGT2. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":EGT2:", response);
+	    // simData.setEngine_exh_gas_temp2(ConverterUtil.stringToDouble(value));
 
-	    // CHT1
-	    value = getValueOf(":CHT1:", response);
-	    simData.setEngine_exh_gas_temp2(ConverterUtil.stringToDouble(value));
+	    // CHT1. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":CHT1:", response);
+	    // simData.setEngine_exh_gas_temp2(ConverterUtil.stringToDouble(value));
 
-	    // CHT2
-	    value = getValueOf(":CHT2:", response);
-	    simData.setEngine_exh_gas_temp2(ConverterUtil.stringToDouble(value));
+	    // CHT2. Not used any more, see parseEngineResponse
+	    // value = getValueOf(":CHT2:", response);
+	    // simData.setEngine_exh_gas_temp2(ConverterUtil.stringToDouble(value));
 
 	    // BATV. Not used
 	    // value = getValueOf(":BATV:", response);
