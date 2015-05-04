@@ -5,7 +5,7 @@ Precondition: it's supposed that you have X-PLANE installed with AWCom plugin. X
 
 Step 1. Install Java Runtime Environment 8 or higher. Application doesn't support older versions of Java
 
-Step 2. Install Apache Tomcat 7.0.
+Step 2. Install Apache Tomcat 8.0.
 
 Step 3. Modify tomcat_instalation_directory/conf/tomcat-users.xml file. You need to add the following lines to the file:
 
@@ -20,11 +20,11 @@ Step 5. Modify WebContent/WEB-INF/simulatorManager.prop file. Set db_url propert
 
 Step 6. Run PostgreSQL database.
 
-Step 7. Run Apache Tomcat 7.0.
+Step 7. Run Apache Tomcat 8.0.
 
 Step 8. Deploy .war file and WebContent folder to Apache Tomcat.
 
-Step 9. In order to run the application you need to deploy the application to Tomcat Apache 7.0 application server.
+Step 9. In order to run the application you need to deploy the application to Tomcat Apache 8.0 application server.
 
 Step 10. Go to http://localhost:8080/SimulatorManager/
 
@@ -32,7 +32,7 @@ Step 11. Enter the username and password from step 3.
 <h2>Compiling the application</h2>
 This is needed only if you want to change something in the application. Otherwise you should be using a compiled version already. In order to compile the application you need to:
 
-Step 1. Install Java Runtime Environment 7.
+Step 1. Install Java Runtime Environment 8.
 
 Step 2. Install Eclipse. Install Vaadin plugin for Eclipse.
 
@@ -45,7 +45,7 @@ Step 5. Resolve project dependencies in Eclipse using Ivy.
 Step 6. Build WidgetSet/Theme of the application in Eclipse using the Vaadin plugin.
 
 Step 7. You should be able to run the application on your Tomcat server now.
-<h2>Using the application</h2>
+<h2>Using the application</h2>
 <h3>Initialize the database</h3>
 
 Before being able to use the application, you need to initialize the database first. In order to do it you need to go to Main page (localhost:8080/SimulatorManager), and click "Configuration" there. Click "Init database". Appropriate tables will be created in the database, and some basic information about some simulators will be added to the database <strong>(?).</strong>

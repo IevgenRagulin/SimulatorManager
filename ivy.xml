@@ -53,6 +53,8 @@
 		
 		<dependency org="org.apache.commons" name="commons-lang3" rev="3.0"/>
 		
+		<dependency org="org.postgresql" name="postgresql" rev="9.3-1100-jdbc41"/>
+		
 			
 	</dependencies>
 </ivy-module>
