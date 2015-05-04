@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS simulationenginesstate;
 DROP TABLE IF EXISTS simulationdevicesstate;
 DROP TABLE IF EXISTS simulationinfo;
@@ -7,7 +6,6 @@ DROP TABLE IF EXISTS simulation;
 DROP TABLE IF EXISTS simulator;
 DROP TABLE IF EXISTS enginemodel;
 DROP TABLE IF EXISTS simulatormodel;
-
 
 
 CREATE TABLE simulatormodel
@@ -146,10 +144,10 @@ CREATE TABLE enginemodel
 CREATE TABLE simulator
 (
   simulatorid serial NOT NULL,
+  simulatormodelid integer NOT NULL,
   simulatorname character varying(255) NOT NULL,
   hostname character varying(255) NOT NULL,
   port integer NOT NULL,
-  simulatormodelid integer NOT NULL,
   active boolean DEFAULT FALSE,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulator_pkey PRIMARY KEY (simulatorid),
@@ -164,13 +162,15 @@ WITH (
 CREATE TABLE simulation
 (
   simulationid serial NOT NULL,
-  simulator_simulatorid integer NOT NULL,
+  simulatorid integer NOT NULL,
   issimulationon boolean,
   issimulationpaused boolean,
   simulationstartedtime timestamp without time zone,
   latestupdatetime timestamp without time zone,
   "timestamp" timestamp without time zone DEFAULT now(),
-  CONSTRAINT simulation_pkey PRIMARY KEY (simulationid)
+  CONSTRAINT simulation_pkey PRIMARY KEY (simulationid),
+  CONSTRAINT simulator_simulatorid_key FOREIGN KEY (simulatorid) REFERENCES simulator (simulatorid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE 
 )
 WITH (
   OIDS=FALSE
@@ -180,12 +180,12 @@ WITH (
   CREATE TABLE simulationinfo
 (
   simulationinfoid serial NOT NULL,
-  simulation_simulationid integer NOT NULL,
+  simulationid integer NOT NULL,
   longtitude double precision,
   latitude double precision,
   "timestamp" timestamp without time zone DEFAULT now(),
   CONSTRAINT simulationinfo_pkey PRIMARY KEY (simulationinfoid),
-  CONSTRAINT simulationinfo_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
+  CONSTRAINT simulationinfo_simulation_simulationid_fkey FOREIGN KEY (simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 )
@@ -195,8 +195,8 @@ WITH (
 
 CREATE TABLE simulationdevicesstate
 (
-  devstateid serial NOT NULL,
-  simulation_simulationid integer NOT NULL,
+  simulationdevicesstateid serial NOT NULL,
+  simulationid integer NOT NULL,
   elevator double precision,
   eleron double precision,
   rudder double precision,
@@ -215,8 +215,8 @@ CREATE TABLE simulationdevicesstate
   rfu real,
   cfu real,
   "timestamp" timestamp without time zone DEFAULT now(),
-  CONSTRAINT simulationdevicesstate_pkey PRIMARY KEY (devstateid),
-  CONSTRAINT simulationdevicesstate_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
+  CONSTRAINT simulationdevicesstate_pkey PRIMARY KEY (simulationdevicesstateid),
+  CONSTRAINT simulationdevicesstate_simulation_simulationid_fkey FOREIGN KEY (simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 )
@@ -226,8 +226,8 @@ WITH (
 
 CREATE TABLE simulationpfdinfo
 (
-  pfdinfoid serial NOT NULL,
-  simulation_simulationid integer NOT NULL,
+  simulationpfdinfoid serial NOT NULL,
+  simulationid integer NOT NULL,
   roll double precision,
   pitch double precision,
   heading double precision,
@@ -237,8 +237,8 @@ CREATE TABLE simulationpfdinfo
   groundaltitude double precision,
   verticalspeed double precision,
   "timestamp" timestamp without time zone DEFAULT now(),
-  CONSTRAINT simulationpfdinfo_pkey PRIMARY KEY (pfdinfoid),
-  CONSTRAINT simulationpfdinfo_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
+  CONSTRAINT simulationpfdinfo_pkey PRIMARY KEY (simulationpfdinfoid),
+  CONSTRAINT simulationpfdinfo_simulation_simulationid_fkey FOREIGN KEY (simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 )
@@ -248,8 +248,8 @@ WITH (
 
 CREATE TABLE simulationenginesstate
 (
-  enginesstateid serial NOT NULL,
-  simulation_simulationid integer NOT NULL,
+  simulationenginesstateid serial NOT NULL,
+  simulationid integer NOT NULL,
   ENGINES_NUM int,
   RPM real [],
   PWR real [], 
@@ -270,8 +270,8 @@ CREATE TABLE simulationenginesstate
   VLT real [], 
   AMP real [], 
   "timestamp" timestamp without time zone DEFAULT now(),
-  CONSTRAINT simulationenginesstate_pkey PRIMARY KEY (enginesstateid),
-  CONSTRAINT simulationenginesstate_simulation_simulationid_fkey FOREIGN KEY (simulation_simulationid)
+  CONSTRAINT simulationenginesstate_pkey PRIMARY KEY (simulationenginesstateid),
+  CONSTRAINT simulationenginesstate_simulation_simulationid_fkey FOREIGN KEY (simulationid)
       REFERENCES simulation (simulationid) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 )

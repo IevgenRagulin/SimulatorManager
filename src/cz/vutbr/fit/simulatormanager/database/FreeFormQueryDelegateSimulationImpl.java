@@ -20,12 +20,12 @@ public class FreeFormQueryDelegateSimulationImpl implements FreeformQueryDelegat
 
     @Override
     public String getQueryString(int offset, int limit) throws UnsupportedOperationException {
-	return "SELECT * FROM simulation WHERE Simulator_SimulatorId=" + simulatorId + " ORDER BY simulationid DESC LIMIT 1";
+	return "SELECT * FROM simulation WHERE simulatorid=" + simulatorId + " ORDER BY simulationid DESC LIMIT 1";
     }
 
     @Override
     public String getCountQuery() throws UnsupportedOperationException {
-	return "SELECT count(DISTINCT Simulator_SimulatorId) FROM simulation WHERE Simulator_SimulatorId=" + simulatorId;
+	return "SELECT count(DISTINCT simulatorid) FROM simulation WHERE simulatorid=" + simulatorId;
     }
 
     @Override
@@ -77,11 +77,11 @@ public class FreeFormQueryDelegateSimulationImpl implements FreeformQueryDelegat
     }
 
     private String getInsertQuery(RowItem row) {
-	StringBuffer insert = new StringBuffer("INSERT INTO simulation (" + SimulationCols.simulator_simulatorid.toString()
-		+ ", " + SimulationCols.issimulationon.toString() + ", " + SimulationCols.issimulationpaused.toString() + ", "
+	StringBuffer insert = new StringBuffer("INSERT INTO simulation (" + SimulationCols.simulatorid.toString() + ", "
+		+ SimulationCols.issimulationon.toString() + ", " + SimulationCols.issimulationpaused.toString() + ", "
 		+ SimulationCols.simulationstartedtime.toString() + ", " + SimulationCols.latestupdatetime.toString()
 		+ ") VALUES ( ");
-	appendInsertValue(insert, row, SimulationCols.simulator_simulatorid.toString());
+	appendInsertValue(insert, row, SimulationCols.simulatorid.toString());
 	appendInsertValue(insert, row, SimulationCols.issimulationon.toString());
 	appendInsertValue(insert, row, SimulationCols.issimulationpaused.toString());
 	insert.append(" now(), now() ");

@@ -15,9 +15,9 @@ import cz.vutbr.fit.simulatormanager.beans.SimulationBean;
 import cz.vutbr.fit.simulatormanager.beans.SimulationDevStateBean;
 import cz.vutbr.fit.simulatormanager.beans.SimulationInfoBean;
 import cz.vutbr.fit.simulatormanager.beans.SimulationPFDBean;
-import cz.vutbr.fit.simulatormanager.dao.SimulationDao;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.DatabaseUtil;
+import cz.vutbr.fit.simulatormanager.database.SimulationQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationDevStateItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
@@ -185,8 +185,7 @@ public class SimulationsUpdater implements Runnable {
     }
 
     public synchronized SimulationItem getLatestSimulationFromDb(String simulatorId) {
-	SimulationDao simulationDao = new SimulationDao();
-	Item latestRunningSimulation = simulationDao.getLatestRunningSimulationOnSimulatorWithId(simulatorId);
+	Item latestRunningSimulation = SimulationQueries.getLatestRunningSimulationOnSimulatorWithId(simulatorId);
 	SimulationBean simBean = new SimulationBean(latestRunningSimulation);
 	SimulationItem simItem = new SimulationItem(simBean);
 	return simItem;

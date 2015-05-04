@@ -1,12 +1,16 @@
 package cz.vutbr.fit.simulatormanager.beans;
 
+import java.io.Serializable;
+
 /**
  * After getting data from simulator and parsing in, we set it to this object
  * 
  * @author zhenia
  *
  */
-public class AllSimulationInfo {
+public class AllSimulationInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     // System
     float fps; // Frame per second
     int sim_speed; // Simulation speed

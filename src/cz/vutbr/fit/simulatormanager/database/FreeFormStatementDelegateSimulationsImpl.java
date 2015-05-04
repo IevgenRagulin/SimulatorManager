@@ -88,7 +88,7 @@ public class FreeFormStatementDelegateSimulationsImpl implements FreeformStateme
     @Override
     public StatementHelper getQueryStatement(int offset, int limit) throws UnsupportedOperationException {
 	StatementHelper sh = new StatementHelper();
-	StringBuffer query = new StringBuffer("SELECT * FROM simulation WHERE Simulator_SimulatorId=").append(simulatorId);
+	StringBuffer query = new StringBuffer("SELECT * FROM simulation WHERE simulatorid=").append(simulatorId);
 	String stringJoiner = "";
 	// add order bys
 	if (CollectionUtils.isNotEmpty(orderBys)) {
@@ -117,7 +117,7 @@ public class FreeFormStatementDelegateSimulationsImpl implements FreeformStateme
     @Override
     public StatementHelper getCountStatement() throws UnsupportedOperationException {
 	StatementHelper sh = new StatementHelper();
-	StringBuffer query = new StringBuffer("SELECT COUNT(*) FROM simulation WHERE Simulator_SimulatorId=" + simulatorId);
+	StringBuffer query = new StringBuffer("SELECT COUNT(*) FROM simulation WHERE simulatorid=" + simulatorId);
 	sh.setQueryString(query.toString());
 	return sh;
     }
@@ -142,22 +142,21 @@ public class FreeFormStatementDelegateSimulationsImpl implements FreeformStateme
     }
 
     private void removeDataFromSimulationInfo(Connection conn, Integer simulationId) throws SQLException {
-	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationinfo WHERE simulation_simulationid = ?");
+	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationinfo WHERE simulationid = ?");
 	statement.setInt(1, simulationId);
 	statement.executeUpdate();
 	statement.close();
     }
 
     private void removeDataFromSimulationPfdInfo(Connection conn, Integer simulationId) throws SQLException {
-	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationpfdinfo WHERE simulation_simulationid = ?");
+	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationpfdinfo WHERE simulationid = ?");
 	statement.setInt(1, simulationId);
 	statement.executeUpdate();
 	statement.close();
     }
 
     private void removeDataFromSimulationDevStateInfo(Connection conn, Integer simulationId) throws SQLException {
-	PreparedStatement statement = conn
-		.prepareStatement("DELETE FROM simulationdevicesstate WHERE simulation_simulationid = ?");
+	PreparedStatement statement = conn.prepareStatement("DELETE FROM simulationdevicesstate WHERE simulationid = ?");
 	statement.setInt(1, simulationId);
 	statement.executeUpdate();
 	statement.close();

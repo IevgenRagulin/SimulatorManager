@@ -1,12 +1,15 @@
 package cz.vutbr.fit.simulatormanager.beans;
 
+import java.io.Serializable;
+
 /**
  * Bean corresponding to simulatormodel table in database
  * 
  * @author zhenia
  *
  */
-public class SimulatorModelBean {
+public class SimulatorModelBean implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Integer minspeed;
     private Integer maxspeed;

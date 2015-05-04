@@ -2,7 +2,7 @@ package cz.vutbr.fit.simulatormanager.database.columns;
 
 public enum SimulationCols {
     simulationid("Simulation id"), //
-    simulator_simulatorid("Simulator id"), //
+    simulatorid("Simulator id"), //
     issimulationon("Is on"), //
     issimulationpaused("Is paused"), //
     simulationstartedtime("Started time"), //
@@ -34,7 +34,7 @@ public enum SimulationCols {
     }
 
     public static String[] getVisibleCols() {
-	return new String[] { simulationid.toString(), simulator_simulatorid.toString(), issimulationon.toString(),
+	return new String[] { simulationid.toString(), simulatorid.toString(), issimulationon.toString(),
 		issimulationpaused.toString(), simulationstartedtime.toString(), latestupdatetime.toString() };
     }
 }

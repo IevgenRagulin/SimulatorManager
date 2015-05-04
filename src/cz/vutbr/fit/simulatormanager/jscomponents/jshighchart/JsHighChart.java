@@ -112,7 +112,7 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 	    int value = ((Double) pfdItem.getItemProperty(itemPropertyName).getValue()).intValue();
 	    long timestampMilis = ((java.sql.Timestamp) pfdItem.getItemProperty(SimulationPfdInfoCols.timestamp.toString())
 		    .getValue()).getTime();
-	    int pfdId = (Integer) pfdItem.getItemProperty(SimulationPfdInfoCols.pfdinfoid.toString()).getValue();
+	    int pfdId = (Integer) pfdItem.getItemProperty(SimulationPfdInfoCols.simulationpfdinfoid.toString()).getValue();
 	    oldValues.append("{\"x\": ");
 	    oldValues.append(timestampMilis);
 	    oldValues.append(", ");
@@ -128,7 +128,7 @@ public abstract class JsHighChart extends AbstractJavaScriptComponent {
 	    }
 	}
 	oldValues.append("]");
-	System.out.println(oldValues);
+	LOG.info("addOldDataToChart() - old data: {} ", oldValues.toString());
 	this.getState().data = oldValues.toString();
     }
 

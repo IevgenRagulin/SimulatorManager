@@ -44,7 +44,7 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 
     public void updateIndividualEngineValues(String simulatorId, AllEngineInfo enginesInfo,
 	    SimulationDevStateBean simulationDevState) {
-	LOG.info("Update individual engine values: {}, enginesInfo: {}, simulationDevState: {}", simulatorId, enginesInfo,
+	LOG.debug("Update individual engine values: {}, enginesInfo: {}, simulationDevState: {}", simulatorId, enginesInfo,
 		simulationDevState);
 	initModelIfNeeded(simulatorId);
 	updateEngineValuesIfNeeded(enginesInfo);
@@ -64,7 +64,7 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     }
 
     private void updateFuelTanksValuesIfNeeded(SimulationDevStateBean simulationDevState) {
-	LOG.info("setting lfuvals" + simulationDevState.getLfu());
+	LOG.debug("setting lfuvals" + simulationDevState.getLfu());
 	if (prevSimulationDevState.getLfu() != simulationDevState.getLfu()) {
 	    getState().lfuvals = simulationDevState.getLfu();
 	}
@@ -78,15 +78,15 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     }
 
     private void updateEngineValuesIfNeeded(AllEngineInfo enginesInfo) {
-	LOG.info("update engine values. rpm is en" + prevEngineModel.get(0).isRpm());
+	LOG.debug("update engine values. rpm is en" + prevEngineModel.get(0).isRpm());
 	if (!areArraysEqual(prevEngineInfo.getRpm(), enginesInfo.getRpm())) {
-	    LOG.info("updateEngineValuesIfNeeded() - rpm value has changed, updating. New value[0]: {}", enginesInfo.getRpm()[0]);
+	    LOG.debug("updateEngineValuesIfNeeded() - rpm value has changed, updating. New value[0]: {}", enginesInfo.getRpm()[0]);
 	    getState().rpmvals = enginesInfo.getRpm();
 	}
 	if (!areArraysEqual(prevEngineInfo.getPwr(), enginesInfo.getPwr())) {
-	    LOG.info("updateEngineValuesIfNeeded() - pwr value has changed, updating. New value[0]: {}", enginesInfo.getPwr()[0]);
+	    LOG.debug("updateEngineValuesIfNeeded() - pwr value has changed, updating. New value[0]: {}", enginesInfo.getPwr()[0]);
 	    getState().pwrvals = enginesInfo.getPwr();
-	    LOG.info("new pwrvals[0]:{}", getState().pwrvals[0]);
+	    LOG.debug("new pwrvals[0]:{}", getState().pwrvals[0]);
 	}
 	if (!areArraysEqual(prevEngineInfo.getPwp(), enginesInfo.getPwp())) {
 	    getState().pwpvals = enginesInfo.getPwp();
@@ -203,7 +203,7 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     private void updateSimulatorModelIfNeeded(String simulatorId) {
 	Item simulatorModel = SimulatorModelQueries.getSimulatorModelBySimulatorId(simulatorId);
 	SimulatorModelBean simulatorModelBean = buildSimulatorModelBean(simulatorModel);
-	LOG.info("updateSimulatorModelIfNeeded() - going to compare simulator model beans. minlfu: {}, maxlfu: {} ",
+	LOG.debug("updateSimulatorModelIfNeeded() - going to compare simulator model beans. minlfu: {}, maxlfu: {} ",
 		simulatorModelBean.getMinlfu(), simulatorModelBean.getMaxlfu());
 	if (!simulatorModelBean.equals(prevSimulatorModel)) {
 	    LOG.info("updateSimulatorModelIfNeeded() - needed! updating simulator model");
@@ -276,17 +276,16 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 	if (hasEngineModelChanged(enginesModels, itemIds)) {
 	    clearState(itemIds.size());
 	}
-	LOG.info("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
-	LOG.info("This object" + this);
+	LOG.debug("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
 	for (RowId itemId : itemIds) {
 	    Item engineItem = enginesModels.getItem(itemId);
 	    EngineModelBean engineBean = new EngineModelBean(engineItem);
 	    int engineModelOrder = engineBean.getEnginemodelorder();
 	    // update engine model if it has changed
-	    LOG.info("going to check if engine model has changed on one of the engines. isPWR:{}", engineBean.isPwr());
+	    LOG.debug("going to check if engine model has changed on one of the engines. isPWR:{}", engineBean.isPwr());
 	    if (!engineBean.equals(prevEngineModel.get(engineModelOrder))) {
 		LOG.info("updateEngineModelsIfNeeded() - needed! updating engine models");
-		LOG.info("setting rpm {} ", engineBean.isRpm());
+		LOG.debug("setting rpm {} ", engineBean.isRpm());
 		// RPM
 		getState().rpm[engineModelOrder] = engineBean.isRpm();
 		getState().minrpm[engineModelOrder] = engineBean.getMinrpm();

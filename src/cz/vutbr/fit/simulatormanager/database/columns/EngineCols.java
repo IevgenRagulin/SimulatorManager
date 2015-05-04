@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 public enum EngineCols {
 
     enginestateid("Engine state id"), //
-    simulation_simulationid("Simulation id"), //
+    simulationid("Simulation id"), //
     engines_num("Number of engines"), //
     rpm("RPM"), //
     pwr("PWR - power"), //

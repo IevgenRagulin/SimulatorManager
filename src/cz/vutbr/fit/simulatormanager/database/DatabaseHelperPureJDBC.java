@@ -55,8 +55,7 @@ public class DatabaseHelperPureJDBC {
      * @throws SQLException
      */
     private static Connection getConnection() throws SQLException {
-	return DriverManager.getConnection(AppConfig.getDbUrl(), AppConfig.getDbUserName(),
-		AppConfig.getDbUserPassword());
+	return DriverManager.getConnection(AppConfig.getDbUrl(), AppConfig.getDbUserName(), AppConfig.getDbUserPassword());
     }
 
     /**
@@ -233,7 +232,7 @@ public class DatabaseHelperPureJDBC {
      * timestamp is the closest to timestamp
      */
     public static Optional<AllEngineInfo> getEnginesInfo(Integer pfdInfoId, long timestamp) {
-	String selectQuery = "SELECT * FROM simulationenginesstate WHERE simulation_simulationid=(SELECT simulation_simulationid FROM simulationpfdinfo WHERE pfdinfoid=?)  ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp(?/1000)::timestamp))) limit 1";
+	String selectQuery = "SELECT * FROM simulationenginesstate WHERE simulationid=(SELECT simulationid FROM simulationpfdinfo WHERE simulationpfdinfoid=?)  ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp(?/1000)::timestamp))) limit 1";
 	try (Connection connection = getConnection();
 		PreparedStatement stmt = buildSelectEnginesStatement(connection, pfdInfoId, timestamp, selectQuery)) {
 	    ResultSet rs = stmt.executeQuery();
@@ -333,8 +332,8 @@ public class DatabaseHelperPureJDBC {
 	    throws SQLException {
 	PreparedStatement stmt = null;
 	stmt = conn
-		.prepareStatement("INSERT INTO simulationenginesstate (simulation_simulationid, engines_num, rpm, pwr, pwp, mp_, et1, et2, ct1, ct2, est, ff_, fp_, op_, ot_, n1_, n2_, vib, vlt, amp) VALUES "
-			+ "							(?,                       ?,           ?,    ?,   ?,  ?,   ?,    ?,   ?,   ?,   ?,   ?,   ?,  ?,   ?,   ?,  ?,    ?,   ?,   ?)");
+		.prepareStatement("INSERT INTO simulationenginesstate (simulationid, engines_num, rpm, pwr, pwp, mp_, et1, et2, ct1, ct2, est, ff_, fp_, op_, ot_, n1_, n2_, vib, vlt, amp) VALUES "
+			+ "					       (?,           ?,            ?,   ?,   ?,  ?,   ?,    ?,   ?,   ?,   ?,   ?,   ?,  ?,   ?,   ?,  ?,    ?,   ?,   ?)");
 	stmt.setInt(1, simulationId);
 	stmt.setInt(2, engInfo.getNumberOfEngines());
 	stmt.setArray(3, creatArrayOfFloat(conn, engInfo.getRpm()));

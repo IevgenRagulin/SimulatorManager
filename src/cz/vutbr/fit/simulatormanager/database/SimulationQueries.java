@@ -46,6 +46,27 @@ public class SimulationQueries {
      */
     public static Integer getSimulatorIdBySimulationId(String simulationId) {
 	Item item = getSimulationBySimulationId(simulationId);
-	return (Integer) item.getItemProperty(SimulationCols.simulator_simulatorid.toString()).getValue();
+	return (Integer) item.getItemProperty(SimulationCols.simulatorid.toString()).getValue();
+    }
+
+    protected static DatabaseHelper dbHelp = new DatabaseHelper();
+
+    /**
+     * Returns an Item with the currently running simulation on simulator with
+     * id simulatorId. If there is more than one simulation currently running
+     * (which should be impossible) returns the newest one
+     */
+    public static Item getLatestRunningSimulationOnSimulatorWithId(String simulatorId) {
+	FreeformQuery query = dbHelp.buildQuery("SELECT * FROM simulation WHERE simulatorid=" + simulatorId
+		+ " AND issimulationon=true ORDER BY simulationid DESC LIMIT 1", Arrays.asList("simulationid"));
+	SQLContainer runningSimulations = null;
+	try {
+	    runningSimulations = new SQLContainer(query);
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+	Item latestRunning = DatabaseUtil.getLatestItemFromContainer(runningSimulations);
+	return latestRunning;
+
     }
 }

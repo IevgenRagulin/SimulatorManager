@@ -50,8 +50,7 @@ public class DatabaseUpdater {
     public static void addSimulationInfoToDb(SQLContainer lastSimCont, String simulatorId, RowId simulationId)
 	    throws UnsupportedOperationException, SQLException {
 	LOG.debug("addSimulationInfoToDb, simulatorId: {}", simulatorId);
-	int saveToDbFrequency = Math.round(AppConfig.getWriteToDbFrequency()
-		/ AppConfig.getSimulatorGetDataFrequency());
+	int saveToDbFrequency = Math.round(AppConfig.getWriteToDbFrequency() / AppConfig.getSimulatorGetDataFrequency());
 	int saveSimInfoToDbFrequency = Math.round(AppConfig.getWritePositionToDbFrequency()
 		/ AppConfig.getSimulatorGetDataFrequency());
 
@@ -105,8 +104,7 @@ public class DatabaseUpdater {
 	RowId newSimDvStId = (RowId) simDevStCont.addItem();
 	Collection<?> itemPropIds = simDevStItem.getItemPropertyIds();
 	// set reference key to simulation id
-	simDevStCont.getContainerProperty(newSimDvStId, SimulationInfoCols.simulation_simulationid.toString()).setValue(
-		simulationIdInt);
+	simDevStCont.getContainerProperty(newSimDvStId, SimulationInfoCols.simulationid.toString()).setValue(simulationIdInt);
 
 	// Set values: elevator, eleron, rudder, throttle...
 	for (Object prop : itemPropIds) {
@@ -128,8 +126,7 @@ public class DatabaseUpdater {
 	SimulationPFDItem simPfdItem = SimulatorsStatus.getSimulationPFDItemBySimulatorId(simulatorId);
 	RowId newPfdId = (RowId) simPfdCont.addItem();
 	// set reference key to simulation id
-	simPfdCont.getContainerProperty(newPfdId, SimulationInfoCols.simulation_simulationid.toString())
-		.setValue(simulationIdInt);
+	simPfdCont.getContainerProperty(newPfdId, SimulationInfoCols.simulationid.toString()).setValue(simulationIdInt);
 
 	Collection<?> itemPropIds = simPfdItem.getItemPropertyIds();
 	// set values roll, pitch, heading, truecourse...
@@ -149,7 +146,7 @@ public class DatabaseUpdater {
 	RowId newInfoId = (RowId) simInfoCont.addItem();
 	LOG.debug("addSimulationInfoInfoToDatabase() - simulationIdInt:{}, simulatorId:{}, data: {}", simulationId, simulatorId,
 		simInfoBean);
-	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.simulation_simulationid.toString()).setValue(simulationId);
+	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.simulationid.toString()).setValue(simulationId);
 	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.longtitude.toString()).setValue(
 		simInfoBean.getLongtitude());
 	simInfoCont.getContainerProperty(newInfoId, SimulationInfoCols.latitude.toString()).setValue(simInfoBean.getLatitude());
@@ -176,8 +173,7 @@ public class DatabaseUpdater {
     public static RowId createNewRunningPausedSimulation(SQLContainer lastSimCont, String simulatorId)
 	    throws UnsupportedOperationException, SQLException {
 	RowId id = (RowId) lastSimCont.addItem();
-	lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(
-		Integer.valueOf(simulatorId));
+	lastSimCont.getContainerProperty(id, SimulationCols.simulatorid.toString()).setValue(Integer.valueOf(simulatorId));
 	lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_ON);
 	lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(
 		SimulatorsStatus.SIMULATION_PAUSED);
@@ -193,8 +189,7 @@ public class DatabaseUpdater {
 	    throws UnsupportedOperationException, SQLException {
 	LOG.debug("Create new RUNNING, NOT PAUSED simulation");
 	RowId id = (RowId) lastSimCont.addItem();
-	lastSimCont.getContainerProperty(id, SimulationCols.simulator_simulatorid.toString()).setValue(
-		Integer.valueOf(simulatorId));
+	lastSimCont.getContainerProperty(id, SimulationCols.simulatorid.toString()).setValue(Integer.valueOf(simulatorId));
 	lastSimCont.getContainerProperty(id, SimulationCols.issimulationon.toString()).setValue(SimulatorsStatus.SIMULATION_ON);
 	lastSimCont.getContainerProperty(id, SimulationCols.issimulationpaused.toString()).setValue(
 		SimulatorsStatus.SIMULATION_NOT_PAUSED);

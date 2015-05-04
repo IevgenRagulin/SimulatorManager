@@ -1,8 +1,8 @@
 package cz.vutbr.fit.simulatormanager.database.columns;
 
 public enum SimulationDevStateCols {
-    devstateid, //
-    simulation_simulationid, //
+    simulationdevstateid, //
+    simulationid, //
     elevator, //
     eleron, //
     rudder, //

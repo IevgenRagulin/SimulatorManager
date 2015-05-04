@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 
 public class DistanceUtil {
-    final static Logger LOG = LoggerFactory.getLogger(DistanceUtil.class);
+    private final static Logger LOG = LoggerFactory.getLogger(DistanceUtil.class);
 
     /**
      * calculates distance between two points in meters
@@ -75,7 +75,7 @@ public class DistanceUtil {
 	    hasPlaneMoved = true;
 	}
 	if (hasPlaneMoved) {
-	    LOG.info(
+	    LOG.debug(
 		    "Plane has moved or there is no info about simulations for simulator. Has moved over: {} meters. The threshold is: {}. PrevSimItem: {}",
 		    distanceActual, distInMetersThreshold, prevSimItem);
 	}
