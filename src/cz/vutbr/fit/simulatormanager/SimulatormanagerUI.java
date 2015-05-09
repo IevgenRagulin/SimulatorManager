@@ -59,9 +59,8 @@ public class SimulatormanagerUI extends UI {
 	if (!uiInitialized) {
 	    if (!DatabaseHelperPureJDBC.isDatabaseRunning()) {
 		Notification.show("Please, check if database is running and configured properly",
-			"Current configuration. DB URL: " + AppConfig.getDbUrl() + " DB Username: "
-				+ AppConfig.getDbUserName() + ". Configuration file location: "
-				+ AppConfig.CONF_FILE_PATH, Notification.Type.ERROR_MESSAGE);
+			"Current configuration. DB URL: " + AppConfig.getDbUrl() + " DB Username: " + AppConfig.getDbUserName()
+				+ ". Configuration file location: " + AppConfig.CONF_FILE_PATH, Notification.Type.ERROR_MESSAGE);
 	    } else {
 		getPage().setTitle(APPLICATION_NAME);
 		navigator = new Navigator(this, this);

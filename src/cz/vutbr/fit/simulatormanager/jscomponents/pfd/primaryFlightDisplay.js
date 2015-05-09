@@ -142,6 +142,7 @@ function update() {
 	if (!window.currentlyChangingRoll) {
 		setRoll();
 	}
+	redrawPFD();
 	if (!window.currentlyChangingSpeed) {
 		setSpeed();
 	}

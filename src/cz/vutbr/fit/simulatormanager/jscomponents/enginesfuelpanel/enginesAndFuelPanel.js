@@ -141,7 +141,7 @@ function hasStateOfSomeFeatureChanged(state) {
 			return true;
 		}
 	}
-	console.log("state of some feature has changed NO");
+	//console.log("state of some feature has changed NO");
 	return false;
 }
 
