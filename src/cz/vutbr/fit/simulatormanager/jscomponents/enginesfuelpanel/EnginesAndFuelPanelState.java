@@ -2,6 +2,13 @@ package cz.vutbr.fit.simulatormanager.jscomponents.enginesfuelpanel;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 
+/**
+ * This class is used for communicating state of fuel, engines between java and
+ * javascript parts of the application
+ * 
+ * @author zhenia
+ *
+ */
 public class EnginesAndFuelPanelState extends JavaScriptComponentState {
     private static final long serialVersionUID = 1L;
 

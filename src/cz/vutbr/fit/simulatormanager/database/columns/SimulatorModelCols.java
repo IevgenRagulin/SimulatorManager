@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.fit.simulatormanager.Constants;
 
+/**
+ * Column names simulatormodel
+ * 
+ * @author zhenia
+ *
+ */
 public enum SimulatorModelCols {
 
     simulatormodelid("Simulator model id"), //

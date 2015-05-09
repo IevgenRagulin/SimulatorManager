@@ -16,7 +16,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 
 /**
  * This class is used for a combobox, because it uses RowId on the UI
- * (presentation), but on the DB level (model) we use Integer
+ * (presentation), but on the DB level (model) we use Integer.
  * 
  * @author zhenia
  *

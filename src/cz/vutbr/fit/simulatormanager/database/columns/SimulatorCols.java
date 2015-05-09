@@ -3,10 +3,15 @@ package cz.vutbr.fit.simulatormanager.database.columns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Column names for table simulator
+ * 
+ * @author zhenia
+ *
+ */
 public enum SimulatorCols {
 
-    active("Is simulator active",
-	    "If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
+    active("Is simulator active", "If checked, Simulator Manager will try to fetch data from the simulator every X seconds"), //
     simulatorid("Simulator id"), // simulator.simulatorid
     simulatormodelid("Simulator model"), // simulator.simulatormodelid
     simulatorname("Simulator name"), // simulator.simulatorname

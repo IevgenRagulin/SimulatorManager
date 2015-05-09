@@ -11,6 +11,12 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinService;
 
+/**
+ * Class for accessing Resources (images, files etc.)
+ * 
+ * @author zhenia
+ *
+ */
 public class ResourceUtil {
     final static Logger LOG = LoggerFactory.getLogger(ResourceUtil.class);
     private final static String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();

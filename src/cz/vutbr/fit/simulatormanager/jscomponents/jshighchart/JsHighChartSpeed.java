@@ -9,33 +9,39 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
+/**
+ * This class represents speed chart
+ * 
+ * @author zhenia
+ *
+ */
 @JavaScript({ "js_highchart_speed.js" })
 public class JsHighChartSpeed extends JsHighChart {
-	private static final long serialVersionUID = -5499980900026438314L;
+    private static final long serialVersionUID = -5499980900026438314L;
 
-	public JsHighChartSpeed(SimulationsView view, String title, String units, String cssid) {
-		super(view, cssid);
-	}
+    public JsHighChartSpeed(SimulationsView view, String title, String units, String cssid) {
+	super(view, cssid);
+    }
 
-	@Override
-	public void initChartWithDataForSimulatorWithId(String simulatorId, int newSpeed) {
-		SQLContainer simulationPfdData = view.getDBHelp().getLatestPFDInfoBySimulatorId(simulatorId);
-		if (simulationPfdData.size() > 0) {
-			addOldDataToChart(simulationPfdData, SimulationPfdInfoCols.ias.toString());
-		} else {
-			this.getState().data = "[[" + (new Date().getTime()) + "," + newSpeed + "]]";
-		}
+    @Override
+    public void initChartWithDataForSimulatorWithId(String simulatorId, int newSpeed) {
+	SQLContainer simulationPfdData = view.getDBHelp().getLatestPFDInfoBySimulatorId(simulatorId);
+	if (simulationPfdData.size() > 0) {
+	    addOldDataToChart(simulationPfdData, SimulationPfdInfoCols.ias.toString());
+	} else {
+	    this.getState().data = "[[" + (new Date().getTime()) + "," + newSpeed + "]]";
 	}
+    }
 
-	public void addNewPoint(String simulatorId, SimulationPFDItem simulationPfdItem) {
-		int newSpeed = simulationPfdItem.getBean().getIas().intValue();
-		super.addNewPoint(simulatorId, newSpeed);
-		markAsDirty();
-	}
+    public void addNewPoint(String simulatorId, SimulationPFDItem simulationPfdItem) {
+	int newSpeed = simulationPfdItem.getBean().getIas().intValue();
+	super.addNewPoint(simulatorId, newSpeed);
+	markAsDirty();
+    }
 
-	@Override
-	public void initChartWithDataForSimulationWithId(String simulationId) {
-		SQLContainer simulationPfdData = view.getDBHelp().getPFDInfoBySimulationId(simulationId);
-		addOldDataToChart(simulationPfdData, SimulationPfdInfoCols.ias.toString());
-	}
+    @Override
+    public void initChartWithDataForSimulationWithId(String simulationId) {
+	SQLContainer simulationPfdData = view.getDBHelp().getPFDInfoBySimulationId(simulationId);
+	addOldDataToChart(simulationPfdData, SimulationPfdInfoCols.ias.toString());
+    }
 }

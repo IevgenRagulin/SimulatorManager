@@ -3,6 +3,12 @@ package cz.vutbr.fit.simulatormanager.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Class which helps convert data between different types
+ * 
+ * @author zhenia
+ *
+ */
 public class ConverterUtil {
 
     final static Logger LOG = LoggerFactory.getLogger(ConverterUtil.class);
@@ -31,6 +37,9 @@ public class ConverterUtil {
 
     public static Integer stringToInt(String strVal) {
 	if (strVal != null) {
+	    // remove spaces (including non breaking)
+	    strVal = strVal.replaceAll("\\s+", "");
+	    strVal = strVal.replace("\u00A0", "");
 	    return Integer.parseInt(strVal);
 	}
 	return null;

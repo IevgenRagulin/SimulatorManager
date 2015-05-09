@@ -13,6 +13,12 @@ import org.slf4j.LoggerFactory;
 import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.AllSimulationInfo;
 
+/**
+ * Class for getting data from simulators through AWCom
+ * 
+ * @author zhenia
+ *
+ */
 public class AWComClient {
 
     private final static Logger LOG = LoggerFactory.getLogger(AWComClient.class);

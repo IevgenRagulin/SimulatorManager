@@ -23,9 +23,9 @@ import cz.vutbr.fit.simulatormanager.simulatorcommunication.AWComParser;
  * Class for checking if the Simulator Model corresponds to the data sent by
  * simulator through AWCOM.
  * 
- * Currently checks engine configuration
+ * Currently checks engine configuration, fuel configuration
  * 
- * TODO: check fuel configuration, number of landing gears
+ * TODO: check number of landing gears, anything else?
  * 
  * @author zhenia
  *
@@ -89,8 +89,8 @@ public class SimulatorValidator {
 	List<String> listOfErrors = new ArrayList<String>();
 	for (EngineModelCols engineModelColumn : EngineModelCols.getEngineModelConfigurationCols()) {
 	    boolean isFeatureEnabledInDb = isFeatureEnabledInDb(engineItem, engineModelColumn.toString());
-	    Float valueFromAwCom = AWComParser.getValueForEngineKey(engineNumber, engineModelColumn.toString()
-		    .toUpperCase(), responseFromAwCom);
+	    Float valueFromAwCom = AWComParser.getValueForEngineKey(engineNumber, engineModelColumn.toString().toUpperCase(),
+		    responseFromAwCom);
 	    boolean isFeatureEnabledAccordingToAwCom = isAwComSendingValueForFeature(valueFromAwCom);
 	    if (isFeatureConfigurationWrong(isFeatureEnabledInDb, isFeatureEnabledAccordingToAwCom)) {
 		listOfErrors.add(buildErrorEngineMessage(engineModelColumn.toString(), valueFromAwCom, engineNumber));
@@ -100,8 +100,8 @@ public class SimulatorValidator {
     }
 
     private static String buildSimulatorModelErrorMessage(String featureName, Float valueFromAwcom) {
-	return new StringBuilder(100).append(featureName.toUpperCase())
-		.append(" needs to be disabled. Value from awcom: ").append(valueFromAwcom).toString();
+	return new StringBuilder(100).append(featureName.toUpperCase()).append(" needs to be disabled. Value from awcom: ")
+		.append(valueFromAwcom).toString();
     }
 
     private static String buildErrorEngineMessage(String featureName, Float valueFromAwcom, int engineNumber) {

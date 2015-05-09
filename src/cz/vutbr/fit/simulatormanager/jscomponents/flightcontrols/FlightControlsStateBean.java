@@ -2,6 +2,13 @@ package cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols;
 
 import java.io.Serializable;
 
+/**
+ * This class is needed so that FlightControlsState class is accessed less
+ * frequently to improve performance
+ * 
+ * @author zhenia
+ *
+ */
 public class FlightControlsStateBean implements Serializable {
     private static final long serialVersionUID = -1663050188807660753L;
     /* Plane configuration */
@@ -23,9 +30,8 @@ public class FlightControlsStateBean implements Serializable {
     public int landg_3;// landing gear 1
     private int[] test = new int[] { 1, 2, 3 };
 
-    public FlightControlsStateBean(float aileron, float elevator, float rudder, float aileront, float elevatort,
-	    float ruddert, float speedbrakes, float flaps, boolean brakes, boolean paused, int numOfLandG, int landg_1,
-	    int landg_2, int landg_3) {
+    public FlightControlsStateBean(float aileron, float elevator, float rudder, float aileront, float elevatort, float ruddert,
+	    float speedbrakes, float flaps, boolean brakes, boolean paused, int numOfLandG, int landg_1, int landg_2, int landg_3) {
 	this.ail = aileron;
 	this.el = elevator;
 	this.rd = rudder;

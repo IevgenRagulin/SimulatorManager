@@ -7,6 +7,12 @@ import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.beans.AllSimulationInfo;
 import cz.vutbr.fit.simulatormanager.util.ConverterUtil;
 
+/**
+ * Class for parsing data received from simulators
+ * 
+ * @author zhenia
+ *
+ */
 public class AWComParser {
 
     final static Logger LOG = LoggerFactory.getLogger(AWComParser.class);

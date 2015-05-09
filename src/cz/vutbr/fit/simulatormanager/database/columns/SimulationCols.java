@@ -1,5 +1,11 @@
 package cz.vutbr.fit.simulatormanager.database.columns;
 
+/**
+ * Column names for table simulation
+ * 
+ * @author zhenia
+ *
+ */
 public enum SimulationCols {
     simulationid("Simulation id"), //
     simulatorid("Simulator id"), //

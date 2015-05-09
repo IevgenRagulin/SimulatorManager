@@ -9,6 +9,13 @@ import cz.vutbr.fit.simulatormanager.database.SimulatorModelQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 import cz.vutbr.fit.simulatormanager.util.ConverterUtil;
 
+/**
+ * Flight controls class: control yoke, trim, paused, flaps, speed brakes,
+ * brakes, landing gears
+ * 
+ * @author zhenia
+ *
+ */
 @SuppressWarnings("serial")
 @com.vaadin.annotations.JavaScript({ "flightControls.js" })
 public class FlightControls extends AbstractJavaScriptComponent {

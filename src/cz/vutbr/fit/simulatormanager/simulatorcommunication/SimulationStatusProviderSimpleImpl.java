@@ -11,6 +11,13 @@ import cz.vutbr.fit.simulatormanager.beans.AllSimulationInfo;
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.util.DistanceUtil;
 
+/**
+ * Class which decides if the simulator is running/paused or stopped. It has
+ * retry logic in it retry logic in it
+ * 
+ * @author zhenia
+ *
+ */
 public class SimulationStatusProviderSimpleImpl {
     final static Logger LOG = LoggerFactory.getLogger(SimulationStatusProviderSimpleImpl.class);
 
@@ -43,6 +50,16 @@ public class SimulationStatusProviderSimpleImpl {
 	return (AWComClient.getSimulationData(host, port) != null);
     }
 
+    /**
+     * Returns true if can access simulator and if it's position has changed at
+     * least once in the last 10000 requests. Returns false if simulator
+     * couldn't be accessed during last maxFailedTolearatedRequests or if the
+     * position hasn't changed during last 10000 requests
+     * 
+     * @param dataFromSimulation
+     * @param simulatorId
+     * @return
+     */
     public static boolean isSimulatorRunning(AllSimulationInfo dataFromSimulation, String simulatorId) {
 	SimulationStatusProviderSimpleImpl.updateSimulatorRespondStatistic(dataFromSimulation, simulatorId);
 	Integer currentNumbOfFailed = simulatorIdNumberOfFailedRequests.get(simulatorId);

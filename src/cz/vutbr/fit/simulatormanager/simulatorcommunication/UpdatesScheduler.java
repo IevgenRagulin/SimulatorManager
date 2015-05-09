@@ -20,6 +20,14 @@ import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.DatabaseHelper;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorCols;
 
+/**
+ * This class is the heart of the backend part of the application. It schedules
+ * the simulators to be contacted every T milliseconds, dedicating one thread
+ * for each active simulator
+ * 
+ * @author zhenia
+ *
+ */
 public class UpdatesScheduler {
 
     final static Logger LOG = LoggerFactory.getLogger(UpdatesScheduler.class);
@@ -56,8 +64,7 @@ public class UpdatesScheduler {
     public static void updateRunningSimsStatus() {
 	SQLContainer simulatorContainer = dbHelp.getNewSimulatorContainer();
 	if (numberOfThreads != simulatorContainer.size()) {
-	    LOG.info(
-		    "Number of simulators has changed. Previously we had: {} threads, now: {}. Creating new thread pool. ",
+	    LOG.info("Number of simulators has changed. Previously we had: {} threads, now: {}. Creating new thread pool. ",
 		    numberOfThreads, simulatorContainer.size());
 	    numberOfThreads = simulatorContainer.size();
 	    schedulerSimulationUpdater.shutdownNow();

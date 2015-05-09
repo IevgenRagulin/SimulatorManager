@@ -24,6 +24,13 @@ import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 
+/**
+ * This class updates the state of the simulation in the database (running,
+ * paused etc.)
+ * 
+ * @author zhenia
+ *
+ */
 public class SimulationsUpdater implements Runnable {
     final static Logger LOG = LoggerFactory.getLogger(SimulationsUpdater.class);
 

@@ -3,9 +3,15 @@ package cz.vutbr.fit.simulatormanager.database.columns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Database column names for table simulationenginesstate
+ * 
+ * @author zhenia
+ *
+ */
 public enum EngineCols {
 
-    enginestateid("Engine state id"), //
+    simulationenginesstateid("Engine state id"), //
     simulationid("Simulation id"), //
     engines_num("Number of engines"), //
     rpm("RPM"), //

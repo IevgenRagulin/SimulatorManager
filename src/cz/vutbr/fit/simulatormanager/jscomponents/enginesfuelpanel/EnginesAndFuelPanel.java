@@ -20,6 +20,12 @@ import cz.vutbr.fit.simulatormanager.database.EngineModelQueries;
 import cz.vutbr.fit.simulatormanager.database.SimulatorModelQueries;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
 
+/**
+ * Engines and fuel Panel contains gauges for displaying engines and fuel state
+ * 
+ * @author zhenia
+ *
+ */
 @com.vaadin.annotations.JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",
 	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "enginesAndFuelPanel.js" })
 @com.vaadin.annotations.StyleSheet({ "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" })

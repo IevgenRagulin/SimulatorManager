@@ -12,6 +12,12 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
+/**
+ * This is a class for an altitude graph
+ * 
+ * @author zhenia
+ *
+ */
 @JavaScript({ "js_highchart_altitude.js" })
 public class JsHighChartAltitude extends JsHighChart {
     private static final long serialVersionUID = 8808324160034287613L;

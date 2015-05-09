@@ -2,6 +2,12 @@ package cz.vutbr.fit.simulatormanager.jscomponents.flightcontrols;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 
+/**
+ * Class for javascript-java communication of FlightControls component
+ * 
+ * @author zhenia
+ *
+ */
 @SuppressWarnings("serial")
 public class FlightControlsState extends JavaScriptComponentState {
     // the variable names are so short so that we pass less data through the

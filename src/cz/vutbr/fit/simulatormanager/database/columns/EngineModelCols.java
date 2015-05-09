@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.fit.simulatormanager.Constants;
 
+/**
+ * Database column names for table enginemodel
+ * 
+ * @author zhenia
+ *
+ */
 public enum EngineModelCols {
 
     enginemodelid("Engine model id"), //

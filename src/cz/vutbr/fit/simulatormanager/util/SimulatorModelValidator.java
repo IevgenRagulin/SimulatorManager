@@ -56,7 +56,7 @@ public class SimulatorModelValidator {
     private static List<String> validateModelConfiguration(SimulatorModelForm simulatorModelForm) {
 	List<String> errors = new ArrayList<String>();
 	SimulatorModelBean sim = buildSimulatorModelBean(simulatorModelForm);
-	LOG.info("IS llfu" + sim.isLfu());
+	LOG.debug("IS llfu" + sim.isLfu());
 	addError(
 		errors,
 		validateVal(SimulatorModelCols.lfu, sim.isLfu(), sim.getMinlfu(), sim.getLowlfu(), sim.getHighlfu(),

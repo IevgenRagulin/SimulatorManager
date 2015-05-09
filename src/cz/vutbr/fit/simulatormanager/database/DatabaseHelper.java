@@ -22,6 +22,14 @@ import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationCols;
 import cz.vutbr.fit.simulatormanager.exception.UnknownSimulatorException;
 
+/**
+ * This class is used for accessing the database. It has most of the db queries
+ * in it. Later, I decided to save queries in different files
+ * (EngineModelQueries, SimulationQueries etc.)
+ * 
+ * @author zhenia
+ *
+ */
 public class DatabaseHelper implements Serializable {
     private static final long serialVersionUID = -5027557673512708776L;
     final static Logger LOG = LoggerFactory.getLogger(DatabaseHelper.class);

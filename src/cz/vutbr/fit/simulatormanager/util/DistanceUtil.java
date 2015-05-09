@@ -5,6 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 
+/**
+ * Class for measuring distance between cordinates
+ * 
+ * @author zhenia
+ *
+ */
 public class DistanceUtil {
     private final static Logger LOG = LoggerFactory.getLogger(DistanceUtil.class);
 

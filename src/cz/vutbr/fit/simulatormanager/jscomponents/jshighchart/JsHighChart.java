@@ -19,6 +19,12 @@ import com.vaadin.ui.JavaScriptFunction;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 import cz.vutbr.fit.simulatormanager.views.SimulationsView;
 
+/**
+ * This is a parent class for speed/altitude graphs
+ * 
+ * @author zhenia
+ *
+ */
 @JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", "highstock.js" })
 public abstract class JsHighChart extends AbstractJavaScriptComponent {
     private static final long serialVersionUID = -9172268881960130470L;

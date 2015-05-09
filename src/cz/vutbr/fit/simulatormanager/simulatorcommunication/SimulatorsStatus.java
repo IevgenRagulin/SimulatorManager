@@ -10,6 +10,13 @@ import cz.vutbr.fit.simulatormanager.items.SimulationInfoItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationItem;
 import cz.vutbr.fit.simulatormanager.items.SimulationPFDItem;
 
+/**
+ * This class contains the current state of the simulators (engines info, pfd
+ * info etc.)
+ * 
+ * @author zhenia
+ *
+ */
 public class SimulatorsStatus {
     public static final boolean SIMULATION_ON = true;
     public static final boolean SIMULATION_OFF = false;

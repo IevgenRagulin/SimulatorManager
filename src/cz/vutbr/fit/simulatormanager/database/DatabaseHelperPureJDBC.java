@@ -22,8 +22,9 @@ import cz.vutbr.fit.simulatormanager.beans.AllEngineInfo;
 import cz.vutbr.fit.simulatormanager.data.AppConfig;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineCols;
 
-/*
- * Uses pure jdbc connection (instead of Vaadin containers) to make basic queries to database 
+/**
+ * Uses pure jdbc connection (instead of Vaadin containers) to make queries to
+ * database
  */
 public class DatabaseHelperPureJDBC {
 
@@ -229,7 +230,8 @@ public class DatabaseHelperPureJDBC {
 
     /**
      * Gets latest engines info which corresponds to pfdidinfoid, and whose
-     * timestamp is the closest to timestamp
+     * timestamp is the closest to timestamp. We use pure jdbc here because
+     * vaadin doesn't seem to support arrays
      */
     public static Optional<AllEngineInfo> getEnginesInfo(Integer pfdInfoId, long timestamp) {
 	String selectQuery = "SELECT * FROM simulationenginesstate WHERE simulationid=(SELECT simulationid FROM simulationpfdinfo WHERE simulationpfdinfoid=?)  ORDER BY ABS(EXTRACT(EPOCH FROM timestamp-(to_timestamp(?/1000)::timestamp))) limit 1";
