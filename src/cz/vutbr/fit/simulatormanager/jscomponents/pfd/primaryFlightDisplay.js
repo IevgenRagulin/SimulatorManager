@@ -8,8 +8,8 @@ var canvasWidth = 240;
 var sightHeight = 208.8;
 var sightWidth = 240;
 
-var vsCanW = 50;
-var vsCanH = 340;
+var vsCanW = 50;//vertical speed width
+var vsCanH = 340;//vertical speed height
 
 var compasCanvasWidth = 240;
 var compasCanvasHeight = 40;
@@ -27,11 +27,12 @@ var leftSpeedBarMargin = 2;
 var topSpeedBarMargin = 0;
 var speedIndicatorWidth = 5;
 
-var altBarWidth = 40;
-var altBarHeight = 260;
+var altBarWidth = 40;//altitude bar width
+var altBarHeight = 260;//altitude bar height
 var altBarRightMargin = 0;
 var altBarTopMargin = 0;
 
+//current values on the canvas, animation increases/decreases these values step by step to get to wantHaveValues
 var currentSpeed = 0;
 var currentAltitude = 0;
 var currentPitch = 0;
@@ -39,6 +40,7 @@ var currentRoll = 0;
 var currentCompass = 0;
 var currentVerSpeed = 0;
 
+//latest values from AWCom
 var wantHaveSpeed = 0;
 var wantHaveAltitude = 0;
 var wantHavePitch = 0;
@@ -46,8 +48,7 @@ var wantHaveRoll = 0;
 var wantHaveCompass = 0;
 var wantHaveVerSpeed = 0;
 
-var currentlyChangingRoll = false;
-var currentlyChangingPitch = false;
+var currentlyChangingRollOrPitch = false;
 var currentlyChangingAlt = false;
 var currentlyChangingSpeed = false;
 var currentlyChangingCompass = false;
@@ -61,12 +62,16 @@ var currentlyRotatingHorizont = false;
 var horizontHasBeenRotated = false;
 
 var darkGray = '#404040';
+var pfdCan;
+var pfdCtx;
 //var currentPitchShape = new createjs.Shape();
 function cz_vutbr_fit_simulatormanager_jscomponents_pfd_PrimaryFlightDisplay() {
 	//window.currentPitchShape.x=0;
 	var e = this.getElement();
 	resetPfd();
 	initHtml(e);
+	window.pfdCan = document.getElementById('pfd');
+	window.pfdCtx = window.pfdCan.getContext('2d');
 	init();
 	update();
 	this.onStateChange = function() {
@@ -91,8 +96,7 @@ function resetPfd() {
 	window.currentRoll = 0;
 	window.currentPitch = 0;
 	window.currentVerSpeed = 0;
-	window.currentlyChangingRoll = false;
-	window.currentlyChangingPitch = false;
+	window.currentlyChangingRollOrPitch = false;
 	window.currentlyChangingAlt = false;
 	window.currentlyChangingSpeed = false;
 	window.currentlyChangingCompass = false;
@@ -124,9 +128,6 @@ function initHtml(e) {
 			+ "</canvas>" + "</div>";
 }
 
-
-
-
 function init() {
 	drawSight();
 	drawCompassIndicator();
@@ -135,14 +136,12 @@ function init() {
 }
 
 function update() {
-	//we only do the update if no other update is done it the moment to avoid loops 
-	if (!window.currentlyChangingPitch) {
-		setPitch();
+	//we only do the update if no other update is done it the moment to avoid eternal loops 
+	TweenLite.to(window, 1, {currentPitch:window.wantHavePitch});
+	//TweenLite.to(window, 1, {currentRoll:window.wantHaveRoll});
+	if (!window.currentlyChangingRollOrPitch) {
+		setRollAndPitch();
 	}
-	if (!window.currentlyChangingRoll) {
-		setRoll();
-	}
-	redrawPFD();
 	if (!window.currentlyChangingSpeed) {
 		setSpeed();
 	}
@@ -162,16 +161,6 @@ function clearRect(ctx, x, y, w, h) {
 	ctx.clearRect(x, y, w, h);
 }
 
-function drawTestLine(can, ctx) {
-	ctx.beginPath();
-	ctx.lineWidth = 3;
-	ctx.strokeStyle = 'red';
-	ctx.moveTo(0, 0);
-	ctx.lineTo(can.width, can.height);
-	ctx.stroke();
-	ctx.restore();
-}
-
 function fillRect(ctx, x, y, w, h) {
 	ctx.beginPath();
 	ctx.fillRect(x, y, w, h);
@@ -180,6 +169,7 @@ function fillRect(ctx, x, y, w, h) {
 
 function fillSky(ctx, x, y, w, h) {
 	ctx.fillStyle = '#0080ff';
+	console.log("fill sky. fill rect. x: "+x+" y: "+y+" width "+w+ " height"+h);
 	fillRect(ctx, x, y, w, h);
 }
 
@@ -214,64 +204,43 @@ function calculateAltitudeSpeedStep(dif) {
 	}
 }
 
+/*
+ * we only make animation step if the difference between desired valu and current value is big enough
+ */
 function shouldWeMakeAnimationStep(dif, step) {
 	return ((dif > step) || (dif < -step));
 }
 
-function setPitch() {
+function setRollAndPitch() {
+	//update PITCH values
 	// Check if we should continue animating pitch
 	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
-	if (shouldWeMakeAnimationStep(difPitch, 0.03)) {
+	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
+	if (shouldWeMakeAnimationStep(difPitch, 0.03)||shouldWeMakeAnimationStep(difRoll, 0.005)) {
 		requestAnimationFrame(function() {
-			setPitch();
+			setRollAndPitch();
 		});
 		difPitch = calculateCompassPitchRollStep(difPitch, 0.03);
-		window.currentlyChangingPitch = true;
+		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
+		window.currentlyChangingRollOrPitch = true;
 	} else {
-		window.currentlyChangingPitch = false;
+		window.currentlyChangingRollOrPitch = false;
 	}
-
-	var ctx = document.getElementById('pfd').getContext('2d');
 	var newPitch = (window.currentPitch + difPitch) % 360;
 	// Transform negative numbers to 0-359 coordinates
 	if (newPitch < 0) {
 		newPitch = 360 + newPitch;
 	}
-	// Draw lines and numbers for sight
-	drawLineNumbersForSight(0, newPitch);
-
-	// ctx.save();
-	drawArtificialHorizon(ctx, window.currentRoll, newPitch, window.currentYaw);
-	window.currentPitch = newPitch;
-	// ctx.restore();
-	//document.getElementById('pitchV').innerHTML = window.currentPitch;
-}
-
-function setRoll() {
-	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
-	var can = document.getElementById('pfd');
-	var ctx = can.getContext('2d');
-	// Check if we should continue animating roll
-	if (shouldWeMakeAnimationStep(difRoll, 0.005))  {
-		requestAnimationFrame(function() {
-			setRoll();
-		});
-		 
-		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
-		window.currentlyChangingRoll = true;
-	} else {
-		window.currentlyChangingRoll = false;
-	}
-	//rotate canvas back to initial position
-	rotateCanvasByRollDegrees(can, window.currentRoll);
+	//window.currentPitch = newPitch;
+	//DRAW everything
+	//rotate canvas back to initial position. It's important to rotate back, o that the lines for sight are drawn when rotation angle is 0
+	rotateCanvasByRollDegrees(window.pfdCan, window.currentRoll);
 	drawLineNumbersForSight(difRoll, window.currentPitch);
 	window.currentRoll = (window.currentRoll + difRoll) % 360;
 	//rotate canvas to a new position
-	rotateCanvasByRollDegrees(can, -window.currentRoll);
-
-	drawArtificialHorizon(ctx, window.currentRoll, window.currentPitch,
+	rotateCanvasByRollDegrees(window.pfdCan, -window.currentRoll);
+	drawArtificialHorizon(window.currentRoll, window.currentPitch,
 			window.currentYaw);
-	//document.getElementById('rollV').innerHTML = window.currentRoll;
 }
 
 function rotateCanvasByRollDegrees(can, roll) {
@@ -281,9 +250,9 @@ function rotateCanvasByRollDegrees(can, roll) {
 	ctx.translate(-can.width / 2, -can.height / 2);
 }
 
-function drawArtificialHorizon(ctx, roll, pitch, yaw) {
-	clearRect(ctx, 0, 0, window.window.canvasWidth, window.canvasHeight);
-	drawSkyAndGround(ctx, pitch);
+function drawArtificialHorizon(roll, pitch, yaw) {
+	clearRect(window.pfdCtx, 0, 0, window.canvasWidth, window.canvasHeight);
+	drawSkyAndGround(window.pfdCtx, pitch);
 }
 
 // TODO: Simplify this code
@@ -354,17 +323,20 @@ function drawBankAngleLines() {
 	ctx.lineTo(window.canvasWidth/2+3, 0);
 	ctx.lineTo(window.canvasWidth/2, 6);
 	ctx.lineTo(window.canvasWidth/2-3, 0);
+	ctx.stroke();
 	ctx.fill();
 	
 }
 
+/**
+ * Note: doesn't do stroke to improve performance, stroke should be done by caller
+ */
 function drawBankLineAtRoll(can, roll, startPos, endPos) {
 	var ctx = can.getContext('2d');
 	ctx.save();
 	rotateCanvasByRollDegrees(can, roll);
 	ctx.moveTo(can.width / 2, can.height * startPos);
 	ctx.lineTo(can.width / 2, can.height * endPos);
-	ctx.stroke();
 	ctx.restore();
 }
 
@@ -409,20 +381,11 @@ function isLineNumberVisible(lineNumberVal, pitchVal) {
 	} else if ((lineNumberVal<=0)&&(pitchVal>=0)){
 		return ((Math.abs(Math.abs(lineNumberVal) - pitchVal)) < visibleNumOfLinesTop);
 	}
-	
-	 
 }
 
-function rotateSightFor180DigreesArountPoint(ctxSight, xRotationPoint,
-		yRotationPoint) {
-	window.currentlyRotatingHorizont = true;
-	window.horizontHasBeenRotated = true;
-	ctxSight.translate(xRotationPoint, yRotationPoint);
-	ctxSight.rotate(180 * Math.PI / 180);
-	ctxSight.translate(-xRotationPoint, -yRotationPoint);
-}
-
-// Transform 180-360 values to (-180;-0)
+/**
+ * Transform 180-360 values to (-180;-0)
+ */ 
 function transformPitchValue(pitch) {
 	if (pitch > 180) {
 		pitch = pitch - 360;
@@ -430,7 +393,9 @@ function transformPitchValue(pitch) {
 	return pitch;
 }
 
-
+/**
+ * draw line numbers indicating pitch angle
+ */
 function drawLineNumbersForSight(difRoll, difPitch) {
 	var transformedPitchValue = transformPitchValue(difPitch);
 	var canSight = document.getElementById('sight');
@@ -448,14 +413,20 @@ function drawLineNumbersForSight(difRoll, difPitch) {
 	ctxSight.stroke();
 }
 
+/**
+ * as far as i remember, this draws this little triangle on the top to indicate performance
+ * note: doesn't stroke at the end to improve performance. 
+ */
 function drawBankIndicator(can, ctx) {
 	ctx.moveTo(can.width/2, can.height*0.04);
 	ctx.lineTo(can.width/2-4, can.height*0.04+8);
 	ctx.lineTo(can.width/2+4, can.height*0.04+8);
 	ctx.lineTo(can.width/2, can.height*0.04);
-	ctx.stroke();
 }
 
+/**
+ * draws the circle in the midle of the pfd
+ */
 function drawSight() {
 	var ctx = document.getElementById('sight').getContext('2d');
 	ctx.clearRect(0, -100, window.horizontWidth, window.canvasHeight + 200);
@@ -471,6 +442,7 @@ function drawSight() {
 	// Draw point
 	arc(ctx, window.window.canvasWidth / 2, window.canvasHeight / 2,
 			window.sightCenterCenterRadius, 0, 2 * Math.PI);
+	ctx.stroke();
 	ctx.restore();
 }
 
@@ -711,13 +683,6 @@ function rotateCompassCanvasByDegrees(compassCanvas, degrees) {
 			-window.compasCanvasHeight - window.compasTopMargin);
 }
 
-function rotateCanvasByRollDegrees(can, roll) {
-	var ctx = can.getContext('2d');
-	ctx.translate(can.width / 2, can.height/ 2);
-	ctx.rotate(roll * Math.PI / 180);
-	ctx.translate(-can.width / 2, -can.height / 2);
-}
-
 // Sets compass value in small iterations. Animates it also with
 // requestAnimationFrame
 function setCompassValue(ctxCompass, compass) {
@@ -740,7 +705,6 @@ function setCompassValue(ctxCompass, compass) {
 	}
 	//rotate compass to new pos
 	rotateCompassCanvasByDegrees(ctxCompass, -window.currentCompass);
-	//document.getElementById('compassV').innerHTML = window.currentCompass;
 }
 function setCompass() {
 	var ctxCompass = document.getElementById('compass').getContext('2d');
@@ -832,12 +796,9 @@ function drawPolygone(ctx, poly) {
 	ctx.stroke();
 }
 
-function fillArc(ctx, x, y, r, startAngle, finishAngle) {
-	arc(ctx, x, y, r, startAngle, finishAngle);
-	ctx.fill();
-}
-
-// Help function for drawing arc
+/**
+ * Note: stroke/fill should be called by caller to improve performance
+ */ 
 function arc(ctx, x, y, r, startAngle, finishAngle) {
 	ctx.beginPath();
 	ctx.arc(x, y, r, startAngle, finishAngle);

@@ -290,15 +290,16 @@ function drawAilRudElevTrim() {
 		var y = window.yokeHeight / 2 + yOffset;
 		var x = window.yokeWidth / 2 + window.currentAileronTrim
 				* (window.yokeWidth / 2) + xOffset;
-		fillArc(ctx, x, y, 5, 0, 2 * Math.PI);
+		arc(ctx, x, y, 5, 0, 2 * Math.PI);
 	}
 	if (isFlightControlDataAvailable(window.wantHaveElevatorTrim)) {
 		/* Draw elevator */
 		x = window.yokeWidth / 2 + xOffset;
 		y = window.yokeHeight / 2 + window.currentElevatorTrim
 				* (window.yokeHeight / 2) + yOffset;
-		fillArc(ctx, x, y, 5, 0, 2 * Math.PI);
+		arc(ctx, x, y, 5, 0, 2 * Math.PI);
 	}
+	ctx.fill();
 	if (isFlightControlDataAvailable(window.wantHaveRudderTrim)) {
 		/* Draw rudder */
 		drawRudderIndTrim();
@@ -315,12 +316,13 @@ function drawAilRudElev() {
 	var y = window.yokeHeight / 2 + yOffset;
 	var x = window.yokeWidth / 2 + window.currentAileron
 			* (window.yokeWidth / 2) + xOffset;
-	fillArc(ctx, x, y, 5, 0, 2 * Math.PI);
+	arc(ctx, x, y, 5, 0, 2 * Math.PI);
 	/* Draw elevator */
 	x = window.yokeWidth / 2 + xOffset;
 	y = window.yokeHeight / 2 + window.currentElevator
 			* (window.yokeHeight / 2) + yOffset;
-	fillArc(ctx, x, y, 5, 0, 2 * Math.PI);
+	arc(ctx, x, y, 5, 0, 2 * Math.PI);
+	ctx.fill();
 	/* Draw rudder */
 	drawRudderInd();
 }
@@ -347,7 +349,8 @@ function drawRudderRudderTrimIndHelpFunc(ctxRud, currentValue) {
 	var y = window.rudderHeight / 2 + window.yOffsetR;
 	var x = window.rudderWidth / 2 + currentValue * (window.rudderWidth / 2)
 			+ window.xOffsetR;
-	fillArc(ctxRud, x, y, 5, 0, 2 * Math.PI);
+	arc(ctxRud, x, y, 5, 0, 2 * Math.PI);
+	ctxRud.fill();
 }
 
 function setSpeedBrakes() {

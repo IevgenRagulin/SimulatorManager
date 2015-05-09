@@ -6,7 +6,7 @@ import com.vaadin.data.Property;
 import cz.vutbr.fit.simulatormanager.database.columns.SimulationPfdInfoCols;
 
 @SuppressWarnings("serial")
-@com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js" })
+@com.vaadin.annotations.JavaScript({ "primaryFlightDisplay.js", "TimelineLite.min.js", "TweenLite.min.js" })
 public class PrimaryFlightDisplay extends com.vaadin.ui.AbstractJavaScriptComponent {
 
     private final String CSS_CLASS = "PFD_DISPLAY";
