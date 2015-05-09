@@ -60,7 +60,7 @@ function initEnginesPanel() {
 		if (isHtmlInitialized) {
 			// iterate over fuel tanks
 			for (var i = 0; i < fuelTanks.length; i++) {
-				setTimeoutToDrawFuelGauge(i);
+				//setTimeoutToDrawFuelGauge(i);
 			}
 			// iterate over engines. the number of engines is the same as the
 			// size of array rpm
@@ -74,7 +74,7 @@ function initEnginesPanel() {
 					// because
 					// javascript is so javascript:
 					// http://stackoverflow.com/questions/5226285/settimeout-in-a-for-loop-and-pass-i-as-value
-					setTimeoutToDrawEngineGauge(i, j);
+					//setTimeoutToDrawEngineGauge(i, j);
 				}
 			}
 		}
@@ -83,9 +83,6 @@ function initEnginesPanel() {
 
 /**
  * Draw gauge on engineId for featureId asynchroniously
- * 
- * @param engineId
- * @param featureId
  */
 function setTimeoutToDrawEngineGauge(engineId, featureId) {
 	// console.log("kuku set timeout engineId"+engineId+"featureId"+featureId);
@@ -254,6 +251,7 @@ function buildGaugeOptions(greenFrom_, greenTo_, redFrom_, redTo_, minVal,
 		redTo : redTo_,
 		greenFrom : greenFrom_,
 		greenTo : greenTo_,
+		animation : false,
 		minorTicks : 5,
 		max : maxVal,
 		min : minVal

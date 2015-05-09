@@ -27,7 +27,7 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
  *
  */
 @com.vaadin.annotations.JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",
-	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "enginesAndFuelPanel.js" })
+	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "highcharts.js", "enginesAndFuelPanel.js" })
 @com.vaadin.annotations.StyleSheet({ "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" })
 public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 

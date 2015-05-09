@@ -175,7 +175,7 @@ function calculateFlightControlsAnimStep(dif, step) {
 // Animation for setting rudder
 function setRudder() {
 	var dif = window.wantHaveRudder - window.currentRudder;
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setRudder();
 		});
@@ -192,7 +192,7 @@ function setRudder() {
 function setElevator() {
 	var dif = window.wantHaveElevator - window.currentElevator;
 	// check if we should continue animating
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setElevator();
 		});
@@ -210,7 +210,7 @@ function setElevator() {
 function setAileron() {
 	var dif = window.wantHaveAileron - window.currentAileron;
 	// check if we should continue animating
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setAileron();
 		});
@@ -227,7 +227,7 @@ function setAileron() {
 function setAileronTrim() {
 	var dif = window.wantHaveAileronTrim - window.currentAileronTrim;
 	// check if we should continue animating
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setAileronTrim();
 		});
@@ -249,7 +249,7 @@ function isFlightControlDataAvailable(value) {
 // Animation for setting rudder trim
 function setRudderTrim() {
 	var dif = window.wantHaveRudderTrim - window.currentRudderTrim;
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setRudderTrim();
 		});
@@ -266,7 +266,7 @@ function setRudderTrim() {
 function setElevatorTrim() {
 	var dif = window.wantHaveElevatorTrim - window.currentElevatorTrim;
 	// check if we should continue animating
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setElevatorTrim();
 		});
@@ -356,7 +356,7 @@ function drawRudderRudderTrimIndHelpFunc(ctxRud, currentValue) {
 function setSpeedBrakes() {
 	var dif = window.wantHaveSpeedBrakes - window.currentSpeedBrakes;
 	// check if we should continue animating
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setSpeedBrakes();
 		});
@@ -375,7 +375,7 @@ function setSpeedBrakes() {
 function setFlaps() {
 	var dif = window.wantHaveFlaps - window.currentFlaps;
 	// check if we should continue animating
-	if (shouldWeMakeAnimationStep(dif, 0.05)) {
+	if (shouldRedraw(dif, 0.05)) {
 		requestAnimationFrame(function() {
 			setFlaps();
 		});
