@@ -8,8 +8,8 @@ var canvasWidth = 240;
 var sightHeight = 208.8;
 var sightWidth = 240;
 
-var vsCanW = 50;//vertical speed width
-var vsCanH = 340;//vertical speed height
+var vsCanW = 50;// vertical speed width
+var vsCanH = 340;// vertical speed height
 
 var compasCanvasWidth = 240;
 var compasCanvasHeight = 40;
@@ -27,12 +27,13 @@ var leftSpeedBarMargin = 2;
 var topSpeedBarMargin = 0;
 var speedIndicatorWidth = 5;
 
-var altBarWidth = 40;//altitude bar width
-var altBarHeight = 260;//altitude bar height
+var altBarWidth = 40;// altitude bar width
+var altBarHeight = 260;// altitude bar height
 var altBarRightMargin = 0;
 var altBarTopMargin = 0;
 
-//current values on the canvas, animation increases/decreases these values step by step to get to wantHaveValues
+// current values on the canvas, animation increases/decreases these values step
+// by step to get to wantHaveValues
 var currentSpeed = 0;
 var currentAltitude = 0;
 var currentPitch = 0;
@@ -40,7 +41,7 @@ var currentRoll = 0;
 var currentCompass = 0;
 var currentVerSpeed = 0;
 
-//latest values from AWCom
+// latest values from AWCom
 var wantHaveSpeed = 0;
 var wantHaveAltitude = 0;
 var wantHavePitch = 0;
@@ -64,9 +65,9 @@ var horizontHasBeenRotated = false;
 var darkGray = '#404040';
 var pfdCan;
 var pfdCtx;
-//var currentPitchShape = new createjs.Shape();
+var initialized = false;
 function cz_vutbr_fit_simulatormanager_jscomponents_pfd_PrimaryFlightDisplay() {
-	//window.currentPitchShape.x=0;
+	// window.currentPitchShape.x=0;
 	var e = this.getElement();
 	resetPfd();
 	initHtml(e);
@@ -81,14 +82,14 @@ function cz_vutbr_fit_simulatormanager_jscomponents_pfd_PrimaryFlightDisplay() {
 		window.wantHavePitch = this.getState().p;
 		window.wantHaveHeading = this.getState().h;
 		window.wantHaveVerSpeed = this.getState().vs;
-		update();
 	};
+	TweenLite.ticker.addEventListener("tick", update); // refresh all elements
+	window.initialized = true;
 }
 
-function handleComplete() {
-}
 
-//Set reset currentlyChangingValue, currentValue global variables to prevent bug when we switch between simulators
+// Set reset currentlyChangingValue, currentValue global variables to prevent
+// bug when we switch between simulators
 function resetPfd() {
 	window.currentCompass = 0;
 	window.currentAltitude = 0;
@@ -136,26 +137,22 @@ function init() {
 }
 
 function update() {
-	//we only do the update if no other update is done it the moment to avoid eternal loops 
-	TweenLite.to(window, 1, {currentPitch:window.wantHavePitch});
-	//TweenLite.to(window, 1, {currentRoll:window.wantHaveRoll});
-	if (!window.currentlyChangingRollOrPitch) {
-		setRollAndPitch();
-	}
-	if (!window.currentlyChangingSpeed) {
-		setSpeed();
-	}
-	if (!window.currentlyChangingAltitude) {
-		setAltitude();
-	}
-	if (!window.currentlyChangingCompass) {
-		setCompass();
-	}
-	if (!window.currentlyChangingVerSpeed) {
-		setVerticalSpeed();
-	} 
+	// This is the heart of animation. We use TweenLite library to tween the
+	// values (i.e. go smoothly from 0 to 100)
+	TweenLite.to(window, 1, {
+		currentPitch : window.wantHavePitch,
+		currentSpeed : window.wantHaveSpeed,
+		currentAltitude : window.wantHaveAltitude,
+		currentVerSpeed : window.wantHaveVerSpeed
+	});
+	// we only do the update if no other update is done at the moment to avoid
+	// eternal loops
+	setRollAndPitch();
+	setSpeed();
+	setAltitude();
+	setCompass();
+	setVerticalSpeed();
 }
-
 
 function clearRect(ctx, x, y, w, h) {
 	ctx.clearRect(x, y, w, h);
@@ -169,7 +166,6 @@ function fillRect(ctx, x, y, w, h) {
 
 function fillSky(ctx, x, y, w, h) {
 	ctx.fillStyle = '#0080ff';
-	console.log("fill sky. fill rect. x: "+x+" y: "+y+" width "+w+ " height"+h);
 	fillRect(ctx, x, y, w, h);
 }
 
@@ -196,56 +192,36 @@ function calculateCompassPitchRollStep(diff, step) {
 	return direction;
 }
 
-function calculateAltitudeSpeedStep(dif) {
-	if ((dif > 1) || (dif < 1)) {
-		return Math.round(dif * 0.1 * 100) / 100;
-	} else {
-		return 0;
-	}
-}
-
-/*
- * we only make animation step if the difference between desired valu and current value is big enough
+/**
+ * we only redraw if difference between current and want have > 0
  */
-function shouldWeMakeAnimationStep(dif, step) {
-	return ((dif > step) || (dif < -step));
+function shouldRedraw(dif, step) {
+	return ((dif > step) || (dif < -step) || window.initialized);
 }
 
 function setRollAndPitch() {
-	//update PITCH values
+	// update PITCH values
 	// Check if we should continue animating pitch
 	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
 	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
-	if (shouldWeMakeAnimationStep(difPitch, 0.03)||shouldWeMakeAnimationStep(difRoll, 0.005)) {
-		requestAnimationFrame(function() {
-			setRollAndPitch();
-		});
-		difPitch = calculateCompassPitchRollStep(difPitch, 0.03);
-		difRoll = calculateCompassPitchRollStep(difRoll, 0.05);
-		window.currentlyChangingRollOrPitch = true;
-	} else {
-		window.currentlyChangingRollOrPitch = false;
+	// DRAW everything
+	if (shouldRedraw(difRoll, 0.5)
+			|| shouldRedraw(difPitch, 0.5)) {
+		// rotate canvas back to initial position. It's important to rotate
+		// back, o that the lines for sight are drawn when rotation angle is 0
+		rotateCanvasByRollDegrees(window.pfdCan, window.currentRoll);
+		drawLineNumbersForSight(difRoll, window.currentPitch);
+		window.currentRoll = (window.currentRoll + difRoll) % 360;
+		// rotate canvas to a new position
+		rotateCanvasByRollDegrees(window.pfdCan, -window.currentRoll);
+		drawArtificialHorizon(window.currentRoll, window.currentPitch,
+				window.currentYaw);
 	}
-	var newPitch = (window.currentPitch + difPitch) % 360;
-	// Transform negative numbers to 0-359 coordinates
-	if (newPitch < 0) {
-		newPitch = 360 + newPitch;
-	}
-	//window.currentPitch = newPitch;
-	//DRAW everything
-	//rotate canvas back to initial position. It's important to rotate back, o that the lines for sight are drawn when rotation angle is 0
-	rotateCanvasByRollDegrees(window.pfdCan, window.currentRoll);
-	drawLineNumbersForSight(difRoll, window.currentPitch);
-	window.currentRoll = (window.currentRoll + difRoll) % 360;
-	//rotate canvas to a new position
-	rotateCanvasByRollDegrees(window.pfdCan, -window.currentRoll);
-	drawArtificialHorizon(window.currentRoll, window.currentPitch,
-			window.currentYaw);
 }
 
 function rotateCanvasByRollDegrees(can, roll) {
 	var ctx = can.getContext('2d');
-	ctx.translate(can.width / 2, can.height/ 2);
+	ctx.translate(can.width / 2, can.height / 2);
 	ctx.rotate(roll * Math.PI / 180);
 	ctx.translate(-can.width / 2, -can.height / 2);
 }
@@ -259,47 +235,44 @@ function drawArtificialHorizon(roll, pitch, yaw) {
 function drawSkyAndGround(ctx, newPitch) {
 	// Calculating the X,Y,W,H for sky and ground
 	// All values are multiplied by 5. One pitch value = 5 pixels.
-	if (newPitch >= 0) {
-		var skyOnTop, grOnTop, skyBottom, grBottom, skyOnTopY, grOnTopY, skyBottomY, grBottomY;
-		if (newPitch >= 180) {
-			skyOnTop = newPitch * 5 - 180 * 5;
-			skyOnTop = newPitch * 5 - 180 * 5;
-			grOnTop = 180 * 5;
-			skyBottom = 360 * 5 - newPitch * 5;
-			grBottom = 0;
+	var skyOnTop, grOnTop, skyBottom, grBottom, skyOnTopY, grOnTopY, skyBottomY, grBottomY;
+	// if current pitch is smaller than 0
+	if (newPitch <= 0) {
+		newPitch = 360 + newPitch; // for easier computation Transform negative
+		// numbers to 0-359 coordinates
+		skyOnTop = newPitch * 5 - 180 * 5;
+		skyOnTop = newPitch * 5 - 180 * 5;
+		grOnTop = 180 * 5;
+		skyBottom = 360 * 5 - newPitch * 5;
+		grBottom = 0;
 
-			skyOnTopY = 0;
-			grOnTopY = skyOnTop;
-			skyBottomY = grOnTopY + grOnTop;
-			grBottomY = skyBottomY + skyBottom;
-		} else {
-			skyOnTop = 0;
-			grOnTop = newPitch * 5;
-			skyBottom = 180 * 5;
-			grBottom = 180 * 5 - newPitch * 5;
-
-			skyOnTopY = 0;
-			grOnTopY = 0;
-			skyBottomY = grOnTopY + grOnTop;
-			grBottomY = skyBottomY + skyBottom;
-		}
-
-		// Translate by
-		var translateBy = -(180 - window.canvasHeight / 10) * 5;
-		ctx.translate(0, translateBy);
-		var skyGroundLeftX = -(window.horizontWidth - window.window.canvasWidth) / 2;
-		fillSky(ctx, skyGroundLeftX, skyOnTopY, window.horizontWidth, skyOnTop);
-		fillGround(ctx, skyGroundLeftX, grOnTopY, window.horizontWidth, grOnTop);
-		fillSky(ctx, skyGroundLeftX, skyBottomY, window.horizontWidth,
-				skyBottom);
-		fillGround(ctx, skyGroundLeftX, grBottomY, window.horizontWidth,
-				grBottom);
-		ctx.translate(0, -translateBy);
-		// Draw lines on top of artificial horizon to indicate the bank angle.
-		
+		skyOnTopY = 0;
+		grOnTopY = skyOnTop;
+		skyBottomY = grOnTopY + grOnTop;
+		grBottomY = skyBottomY + skyBottom;
 	} else {
-		console.error("Unexpected pitch value!");
+		skyOnTop = 0;
+		grOnTop = newPitch * 5;
+		skyBottom = 180 * 5;
+		grBottom = 180 * 5 - newPitch * 5;
+
+		skyOnTopY = 0;
+		grOnTopY = 0;
+		skyBottomY = grOnTopY + grOnTop;
+		grBottomY = skyBottomY + skyBottom;
 	}
+
+	// Translate by
+	var translateBy = -(180 - window.canvasHeight / 10) * 5;
+	ctx.translate(0, translateBy);
+	var skyGroundLeftX = -(window.horizontWidth - window.window.canvasWidth) / 2;
+	fillSky(ctx, skyGroundLeftX, skyOnTopY, window.horizontWidth, skyOnTop);
+	fillGround(ctx, skyGroundLeftX, grOnTopY, window.horizontWidth, grOnTop);
+	fillSky(ctx, skyGroundLeftX, skyBottomY, window.horizontWidth, skyBottom);
+	fillGround(ctx, skyGroundLeftX, grBottomY, window.horizontWidth, grBottom);
+	ctx.translate(0, -translateBy);
+	// Draw lines on top of artificial horizon to indicate the bank angle.
+
 }
 
 function drawBankAngleLines() {
@@ -308,28 +281,29 @@ function drawBankAngleLines() {
 	ctx.strokeStyle = "white";
 	ctx.fillStyle = "white";
 	ctx.lineWidth = 1;
-	//draw bank lines at the left
+	// draw bank lines at the left
 	drawBankLineAtRoll(can, 60, 0.03, 0);
 	drawBankLineAtRoll(can, 45, 0.03, 0);
 	drawBankLineAtRoll(can, 30, 0.03, 0);
 	drawBankLineAtRoll(can, 15, 0.03, 0);
-	//draw bank lines at the right
+	// draw bank lines at the right
 	drawBankLineAtRoll(can, -60, 0.03, 0);
 	drawBankLineAtRoll(can, -45, 0.03, 0);
 	drawBankLineAtRoll(can, -30, 0.03, 0);
 	drawBankLineAtRoll(can, -15, 0.03, 0);
-	//Draw bank angle triangle
-	ctx.moveTo(window.canvasWidth/2-3, 0);
-	ctx.lineTo(window.canvasWidth/2+3, 0);
-	ctx.lineTo(window.canvasWidth/2, 6);
-	ctx.lineTo(window.canvasWidth/2-3, 0);
+	// Draw bank angle triangle
+	ctx.moveTo(window.canvasWidth / 2 - 3, 0);
+	ctx.lineTo(window.canvasWidth / 2 + 3, 0);
+	ctx.lineTo(window.canvasWidth / 2, 6);
+	ctx.lineTo(window.canvasWidth / 2 - 3, 0);
 	ctx.stroke();
 	ctx.fill();
-	
+
 }
 
 /**
- * Note: doesn't do stroke to improve performance, stroke should be done by caller
+ * Note: doesn't do stroke to improve performance, stroke should be done by
+ * caller
  */
 function drawBankLineAtRoll(can, roll, startPos, endPos) {
 	var ctx = can.getContext('2d');
@@ -344,9 +318,10 @@ function drawLineNumberHelpFunc(ctxSight, startInt, endInt, difPitch, direction)
 	ctxSight.strokeStyle = 'white';
 	ctxSight.fillStyle = 'white';
 	for (var i = startInt; i <= endInt; i = i + 2.5) {
-		//Don't draw the line number and line if it is not visible
-		//Reason: 1. performance. 2. So that it doesn't overlap with bank angle lines
-		if (isLineNumberVisible(i*direction, difPitch)) {
+		// Don't draw the line number and line if it is not visible
+		// Reason: 1. performance. 2. So that it doesn't overlap with bank angle
+		// lines
+		if (isLineNumberVisible(i * direction, difPitch)) {
 			if (((i % 5) == 0) && (i != startInt)) {
 				ctxSight.fillText(i, window.canvasWidth / 2 - 45,
 						window.canvasHeight / 2 + i * 5 * direction + 3
@@ -370,22 +345,30 @@ function drawLineNumberHelpFunc(ctxSight, startInt, endInt, difPitch, direction)
 }
 
 function isLineNumberVisible(lineNumberVal, pitchVal) {
-	var visibleNumOfLines =  window.canvasHeight / 10+4;//we make it a little bigger in the bottom, so that lines don't dissaper too early
-	var visibleNumOfLinesTop=visibleNumOfLines; //we make the visible a bit smaller so that it doesn't overlap with bank angle lines
-	if ((lineNumberVal>=0)&&(pitchVal<=0)) {
+	var visibleNumOfLines = window.canvasHeight / 10 + 4;// we make it a
+	// little bigger in
+	// the bottom, so
+	// that lines don't
+	// dissaper too
+	// early
+	var visibleNumOfLinesTop = visibleNumOfLines; // we make the visible a bit
+	// smaller so that it
+	// doesn't overlap with bank
+	// angle lines
+	if ((lineNumberVal >= 0) && (pitchVal <= 0)) {
 		return ((Math.abs(Math.abs(lineNumberVal) - Math.abs(pitchVal))) < visibleNumOfLines);
-	} else if ((lineNumberVal>=0)&&(pitchVal>=0)){
+	} else if ((lineNumberVal >= 0) && (pitchVal >= 0)) {
 		return ((Math.abs(lineNumberVal + pitchVal)) < visibleNumOfLines);
-	} else if ((lineNumberVal<=0)&&(pitchVal<=0)){
+	} else if ((lineNumberVal <= 0) && (pitchVal <= 0)) {
 		return ((Math.abs(lineNumberVal + pitchVal)) < visibleNumOfLinesTop);
-	} else if ((lineNumberVal<=0)&&(pitchVal>=0)){
+	} else if ((lineNumberVal <= 0) && (pitchVal >= 0)) {
 		return ((Math.abs(Math.abs(lineNumberVal) - pitchVal)) < visibleNumOfLinesTop);
 	}
 }
 
 /**
  * Transform 180-360 values to (-180;-0)
- */ 
+ */
 function transformPitchValue(pitch) {
 	if (pitch > 180) {
 		pitch = pitch - 360;
@@ -401,10 +384,11 @@ function drawLineNumbersForSight(difRoll, difPitch) {
 	var canSight = document.getElementById('sight');
 	var ctxSight = canSight.getContext('2d');
 	drawSight();
-	//rotate sight canvas to initial position
+	// rotate sight canvas to initial position
 	rotateCanvasByRollDegrees(canSight, window.currentRoll);
 	var newRoll = (window.currentRoll + difRoll) % 360;
-	//rotate line number sight canvas to new position. Explanation: we make two rotations instead of one to decrease the error created by approximating
+	// rotate line number sight canvas to new position. Explanation: we make two
+	// rotations instead of one to decrease the error created by approximating
 	rotateCanvasByRollDegrees(canSight, -newRoll);
 	// draw numbers for degrees -90 to +90
 	drawLineNumberHelpFunc(ctxSight, 0, 90, transformedPitchValue, -1);
@@ -414,14 +398,14 @@ function drawLineNumbersForSight(difRoll, difPitch) {
 }
 
 /**
- * as far as i remember, this draws this little triangle on the top to indicate performance
- * note: doesn't stroke at the end to improve performance. 
+ * as far as i remember, this draws this little triangle on the top to indicate
+ * performance note: doesn't stroke at the end to improve performance.
  */
 function drawBankIndicator(can, ctx) {
-	ctx.moveTo(can.width/2, can.height*0.04);
-	ctx.lineTo(can.width/2-4, can.height*0.04+8);
-	ctx.lineTo(can.width/2+4, can.height*0.04+8);
-	ctx.lineTo(can.width/2, can.height*0.04);
+	ctx.moveTo(can.width / 2, can.height * 0.04);
+	ctx.lineTo(can.width / 2 - 4, can.height * 0.04 + 8);
+	ctx.lineTo(can.width / 2 + 4, can.height * 0.04 + 8);
+	ctx.lineTo(can.width / 2, can.height * 0.04);
 }
 
 /**
@@ -477,16 +461,16 @@ function drawVerticalSpeed() {
 	ctxVS.beginPath();
 	ctxVS.strokeStyle = darkGray;
 	ctxVS.fillStyle = darkGray;
-	var coord=[window.vsCanW * 0.10, window.vsCanH * 0.2,//top left corner
-	           window.vsCanW * 0.10, window.vsCanH * 0.40,
-	           window.vsCanW*0.30, window.vsCanH*0.45,
-	           window.vsCanW*0.30, window.vsCanH*0.55,
-	           window.vsCanW * 0.10, window.vsCanH * 0.60,
-	           window.vsCanW * 0.10, window.vsCanH * 0.80,//bottom left corner
-	           window.vsCanW * 0.50, window.vsCanH * 0.80,//bottom right corner
-	           window.vsCanW * 0.80, window.vsCanH * 0.68,
-	           window.vsCanW * 0.80, window.vsCanH * 0.32,
-	           window.vsCanW * 0.50, window.vsCanH * 0.20];//top right corner
+	var coord = [ window.vsCanW * 0.10, window.vsCanH * 0.2,// top left corner
+	window.vsCanW * 0.10, window.vsCanH * 0.40, window.vsCanW * 0.30,
+			window.vsCanH * 0.45, window.vsCanW * 0.30, window.vsCanH * 0.55,
+			window.vsCanW * 0.10, window.vsCanH * 0.60, window.vsCanW * 0.10,
+			window.vsCanH * 0.80,// bottom left corner
+			window.vsCanW * 0.50, window.vsCanH * 0.80,// bottom right corner
+			window.vsCanW * 0.80, window.vsCanH * 0.68, window.vsCanW * 0.80,
+			window.vsCanH * 0.32, window.vsCanW * 0.50, window.vsCanH * 0.20 ];// top
+	// right
+	// corner
 	drawPolygone(ctxVS, coord);
 	ctxVS.stroke();
 	ctxVS.fill();
@@ -498,65 +482,51 @@ function drawVerticalSpeed() {
 function calculateVsYPosition(verticalSpeed) {
 	var verticalSpeedYPos = 0;
 	var scale = (0.28 * window.vsCanH) / 1000;
-	//if>3000, set to max
+	// if>3000, set to max
 	if (verticalSpeed > 3000) {
 		verticalSpeedYPos = window.vsCanH * 0.22;
-	//if<3000, set to min
+		// if<3000, set to min
 	} else if (verticalSpeed < -3000) {
 		verticalSpeedYPos = window.vsCanH * 0.78;
 	} else {
-		//looking a this code year after I've written it.. looks like we take the vertical speed and scale it down by 1000, without caring what units AWCom is actually sending
+		// looking a this code year after I've written it.. looks like we take
+		// the vertical speed and scale it down by 1000, without caring what
+		// units AWCom is actually sending
 		verticalSpeedYPos = window.vsCanH * 0.5 - (verticalSpeed / 3) * scale;
 	}
 	return verticalSpeedYPos;
 }
 
-function calculateVerSpeedStep(difVerSpeed) {
-	return difVerSpeed * 0.01;
-}
-
 function setVerticalSpeed() {
 	var difVerSpeed = window.wantHaveVerSpeed - window.currentVerSpeed;
-	var difVerSpeedStep = calculateVerSpeedStep(difVerSpeed);
-	if (shouldWeMakeAnimationStep(difVerSpeed, 10)) {
-		window.currentlyChangingVerSpeed = true;
-		requestAnimationFrame(function() {
-			setVerticalSpeed();
-		});
-	} else {
-		window.currentlyChangingVerSpeed = false;
+	if (shouldRedraw(difVerSpeed, 1)) {
+		var speedYPos = calculateVsYPosition(window.currentVerSpeed);
+		var ctxVS = document.getElementById('verspeed').getContext('2d');
+		drawVerticalSpeed();
+		ctxVS.beginPath();
+		ctxVS.strokeStyle = 'white';
+		ctxVS.lineWidth = 2;
+		ctxVS.moveTo(window.vsCanW, window.vsCanH / 2);
+		ctxVS.lineTo(window.vsCanW * 0.5, speedYPos);
+		ctxVS.font = '10pt Calibri';
+		ctxVS.fillText(Math.round(window.currentVerSpeed),
+				window.vsCanW * 0.05, window.vsCanH * 0.16);
+		ctxVS.stroke();
 	}
-	window.currentVerSpeed += difVerSpeedStep;
-	var speedYPos = calculateVsYPosition(window.currentVerSpeed);
-	var ctxVS = document.getElementById('verspeed').getContext('2d');
-	drawVerticalSpeed();
-	ctxVS.beginPath();
-	ctxVS.strokeStyle = 'white';
-	ctxVS.lineWidth = 2;
-	ctxVS.moveTo(window.vsCanW, window.vsCanH / 2);
-	ctxVS.lineTo(window.vsCanW * 0.5, speedYPos);
-	ctxVS.font = '10pt Calibri';
-	ctxVS.fillText(Math.round(window.currentVerSpeed), window.vsCanW * 0.05,
-			window.vsCanH * 0.16);
-	ctxVS.stroke();
 }
 
 /**
  * Increase currentSpeed by a small value to be closer to wantHaveSpeed
  */
 function setSpeed() {
-	var ctxSpeed = document.getElementById('speed').getContext('2d');
 	var difSpeed = window.wantHaveSpeed - window.currentSpeed;
-	var difSpeedStep = calculateAltitudeSpeedStep(difSpeed);
-	if (shouldWeMakeAnimationStep(difSpeed, 1.0)) {
-		window.currentlyChangingSpeed = true;
-		requestAnimationFrame(function() {
-			setSpeed();
-		});
-	} else {
-		window.currentlyChangingSpeed = false;
+	if (shouldRedraw(difSpeed, 1)) {
+		drawSpeed();
 	}
-	window.currentSpeed = window.currentSpeed + difSpeedStep;
+}
+
+function drawSpeed() {
+	var ctxSpeed = document.getElementById('speed').getContext('2d');
 	drawSpeedBar(ctxSpeed);
 	drawSpeedLinesWithNumbers(ctxSpeed);
 	drawSpeedIndicator(ctxSpeed);
@@ -567,8 +537,9 @@ function writeSpeedOnSpeedIndicator(ctxSpeed) {
 	var currentSpeedInt = Math.round(window.currentSpeed);
 	ctxSpeed.font = '14pt Calibri';
 	ctxSpeed.fillStyle = 'white';
-	//Write speed on speed indicator
-	ctxSpeed.fillText(currentSpeedInt, window.leftSpeedBarMargin+1, window.speedBarHeight/2+3);	
+	// Write speed on speed indicator
+	ctxSpeed.fillText(currentSpeedInt, window.leftSpeedBarMargin + 1,
+			window.speedBarHeight / 2 + 3);
 }
 
 function drawSpeedBar(ctxSpeed) {
@@ -608,42 +579,31 @@ function drawSpeedLinesWithNumbers(ctxSpeed) {
 }
 
 function setAltitude() {
-	// console.log('set alt called');
-	var ctxAltitude = document.getElementById('altitude').getContext('2d');
 	var difAltitude = window.wantHaveAltitude - window.currentAltitude;
-	var difAltitudeStep = calculateAltitudeSpeedStep(difAltitude);
-	if (shouldWeMakeAnimationStep(difAltitude, 1)) {
-		requestAnimationFrame(function() {
-			window.currentlyChangingAlt = true;
-			setAltitude();
-		});
-	} else {
-		window.currentlyChangingAlt = false;
+	if (shouldRedraw(difAltitude, 1)) {
+		var ctxAltitude = document.getElementById('altitude').getContext('2d');
+		clearRect(ctxAltitude, window.canvasWidth - window.altBarRightMargin
+				- window.altBarWidth, window.altBarTopMargin,
+				window.altBarWidth, window.altBarHeight);
+		ctxAltitude.save();
+		ctxAltitude.fillStyle = window.darkGray;
+		fillRect(ctxAltitude, window.canvasWidth - window.altBarRightMargin
+				- window.altBarWidth, window.altBarTopMargin,
+				window.altBarWidth, window.altBarHeight);
+		drawAltitudeLinesNumber(ctxAltitude);
+		drawAltitudeIndicator(ctxAltitude);
+		writeAltOnAltIndicator(ctxAltitude);
 	}
-
-	window.currentAltitude = window.currentAltitude + difAltitudeStep;
-
-	clearRect(ctxAltitude, window.canvasWidth - window.altBarRightMargin
-			- window.altBarWidth, window.altBarTopMargin, window.altBarWidth,
-			window.altBarHeight);
-	ctxAltitude.save();
-	ctxAltitude.fillStyle = window.darkGray;
-	fillRect(ctxAltitude, window.canvasWidth - window.altBarRightMargin
-			- window.altBarWidth, window.altBarTopMargin, window.altBarWidth,
-			window.altBarHeight); 
-	drawAltitudeLinesNumber(ctxAltitude);
-	drawAltitudeIndicator(ctxAltitude);
-	writeAltOnAltIndicator(ctxAltitude);
-	//document.getElementById('altitudeV').innerHTML = window.currentAltitude;
 }
 
 function writeAltOnAltIndicator(ctxAlt) {
 	var currentAltInt = Math.round(window.currentAltitude);
 	ctxAlt.font = '14pt Calibri';
 	ctxAlt.fillStyle = 'white';
-	//Write speed on speed indicator
-	ctxAlt.fillText(currentAltInt, window.canvasWidth - window.altBarRightMargin
-			- window.altBarWidth+10, window.altBarHeight/2+3);	
+	// Write speed on speed indicator
+	ctxAlt.fillText(currentAltInt, window.canvasWidth
+			- window.altBarRightMargin - window.altBarWidth + 10,
+			window.altBarHeight / 2 + 3);
 }
 
 function drawAltitudeLinesNumber(ctxAltitude) {
@@ -683,27 +643,18 @@ function rotateCompassCanvasByDegrees(compassCanvas, degrees) {
 			-window.compasCanvasHeight - window.compasTopMargin);
 }
 
-// Sets compass value in small iterations. Animates it also with
-// requestAnimationFrame
+// Sets compass value in small iterations.
 function setCompassValue(ctxCompass, compass) {
 	var difCompass = (compass - window.currentCompass) % 360;
 	var compassStep = calculateCompassPitchRollStep(difCompass, 0.05);
-	if (shouldWeMakeAnimationStep(difCompass, 0.05)) {
-		requestAnimationFrame(function() {
-			window.currentlyChangingCompass = true;
-			setCompass();
-		});
-	} else {
-		window.currentlyChangingCompass = false;
-	}
-	//rotate compass back to initial pos
+	// rotate compass back to initial pos
 	rotateCompassCanvasByDegrees(ctxCompass, window.currentCompass);
-	//set compass value to new position
-	window.currentCompass = (window.currentCompass + compassStep)%360;
+	// set compass value to new position
+	window.currentCompass = (window.currentCompass + compassStep) % 360;
 	if (window.currentCompass < 0) {
 		window.currentCompass += 360;
 	}
-	//rotate compass to new pos
+	// rotate compass to new pos
 	rotateCompassCanvasByDegrees(ctxCompass, -window.currentCompass);
 }
 function setCompass() {
@@ -715,19 +666,18 @@ function setCompass() {
 function drawCompass() {
 	var canCompass = document.getElementById('compass');
 	var ctxCompass = canCompass.getContext('2d');
-	clearRect(ctxCompass, 0, 10, canCompass.width*5, canCompass.height*5);
+	clearRect(ctxCompass, 0, 10, canCompass.width * 5, canCompass.height * 5);
 	ctxCompass.strokeStyle = window.darkGray;
 	ctxCompass.fillStyle = window.darkGray;
 	var y = window.compasCanvasHeight + window.compasTopMargin;
-	arc(ctxCompass, window.compasCanvasWidth / 2,
-			y, window.compasRadius, 0,
+	arc(ctxCompass, window.compasCanvasWidth / 2, y, window.compasRadius, 0,
 			2 * Math.PI);
 	ctxCompass.fill();
 	ctxCompass.fillStyle = 'white';
 	ctxCompass.font = '33 pt Calibri';
 	for (var i = 0; i < 36; i++) {
 		ctxCompass.save();
-		rotateCompassCanvasByDegrees(ctxCompass, 10*i);
+		rotateCompassCanvasByDegrees(ctxCompass, 10 * i);
 		ctxCompass.fillText(i, window.compasCanvasWidth / 2, 20);
 		ctxCompass.restore();
 	}
@@ -738,13 +688,18 @@ function drawSpeedIndicator(ctxSpeed) {
 	// Draw speed indicator
 	ctxSpeed.strokeStyle = 'white';
 	ctxSpeed.fillStyle = 'black';
-	var coords = [window.speedBarWidth+window.leftSpeedBarMargin-5, window.speedBarHeight/2-3,
-    window.speedBarWidth+window.leftSpeedBarMargin-8, window.speedBarHeight/2-6,
-    window.speedBarWidth+window.leftSpeedBarMargin-8, window.speedBarHeight/2-20,
-    window.leftSpeedBarMargin-2, window.speedBarHeight/2-20,
-    window.leftSpeedBarMargin-2, window.speedBarHeight/2+16,
-    window.speedBarWidth+window.leftSpeedBarMargin-8, window.speedBarHeight/2+16,
-    window.speedBarWidth+window.leftSpeedBarMargin-8, window.speedBarHeight/2];
+	var coords = [ window.speedBarWidth + window.leftSpeedBarMargin - 5,
+			window.speedBarHeight / 2 - 3,
+			window.speedBarWidth + window.leftSpeedBarMargin - 8,
+			window.speedBarHeight / 2 - 6,
+			window.speedBarWidth + window.leftSpeedBarMargin - 8,
+			window.speedBarHeight / 2 - 20, window.leftSpeedBarMargin - 2,
+			window.speedBarHeight / 2 - 20, window.leftSpeedBarMargin - 2,
+			window.speedBarHeight / 2 + 16,
+			window.speedBarWidth + window.leftSpeedBarMargin - 8,
+			window.speedBarHeight / 2 + 16,
+			window.speedBarWidth + window.leftSpeedBarMargin - 8,
+			window.speedBarHeight / 2 ];
 	drawPolygone(ctxSpeed, coords);
 
 }
@@ -762,25 +717,40 @@ function drawAltitudeIndicator(ctxAlt) {
 			window.altBarHeight / 2 - 8,
 			window.canvasWidth - window.altBarWidth - window.altBarRightMargin
 					- window.speedIndicatorWidth, window.altBarHeight / 2 ];
-	var coords = [window.canvasWidth-window.altBarWidth-window.altBarRightMargin+5, window.altBarHeight/2-3,
-	             window.canvasWidth-window.altBarWidth-window.altBarRightMargin+8, window.altBarHeight/2-6,
-	             window.canvasWidth-window.altBarWidth-window.altBarRightMargin+8, window.altBarHeight/2-20,
-	             window.canvasWidth-window.altBarRightMargin+20, window.altBarHeight/2-20,
-	             window.canvasWidth-window.altBarRightMargin+20, window.altBarHeight/2+16,
-	             window.canvasWidth-window.altBarWidth-window.altBarRightMargin+8, window.altBarHeight/2+16,
-	             window.canvasWidth-window.altBarWidth-window.altBarRightMargin+8, window.altBarHeight/2];
+	var coords = [
+			window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+					+ 5,
+			window.altBarHeight / 2 - 3,
+			window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+					+ 8,
+			window.altBarHeight / 2 - 6,
+			window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+					+ 8,
+			window.altBarHeight / 2 - 20,
+			window.canvasWidth - window.altBarRightMargin + 20,
+			window.altBarHeight / 2 - 20,
+			window.canvasWidth - window.altBarRightMargin + 20,
+			window.altBarHeight / 2 + 16,
+			window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+					+ 8,
+			window.altBarHeight / 2 + 16,
+			window.canvasWidth - window.altBarWidth - window.altBarRightMargin
+					+ 8, window.altBarHeight / 2 ];
 	drawPolygone(ctxAlt, coords);
 }
 
 // Draws this little triangle which points to current compass
 function drawCompassIndicator() {
-	var compassCtx = document.getElementById('compassIndicator').getContext('2d');
+	var compassCtx = document.getElementById('compassIndicator').getContext(
+			'2d');
 	compassCtx.strokeStyle = 'white';
 	compassCtx.fillStyle = 'white';
 	// setting vertices coordinates of a triangle x1,y1,x2,y2,x3,y3
 	var coords = [ window.compasCanvasWidth / 2 + 3, 7,
-			window.compasCanvasWidth / 2 - window.compassIndicatorWidth + 3, 7 - window.compassIndicatorWidth,
-			window.compasCanvasWidth / 2 + window.compassIndicatorWidth + 3, 7 - window.compassIndicatorWidth ];
+			window.compasCanvasWidth / 2 - window.compassIndicatorWidth + 3,
+			7 - window.compassIndicatorWidth,
+			window.compasCanvasWidth / 2 + window.compassIndicatorWidth + 3,
+			7 - window.compassIndicatorWidth ];
 	drawPolygone(compassCtx, coords);
 }
 
@@ -798,7 +768,7 @@ function drawPolygone(ctx, poly) {
 
 /**
  * Note: stroke/fill should be called by caller to improve performance
- */ 
+ */
 function arc(ctx, x, y, r, startAngle, finishAngle) {
 	ctx.beginPath();
 	ctx.arc(x, y, r, startAngle, finishAngle);
