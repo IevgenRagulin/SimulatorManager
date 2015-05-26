@@ -1,0 +1,122 @@
+/* Import the reindeer theme.*/
+/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
+@import "../reindeer/reindeer.scss";
+@import "../valo/valo";
+
+/* This contains all of your theme.*/
+/* If somebody wants to extend the theme she will include this mixin. */
+@mixin testvaadinn {
+  /* Include all the styles from the reindeer theme */
+  @include valo;
+
+  /* Insert your theme rules here */
+  .runningSimulationsErrorLabel {
+   font-weight:bold;
+   color:blue;
+   margin-left: 30px;
+   font-size:120%;
+  }
+  
+    .v-caption-runningSimulationsErrorLabel {
+   font-weight:bold;
+   color:green;
+  }
+  
+    .runningSimulationsInfoLabel {
+   font-weight:bold;
+   color:blue;
+  }
+  
+  	.flightPathMap {
+  	margin-left: 20px;
+ 	}
+ 	
+ 	.PFD_DISPLAY {
+ 	margin-top: 0px;
+ 	}
+ 	
+ 	.FLIGHT_CONTROLS {
+ 	margin-left: 20px;
+ 	}
+ 	 
+ 	.mainVertLayout {
+
+	}
+	
+	.btnDtbManagement {
+		width: 270px;
+		margin-top: 20px;
+		height: 45px;
+	}
+	
+	.v-menubar {
+		margin-top: 2px; 
+		margin-bottom: 20px;
+	}
+	
+	.simulatorsAddSimulator {
+		margin-top: 10px;
+	}
+	
+	/*Tables background white*/
+	.v-table-body {
+		background-color: #F0FFFF;
+	}
+	
+	.circular {
+		width: 200px;
+		height: 200px;
+		border-radius: 100px;
+		-webkit-border-radius: 100px;
+		-moz-border-radius: 100px;
+		cursor:pointer;
+	}
+	
+	.button-main-page {
+		width: 200px;
+		margin-top: 20px;
+		text-align: center;
+		font-weight: bold;
+		font-size: 130%;
+		cursor:pointer;
+		color: #5a5a5a;
+	}
+	
+	.button-main-page:hover {
+		text-shadow: 1px 1px #5a5a5a;
+	}
+	
+	.sm-menu-bar {
+		background: black;
+		color: white;
+	}
+	
+	
+	.v-menubar-menuitem-unchecked:hover {
+		background: #181818;
+	}
+	
+	.sm-choose-sim-button {
+		margin-top: 30px;
+	}
+	
+	.sm-conf-button {
+		margin-left: 30px;
+	}
+	
+	#altitudeChartId, #speedChartId {
+		margin-top: 8px;
+	}
+	
+	.v-Notification.error { 
+	        background: #ed473b no-repeat right top;
+	        background-image: url(images/button_images/close-33.png); 
+	        border: 3px solid #ca3030; 
+	} 
+	
+	.v-Notification h1 {
+		font-size: 19pt;
+	}
+	
+
+ }

@@ -1,0 +1,168 @@
+db_url=jdbc:postgresql://localhost/postgres2
+db_username=postgres
+db_password=password
+google_map_api_key=AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4
+#! how often we get data from simulator
+simulator_get_data_frequency_ms=1000
+#! how often we update the ui when displaying running simulation
+user_interface_refresh_frequency_ms=1000
+#! how often we save data to database. Here - every 1000/UPDATE_RATE MS times. I.e. if UPDATE_RATE_MS = 300, we save data every 3 times
+write_to_database_frequency_ms=6000
+#! how often we save position data to database. We make this frequency smaller than for other data, because data in simulation info contains plane coordinates and google maps become slow when there is lots of data
+write_position_to_database_frequency_ms=12000
+#! how often we add data about plane position to the map
+update_airplane_position_frequency_ms=6000
+
+#! Default values for new simulator model
+simulatormodelname=Boeing 737-800 NG
+minspeed=0
+#!http://www.flugzeuginfo.net/acdata_php/acdata_7378_en.php
+maxspeed=946
+minspeedonflaps=0
+#! http://ivaous.org/academy/index.php/pilotmenu/atp-airline-transport-pilot/boeing-737-800
+maxspeedonflaps=350
+numberoflandinggears = 3
+#! Left engine. http://www.slideshare.net/theoryce/b737-ng-fuel-system-20650855
+lfu = true
+minlfu = 0.0
+lowlfu = 500.0
+highlfu = 4000.0
+maxlfu = 4876.0
+#! Right engine. http://www.slideshare.net/theoryce/b737-ng-fuel-system-20650855
+cfu = true
+mincfu = 0.0
+lowcfu = 1000.0
+highcfu = 14000.0
+maxcfu = 16273.0
+#! Central engine. http://www.slideshare.net/theoryce/b737-ng-fuel-system-20650855  
+rfu = true
+minrfu = 0.0
+lowrfu = 500.0
+highrfu = 4000.0
+maxrfu = 4876.0
+
+#! default values of new engine model (Boeing 737-800 NG)
+rpm = false
+minrpm = 0.0
+lowrpm = 0.0
+highrpm = 0.0
+maxrpm = 0.0
+
+#! not for Boeing 737
+pwr = false
+minpwr = 0.0
+lowpr = 0.0
+highpwr = 0.0
+maxpwr = 0.0
+
+#! these are percents, so it just makes sense to make min/max 0/100
+pwp = true
+minpwp = 0.0
+lowpwp = 10.0
+highpwp = 90.0
+maxpwp = 100.0
+
+#!  not for Boeing 737
+mp_ = false
+minmp = 0.0
+lowmp = 0.0
+highmp = 0.0
+maxmp = 0.0
+
+#!  http://www.b737.org.uk/limitations.htm (engine CFM56-7)
+et1 = true
+minet1 = 60.0
+lowet1 = 60.0
+highet1 = 925.0
+maxet1 = 950.0
+
+#!  AWCom is not sending these, so disabling it
+et2 = false
+minet2 = 0.0
+lowet2 = 0.0
+highet2 = 0.0
+maxet2 = 0.0
+
+#! couldn't find
+ct1 = true
+minct1 = 0.0
+lowct1 = 60.0
+highct1 = 300.0
+maxct1 = 500.0
+
+#!  AWCom is not sending these, so disabling it
+ct2 = false
+minct2 = 0.0
+lowct2 = 0.0
+highct2 = 0.0
+maxct2 = 0.0
+
+#!  couldn't find the values for these
+est = true
+minest = 0.0
+lowest = 60.0
+highest = 300.0
+maxest = 500.0
+
+#! http://hildalarrondo.net/wp-content/uploads/2012/08/737_800_Flight_Planning_Performance_Manual.pdf page 183, http://www.b737.org.uk/techspecsdetailed.htm kg/hour -> liter/hour liter=kg*0.82 The values look wrong, AWCom sends 10000
+ff_ = true
+minff = 0.0
+lowff = 100.0
+highff = 2000.0
+maxff = 2566.0
+
+#! haven't found
+fp_ = true
+minfp = 0.0
+lowfp = 34000.0
+highfp = 80000.0
+maxfp = 100000.0
+
+#! http://www.b737.org.uk/limitations.htm (oil pressure should be red when too small unlike others). 13psi*6.89=275.6
+op_ = true
+minop = 0.0
+lowop = 275.0
+highop = 550.0
+maxop = 700.0
+
+#! http://www.b737.org.uk/limitations.htm
+ot_ = true
+minot = 0.0
+lowot = 54.0
+highot = 140.0
+maxot = 155.0
+
+#! http://www.b737.org.uk/limitations.htm
+n1_ = true
+minn1 = 0.0
+lown1 = 20.0
+highn1 = 90.0
+maxn1 = 104.0
+
+#! http://www.b737.org.uk/limitations.htm
+n2_ = true
+minn2 = 0.0
+lown2 = 20.0
+highn2 = 95.0
+maxn2 = 105.0
+
+#! http://www.b737.org.uk/panelcentreinst.htm
+vib = true
+minvib = 0.0
+lowvib = 1.0
+highvib = 4.0
+maxvib = 5.0
+
+#! Not sure if it's correct http://www.b737.org.uk/limitations.htm, http://www.b737.org.uk/electrics.htm
+vlt = true
+minvlt = 0.0
+lowvlt = 22.0
+highvlt = 28.0
+maxvlt = 30.0
+
+#! Not sure if it's correct http://www.b737.org.uk/limitations.htm
+amp = true
+minamp = 0.0
+lowamp = 20.0
+highamp = 80.0
+maxamp = 111.0

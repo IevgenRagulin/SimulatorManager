@@ -1,0 +1,69 @@
+&nbsp;
+<h1>X-Plane simulator manager. Application Usage info</h1>
+<h2>Running the Simulator Manager application</h2>
+Precondition: it's supposed that you have X-PLANE installed with AWCom plugin. X-PLANE installation should either be accessible through Internet or be on the same network with Simulator Manager application.
+
+Step 1. Install Java Runtime Environment 8 or higher. Application doesn't support older versions of Java
+
+Step 2. Install Apache Tomcat 8.0.
+
+Step 3. Modify tomcat_instalation_directory/conf/tomcat-users.xml file. You need to add the following lines to the file:
+
+&lt;role rolename="manager"/&gt;
+&lt;user username="manager" password="manager" roles="manager"/&gt;
+
+Instead of username and password specify the username and password which you want to use for signing in into the application. Also, if you are starting Tomcat from Eclipse, make sure that Eclipse uses the configuration from Tomcat's installation directory.
+
+Step 4. Install PostgreSQL database.
+
+Step 5. Modify WebContent/WEB-INF/simulatorManager.prop file. Set db_url property to point to your database. Example: jdbc:postgresql://localhost/postgres (postgres here is the name of your database). Set db_username and db_password.
+
+Step 6. Run PostgreSQL database.
+
+Step 7. Run Apache Tomcat 8.0.
+
+Step 8. Deploy .war file and WebContent folder to Apache Tomcat.
+
+Step 9. In order to run the application you need to deploy the application to Tomcat Apache 8.0 application server.
+
+Step 10. Go to http://localhost:8080/SimulatorManager/
+
+Step 11. Enter the username and password from step 3.
+<h2>Compiling the application</h2>
+This is needed only if you want to change something in the application. Otherwise you should be using a compiled version already. In order to compile the application you need to:
+
+Step 1. Install Java Runtime Environment 8.
+
+Step 2. Install Eclipse. Install Vaadin plugin for Eclipse.
+
+Step 3. Get the source code from github: https://github.com/IevgenRagulin/SimulatorManager
+
+Step 4. Import the project in Eclipse.
+
+Step 5. Resolve project dependencies in Eclipse using Ivy.
+
+Step 6. Build WidgetSet/Theme of the application in Eclipse using the Vaadin plugin.
+
+Step 7. You should be able to run the application on your Tomcat server now.
+<h2>Using the application</h2>
+<h3>Initialize the database</h3>
+
+Before being able to use the application, you need to initialize the database first. In order to do it you need to go to Main page (localhost:8080/SimulatorManager), and click "Configuration" there. Click "Init database". Appropriate tables will be created in the database, and some basic information about some simulators will be added to the database <strong>(?).</strong>
+
+<h3>Adding new simulators</h3>
+
+Go to Main page. Click "Manage simulators". You will see a list of simulators on the left. Click button "Add a simulator" to add a new simulator. A new simulator with default settings will be added to the database. You will need to set the simulators' ip address or hostname and port. Go to step "Modifying simulators data to do it".
+
+<h3>Modifying simulators data</h3>
+
+Go to Main page. Click "Manage simulators". You will see a list of simulators on the left. Click on one of the simulators in this list. You will see a form for editing the simulator data on the right. The most important data here is: hostname, port and "Is active checkbox". Enter the hostname (IP) on which AWCom plugin/server is installed. Enter the port on which AWCom plugin is running. Check the checkbox "Is active" if you want the Simulator Manager to be getting data from simulator every X milliseconds. Check the checkbox "Should write to database" if you want the Simulator Manager to be writing data about running simulations on this simulator every Y milliseconds.
+
+<h3>Modifying application configuration</h3>
+
+where to find the file, what you can change there
+
+<h3>Managing simulation sessions</h3>
+
+<h3>Viewing running simulations</h3>
+
+<h3>Viewing past simulations</h3>
