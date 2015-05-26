@@ -38,30 +38,24 @@ var currentSpeed = 0;
 var currentAltitude = 0;
 var currentPitch = 0;
 var currentRoll = 0;
-var currentCompass = 0;
+var currentHeading = 0;
 var currentVerSpeed = 0;
+
+// for roll and compass these are the current values (naming is confusing).
+// currentRoll and currentCompass represent values which will be used for the
+// next drawing
+var previousRoll = 0;
+var previousHeading = 0;
 
 // latest values from AWCom
 var wantHaveSpeed = 0;
 var wantHaveAltitude = 0;
 var wantHavePitch = 0;
 var wantHaveRoll = 0;
-var wantHaveCompass = 0;
+var wantHaveHeading = 0;
 var wantHaveVerSpeed = 0;
 
-var currentlyChangingRollOrPitch = false;
-var currentlyChangingAlt = false;
-var currentlyChangingSpeed = false;
-var currentlyChangingCompass = false;
-var currentlyChangingVerSpeed = false;
-
-var horizontWidth = 500;
-
-var isItFirstLoad = true;
-
-var currentlyRotatingHorizont = false;
-var horizontHasBeenRotated = false;
-
+var horizontWidth = 400;
 var darkGray = '#404040';
 var pfdCan;
 var pfdCtx;
@@ -87,21 +81,15 @@ function cz_vutbr_fit_simulatormanager_jscomponents_pfd_PrimaryFlightDisplay() {
 	window.initialized = true;
 }
 
-
 // Set reset currentlyChangingValue, currentValue global variables to prevent
 // bug when we switch between simulators
 function resetPfd() {
-	window.currentCompass = 0;
+	window.currentHeading = 0;
 	window.currentAltitude = 0;
 	window.currentSpeed = 0;
 	window.currentRoll = 0;
 	window.currentPitch = 0;
 	window.currentVerSpeed = 0;
-	window.currentlyChangingRollOrPitch = false;
-	window.currentlyChangingAlt = false;
-	window.currentlyChangingSpeed = false;
-	window.currentlyChangingCompass = false;
-	window.currentlyChangingVerSpeed = false;
 }
 
 function initHtml(e) {
@@ -138,13 +126,15 @@ function init() {
 
 function update() {
 	// This is the heart of animation. We use TweenLite library to tween the
-	// values (i.e. go smoothly from 0 to 100)
-	TweenLite.to(window, 1, {
+	// values (i.e. go smoothly from 0 to 100).
+	TweenLite.to(window, 3, {
 		currentPitch : window.wantHavePitch,
 		currentSpeed : window.wantHaveSpeed,
 		currentAltitude : window.wantHaveAltitude,
 		currentVerSpeed : window.wantHaveVerSpeed
 	});
+	TweenLite.to(window, 3, {directionalRotation:{currentHeading: window.wantHaveHeading+"_short"}});
+	TweenLite.to(window, 3, {directionalRotation:{currentRoll: window.wantHaveRoll+"_short"}});
 	// we only do the update if no other update is done at the moment to avoid
 	// eternal loops
 	setRollAndPitch();
@@ -174,49 +164,11 @@ function fillGround(ctx, x, y, w, h) {
 	fillRect(ctx, x, y, w, h);
 }
 
-// Help function to calculate compass, pitch, roll step based on difference
-// between current
-// value and desired value.
-function calculateCompassPitchRollStep(diff, step) {
-	diff = diff % 360;
-	var direction = 0;
-	if ((diff > step) && (diff <= 180)) {
-		direction = diff * step;
-	} else if ((diff > step) && (diff > 180)) {
-		direction = (diff - 360) * step;
-	} else if ((diff < -step) && (diff <= -180)) {
-		direction = (diff + 360) * step;
-	} else if ((diff < -step) && (diff > -180)) {
-		direction = diff * step;
-	}
-	return direction;
-}
-
 /**
  * we only redraw if difference between current and want have > 0
  */
 function shouldRedraw(dif, step) {
-	return ((dif > step) || (dif < -step) || window.initialized);
-}
-
-function setRollAndPitch() {
-	// update PITCH values
-	// Check if we should continue animating pitch
-	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
-	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
-	// DRAW everything
-	if (shouldRedraw(difRoll, 0.5)
-			|| shouldRedraw(difPitch, 0.5)) {
-		// rotate canvas back to initial position. It's important to rotate
-		// back, o that the lines for sight are drawn when rotation angle is 0
-		rotateCanvasByRollDegrees(window.pfdCan, window.currentRoll);
-		drawLineNumbersForSight(difRoll, window.currentPitch);
-		window.currentRoll = (window.currentRoll + difRoll) % 360;
-		// rotate canvas to a new position
-		rotateCanvasByRollDegrees(window.pfdCan, -window.currentRoll);
-		drawArtificialHorizon(window.currentRoll, window.currentPitch,
-				window.currentYaw);
-	}
+	return ((dif > step) || (dif < -step) || !window.initialized);
 }
 
 function rotateCanvasByRollDegrees(can, roll) {
@@ -234,7 +186,7 @@ function drawArtificialHorizon(roll, pitch, yaw) {
 // TODO: Simplify this code
 function drawSkyAndGround(ctx, newPitch) {
 	// Calculating the X,Y,W,H for sky and ground
-	// All values are multiplied by 5. One pitch value = 5 pixels.
+	// All values are multiplied by 4. One pitch value = 5 pixels.
 	var skyOnTop, grOnTop, skyBottom, grBottom, skyOnTopY, grOnTopY, skyBottomY, grBottomY;
 	// if current pitch is smaller than 0
 	if (newPitch <= 0) {
@@ -379,14 +331,13 @@ function transformPitchValue(pitch) {
 /**
  * draw line numbers indicating pitch angle
  */
-function drawLineNumbersForSight(difRoll, difPitch) {
+function drawLineNumbersForSight(newRoll, difPitch) {
 	var transformedPitchValue = transformPitchValue(difPitch);
 	var canSight = document.getElementById('sight');
 	var ctxSight = canSight.getContext('2d');
 	drawSight();
 	// rotate sight canvas to initial position
-	rotateCanvasByRollDegrees(canSight, window.currentRoll);
-	var newRoll = (window.currentRoll + difRoll) % 360;
+	rotateCanvasByRollDegrees(canSight, window.previousRoll);
 	// rotate line number sight canvas to new position. Explanation: we make two
 	// rotations instead of one to decrease the error created by approximating
 	rotateCanvasByRollDegrees(canSight, -newRoll);
@@ -643,24 +594,41 @@ function rotateCompassCanvasByDegrees(compassCanvas, degrees) {
 			-window.compasCanvasHeight - window.compasTopMargin);
 }
 
-// Sets compass value in small iterations.
-function setCompassValue(ctxCompass, compass) {
-	var difCompass = (compass - window.currentCompass) % 360;
-	var compassStep = calculateCompassPitchRollStep(difCompass, 0.05);
-	// rotate compass back to initial pos
-	rotateCompassCanvasByDegrees(ctxCompass, window.currentCompass);
-	// set compass value to new position
-	window.currentCompass = (window.currentCompass + compassStep) % 360;
-	if (window.currentCompass < 0) {
-		window.currentCompass += 360;
+/**
+ * the naming is confusing. previousRoll - is actually the current roll rotation
+ * of the pfd currentRoll - is the new rotation of the pfd wantHaveRoll - latest
+ * value from awcom the value is tweened from currentRoll to wantHaveRole in the
+ * update() method above
+ */
+function setRollAndPitch() {
+	// update PITCH values
+	// Check if we should continue animating pitch
+	var difPitch = (window.wantHavePitch - window.currentPitch) % 360;
+	var difRoll = (window.wantHaveRoll - window.currentRoll) % 360;
+	// DRAW everything
+	if (shouldRedraw(difRoll, 0.5) || shouldRedraw(difPitch, 0.5)) {
+		var newRoll = window.currentRoll;
+		rotateCanvasByRollDegrees(window.pfdCan, window.previousRoll);
+		drawLineNumbersForSight(newRoll, window.currentPitch);
+		// rotate canvas to a new position
+		rotateCanvasByRollDegrees(window.pfdCan, -newRoll);
+		drawArtificialHorizon(newRoll, window.currentPitch, window.currentYaw);
+		window.previousRoll = newRoll;
 	}
-	// rotate compass to new pos
-	rotateCompassCanvasByDegrees(ctxCompass, -window.currentCompass);
 }
+
 function setCompass() {
 	var ctxCompass = document.getElementById('compass').getContext('2d');
-	setCompassValue(ctxCompass, window.wantHaveHeading);
-	drawCompass();
+	var difCompass = (window.wantHaveHeading - window.currentHeading) % 360;
+	if (shouldRedraw(difCompass, 0.5)) {
+		// rotate compass back to initial pos
+		var newHeading=window.currentHeading;
+		rotateCompassCanvasByDegrees(ctxCompass, window.previousHeading);
+		// rotate compass to new pos
+		rotateCompassCanvasByDegrees(ctxCompass, -newHeading);
+		window.previousHeading = newHeading;
+		drawCompass();
+	}
 }
 
 function drawCompass() {
@@ -701,7 +669,6 @@ function drawSpeedIndicator(ctxSpeed) {
 			window.speedBarWidth + window.leftSpeedBarMargin - 8,
 			window.speedBarHeight / 2 ];
 	drawPolygone(ctxSpeed, coords);
-
 }
 
 // Draws this little triangle which points to current altitude

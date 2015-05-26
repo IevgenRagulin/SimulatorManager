@@ -63,16 +63,18 @@ public class UpdatesScheduler {
 
     public static void updateRunningSimsStatus() {
 	SQLContainer simulatorContainer = dbHelp.getNewSimulatorContainer();
-	if (numberOfThreads != simulatorContainer.size()) {
-	    LOG.info("Number of simulators has changed. Previously we had: {} threads, now: {}. Creating new thread pool. ",
-		    numberOfThreads, simulatorContainer.size());
-	    numberOfThreads = simulatorContainer.size();
-	    schedulerSimulationUpdater.shutdownNow();
-	    if (numberOfThreads != 0) {
-		schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfThreads);
+	if (simulatorContainer != null) {
+	    if (numberOfThreads != simulatorContainer.size()) {
+		LOG.info("Number of simulators has changed. Previously we had: {} threads, now: {}. Creating new thread pool. ",
+			numberOfThreads, simulatorContainer.size());
+		numberOfThreads = simulatorContainer.size();
+		schedulerSimulationUpdater.shutdownNow();
+		if (numberOfThreads != 0) {
+		    schedulerSimulationUpdater = Executors.newFixedThreadPool(numberOfThreads);
+		}
 	    }
+	    UpdatesScheduler.updateSimulatorsStatus(simulatorContainer);
 	}
-	UpdatesScheduler.updateSimulatorsStatus(simulatorContainer);
     }
 
     @SuppressWarnings("rawtypes")

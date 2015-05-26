@@ -22,9 +22,9 @@ public class SimulatorConfigurationChecker {
 
     public static final boolean SHOW_SUCCESS_MESSAGE = true;
     public static final boolean DO_NOT_SHOW_SUCCESS_MESSAGE = false;
-    final static String PING_SUCCESS_MESSAGE = "Success. The selected simulator is up and running, and configured correctly";
-    final static String PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE = "The simulator is running, but you need to check its configuration";
-    final static String PING_FAIL_MESSAGE = "Connection error. The selected simulator is not responding. Please, check that hostname (IP address), port are set correctly. Make sure that AWCom plugin is installed in XPlane";
+    final static String PING_SUCCESS_MESSAGE = "Success. The simulator is up and running";
+    final static String PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE = "The simulator is running. <br/> However, you need to check its configuration";
+    final static String PING_FAIL_MESSAGE = "Connection error.<br/> The selected simulator is not responding.<br/> Check that hostname (IP address), port are set correctly. <br/>Make sure that AWCom plugin is installed in XPlane";
 
     /**
      * 
@@ -37,6 +37,12 @@ public class SimulatorConfigurationChecker {
 	this.hostname = hostname;
 	this.port = port;
 	this.simulatorId = simulatorId;
+    }
+
+    private Notification createShowNotification(String message, String description, Notification.Type type) {
+	Notification notification = new Notification(message, description, type, true);
+	notification.show(Page.getCurrent());
+	return notification;
     }
 
     /**
@@ -53,18 +59,18 @@ public class SimulatorConfigurationChecker {
 	    String errorsInConfiguration = SimulatorValidator.isSimulatorModelConfiguredCorrectly(simulatorId.toString(),
 		    hostname, port);
 	    if (errorsInConfiguration.isEmpty() && showSuccessMessage) {
-		Notification.show(PING_SUCCESS_MESSAGE, "", Notification.Type.HUMANIZED_MESSAGE);
+		createShowNotification("", PING_SUCCESS_MESSAGE, Notification.Type.HUMANIZED_MESSAGE);
 		return true;
 	    } else if (!errorsInConfiguration.isEmpty()) {
-		new Notification(PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE, errorsInConfiguration.toString(),
-			errorNotificationType, true).show(Page.getCurrent());
+		createShowNotification(PING_SUCCESS_CONFIGURATION_FAIL_MESSAGE, errorsInConfiguration.toString(),
+			errorNotificationType);
 		return false;
 	    } else {
 		// return true but don't display any message
 		return true;
 	    }
 	} else {
-	    Notification.show(PING_FAIL_MESSAGE, "", errorNotificationType);
+	    createShowNotification(PING_FAIL_MESSAGE, "", errorNotificationType);
 	    return false;
 	}
     }

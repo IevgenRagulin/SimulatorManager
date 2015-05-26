@@ -25,7 +25,7 @@ import cz.vutbr.fit.simulatormanager.views.SimulationsView;
  * @author zhenia
  *
  */
-@JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", "highstock.js" })
+@JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js", "highstock.js" })
 public abstract class JsHighChart extends AbstractJavaScriptComponent {
     private static final long serialVersionUID = -9172268881960130470L;
     private final static Logger LOG = LoggerFactory.getLogger(JsHighChart.class);

@@ -25,20 +25,20 @@ public enum SimulatorModelCols {
     hasgears("Has gears", Boolean.class), //
     numberoflandinggears("Number of landing gears"), //
     lfu("Left fuel tank" + Constants.LITER, Boolean.class), //
-    minlfu("Minimum amount of fuel in left tank" + Constants.LITER), //
-    lowlfu("Low LFU" + Constants.LITER), //
-    highlfu("High LFU" + Constants.LITER), //
-    maxlfu("Maximum amount of fuel in left tank" + Constants.LITER), //
+    minlfu("Minimum amount of fuel in left tank" + Constants.LITER, Float.class), //
+    lowlfu("Low LFU" + Constants.LITER, Float.class), //
+    highlfu("High LFU" + Constants.LITER, Float.class), //
+    maxlfu("Maximum amount of fuel in left tank" + Constants.LITER, Float.class), //
     cfu("Central fuel tank" + Constants.LITER, Boolean.class), //
-    mincfu("Minimum amount of fuel in central tank" + Constants.LITER), //
-    lowcfu("Low CFU" + Constants.LITER), //
-    highcfu("High CFU" + Constants.LITER), //
-    maxcfu("Maximum amount of fuel in central tank" + Constants.LITER), //
+    mincfu("Minimum amount of fuel in central tank" + Constants.LITER, Float.class), //
+    lowcfu("Low CFU" + Constants.LITER, Float.class), //
+    highcfu("High CFU" + Constants.LITER, Float.class), //
+    maxcfu("Maximum amount of fuel in central tank" + Constants.LITER, Float.class), //
     rfu("Right fuel tank" + Constants.LITER, Boolean.class), //
-    minrfu("Minimum amount of fuel in right tank" + Constants.LITER), //
-    lowrfu("Low RFU" + Constants.LITER), //
-    highrfu("High RFU" + Constants.LITER), //
-    maxrfu("Maximum amount of fuel in right tank" + Constants.LITER), //
+    minrfu("Minimum amount of fuel in right tank" + Constants.LITER, Float.class), //
+    lowrfu("Low RFU" + Constants.LITER, Float.class), //
+    highrfu("High RFU" + Constants.LITER, Float.class), //
+    maxrfu("Maximum amount of fuel in right tank" + Constants.LITER, Float.class), //
     timestamp("Timestamp");//
 
     final static Logger LOG = LoggerFactory.getLogger(SimulatorModelCols.class);

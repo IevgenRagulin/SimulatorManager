@@ -52,8 +52,8 @@ public class AWComParser {
 	    // simData.setBeta(ConverterUtil.stringToDouble(value));
 
 	    // Altitude corrected
-	    value = getValueOf(":ALT:", response);
-	    simData.setAltitude_corrected(metersToFeet(ConverterUtil.stringToDouble(value)));
+	    // value = getValueOf(":ALT:", response);
+	    // simData.setAltitude_corrected(metersToFeet(ConverterUtil.stringToDouble(value)));
 
 	    // Altitude standard
 	    value = getValueOf(":ALTS:", response);

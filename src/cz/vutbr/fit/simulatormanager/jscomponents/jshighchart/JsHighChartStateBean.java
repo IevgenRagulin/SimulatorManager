@@ -13,10 +13,12 @@ import java.io.Serializable;
  */
 public class JsHighChartStateBean implements Serializable {
     private static final long serialVersionUID = 5032000954553816757L;
-
+    // data contains info about previous speeds, altitudes, used for
+    // initializing the graphs
     private String data = new String();
     private String cssid;
-    private int n = -100;// new point value. -100 means not initialized
+    // new point value. -100 means not initialized
+    private int n = -100;
     // clickedID. Id of the primary flight display in
     // database corresponding to point on graph where
     // user has clicked

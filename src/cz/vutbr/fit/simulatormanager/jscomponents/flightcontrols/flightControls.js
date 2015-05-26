@@ -67,14 +67,11 @@ var yOffsetR = (window.rudderBackHeight - window.rudderHeight) / 2;
 
 var numberOfLandingGears = 0;
 function cz_vutbr_fit_simulatormanager_jscomponents_flightcontrols_FlightControls() {
-//function com_example_testvaadin_jscomponents_flightcontrols_FlightControls() {
 	var e = this.getElement();
 	initYokeHtml(e);
 	initYoke();
 	setBrakes();
 	setSimulationPaused();
-	
-	console.log("KUKU"+this.getState().test);
 	this.onStateChange = function() {
 		window.wantHaveRudder = this.getState().rd;
 		window.wantHaveAileron = this.getState().ail;
@@ -317,6 +314,7 @@ function drawAilRudElev() {
 	var x = window.yokeWidth / 2 + window.currentAileron
 			* (window.yokeWidth / 2) + xOffset;
 	arc(ctx, x, y, 5, 0, 2 * Math.PI);
+	ctx.fill();
 	/* Draw elevator */
 	x = window.yokeWidth / 2 + xOffset;
 	y = window.yokeHeight / 2 + window.currentElevator
@@ -453,17 +451,17 @@ function setLandingGearElement(landGearNum, wantHaveValue) {
 	ctxLandGear.font = 'bold 12px sans-serif';
 	if (wantHaveValue == 0) {
 		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
-		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "UP", 5, 17);
+		ctxLandGear.fillText("L GEAR " + landGearNum + ": " + "UP", 5, 17);
 	} else if (wantHaveValue == 1) {
 		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
-		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "DOWN", 5, 17);
+		ctxLandGear.fillText("L GEAR " + landGearNum + ": " + "DOWN", 5, 17);
 	} else if (wantHaveValue == 2) {
 		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
-		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "MOVING", 5,
+		ctxLandGear.fillText("L GEAR " + landGearNum + ": " + "MOVING", 5,
 				17);
 	} else if (wantHaveValue == -1) {
 		ctxLandGear.clearRect(0, 0, canLandGear.width, canLandGear.height);
-		ctxLandGear.fillText("LAND GEAR " + landGearNum + ": " + "N/A", 5, 17);
+		ctxLandGear.fillText("L GEAR " + landGearNum + ": " + "N/A", 5, 17);
 	}
 }
 

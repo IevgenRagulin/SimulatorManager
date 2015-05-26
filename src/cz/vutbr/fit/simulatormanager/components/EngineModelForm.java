@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NullValidator;
@@ -24,6 +25,7 @@ import com.vaadin.ui.TextField;
 import cz.vutbr.fit.simulatormanager.Constants;
 import cz.vutbr.fit.simulatormanager.database.columns.EngineModelCols;
 import cz.vutbr.fit.simulatormanager.exception.IllegalEngineIdException;
+import cz.vutbr.fit.simulatormanager.util.ConverterUtil;
 
 public class EngineModelForm extends FieldGroup {
     private static final long serialVersionUID = 1L;
@@ -35,6 +37,7 @@ public class EngineModelForm extends FieldGroup {
 	this.enginesAccordion = enginesAccordion;
 	this.engGrid = formLayout;
 	setBuffered(false);
+	StringToFloatConverter stringToFloatConverter = ConverterUtil.getStringToFloatConverter();
 	for (EngineModelCols engineModelCol : EngineModelCols.values()) {
 	    // check if this is a boolean field
 	    if (Boolean.class.equals(engineModelCol.getType())) {
@@ -59,6 +62,7 @@ public class EngineModelForm extends FieldGroup {
 		addFieldToForm(dateField, engineModelCol);
 	    } else {
 		TextField field = createInputField(engineModelCol.getName());
+		field.setConverter(stringToFloatConverter);
 		addFieldToForm(field, engineModelCol);
 	    }
 	}

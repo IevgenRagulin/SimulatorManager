@@ -11,6 +11,8 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
  */
 public class JsHighChartState extends JavaScriptComponentState {
     private static final long serialVersionUID = -1016346299843904188L;
+    // data contains info about speed, altitude, time used for
+    // building the graphs
     public String data;
     public String title;
     public String units;

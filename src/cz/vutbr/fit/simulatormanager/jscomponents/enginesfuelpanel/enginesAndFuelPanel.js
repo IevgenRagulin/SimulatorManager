@@ -16,11 +16,10 @@ var thisObj;
  */
 function cz_vutbr_fit_simulatormanager_jscomponents_enginesfuelpanel_EnginesAndFuelPanel() {
 	window.thisObj = this;
-	// console.log("kuku Creating engines panel");
 	// when document
 	// we load script in such a tricky way because there is an error if we try
-	// to do it normally through @Javascript annotation in EnginesPanel.java
-	// as soon as script is loaded, loadVisualizationLibrary
+	// to do it normally through @Javascript annotation in EnginesPanel.java.
+	// As soon as script is loaded, loadVisualizationLibrary
 	loadScript("https://www.google.com/jsapi", loadGoogleVisualizationLibrary);
 	var e = this.getElement();
 }
@@ -42,8 +41,6 @@ function loadGoogleVisualizationLibrary() {
  * onStateChangeListener
  */
 function initEnginesPanel() {
-	// console.log("Kuku Going to init engines panel. Rpm:
-	// "+thisObj.getState().rpm);
 	if (!(typeof thisObj.getState().rpm === 'undefined')) {
 		initAllHtmlAndGauges(thisObj.getElement(), thisObj.getState());
 	}
@@ -74,7 +71,7 @@ function initEnginesPanel() {
 					// because
 					// javascript is so javascript:
 					// http://stackoverflow.com/questions/5226285/settimeout-in-a-for-loop-and-pass-i-as-value
-					//setTimeoutToDrawEngineGauge(i, j);
+					setTimeoutToDrawEngineGauge(i, j);
 				}
 			}
 		}
@@ -85,7 +82,6 @@ function initEnginesPanel() {
  * Draw gauge on engineId for featureId asynchroniously
  */
 function setTimeoutToDrawEngineGauge(engineId, featureId) {
-	// console.log("kuku set timeout engineId"+engineId+"featureId"+featureId);
 	setTimeout(function() {
 		drawEngineGauge(engineId, engineFeatures[featureId]);
 	}, 0);
@@ -444,8 +440,6 @@ function drawFuelTankGauge(featureName) {
 			// tank
 			value = -2;
 		}
-		//console.log("draw fuel gauge. minval, maxval, value" + minVal + ", "
-		//		+ maxVal + ", " + value);
 		var gauge = buildGauge(featureName, value, 'tank-gauge-' + featureName);
 		gauge.draw(gauge.data, options);
 	}

@@ -1,23 +1,23 @@
-db_url=jdbc:postgresql://localhost/postgres
+db_url=jdbc:postgresql://localhost/postgres2
 db_username=postgres
 db_password=password
 google_map_api_key=AIzaSyDObpG4jhLAo88_GE8FHJhg-COWVgi_gr4
 #! how often we get data from simulator
-simulator_get_data_frequency_ms=300
+simulator_get_data_frequency_ms=1000
 #! how often we update the ui when displaying running simulation
-user_interface_refresh_frequency_ms=300
+user_interface_refresh_frequency_ms=1000
 #! how often we save data to database. Here - every 1000/UPDATE_RATE MS times. I.e. if UPDATE_RATE_MS = 300, we save data every 3 times
-write_to_database_frequency_ms=1000
+write_to_database_frequency_ms=6000
 #! how often we save position data to database. We make this frequency smaller than for other data, because data in simulation info contains plane coordinates and google maps become slow when there is lots of data
-write_position_to_database_frequency_ms=10000
+write_position_to_database_frequency_ms=12000
 #! how often we add data about plane position to the map
-update_airplane_position_frequency_ms=3000
+update_airplane_position_frequency_ms=6000
 
 #! Default values for new simulator model
-simulatormodelname=Boeing 737-700 NG
+simulatormodelname=Boeing 737-800 NG
 minspeed=0
-#!http://www.flugzeuginfo.net/acdata_php/acdata_7377_en.php
-maxspeed=1000
+#!http://www.flugzeuginfo.net/acdata_php/acdata_7378_en.php
+maxspeed=946
 minspeedonflaps=0
 #! http://ivaous.org/academy/index.php/pilotmenu/atp-airline-transport-pilot/boeing-737-800
 maxspeedonflaps=350
@@ -41,7 +41,7 @@ lowrfu = 500.0
 highrfu = 4000.0
 maxrfu = 4876.0
 
-#! default values of new engine model (Boeing 737-700 NG)
+#! default values of new engine model (Boeing 737-800 NG)
 rpm = false
 minrpm = 0.0
 lowrpm = 0.0
@@ -69,12 +69,12 @@ lowmp = 0.0
 highmp = 0.0
 maxmp = 0.0
 
-#!  http://home.scarlet.be/ppleducation/Limitations%20737.pdf
+#!  http://www.b737.org.uk/limitations.htm (engine CFM56-7)
 et1 = true
 minet1 = 60.0
 lowet1 = 60.0
-highet1 = 850.0
-maxet1 = 930.0
+highet1 = 925.0
+maxet1 = 950.0
 
 #!  AWCom is not sending these, so disabling it
 et2 = false
@@ -108,8 +108,8 @@ maxest = 500.0
 ff_ = true
 minff = 0.0
 lowff = 100.0
-highff = 1500.0
-maxff = 1700.0
+highff = 2000.0
+maxff = 2566.0
 
 #! haven't found
 fp_ = true
@@ -125,21 +125,21 @@ lowop = 275.0
 highop = 550.0
 maxop = 700.0
 
-#! http://home.scarlet.be/ppleducation/Limitations%20737.pdf
+#! http://www.b737.org.uk/limitations.htm
 ot_ = true
 minot = 0.0
 lowot = 54.0
 highot = 140.0
-maxot = 165.0
+maxot = 155.0
 
-#! http://home.scarlet.be/ppleducation/Limitations%20737.pdf
+#! http://www.b737.org.uk/limitations.htm
 n1_ = true
 minn1 = 0.0
 lown1 = 20.0
 highn1 = 90.0
-maxn1 = 106.0
+maxn1 = 104.0
 
-#! http://home.scarlet.be/ppleducation/Limitations%20737.pdf
+#! http://www.b737.org.uk/limitations.htm
 n2_ = true
 minn2 = 0.0
 lown2 = 20.0
@@ -158,7 +158,7 @@ vlt = true
 minvlt = 0.0
 lowvlt = 22.0
 highvlt = 28.0
-maxvlt = 40.0
+maxvlt = 30.0
 
 #! Not sure if it's correct http://www.b737.org.uk/limitations.htm
 amp = true

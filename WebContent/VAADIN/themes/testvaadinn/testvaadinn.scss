@@ -108,5 +108,15 @@
 		margin-top: 8px;
 	}
 	
+	.v-Notification.error { 
+	        background: #ed473b no-repeat right top;
+	        background-image: url(images/button_images/close-33.png); 
+	        border: 3px solid #ca3030; 
+	} 
+	
+	.v-Notification h1 {
+		font-size: 19pt;
+	}
+	
 
  }

@@ -22,6 +22,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
+import cz.vutbr.fit.simulatormanager.components.AreYouSureDialog;
 import cz.vutbr.fit.simulatormanager.components.EnginesTabSheet;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulatorModelConfigurationChecker;
@@ -96,8 +97,8 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
 		try {
-		    SimulatorModelConfigurationChecker validator = new SimulatorModelConfigurationChecker(
-			    enginesTabsheet, simulatorModelForm);
+		    SimulatorModelConfigurationChecker validator = new SimulatorModelConfigurationChecker(enginesTabsheet,
+			    simulatorModelForm);
 		    boolean isConfigurationValid = validator.verifyConfiguration(INVALID_CONFIG, VALID_CONFIG);
 		    if (isConfigurationValid) {
 			simulatorModelForm.commit();
@@ -113,8 +114,7 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 
 		    }
 		} catch (UnsupportedOperationException | SQLException e) {
-		    Notification.show(
-			    "Error occured when trying to commit engines form. Error message: " + e.getMessage(), "",
+		    Notification.show("Error occured when trying to commit engines form. Error message: " + e.getMessage(), "",
 			    Notification.Type.ERROR_MESSAGE);
 		}
 	    }
@@ -132,14 +132,22 @@ public class SimulatorModelsView extends VerticalLayout implements View {
 	});
     }
 
+    @SuppressWarnings("serial")
     private void removeModelClickListener() {
 	removeSimulatorModelButton.addClickListener(new ClickListener() {
-	    private static final long serialVersionUID = 1L;
 
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		selectedSimulatorModelName.setVisible(false);
-		simulatorModelsList.removeSimulator();
+		AreYouSureDialog reallyDeleteDialog = new AreYouSureDialog(new ClickListener() {
+
+		    @Override
+		    public void buttonClick(ClickEvent event) {
+			selectedSimulatorModelName.setVisible(false);
+			simulatorModelsList.removeSimulator();
+		    }
+		});
+
+		navigator.getUI().addWindow(reallyDeleteDialog);
 	    }
 	});
     }

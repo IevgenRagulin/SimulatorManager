@@ -12251,3 +12251,13 @@ div.v-layout.v-horizontal.v-widget {
 .testvaadinn #altitudeChartId, .testvaadinn #speedChartId {
 	margin-top: 8px;
 }
+
+.testvaadinn .v-Notification.error {
+	background: #ed473b no-repeat right top;
+	background-image: url(images/button_images/close-33.png);
+	border: 3px solid #ca3030;
+}
+
+.testvaadinn .v-Notification h1 {
+	font-size: 19pt;
+}

@@ -23,6 +23,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
+import cz.vutbr.fit.simulatormanager.components.AreYouSureDialog;
 import cz.vutbr.fit.simulatormanager.components.MainMenuBar;
 import cz.vutbr.fit.simulatormanager.components.SimulatorConfigurationChecker;
 import cz.vutbr.fit.simulatormanager.components.SimulatorForm;
@@ -213,8 +214,17 @@ public class SimulatorsView extends VerticalLayout implements View {
 	removeSimulatorButton.addClickListener(new ClickListener() {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		selectedSimulatorName.setVisible(false);
-		simulatorList.removeSimulator();
+		AreYouSureDialog reallyDeleteDialog = new AreYouSureDialog(new ClickListener() {
+
+		    @Override
+		    public void buttonClick(ClickEvent event) {
+			selectedSimulatorName.setVisible(false);
+			simulatorList.removeSimulator();
+		    }
+		});
+
+		navigator.getUI().addWindow(reallyDeleteDialog);
+
 	    }
 	});
     }

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.CheckBox;
@@ -15,6 +16,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
+import cz.vutbr.fit.simulatormanager.util.ConverterUtil;
 import cz.vutbr.fit.simulatormanager.views.SimulatorModelsView;
 
 public class SimulatorModelForm extends FieldGroup {
@@ -29,6 +31,7 @@ public class SimulatorModelForm extends FieldGroup {
 
     private void init() {
 	setBuffered(false);
+	StringToFloatConverter stringToFloatConverter = ConverterUtil.getStringToFloatConverter();
 	for (SimulatorModelCols colName : SimulatorModelCols.values()) {
 	    AbstractField<?> field = null;
 	    // check if this is a boolean, use checkbox then
@@ -43,8 +46,11 @@ public class SimulatorModelForm extends FieldGroup {
 		addFieldToForm(dateField, colName);
 		field = dateField;
 	    } else {
-		field = createInputField(colName.getName());
-		addFieldToForm(field, colName);
+		TextField textField = createInputField(colName.getName());
+		if (Float.class.equals(colName.getType())) {
+		    textField.setConverter(stringToFloatConverter);
+		}
+		addFieldToForm(textField, colName);
 	    }
 	}
     }

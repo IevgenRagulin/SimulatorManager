@@ -26,8 +26,8 @@ import cz.vutbr.fit.simulatormanager.database.columns.SimulatorModelCols;
  * @author zhenia
  *
  */
-@com.vaadin.annotations.JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",
-	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "highcharts.js", "enginesAndFuelPanel.js" })
+@com.vaadin.annotations.JavaScript({ "http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+	"http://code.jquery.com/ui/1.11.4/jquery-ui.js", "enginesAndFuelPanel.js" })
 @com.vaadin.annotations.StyleSheet({ "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" })
 public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 
@@ -71,13 +71,20 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 
     private void updateFuelTanksValuesIfNeeded(SimulationDevStateBean simulationDevState) {
 	LOG.debug("setting lfuvals" + simulationDevState.getLfu());
-	if (prevSimulationDevState.getLfu() != simulationDevState.getLfu()) {
+	if (prevSimulationDevState.getLfu() != null
+		&& Math.abs(prevSimulationDevState.getLfu() - simulationDevState.getLfu()) > 0.5) {
+	    LOG.debug("updateFuelTanksValuesIfNeeded() - lfu changed. old lfu" + prevSimulationDevState.getLfu() + " new lfu"
+		    + simulationDevState.getLfu());
 	    getState().lfuvals = simulationDevState.getLfu();
 	}
-	if (prevSimulationDevState.getRfu() != simulationDevState.getRfu()) {
+	if (prevSimulationDevState.getRfu() != null
+		&& Math.abs(prevSimulationDevState.getRfu() - simulationDevState.getRfu()) > 0.5) {
+	    LOG.debug("updateFuelTanksValuesIfNeeded() - rfu changed");
 	    getState().rfuvals = simulationDevState.getRfu();
 	}
-	if (prevSimulationDevState.getCfu() != simulationDevState.getCfu()) {
+	if (prevSimulationDevState.getCfu() != null
+		&& Math.abs(prevSimulationDevState.getCfu() - simulationDevState.getCfu()) > 0.5) {
+	    LOG.debug("updateFuelTanksValuesIfNeeded() - cfu changed");
 	    getState().cfuvals = simulationDevState.getCfu();
 	}
 	prevSimulationDevState = simulationDevState;
@@ -86,13 +93,10 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     private void updateEngineValuesIfNeeded(AllEngineInfo enginesInfo) {
 	LOG.debug("update engine values. rpm is en" + prevEngineModel.get(0).isRpm());
 	if (!areArraysEqual(prevEngineInfo.getRpm(), enginesInfo.getRpm())) {
-	    LOG.debug("updateEngineValuesIfNeeded() - rpm value has changed, updating. New value[0]: {}", enginesInfo.getRpm()[0]);
 	    getState().rpmvals = enginesInfo.getRpm();
 	}
 	if (!areArraysEqual(prevEngineInfo.getPwr(), enginesInfo.getPwr())) {
-	    LOG.debug("updateEngineValuesIfNeeded() - pwr value has changed, updating. New value[0]: {}", enginesInfo.getPwr()[0]);
 	    getState().pwrvals = enginesInfo.getPwr();
-	    LOG.debug("new pwrvals[0]:{}", getState().pwrvals[0]);
 	}
 	if (!areArraysEqual(prevEngineInfo.getPwp(), enginesInfo.getPwp())) {
 	    getState().pwpvals = enginesInfo.getPwp();
@@ -106,7 +110,7 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 	if (!areArraysEqual(prevEngineInfo.getEt2(), enginesInfo.getEt2())) {
 	    getState().et2vals = enginesInfo.getEt2();
 	}
-	if (!areArraysEqual(prevEngineInfo.getCt1(), enginesInfo.getCt2())) {
+	if (!areArraysEqual(prevEngineInfo.getCt1(), enginesInfo.getCt1())) {
 	    getState().ct1vals = enginesInfo.getCt1();
 	}
 	if (!areArraysEqual(prevEngineInfo.getCt2(), enginesInfo.getCt2())) {
@@ -161,7 +165,8 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 	    return false;
 	}
 	for (int i = 0; i < array1.length; i++) {
-	    if (Math.abs(array1[i] - array2[i]) > 0.01) {
+	    if (Math.abs(array1[i] - array2[i]) > 0.1) {
+		LOG.debug("arrays are not equal state update is needed");
 		return false;
 	    }
 	}
@@ -280,6 +285,7 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
 	SQLContainer enginesModels = EngineModelQueries.getEngineModelsBySimulatorId(simulatorId);
 	Collection<RowId> itemIds = (Collection<RowId>) enginesModels.getItemIds();
 	if (hasEngineModelChanged(enginesModels, itemIds)) {
+	    LOG.info("updateEngineModelsIfNeeded() - engine model has changed");
 	    clearState(itemIds.size());
 	}
 	LOG.debug("Going to iterate throuh engines. Num of engines: {}", itemIds.size());
@@ -410,12 +416,5 @@ public class EnginesAndFuelPanel extends AbstractJavaScriptComponent {
     public EnginesAndFuelPanelState getState() {
 	return (EnginesAndFuelPanelState) super.getState();
     }
-
-    /*
-     * We use this bean in adition to state class, because when we access state
-     * class fields, the change state event is generated even if we don't change
-     * the state. So, we use this bean to imporove performance
-     */
-    // private EnginesPanelStateBean enginesPanelStateBean;
 
 }

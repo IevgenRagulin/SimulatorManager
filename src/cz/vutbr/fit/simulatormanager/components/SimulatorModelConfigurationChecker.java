@@ -29,6 +29,12 @@ public class SimulatorModelConfigurationChecker {
 	this.simulatorModelForm = simulatorModelForm;
     }
 
+    private void buildAndShowNotification(String message, String description, Notification.Type type) {
+	Notification notification = new Notification(message, description, type);
+	notification.setHtmlContentAllowed(true);
+	notification.show(Page.getCurrent());
+    }
+
     /**
      * 
      * @param errorMessage
@@ -39,14 +45,12 @@ public class SimulatorModelConfigurationChecker {
      * @return
      */
     public boolean verifyConfiguration(String errorMessage, String successMessage) {
-	String errorsInConfig = SimulatorModelValidator.isSimulatorModelConfiguredCorrectly(enginesModels,
-		simulatorModelForm);
+	String errorsInConfig = SimulatorModelValidator.isSimulatorModelConfiguredCorrectly(enginesModels, simulatorModelForm);
 	if (StringUtils.isEmpty(errorsInConfig)) {
-	    Notification.show(successMessage, "", Notification.Type.HUMANIZED_MESSAGE);
+	    buildAndShowNotification(successMessage, "", Notification.Type.HUMANIZED_MESSAGE);
 	    return true;
 	} else {
-	    new Notification(errorMessage, errorsInConfig, Notification.Type.ERROR_MESSAGE, true).show(Page
-		    .getCurrent());
+	    buildAndShowNotification(errorMessage, errorsInConfig, Notification.Type.ERROR_MESSAGE);
 	    return false;
 	}
     }

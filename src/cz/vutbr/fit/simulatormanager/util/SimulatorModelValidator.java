@@ -227,7 +227,9 @@ public class SimulatorModelValidator {
 	    return "";
 	} else {
 	    return new StringBuilder().append(featureName.toString().toUpperCase())
-		    .append(" is enabled, but min/max are misconfigured on engine with order").append(engineOrder).toString();
+		    .append(" is enabled, but min/max are misconfigured on engine with order ").append(engineOrder)
+		    .append("min, low, high, max: ").append(minValue).append(" ").append(lowValue).append(" ").append(highValue)
+		    .append(" ").append(maxValue).toString();
 	}
     }
 
@@ -347,6 +349,7 @@ public class SimulatorModelValidator {
 
 		} else if (engineFormField.getCaption().equals(EngineModelCols.rpm.getName())) {
 		    CheckBox rpm = (CheckBox) engineFormField;
+		    LOG.info("Is rpm enabled: {} ", rpm.getValue());
 		    engineModelBean.setRpm(Boolean.valueOf(rpm.getValue()));
 		} else if (engineFormField.getCaption().equals(EngineModelCols.minrpm.getName())) {
 		    TextField field = (TextField) engineFormField;

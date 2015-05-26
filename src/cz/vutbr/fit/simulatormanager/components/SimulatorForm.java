@@ -40,7 +40,7 @@ public class SimulatorForm extends FieldGroup {
     private static final long serialVersionUID = 1L;
     private SimulatorsView view;
     private ComboBox simulatorModel = new ComboBox();
-    private static StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();;
+    private static StringToIntegerConverter plainIntegerConverter = getStringToIntegerConverter();
 
     public SimulatorForm(SimulatorsView view) {
 	this.view = view;
